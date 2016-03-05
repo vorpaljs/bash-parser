@@ -12,7 +12,7 @@ const fieldSplitting = require('./field-splitting');
 const tildeExpanding = require('./tilde-expanding');
 const pathExpansion = require('./path-expansion');
 const quoteRemoval = require('./quote-removal');
-const logger = require('./logger-iterator');
+// const logger = require('./logger-iterator');
 
 const preAliasLexer = compose(
 	// aliasSubstitution(options, preAliasLexer(options)),

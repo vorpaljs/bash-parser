@@ -33,11 +33,6 @@ const mkLoc = (lineNumber, columnNumber) => ({
 	startColumn: columnNumber
 });
 
-const newLine = (lineNumber, columnNumber) => ({
-	NEWLINE: '\n',
-	loc: mkLoc(lineNumber, columnNumber)
-});
-
 const quotingCharacter = (ch, lastCh, penultCh) =>
 	QUOTING_DELIM[penultCh + lastCh + ch] ||
 	QUOTING_DELIM[lastCh + ch] ||
@@ -63,6 +58,13 @@ const mkStartState = () => ({
 	setOperatorToken(text) {
 		this.token = {
 			OPERATOR: text,
+			loc: mkLoc(this.lineNumber, this.columnNumber)
+		};
+	},
+
+	setNewLineToken() {
+		this.token = {
+			NEWLINE: '\n',
 			loc: mkLoc(this.lineNumber, this.columnNumber)
 		};
 	},
@@ -228,7 +230,7 @@ module.exports = function * tokenDelimiter(source) {
 			}
 
 			state.quoting = QUOTING.NO;
-			state.token = newLine(state.lineNumber, state.columnNumber);
+			state.setNewLineToken();
 			state.prevLineNumber = state.lineNumber;
 			state.prevColumnNumber = state.columnNumber;
 			yield state.finalizeCurrentToken();

@@ -38,11 +38,6 @@ const newLine = (lineNumber, columnNumber) => ({
 	loc: mkLoc(lineNumber, columnNumber)
 });
 
-const eof = (lineNumber, columnNumber) => ({
-	EOF: true,
-	loc: mkLoc(lineNumber, columnNumber)
-});
-
 const operator = (ch, lineNumber, columnNumber) => ({
 	OPERATOR: ch,
 	loc: mkLoc(lineNumber, columnNumber)
@@ -81,6 +76,13 @@ const mkStartState = () => ({
 		this.token = {
 			EMPTY: true,
 			loc: mkLoc(this.lineNumber, this.columnNumber)
+		};
+	},
+
+	setEOFToken() {
+		this.token = {
+			EOF: true,
+			loc: mkLoc(this.prevLineNumber, this.prevColumnNumber)
 		};
 	},
 
@@ -304,6 +306,6 @@ module.exports = function * tokenDelimiter(source) {
 	}
 
 	state.advanceLoc('');
-	state.token = eof(state.prevLineNumber, state.prevColumnNumber);
+	state.setEOFToken();
 	yield state.finalizeCurrentToken();
 };

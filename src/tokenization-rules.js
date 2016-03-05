@@ -1,6 +1,7 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
 const values = require('object-values');
+const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
 const words = require('./reserved-words');
 
@@ -108,9 +109,10 @@ exports.forNameVariable = function * (tokens) {
 };
 
 exports.functionName = function * (tokens) {
-	const lastTokens = [];
 	let canBeFunctionName = true;
-	for (const tk of tokens) {
+	const tokensIterator = lookahead(tokens, 2);
+	let tk;
+	for (tk of tokensIterator) {
 		// apply only on valid positions
 		// (start of simple commands)
 		if (!canBeFunctionName) {
@@ -120,31 +122,19 @@ exports.functionName = function * (tokens) {
 				canBeFunctionName = true;
 			}
 		} else if (!tk.WORD && !tk.OPEN_PAREN && !tk.CLOSE_PAREN) {
-			// console.log('!canBeFunctionName')
 			canBeFunctionName = false;
 		} else if (
-			tk.CLOSE_PAREN &&
-			lastTokens.length >= 2 &&
-			lastTokens[1].OPEN_PAREN &&
-			lastTokens[0].WORD
+			tk.WORD &&
+			tokensIterator.ahead(2) &&
+			tokensIterator.ahead(1).OPEN_PAREN &&
+			tokensIterator.ahead(2).CLOSE_PAREN
 		) {
-			const prevTk = lastTokens[0];
-			prevTk.NAME = prevTk.WORD;
-			delete prevTk.maybeSimpleCommandName;
-			delete prevTk.WORD;
+			tk.NAME = tk.WORD;
+			delete tk.maybeSimpleCommandName;
+			delete tk.WORD;
 		}
-		// TODO: refactor to own module, iterable with defined
-		// lookahead cache
-		if (lastTokens.length > 10) {
-			const tky = lastTokens.shift();
-			yield tky;
-		}
-		lastTokens.push(tk);
-	}
 
-	while (lastTokens.length) {
-		const tky = lastTokens.shift();
-		yield tky;
+		yield tk;
 	}
 };
 

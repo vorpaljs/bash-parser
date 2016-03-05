@@ -12,7 +12,7 @@ const fieldSplitting = require('./field-splitting');
 const tildeExpanding = require('./tilde-expanding');
 const pathExpansion = require('./path-expansion');
 const quoteRemoval = require('./quote-removal');
-// const logger = require('./logger-iterator');
+const logger = require('./logger-iterator');
 
 const preAliasLexer = compose(
 	// aliasSubstitution(options, preAliasLexer(options)),
@@ -97,8 +97,9 @@ const posixShellLexer = options => ({
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
 			tildeExpanding(options),
-
+			// logger('after functionName'),
 			rules.functionName,
+			// logger('before functionName'),
 			rules.ioNumber,
 			rules.forNameVariable,
 			commandExpansion,

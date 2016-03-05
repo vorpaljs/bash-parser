@@ -33,11 +33,6 @@ const mkLoc = (lineNumber, columnNumber) => ({
 	startColumn: columnNumber
 });
 
-const empty = (lineNumber, columnNumber) => ({
-	EMPTY: true,
-	loc: mkLoc(lineNumber, columnNumber)
-});
-
 const newLine = (lineNumber, columnNumber) => ({
 	NEWLINE: '\n',
 	loc: mkLoc(lineNumber, columnNumber)
@@ -68,7 +63,10 @@ const closingQuotingCharacter = (quoting, ch, lastCh, penultCh) =>
 	(quoting.close === lastCh + ch && penultCh !== '\\');
 
 const mkStartState = () => ({
-	token: empty(),
+	token: {
+		EMPTY: true,
+		loc: mkLoc(0, 0)
+	},
 	quoting: QUOTING.NO,
 	prevQuoting: null,
 	lineNumber: 0,
@@ -76,6 +74,13 @@ const mkStartState = () => ({
 	prevLineNumber: 0,
 	prevColumnNumber: 0,
 	isComment: false,
+
+	setEmptyToken() {
+		this.token = {
+			EMPTY: true,
+			loc: mkLoc(this.lineNumber, this.columnNumber)
+		};
+	},
 
 	advanceLoc(currentCharacter) {
 		this.prevLineNumber = this.lineNumber;
@@ -149,7 +154,7 @@ module.exports = function * tokenDelimiter(source) {
 				yield state.finalizeCurrentToken();
 			}
 
-			state.token = empty(state.lineNumber, state.columnNumber);
+			state.setEmptyToken();
 		}
 
 		// RULE 4 - If the current character is <backslash>, single-quote, or
@@ -225,7 +230,7 @@ module.exports = function * tokenDelimiter(source) {
 			state.prevLineNumber = state.lineNumber;
 			state.prevColumnNumber = state.columnNumber;
 			yield state.finalizeCurrentToken();
-			state.token = empty(state.lineNumber, state.columnNumber);
+			state.setEmptyToken();
 			// skip to next character
 
 			state.advanceLoc(currentCharacter);
@@ -244,7 +249,7 @@ module.exports = function * tokenDelimiter(source) {
 				yield state.finalizeCurrentToken();
 			}
 
-			state.token = empty(state.lineNumber, state.columnNumber);
+			state.setEmptyToken();
 
 			// skip to next character
 
@@ -284,7 +289,7 @@ module.exports = function * tokenDelimiter(source) {
 		if (currentCharacter === '#') {
 			state.isComment = true;
 		} else if (currentCharacter === '\n') {
-			state.token = empty(state.lineNumber, state.columnNumber);
+			state.setEmptyToken();
 		} else {
 			// RULE 11 - The current character is used as the start of a new word.
 			state.token = mkToken(currentCharacter, state.lineNumber, state.columnNumber);

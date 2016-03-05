@@ -48,11 +48,6 @@ const operator = (ch, lineNumber, columnNumber) => ({
 	loc: mkLoc(lineNumber, columnNumber)
 });
 
-const mkToken = (tk, lineNumber, columnNumber) => ({
-	TOKEN: tk,
-	loc: mkLoc(lineNumber, columnNumber)
-});
-
 const quotingCharacter = (ch, lastCh, penultCh) =>
 	QUOTING_DELIM[penultCh + lastCh + ch] ||
 	QUOTING_DELIM[lastCh + ch] ||
@@ -74,6 +69,13 @@ const mkStartState = () => ({
 	prevLineNumber: 0,
 	prevColumnNumber: 0,
 	isComment: false,
+
+	setGenericToken(text) {
+		this.token = {
+			TOKEN: text,
+			loc: mkLoc(this.lineNumber, this.columnNumber)
+		};
+	},
 
 	setEmptyToken() {
 		this.token = {
@@ -146,11 +148,7 @@ module.exports = function * tokenDelimiter(source) {
 				// The current token cannot form an OPERATOR by itself,
 				// even if it could start one,
 				// so it is emitted as a normal token.
-				state.token = mkToken(
-					state.token.OPERATOR,
-					state.token.loc.startLine,
-					state.token.loc.startColumn
-				);
+				state.setGenericToken(state.token.OPERATOR);
 				yield state.finalizeCurrentToken();
 			}
 
@@ -169,7 +167,7 @@ module.exports = function * tokenDelimiter(source) {
 
 			if (currentCharacter !== '\\') {
 				if (state.token.TOKEN === undefined) {
-					state.token = mkToken(currentCharacter, state.lineNumber, state.columnNumber);
+					state.setGenericToken(currentCharacter);
 				} else {
 					state.token.TOKEN += currentCharacter;
 				}
@@ -292,7 +290,7 @@ module.exports = function * tokenDelimiter(source) {
 			state.setEmptyToken();
 		} else {
 			// RULE 11 - The current character is used as the start of a new word.
-			state.token = mkToken(currentCharacter, state.lineNumber, state.columnNumber);
+			state.setGenericToken(currentCharacter);
 		}
 
 		state.advanceLoc(currentCharacter);

@@ -33,14 +33,6 @@ const mkLoc = (lineNumber, columnNumber) => ({
 	startColumn: columnNumber
 });
 
-const finalizeLoc = (tk, lineNumber, columnNumber) => {
-	Object.assign(tk.loc, {
-		endLine: lineNumber,
-		endColumn: columnNumber
-	});
-	return tk;
-};
-
 const empty = (lineNumber, columnNumber) => ({
 	EMPTY: true,
 	loc: mkLoc(lineNumber, columnNumber)
@@ -95,6 +87,14 @@ const mkStartState = () => ({
 		} else {
 			this.columnNumber++;
 		}
+	},
+
+	finalizeCurrentToken() {
+		Object.assign(this.token.loc, {
+			endLine: this.prevLineNumber,
+			endColumn: this.prevColumnNumber
+		});
+		return this.token;
 	}
 });
 
@@ -136,17 +136,17 @@ module.exports = function * tokenDelimiter(source) {
 			// current character cannot be used with the current characters to form an operator,
 			// the operator containing the previous character shall be delimited.
 			if (isOperator(state.token.OPERATOR)) {
-				yield finalizeLoc(state.token, state.prevLineNumber, state.prevColumnNumber);
+				yield state.finalizeCurrentToken();
 			} else {
 				// The current token cannot form an OPERATOR by itself,
 				// even if it could start one,
 				// so it is emitted as a normal token.
-				const alteredTk = mkToken(
+				state.token = mkToken(
 					state.token.OPERATOR,
 					state.token.loc.startLine,
 					state.token.loc.startColumn
 				);
-				yield finalizeLoc(alteredTk, state.prevLineNumber, state.prevColumnNumber);
+				yield state.finalizeCurrentToken();
 			}
 
 			state.token = empty(state.lineNumber, state.columnNumber);
@@ -201,7 +201,7 @@ module.exports = function * tokenDelimiter(source) {
 			// emit current token if not empty
 
 			if (!state.token.EMPTY) {
-				yield finalizeLoc(state.token, state.prevLineNumber, state.prevColumnNumber);
+				yield state.finalizeCurrentToken();
 			}
 			state.token = operator(currentCharacter, state.lineNumber, state.columnNumber);
 
@@ -217,13 +217,15 @@ module.exports = function * tokenDelimiter(source) {
 				currentCharacter === '\n') {
 			// emit current token if not empty
 			if (!state.token.EMPTY) {
-				yield finalizeLoc(state.token, state.prevLineNumber, state.prevColumnNumber);
+				yield state.finalizeCurrentToken();
 			}
 
-			state.token = empty(state.lineNumber, state.columnNumber);
 			state.quoting = QUOTING.NO;
-			yield finalizeLoc(newLine(state.lineNumber, state.columnNumber), state.lineNumber, state.columnNumber);
-
+			state.token = newLine(state.lineNumber, state.columnNumber);
+			state.prevLineNumber = state.lineNumber;
+			state.prevColumnNumber = state.columnNumber;
+			yield state.finalizeCurrentToken();
+			state.token = empty(state.lineNumber, state.columnNumber);
 			// skip to next character
 
 			state.advanceLoc(currentCharacter);
@@ -239,7 +241,7 @@ module.exports = function * tokenDelimiter(source) {
 			currentCharacter.match(/\s/)) {
 			// emit current token if not empty
 			if (!state.token.EMPTY) {
-				yield finalizeLoc(state.token, state.prevLineNumber, state.prevColumnNumber);
+				yield state.finalizeCurrentToken();
 			}
 
 			state.token = empty(state.lineNumber, state.columnNumber);
@@ -295,9 +297,10 @@ module.exports = function * tokenDelimiter(source) {
 	// be delimited. If there is no current token, the end-of-input indicator
 	// shall be returned as the token.
 	if (!state.token.EMPTY) {
-		yield finalizeLoc(state.token, state.prevLineNumber, state.prevColumnNumber);
+		yield state.finalizeCurrentToken();
 	}
 
 	state.advanceLoc('');
-	yield finalizeLoc(eof(state.prevLineNumber, state.prevColumnNumber), state.prevLineNumber, state.prevColumnNumber);
+	state.token = eof(state.prevLineNumber, state.prevColumnNumber);
+	yield state.finalizeCurrentToken();
 };

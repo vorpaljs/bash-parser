@@ -38,11 +38,6 @@ const newLine = (lineNumber, columnNumber) => ({
 	loc: mkLoc(lineNumber, columnNumber)
 });
 
-const operator = (ch, lineNumber, columnNumber) => ({
-	OPERATOR: ch,
-	loc: mkLoc(lineNumber, columnNumber)
-});
-
 const quotingCharacter = (ch, lastCh, penultCh) =>
 	QUOTING_DELIM[penultCh + lastCh + ch] ||
 	QUOTING_DELIM[lastCh + ch] ||
@@ -64,6 +59,13 @@ const mkStartState = () => ({
 	prevLineNumber: 0,
 	prevColumnNumber: 0,
 	isComment: false,
+
+	setOperatorToken(text) {
+		this.token = {
+			OPERATOR: text,
+			loc: mkLoc(this.lineNumber, this.columnNumber)
+		};
+	},
 
 	setGenericToken(text) {
 		this.token = {
@@ -208,7 +210,7 @@ module.exports = function * tokenDelimiter(source) {
 			if (!state.token.EMPTY) {
 				yield state.finalizeCurrentToken();
 			}
-			state.token = operator(currentCharacter, state.lineNumber, state.columnNumber);
+			state.setOperatorToken(currentCharacter);
 
 			// skip to next character
 

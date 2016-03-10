@@ -59,6 +59,11 @@ const parameterOps = {
 		expand: ['word']
 	},
 
+	[`^\\#(${name})$`]: {
+		op: 'stringLength',
+		parameter: m => m[1]
+	},
+
 	[`^([1-9][0-9]*)$`]: {
 		kind: 'positional',
 		parameter: m => Number(m[1])

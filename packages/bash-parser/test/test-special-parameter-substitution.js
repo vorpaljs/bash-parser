@@ -49,6 +49,24 @@ test('parameter with use default value if unset', t => {
 	});
 });
 
+test('parameter with string length', t => {
+	const result = bashParser('${#default_value}');
+
+	utils.checkResults(t, result.commands[0].name, {
+		type: 'Word',
+		text: '${#default_value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'default_value',
+			op: 'stringLength',
+			loc: {
+				start: 0,
+				end: 16
+			}
+		}]
+	});
+});
+
 test('parameter with assign default value', t => {
 	const result = bashParser('${other:=default_value}');
 	utils.checkResults(t, result.commands[0].name, {

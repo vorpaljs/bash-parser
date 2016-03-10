@@ -9,24 +9,56 @@ const parameterOps = {
 		word: m => m[2],
 		expand: ['word']
 	},
+
 	[`^(${name}):\\=(.*)$`]: {
 		op: 'assignDefaultValue',
 		parameter: m => m[1],
 		word: m => m[2],
 		expand: ['word']
 	},
+
 	[`^(${name}):\\?(.*)$`]: {
 		op: 'indicateErrorIfNull',
 		parameter: m => m[1],
 		word: m => m[2],
 		expand: ['word']
 	},
+
 	[`^(${name}):\\+(.*)$`]: {
 		op: 'useAlternativeValue',
 		parameter: m => m[1],
 		word: m => m[2],
 		expand: ['word']
 	},
+
+	[`^(${name})\\-(.*)$`]: {
+		op: 'useDefaultValueIfUnset',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
+	[`^(${name})\\=(.*)$`]: {
+		op: 'assignDefaultValueIfUnset',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
+	[`^(${name})\\?(.*)$`]: {
+		op: 'indicateErrorIfUnset',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
+	[`^(${name})\\+(.*)$`]: {
+		op: 'useAlternativeValueIfUnset',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
 	[`^([1-9][0-9]*)$`]: {
 		kind: 'positional',
 		parameter: m => Number(m[1])
@@ -63,7 +95,6 @@ const parameterOps = {
 	'^0$': {
 		kind: 'shell-script-name'
 	}
-
 };
 
 module.exports = parameterOps;

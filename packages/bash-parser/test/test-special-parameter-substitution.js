@@ -27,6 +27,28 @@ test('parameter with use default value', t => {
 	});
 });
 
+test('parameter with use default value if unset', t => {
+	const result = bashParser('${other-default_value}');
+
+	utils.checkResults(t, result.commands[0].name, {
+		type: 'Word',
+		text: '${other-default_value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default_value',
+				type: 'Word'
+			},
+			op: 'useDefaultValueIfUnset',
+			loc: {
+				start: 0,
+				end: 21
+			}
+		}]
+	});
+});
+
 test('parameter with assign default value', t => {
 	const result = bashParser('${other:=default_value}');
 	utils.checkResults(t, result.commands[0].name, {
@@ -43,6 +65,27 @@ test('parameter with assign default value', t => {
 			loc: {
 				start: 0,
 				end: 22
+			}
+		}]
+	});
+});
+
+test('parameter with assign default value if unset', t => {
+	const result = bashParser('${other=default_value}');
+	utils.checkResults(t, result.commands[0].name, {
+		type: 'Word',
+		text: '${other=default_value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default_value',
+				type: 'Word'
+			},
+			op: 'assignDefaultValueIfUnset',
+			loc: {
+				start: 0,
+				end: 21
 			}
 		}]
 	});
@@ -99,6 +142,27 @@ test('parameter with indicate error if null', t => {
 	});
 });
 
+test('parameter with indicate error if unset', t => {
+	const result = bashParser('${other?default_value}');
+	utils.checkResults(t, result.commands[0].name, {
+		text: '${other?default_value}',
+		type: 'Word',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default_value',
+				type: 'Word'
+			},
+			op: 'indicateErrorIfUnset',
+			loc: {
+				start: 0,
+				end: 21
+			}
+		}]
+	});
+});
+
 test('parameter with use alternative value', t => {
 	const result = bashParser('${other:+default_value}');
 	utils.checkResults(t, result.commands[0].name, {
@@ -115,6 +179,27 @@ test('parameter with use alternative value', t => {
 			loc: {
 				start: 0,
 				end: 22
+			}
+		}]
+	});
+});
+
+test('parameter with use alternative value if unset', t => {
+	const result = bashParser('${other+default_value}');
+	utils.checkResults(t, result.commands[0].name, {
+		text: '${other+default_value}',
+		type: 'Word',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default_value',
+				type: 'Word'
+			},
+			op: 'useAlternativeValueIfUnset',
+			loc: {
+				start: 0,
+				end: 21
 			}
 		}]
 	});

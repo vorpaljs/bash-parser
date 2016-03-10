@@ -5,8 +5,9 @@ const utils = require('./utils');
 
 // preload all modes to have them browserified
 const modes = {
-	bash: require('./modes/bash'),
-	posix: require('./modes/posix')
+	'bash': require('./modes/bash'),
+	'posix': require('./modes/posix'),
+	'word-expansion': require('./modes/word-expansion')
 };
 
 function loadPlugin(name) {

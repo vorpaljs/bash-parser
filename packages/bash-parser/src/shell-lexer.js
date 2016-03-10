@@ -1,7 +1,5 @@
-/* eslint-disable camelcase */
 'use strict';
 const compose = require('compose-function');
-const utils = require('./utils');
 
 const posixShellLexer = (mode, options) => ({
 	lex() {
@@ -47,7 +45,7 @@ const posixShellLexer = (mode, options) => ({
 	},
 
 	setInput(source) {
-		const tokenizer = mode.tokenizer(options, utils);
+		const tokenizer = mode.tokenizer(options);
 		let previousPhases = [tokenizer];
 		const phases = [tokenizer]
 			.concat(mode.lexerPhases.map(phase => {

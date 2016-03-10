@@ -5,7 +5,7 @@ const t = require('../../../../utils/tokens');
 
 const continueToken = t.continueToken;
 
-module.exports = function expansionCommandTick(state, source) {
+module.exports = function expansionCommandTick(state, source, reducers) {
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
@@ -32,13 +32,13 @@ module.exports = function expansionCommandTick(state, source) {
 
 	if (!state.escaping && char === '\\') {
 		return {
-			nextReduction: expansionCommandTick,
+			nextReduction: reducers.expansionCommandTick,
 			nextState: state.appendChar(char).setEscaping(true)
 		};
 	}
 
 	return {
-		nextReduction: expansionCommandTick,
+		nextReduction: reducers.expansionCommandTick,
 		nextState: state
 			.setEscaping(false)
 			.appendChar(char)

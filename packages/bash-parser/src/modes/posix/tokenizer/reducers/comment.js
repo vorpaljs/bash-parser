@@ -2,15 +2,12 @@
 
 const newLine = require('../../../../utils/tokens').newLine;
 
-module.exports = function comment(state, source) {
-	const end = require('./end');
-	const start = require('./start');
-
+module.exports = function comment(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === undefined) {
 		return {
-			nextReduction: end,
+			nextReduction: reducers.end,
 			nextState: state
 		};
 	}
@@ -18,7 +15,7 @@ module.exports = function comment(state, source) {
 	if (char === '\n') {
 		return {
 			tokensToEmit: [newLine()],
-			nextReduction: start,
+			nextReduction: reducers.start,
 			nextState: state
 		};
 	}

@@ -2,22 +2,20 @@
 const deepFreeze = require('deep-freeze');
 const last = require('array-last');
 
-const start = require('./reducers/start');
-
-const defaultFields = {
+const defaultFields = reducers => ({
 	current: '',
 	escaping: false,
-	previousReducer: start,
+	previousReducer: reducers.start,
 	loc: {
 		start: {col: 1, row: 1, char: 0},
 		previous: null,
 		current: {col: 1, row: 1, char: 0}
 	}
-};
+});
 
-class ImmutableState {
+const mkImmutableState = reducers => class ImmutableState {
 	constructor(fields) {
-		Object.assign(this, fields || defaultFields);
+		Object.assign(this, fields || defaultFields(reducers));
 		deepFreeze(this);
 	}
 
@@ -87,11 +85,11 @@ class ImmutableState {
 
 		return this.setLoc(loc);
 	}
-}
+};
 
-class MutableState {
+const mkMutableState = reducers => class {
 	constructor(fields) {
-		Object.assign(this, fields || defaultFields);
+		Object.assign(this, fields || defaultFields(reducers));
 	}
 
 	setLoc(loc) {
@@ -178,24 +176,25 @@ class MutableState {
 
 		return this.setLoc(loc);
 	}
-}
+};
 
-const State = process.env.NODE_NEV === 'development' ? ImmutableState : MutableState;
+module.exports = (options, reducers) => function * tokenizer(src) {
+	reducers = reducers || require('./reducers');
 
-module.exports = () => function * tokenizer(src) {
+	const State = process.env.NODE_NEV === 'development' ? mkImmutableState(reducers) : mkMutableState(reducers);
+
 	let state = new State();
 
-	let reduction = start;
+	let reduction = reducers.start;
 	const source = Array.from(src);
 
 	while (typeof reduction === 'function') {
 		const char = source[0];
-		const r = reduction(state, source);
+		const r = reduction(state, source, reducers);
 		const nextReduction = r.nextReduction;
 		const tokensToEmit = r.tokensToEmit;
 		const nextState = r.nextState;
 		if (tokensToEmit) {
-			// console.log({tokensToEmit, reduction, nextReduction})
 			yield * tokensToEmit;
 		}
 
@@ -213,3 +212,4 @@ module.exports = () => function * tokenizer(src) {
 	}
 };
 
+module.exports.reducers = require('./reducers');

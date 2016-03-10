@@ -5,11 +5,7 @@ const t = require('../../../../utils/tokens');
 const tokenOrEmpty = t.tokenOrEmpty;
 const continueToken = t.continueToken;
 
-module.exports = function doubleQuoting(state, source) {
-	const start = require('./start');
-	const expansionStart = require('./expansion-start');
-	const expansionCommandTick = require('./expansion-command-tick');
-
+module.exports = function doubleQuoting(state, source, reducers) {
 	const char = source && source.shift();
 
 	state = state.setPreviousReducer(doubleQuoting);
@@ -31,27 +27,27 @@ module.exports = function doubleQuoting(state, source) {
 
 	if (!state.escaping && char === '"') {
 		return {
-			nextReduction: start,
-			nextState: state.setPreviousReducer(start).appendChar(char)
+			nextReduction: reducers.start,
+			nextState: state.setPreviousReducer(reducers.start).appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '$') {
 		return {
-			nextReduction: expansionStart,
+			nextReduction: reducers.expansionStart,
 			nextState: state.appendEmptyExpansion().appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '`') {
 		return {
-			nextReduction: expansionCommandTick,
+			nextReduction: reducers.expansionCommandTick,
 			nextState: state.appendEmptyExpansion().appendChar(char)
 		};
 	}
 
 	return {
-		nextReduction: doubleQuoting,
+		nextReduction: reducers.doubleQuoting,
 		nextState: state.setEscaping(false).appendChar(char)
 	};
 };

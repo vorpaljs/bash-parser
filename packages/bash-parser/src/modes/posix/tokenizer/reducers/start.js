@@ -6,20 +6,12 @@ const tokenOrEmpty = t.tokenOrEmpty;
 const newLine = t.newLine;
 const isPartOfOperator = t.isPartOfOperator;
 
-const end = require('./end');
-const operator = require('./operator');
-const comment = require('./comment');
-const singleQuoting = require('./single-quoting');
-const doubleQuoting = require('./double-quoting');
-const expansionStart = require('./expansion-start');
-const expansionCommandTick = require('./expansion-command-tick');
-
-module.exports = function start(state, source) {
+module.exports = function start(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === undefined) {
 		return {
-			nextReduction: end,
+			nextReduction: reducers.end,
 			tokensToEmit: tokenOrEmpty(state),
 			nextState: state.resetCurrent().saveCurrentLocAsStart()
 		};
@@ -27,20 +19,20 @@ module.exports = function start(state, source) {
 
 	if (state.escaping && char === '\n') {
 		return {
-			nextReduction: start,
+			nextReduction: reducers.start,
 			nextState: state.setEscaping(false).removeLastChar()
 		};
 	}
 
 	if (!state.escaping && char === '#' && state.current === '') {
 		return {
-			nextReduction: comment
+			nextReduction: reducers.comment
 		};
 	}
 
 	if (!state.escaping && char === '\n') {
 		return {
-			nextReduction: start,
+			nextReduction: reducers.start,
 			tokensToEmit: tokenOrEmpty(state).concat(newLine()),
 			nextState: state.resetCurrent().saveCurrentLocAsStart()
 		};
@@ -48,14 +40,14 @@ module.exports = function start(state, source) {
 
 	if (!state.escaping && char === '\\') {
 		return {
-			nextReduction: start,
+			nextReduction: reducers.start,
 			nextState: state.setEscaping(true).appendChar(char)
 		};
 	}
 
 	if (!state.escaping && isPartOfOperator(char)) {
 		return {
-			nextReduction: operator,
+			nextReduction: reducers.operator,
 			tokensToEmit: tokenOrEmpty(state),
 			nextState: state.setCurrent(char).saveCurrentLocAsStart()
 		};
@@ -63,21 +55,21 @@ module.exports = function start(state, source) {
 
 	if (!state.escaping && char === '\'') {
 		return {
-			nextReduction: singleQuoting,
+			nextReduction: reducers.singleQuoting,
 			nextState: state.appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '"') {
 		return {
-			nextReduction: doubleQuoting,
+			nextReduction: reducers.doubleQuoting,
 			nextState: state.appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char.match(/\s/)) {
 		return {
-			nextReduction: start,
+			nextReduction: reducers.start,
 			tokensToEmit: tokenOrEmpty(state),
 			nextState: state.resetCurrent().saveCurrentLocAsStart().setExpansion([])
 		};
@@ -85,20 +77,20 @@ module.exports = function start(state, source) {
 
 	if (!state.escaping && char === '$') {
 		return {
-			nextReduction: expansionStart,
+			nextReduction: reducers.expansionStart,
 			nextState: state.appendChar(char).appendEmptyExpansion()
 		};
 	}
 
 	if (!state.escaping && char === '`') {
 		return {
-			nextReduction: expansionCommandTick,
+			nextReduction: reducers.expansionCommandTick,
 			nextState: state.appendChar(char).appendEmptyExpansion()
 		};
 	}
 
 	return {
-		nextReduction: start,
+		nextReduction: reducers.start,
 		nextState: state.appendChar(char).setEscaping(false)
 	};
 };

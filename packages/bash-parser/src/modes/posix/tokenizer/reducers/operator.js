@@ -6,10 +6,7 @@ const isPartOfOperator = t.isPartOfOperator;
 const operatorTokens = t.operatorTokens;
 const isOperator = t.isOperator;
 
-module.exports = function operator(state, source) {
-	const end = require('./end');
-	const start = require('./start');
-
+module.exports = function operator(state, source, reducers) {
 	const char = source && source.shift();
 
 	// console.log('isOperator ', {state,char})
@@ -17,17 +14,17 @@ module.exports = function operator(state, source) {
 	if (char === undefined) {
 		if (isOperator(state.current)) {
 			return {
-				nextReduction: end,
+				nextReduction: reducers.end,
 				tokensToEmit: operatorTokens(state),
 				nextState: state.resetCurrent().saveCurrentLocAsStart()
 			};
 		}
-		return start(state, char);
+		return reducers.start(state, char);
 	}
 
 	if (isPartOfOperator(state.current + char)) {
 		return {
-			nextReduction: operator,
+			nextReduction: reducers.operator,
 			nextState: state.appendChar(char)
 		};
 	}
@@ -39,7 +36,7 @@ module.exports = function operator(state, source) {
 		state = state.resetCurrent().saveCurrentLocAsStart();
 	}
 
-	const ret = start(state, [char].concat(source));
+	const ret = reducers.start(state, [char].concat(source), reducers);
 	const nextReduction = ret.nextReduction;
 	const tokensToEmit = ret.tokensToEmit;
 	const nextState = ret.nextState;

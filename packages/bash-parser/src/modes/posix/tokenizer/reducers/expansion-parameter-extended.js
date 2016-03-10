@@ -5,7 +5,7 @@ const t = require('../../../../utils/tokens');
 
 const continueToken = t.continueToken;
 
-module.exports = function expansionParameterExtended(state, source) {
+module.exports = function expansionParameterExtended(state, source, reducers) {
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
@@ -31,7 +31,7 @@ module.exports = function expansionParameterExtended(state, source) {
 	}
 
 	return {
-		nextReduction: expansionParameterExtended,
+		nextReduction: reducers.expansionParameterExtended,
 		nextState: state
 			.appendChar(char)
 			.replaceLastExpansion({parameter: (xp.parameter || '') + char})

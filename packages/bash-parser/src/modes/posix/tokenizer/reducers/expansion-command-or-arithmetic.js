@@ -5,15 +5,13 @@ const t = require('../../../../utils/tokens');
 
 const continueToken = t.continueToken;
 
-module.exports = function expansionCommandOrArithmetic(state, source) {
-	const expansionArithmetic = require('./expansion-arithmetic');
-
+module.exports = function expansionCommandOrArithmetic(state, source, reducers) {
 	const char = source && source.shift();
 	const xp = last(state.expansion);
 
 	if (char === '(' && state.current.slice(-2) === '$(') {
 		return {
-			nextReduction: expansionArithmetic,
+			nextReduction: reducers.expansionArithmetic,
 			nextState: state.appendChar(char)
 		};
 	}
@@ -41,7 +39,7 @@ module.exports = function expansionCommandOrArithmetic(state, source) {
 	}
 
 	return {
-		nextReduction: expansionCommandOrArithmetic,
+		nextReduction: reducers.expansionCommandOrArithmetic,
 		nextState: state.appendChar(char).replaceLastExpansion({command: (xp.command || '') + char})
 	};
 };

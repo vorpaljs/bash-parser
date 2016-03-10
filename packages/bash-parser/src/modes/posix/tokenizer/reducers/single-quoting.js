@@ -5,9 +5,7 @@ const t = require('../../../../utils/tokens');
 const tokenOrEmpty = t.tokenOrEmpty;
 const continueToken = t.continueToken;
 
-module.exports = function singleQuoting(state, source) {
-	const start = require('./start');
-
+module.exports = function singleQuoting(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === undefined) {
@@ -20,13 +18,13 @@ module.exports = function singleQuoting(state, source) {
 
 	if (char === '\'') {
 		return {
-			nextReduction: start,
+			nextReduction: reducers.start,
 			nextState: state.appendChar(char)
 		};
 	}
 
 	return {
-		nextReduction: singleQuoting,
+		nextReduction: reducers.singleQuoting,
 		nextState: state.appendChar(char)
 	};
 };

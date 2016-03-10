@@ -4,31 +4,26 @@ function isSpecialParameter(char) {
 	return char.match(/^[0-9\-!@#\?\*\$]$/);
 }
 
-module.exports = function expansionStart(state, source) {
-	const expansionSpecialParameter = require('./expansion-special-parameter');
-	const expansionParameter = require('./expansion-parameter');
-	const expansionCommandOrArithmetic = require('./expansion-command-or-arithmetic');
-	const expansionParameterExtended = require('./expansion-parameter-extended');
-
+module.exports = function expansionStart(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === '{') {
 		return {
-			nextReduction: expansionParameterExtended,
+			nextReduction: reducers.expansionParameterExtended,
 			nextState: state.appendChar(char)
 		};
 	}
 
 	if (char === '(') {
 		return {
-			nextReduction: expansionCommandOrArithmetic,
+			nextReduction: reducers.expansionCommandOrArithmetic,
 			nextState: state.appendChar(char)
 		};
 	}
 
 	if (char.match(/[a-zA-Z_]/)) {
 		return {
-			nextReduction: expansionParameter,
+			nextReduction: reducers.expansionParameter,
 			nextState: state.appendChar(char).replaceLastExpansion({
 				parameter: char,
 				type: 'parameter_expansion'
@@ -37,7 +32,7 @@ module.exports = function expansionStart(state, source) {
 	}
 
 	if (isSpecialParameter(char)) {
-		return expansionSpecialParameter(state, [char].concat(source));
+		return reducers.expansionSpecialParameter(state, [char].concat(source));
 	}
 
 	return state.previousReducer(state, [char].concat(source));

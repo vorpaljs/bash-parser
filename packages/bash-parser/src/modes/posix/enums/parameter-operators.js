@@ -59,6 +59,34 @@ const parameterOps = {
 		expand: ['word']
 	},
 
+	[`^(${name})\\%\\%(.*)$`]: {
+		op: 'removeLargestSuffixPattern',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
+	[`^(${name})\\#\\#(.*)$`]: {
+		op: 'removeLargestPrefixPattern',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
+	[`^(${name})\\%(.*)$`]: {
+		op: 'removeSmallestSuffixPattern',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
+	[`^(${name})\\#(.*)$`]: {
+		op: 'removeSmallestPrefixPattern',
+		parameter: m => m[1],
+		word: m => m[2],
+		expand: ['word']
+	},
+
 	[`^\\#(${name})$`]: {
 		op: 'stringLength',
 		parameter: m => m[1]

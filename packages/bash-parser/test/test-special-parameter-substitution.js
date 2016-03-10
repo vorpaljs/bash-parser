@@ -223,3 +223,122 @@ test('parameter with use alternative value if unset', t => {
 	});
 });
 
+test('parameter with Remove Smallest Suffix Pattern', t => {
+	const result = bashParser('${other%default$value}');
+	// utils.logResults(result)
+	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
+		type: 'Word',
+		text: '${other%default$value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default$value',
+				expansion: [{
+					type: 'ParameterExpansion',
+					parameter: 'value',
+					loc: {
+						start: 7,
+						end: 12
+					}
+				}],
+				type: 'Word'
+			},
+			op: 'removeSmallestSuffixPattern',
+			loc: {
+				start: 0,
+				end: 21
+			}
+		}]
+	});
+});
+
+test('parameter with Remove Smallest Prefix Pattern', t => {
+	const result = bashParser('${other#default$value}');
+	// utils.logResults(result)
+	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
+		type: 'Word',
+		text: '${other#default$value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default$value',
+				expansion: [{
+					type: 'ParameterExpansion',
+					parameter: 'value',
+					loc: {
+						start: 7,
+						end: 12
+					}
+				}],
+				type: 'Word'
+			},
+			op: 'removeSmallestPrefixPattern',
+			loc: {
+				start: 0,
+				end: 21
+			}
+		}]
+	});
+});
+
+test('parameter with Remove Largest Suffix Pattern', t => {
+	const result = bashParser('${other%%default$value}');
+	// utils.logResults(result)
+	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
+		type: 'Word',
+		text: '${other%%default$value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default$value',
+				expansion: [{
+					type: 'ParameterExpansion',
+					parameter: 'value',
+					loc: {
+						start: 7,
+						end: 12
+					}
+				}],
+				type: 'Word'
+			},
+			op: 'removeLargestSuffixPattern',
+			loc: {
+				start: 0,
+				end: 22
+			}
+		}]
+	});
+});
+
+test('parameter with Remove Largest Prefix Pattern', t => {
+	const result = bashParser('${other##default$value}');
+	// utils.logResults(result)
+	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
+		type: 'Word',
+		text: '${other##default$value}',
+		expansion: [{
+			type: 'ParameterExpansion',
+			parameter: 'other',
+			word: {
+				text: 'default$value',
+				expansion: [{
+					type: 'ParameterExpansion',
+					parameter: 'value',
+					loc: {
+						start: 7,
+						end: 12
+					}
+				}],
+				type: 'Word'
+			},
+			op: 'removeLargestPrefixPattern',
+			loc: {
+				start: 0,
+				end: 22
+			}
+		}]
+	});
+});

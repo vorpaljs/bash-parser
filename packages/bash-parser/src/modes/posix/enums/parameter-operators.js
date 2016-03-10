@@ -6,22 +6,26 @@ const parameterOps = {
 	[`^(${name}):\\-(.*)$`]: {
 		op: 'useDefaultValue',
 		parameter: m => m[1],
-		word: {text: m => m[2], expand: true}
+		word: m => m[2],
+		expand: ['word']
 	},
 	[`^(${name}):\\=(.*)$`]: {
 		op: 'assignDefaultValue',
 		parameter: m => m[1],
-		word: {text: m => m[2], expand: true}
+		word: m => m[2],
+		expand: ['word']
 	},
 	[`^(${name}):\\?(.*)$`]: {
 		op: 'indicateErrorIfNull',
 		parameter: m => m[1],
-		word: {text: m => m[2], expand: true}
+		word: m => m[2],
+		expand: ['word']
 	},
 	[`^(${name}):\\+(.*)$`]: {
 		op: 'useAlternativeValue',
 		parameter: m => m[1],
-		word: {text: m => m[2], expand: true}
+		word: m => m[2],
+		expand: ['word']
 	},
 	[`^([1-9][0-9]*)$`]: {
 		kind: 'positional',

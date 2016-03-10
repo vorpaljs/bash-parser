@@ -15,7 +15,8 @@ test('parameter with use default value', t => {
 			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
-				text: 'default_value'
+				text: 'default_value',
+				type: 'Word'
 			},
 			op: 'useDefaultValue',
 			loc: {
@@ -35,7 +36,8 @@ test('parameter with assign default value', t => {
 			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
-				text: 'default_value'
+				text: 'default_value',
+				type: 'Word'
 			},
 			op: 'assignDefaultValue',
 			loc: {
@@ -46,10 +48,9 @@ test('parameter with assign default value', t => {
 	});
 });
 
-/* TODO: restore parsing of arguments
-test.only('parameter with other parameter in word', t => {
+test('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
-	utils.logResults(result)
+	// utils.logResults(result)
 	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
 		type: 'Word',
 		text: '${other:=default$value}',
@@ -61,9 +62,12 @@ test.only('parameter with other parameter in word', t => {
 				expansion: [{
 					type: 'ParameterExpansion',
 					parameter: 'value',
-					start: 7,
-					end: 13
-				}]
+					loc: {
+						start: 7,
+						end: 12
+					}
+				}],
+				type: 'Word'
 			},
 			op: 'assignDefaultValue',
 			loc: {
@@ -73,7 +77,6 @@ test.only('parameter with other parameter in word', t => {
 		}]
 	});
 });
-*/
 
 test('parameter with indicate error if null', t => {
 	const result = bashParser('${other:?default_value}');
@@ -84,7 +87,8 @@ test('parameter with indicate error if null', t => {
 			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
-				text: 'default_value'
+				text: 'default_value',
+				type: 'Word'
 			},
 			op: 'indicateErrorIfNull',
 			loc: {
@@ -104,7 +108,8 @@ test('parameter with use alternative value', t => {
 			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
-				text: 'default_value'
+				text: 'default_value',
+				type: 'Word'
 			},
 			op: 'useAlternativeValue',
 			loc: {

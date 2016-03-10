@@ -12,14 +12,22 @@ const handleParameter = (obj, match) => {
 			return [k, v(match)];
 		}
 
-		if (typeof v === 'object') {
+		if (typeof v === 'object' && k !== 'expand') {
 			return [k, handleParameter(v, match)];
 		}
 
 		return [k, v];
 	});
 
-	delete ret.expand;
+	if (ret.expand) {
+		const bashParser = require('../../../index');
+
+		for (const prop of ret.expand) {
+			const ast = bashParser(ret[prop], {mode: 'word-expansion'});
+			ret[prop] = ast.commands[0].name;
+		}
+		delete ret.expand;
+	}
 
 	return ret;
 };
@@ -34,16 +42,6 @@ function expandParameter(xp, enums) {
 
 		if (match) {
 			const opProps = handleParameter(pair[1], match);
-
-			/*
-			// recursive expansion of operator argument
-			word = expandWord({value: parameter.slice(pos + 2), WORD: parameter.slice(pos + 2)}, utils);
-			word = Object.assign({}, word);
-			word.text = word.WORD;
-			delete word._;
-			delete word.WORD;
-			delete word.value;
-			delete word.undefined;*/
 
 			return Object.assign(
 				xp,

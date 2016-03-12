@@ -45,7 +45,7 @@ test.skip('shellcheck fixtures', function (t) {
 				parse(source);
 			}, error.message ? new RegExp(error.message) : undefined, fixtureDir + ' errored');
 		} else if (ast) {
-			t.deepEqual(parse(source), ast, dir);
+			t.deepEqual(parse(source), ast, fixtureDir);
 		} else {
 			try {
 				parse(source);

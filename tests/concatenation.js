@@ -3,9 +3,11 @@ var parse = require('../parser');
 
 test('concatenation', function (t) {
 	var arg = parse('"two "\' strings\'', 'argument');
-	t.deepEqual(arg,
-							{type: 'literal', value: 'two	strings'},
-							'concatenated literals are flattened');
+	t.deepEqual(
+		arg,
+		{type: 'literal', value: 'two  strings'},
+		'concatenated literals are flattened'
+	);
 
 	arg = parse('$var"and a string"', 'argument');
 	t.deepEqual(arg, {

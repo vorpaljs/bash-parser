@@ -9,7 +9,7 @@
     "parsimmon": "^0.7.0"
   },
   "scripts": {
-    "test": "xo --ignore parser.js && tape tests/*.js",
+    "test": "tape tests/*.js && xo --ignore parser.js",
     "watch": "npm run prepublish && node build.js -w",
     "prepublish": "node build.js > parser.js"
   },

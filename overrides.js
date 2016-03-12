@@ -34,7 +34,9 @@ exports.initializer = [
 		return arr[1];
 	},
 	function flattenConcatenation(pieces) {
+		/* eslint-disable no-warning-comments */
 		// TODO - this also sucks, it's probably on the order of n^4
+		/* eslint-enable no-warning-comments */
 		var result = [pieces[0]];
 		var len = pieces.length;
 		var prev = pieces[0];
@@ -85,7 +87,7 @@ rules.statementList = function (first, tail, last, head, map) {
 
 	if (last) {
 		if (!prev) {
-			debugger;
+			debugger;		// eslint-disable-line no-debugger
 		}
 		setOperator(last, prev);
 	}
@@ -228,7 +230,9 @@ rules.environmentVariable = function (name) {
 rules.variableSubstitution = function (join, expr) {
 	return {
 		type: 'variableSubstitution',
+		/* eslint-disable no-warning-comments */
 		expression: join(expr) // TODO subParser
+		/* eslint-enable no-warning-comments */
 	};
 };
 

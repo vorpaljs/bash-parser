@@ -9,7 +9,7 @@
     "parsimmon": "^0.7.0"
   },
   "scripts": {
-    "test": "tape tests/*.js",
+    "test": "xo && tape tests/*.js",
     "watch": "npm run prepublish && node build.js -w",
     "prepublish": "node build.js > parser.js"
   },
@@ -35,10 +35,11 @@
     }
   },
   "devDependencies": {
+    "markdown-code-blocks": "0.0.1",
     "pegjs": "~0.9.0",
     "pegjs-override-action": "0.2.3",
     "tape": "^4.5.1",
-    "markdown-code-blocks": "0.0.1",
+    "xo": "^0.13.0",
     "xtend": "~2.1.1"
   },
   "repository": {

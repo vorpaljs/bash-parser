@@ -55,12 +55,12 @@ function watch() {
  * This isn't called directly, but stringified into the resulting source
  */
 function parse(input, opts) {
-// Wrap parser.parse to allow specifying the start rule
-// as a shorthand option
+	// Wrap parser.parse to allow specifying the start rule
+	// as a shorthand option
 	if (!opts) {
 		opts = {};
 	} else if (typeof opts === 'string') {
 		opts = {startRule: opts};
 	}
-	return parser.parse(input, opts);
+	return parser.parse(input, opts);		// eslint-disable-line no-undef
 }

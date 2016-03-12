@@ -1,14 +1,14 @@
 #!/usr/bin/env shjs
-require('shelljs/global')
+require('shelljs/global');
 
-set('-e')
+set('-e');
 
-var path = require('path')
+var path = require('path');
 
-cd(path.join(__dirname, '..'))
+cd(path.join(__dirname, '..'));
 
-exec('npm i kebab-case')
-var kebabCase = require('kebab-case')
+exec('npm i kebab-case');
+var kebabCase = require('kebab-case');
 
 if (exec('git --git-dir ../shellcheck/.git rev-parse 2>/dev/null').code !== 0) {
   pushd('..')

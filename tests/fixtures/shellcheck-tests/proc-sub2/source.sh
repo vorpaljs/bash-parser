@@ -1,1 +1,1 @@
-cat <(  if true; then true; fi )
+cat <(	if true; then true; fi )

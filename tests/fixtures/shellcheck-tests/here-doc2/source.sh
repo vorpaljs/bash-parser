@@ -1,3 +1,3 @@
 <<- EOF
-  cow
-  EOF
+	cow
+	EOF

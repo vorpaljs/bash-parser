@@ -77,7 +77,7 @@ builtinCommandName
  = '[[' / '['
 
 argument "command argument"
- = commandName
+ = concatenation
  / processSubstitution
 
 concatenation "concatenation of strings and/or variables"
@@ -88,7 +88,11 @@ concatenation "concatenation of strings and/or variables"
           / commandSubstitution
           / singleQuote
           / doubleQuote
+          / equal
           )+
+
+equal "equal"
+ = !'#' '='
 
 bareword "bareword"
  = !'#' cs:barewordChar+

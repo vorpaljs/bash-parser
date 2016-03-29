@@ -11,6 +11,17 @@ function setCommandExpansion(args) {
 	let word;
 	let op;
 
+	// skip command expansion if there
+	// is already an arithmetic expansion defined
+	// on same position
+	if (token.expansion) {
+		for (const exp of token.expansion) {
+			if (exp.start <= start && exp.end >= end && exp.kind === 'arithmetic') {
+				return;
+			}
+		}
+	}
+
 	if (expandingCommand === '`') {
 		command = command.replace(/\\`/g, '`');
 	}

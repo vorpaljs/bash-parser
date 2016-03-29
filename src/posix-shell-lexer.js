@@ -5,6 +5,7 @@ const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
 const parameterExpansion = require('./parameter-expansion');
 const commandExpansion = require('./command-expansion');
+const arithmeticExpansion = require('./arithmetic-expansion');
 // const logger = require('./logger-iterator');
 
 module.exports = options => ({
@@ -44,8 +45,9 @@ module.exports = options => ({
 			rules.forNameVariable,
 			// logger('after'),
 			commandExpansion,
-			parameterExpansion,
 			// logger('before'),
+			arithmeticExpansion,
+			parameterExpansion,
 			rules.reservedWords,
 
 			rules.assignmentWord,

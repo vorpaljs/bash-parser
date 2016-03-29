@@ -10,7 +10,8 @@ const QUOTING = {
 	DOUBLE: {},
 	PARAMETER: {},
 	BACKTICK_COMMAND: {},
-	COMMAND: {}
+	COMMAND: {},
+	ARITHMETIC: {}
 };
 
 const QUOTING_DELIM = {
@@ -19,7 +20,8 @@ const QUOTING_DELIM = {
 	'"': QUOTING.DOUBLE,
 	'`': QUOTING.BACKTICK_COMMAND,
 	'${': QUOTING.PARAMETER,
-	'$(': QUOTING.COMMAND
+	'$(': QUOTING.COMMAND,
+	'$((': QUOTING.ARITHMETIC
 };
 
 const isOperatorStart = (ch, lastCh) => lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
@@ -64,7 +66,11 @@ const mkToken = (tk, lineNumber, columnNumber) => ({
 	loc: mkLoc(lineNumber, columnNumber)
 });
 
-const isQuotingCharacter = (ch, lastCh) => hasOwnProperty(QUOTING_DELIM, ch) || hasOwnProperty(QUOTING_DELIM, lastCh + ch);
+const quotingCharacter = (ch, lastCh, penultCh) =>
+	QUOTING_DELIM[ch] ||
+	QUOTING_DELIM[lastCh + ch] ||
+	QUOTING_DELIM[penultCh + lastCh + ch];
+
 /*
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
@@ -77,6 +83,7 @@ module.exports = function * tokenDelimiter(source) {
 	let quoting = QUOTING.NO;
 	let prevQuoting = null;
 	let lastCharacter = null;
+	let penultCharacter = null;
 
 	let lineNumber = 0;
 	let columnNumber = 0;
@@ -93,13 +100,6 @@ module.exports = function * tokenDelimiter(source) {
 		} else {
 			columnNumber++;
 		}
-		/* console.log({
-			currentCharacter,
-			prevLineNumber,
-			prevColumnNumber,
-			lineNumber,
-			columnNumber
-		})*/
 	}
 
 	for (const currentCharacter of source) {
@@ -137,9 +137,9 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		if (isQuotingCharacter(currentCharacter, lastCharacter) &&
+		if (quotingCharacter(currentCharacter, lastCharacter, penultCharacter) &&
 			quoting === QUOTING.NO) {
-			quoting = QUOTING_DELIM[currentCharacter];
+			quoting = quotingCharacter(currentCharacter, lastCharacter, penultCharacter);
 
 			// TODO: test this, why a quoting character should e appended
 			// to TOKEN?
@@ -259,6 +259,7 @@ module.exports = function * tokenDelimiter(source) {
 		// TODO
 		// RULE 11 - The current character is used as the start of a new word.
 		token = mkToken(currentCharacter, lineNumber, columnNumber);
+		penultCharacter = lastCharacter;
 		lastCharacter = currentCharacter;
 
 		advanceLoc(currentCharacter);

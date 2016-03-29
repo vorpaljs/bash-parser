@@ -337,6 +337,16 @@ module.exports = options => {
 	builder.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);
 	builder.filename = name => name;
 
+	/*
+	for (const methodName of Object.keys(builder)) {
+		const method = builder[methodName];
+		builder[methodName] = (...args) => {
+			console.log(methodName);
+			method(...args);
+		};
+	}
+	*/
+
 	return builder;
 };
 

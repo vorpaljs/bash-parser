@@ -6,9 +6,20 @@ function setArithmeticExpansion(args) {
 	const expression = args.expression;
 	const start = args.start;
 	const end = args.end;
+	let AST;
 
-	const AST = babylon.parse(expression);
+	try {
+		AST = babylon.parse(expression);
+	} catch (err) {
+		throw new SyntaxError(`Cannot parse arithmetic expression "${expression}": ${err.message}`);
+	}
+
 	const arithmeticAST = AST.program.body[0].expression;
+
+	if (arithmeticAST === undefined) {
+		throw new SyntaxError(`Cannot parse arithmetic expression "${expression}": Not an expression`);
+	}
+
 	token.expansion = (token.expansion || []).concat({
 		kind: 'arithmetic',
 		expression,

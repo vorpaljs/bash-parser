@@ -33,6 +33,18 @@ test('arithmetic substitution in suffix', t => {
 	});
 });
 
+test('arithmetic substitution node applied to invalid expressions throws', async t => {
+	const result = await t.throws(() => bashParser('echo $((a b c d))'));
+	const message = result.message.split('\n')[0];
+	t.is(message, 'SyntaxError: Cannot parse arithmetic expression "a b c d": Unexpected token (1:2)');
+});
+
+test('arithmetic substitution node applied to non expressions throws', async t => {
+	const result = await t.throws(() => bashParser('echo $((while(1);))'));
+	const message = result.message.split('\n')[0];
+	t.is(message, 'SyntaxError: Cannot parse arithmetic expression "while(1);": Not an expression');
+});
+
 test('arithmetic ast is parsed', t => {
 	const result = bashParser('variable=$((42 + 43))')
 		.commands[0].prefix.list[0].expansion[0].arithmeticAST;

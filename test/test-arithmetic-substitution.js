@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 
@@ -11,6 +11,25 @@ test('arithmetic substitution', t => {
 	t.deepEqual(result.commands[0].prefix.list[0], {
 		text: 'variable=$((42 + 43))',
 		expansion: [{
+			expression: '42 + 43',
+			kind: 'arithmetic',
+			start: 9,
+			end: 21
+		}]
+	});
+});
+
+test('arithmetic & parameter substitution', t => {
+	const result = bashParser('variable=$((42 + 43)) $ciao');
+	delete result.commands[0].prefix.list[0].expansion[1].arithmeticAST;
+	utils.logResults(result.commands[0].prefix.list[0]);
+	t.deepEqual(result.commands[0].prefix.list[0], {
+		text: 'variable=$((42 + 43)) $ciao',
+		expansion: [{
+			parameter: 'ciao',
+			start: 22,
+			end: 27
+		}, {
 			expression: '42 + 43',
 			kind: 'arithmetic',
 			start: 9,

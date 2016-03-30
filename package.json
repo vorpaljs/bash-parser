@@ -1,0 +1,28 @@
+{
+  "name": "bash-parser",
+  "version": "0.0.0",
+  "description": "Parses bash into an AST",
+  "repository": "vorpaljs/bash-parser",
+  "license": "MIT",
+  "author": "vorpaljs",
+  "scripts": {
+    "test": "eslint . && node test | faucet"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=5"
+  },
+  "eslintConfig": {
+    "extends": ["js", "features"]
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-config-features": "^1.1.5",
+    "eslint-config-js": "^4.0.0",
+    "faucet": "0.0.1",
+    "tape": "^4.2.2"
+  },
+  "files": [
+    "index.js"
+  ]
+}

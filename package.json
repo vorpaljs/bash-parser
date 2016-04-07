@@ -1,28 +1,28 @@
 {
-  "name": "bash-parser",
+  "name": "bash-tokenizer",
   "version": "0.0.0",
-  "description": "Parses bash into an AST",
-  "repository": "vorpaljs/bash-parser",
+  "description": "Standard compliant bash tokenizer",
+  "repository": "vorpal-js/bash-tokenizer",
   "license": "MIT",
-  "author": "vorpaljs",
+  "author": "vorpal-js",
   "scripts": {
-    "test": "eslint . && node test | faucet"
+    "test": "ava --no-babel && xo --ignore grammar.js",
+    "build": "jison src/grammar.jison > grammar.js"
   },
   "keywords": [],
   "engines": {
     "node": ">=5"
   },
-  "eslintConfig": {
-    "extends": ["js", "features"]
-  },
   "devDependencies": {
-    "eslint": "^1.10.3",
-    "eslint-config-features": "^1.1.5",
-    "eslint-config-js": "^4.0.0",
-    "faucet": "0.0.1",
-    "tape": "^4.2.2"
+    "ava": "^0.13.0",
+    "jison": "^0.4.17",
+    "xo": "^0.13.0"
   },
   "files": [
-    "index.js"
-  ]
+    "src",
+    "./grammar.js"
+  ],
+  "dependencies": {
+    "compose-function": "^3.0.3"
+  }
 }

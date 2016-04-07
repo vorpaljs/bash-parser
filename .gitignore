@@ -55,7 +55,8 @@ npm-debug.log
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -81,5 +82,7 @@ Temporary Items
 .Trash-*
 
 
-old
+.old
+private
+grammar.js
 

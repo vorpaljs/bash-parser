@@ -677,6 +677,33 @@ test('command with stderr redirection to file', t => {
 	});
 });
 
+test('parse function declaration multiple lines', t => {
+	const result = bashParser('foo () \n{\n command bar --lol;\n}');
+	t.same(
+		result, {
+			type: 'list',
+			andOrs: [{
+				type: 'andOr',
+				left: [{
+					type: 'function',
+					name: 'foo',
+					body: {
+						type: 'term',
+						andOrs: [{
+							type: 'andOr',
+							left: [{
+								type: 'simple_command',
+								name: 'command',
+								suffix: {type: 'cmd_suffix', list: ['bar', '--lol']}
+							}]
+						}]
+					}
+				}]
+			}]
+		}
+	);
+});
+
 test('parse function declaration', t => {
 	const result = bashParser('foo	(){ command bar --lol;}');
 	// console.log(inspect(result, {depth:null}))

@@ -2,7 +2,7 @@
 const compose = require('compose-function');
 const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
-// const logger = require('./logger-iterator');
+const logger = require('./logger-iterator');
 
 module.exports = () => ({
 	lex() {
@@ -14,16 +14,16 @@ module.exports = () => ({
 	},
 	setInput(source) {
 		const tokenize = compose(
-			// logger('end'),
+			logger('end'),
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,
 			rules.reservedWords,
 			rules.assignmentWord,
 			rules.separator,
+			logger('after'),
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
-			// logger('after'),
 
 			rules.newLineList,
 			rules.linebreakIn,

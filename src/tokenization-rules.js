@@ -55,10 +55,6 @@ exports.functionName = function * (tokens) {
 	const lastTokens = [];
 	let canBeFunctionName = true;
 	for (const tk of tokens) {
-		// console.log(
-		//	 'functionName:tk',
-		//	 tk
-		// );
 		// apply only on valid positions
 		// (start of simple commands)
 		if (!canBeFunctionName) {
@@ -67,13 +63,12 @@ exports.functionName = function * (tokens) {
 			if (tk.NEWLINE || tk.TOKEN === ';') {
 				canBeFunctionName = true;
 			}
-		} else if (!tk.WORD && !tk.OPEN_PAREN && !tk.CLOSE_PAREN && !tk.Lbrace) {
+		} else if (!tk.WORD && !tk.OPEN_PAREN && !tk.CLOSE_PAREN) {
 			// console.log('!canBeFunctionName')
 			canBeFunctionName = false;
 		} else if (
-			tk.Lbrace &&
-			lastTokens.length >= 3 &&
-			lastTokens[2].CLOSE_PAREN &&
+			tk.CLOSE_PAREN &&
+			lastTokens.length >= 2 &&
 			lastTokens[1].OPEN_PAREN &&
 			lastTokens[0].WORD
 		) {
@@ -146,7 +141,7 @@ tokenize multiple NEWLINEs as a
 newline_list token (it was a rule in POSIX grammar)
 */
 exports.newLineList = function * (tokens) {
-	let lastToken;
+	let lastToken = {EMPTY: true};
 	for (const tk of tokens) {
 		if (tk.NEWLINE) {
 			if (lastToken.NEWLINE_LIST) {
@@ -157,13 +152,13 @@ exports.newLineList = function * (tokens) {
 				delete tk.NEWLINE;
 			}
 		}
-		if (lastToken) {
+		if (!lastToken.EMPTY) {
 			yield lastToken;
 		}
 		lastToken = tk;
 	}
 
-	if (lastToken) {
+	if (!lastToken.EMPTY) {
 		yield lastToken;
 	}
 };

@@ -142,7 +142,7 @@ exports.assignmentWord = function * (tokens) {
 };
 
 /* resolve a conflict in grammar by
-tokenize multiple NEWLINE s as a
+tokenize multiple NEWLINEs as a
 newline_list token (it was a rule in POSIX grammar)
 */
 exports.newLineList = function * (tokens) {
@@ -157,6 +157,30 @@ exports.newLineList = function * (tokens) {
 				delete tk.NEWLINE;
 			}
 		}
+		if (lastToken) {
+			yield lastToken;
+		}
+		lastToken = tk;
+	}
+
+	if (lastToken) {
+		yield lastToken;
+	}
+};
+
+/* resolve a conflict in grammar by
+tokenize linebreak+in tokens as a new  linebreak_in
+*/
+exports.linebreakIn = function * (tokens) {
+	let lastToken;
+
+	for (const tk of tokens) {
+		if (tk.In && lastToken.NEWLINE) {
+			lastToken.LINEBREAK_IN = '\nin';
+			delete lastToken.NEWLINE;
+			continue;
+		}
+
 		if (lastToken) {
 			yield lastToken;
 		}

@@ -7,6 +7,7 @@
 %token  NEWLINE
 %token  IO_NUMBER
 %token  NEWLINE_LIST
+%token  LINEBREAK_IN
 
 /* The following are the operators mentioned above. */
 
@@ -95,13 +96,15 @@ compound_list   : term
 					-> $term
 				 ;
 term             : term separator and_or
-				  -> yy.termAppen($term.concat, $and_or)
+				  -> yy.termAppend($term.concat, $and_or)
 				 |                and_or
 				  -> yy.term($and_or)
 				 ;
 for_clause       : For name linebreak do_group
 				 	-> yy.forClauseDefault($name, $do_group)
-				 | For name linebreak in sequential_sep do_group
+				 | For name LINEBREAK_IN sequential_sep do_group
+				 	-> yy.forClauseDefault($name, $do_group)
+				 | For name In sequential_sep do_group
 				 	-> yy.forClauseDefault($name, $do_group)
 				 | For name in wordlist sequential_sep do_group
 					-> yy.forClause($name, $wordlist, $do_group)

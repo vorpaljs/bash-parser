@@ -33,7 +33,9 @@ module.exports = () => ({
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
 			// logger('after'),
+
 			rules.newLineList,
+			rules.linebreakIn,
 			// logger('before'),
 			tokenDelimiter
 		);

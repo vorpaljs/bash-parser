@@ -521,7 +521,7 @@ test('parse for with default sequence', t => {
 	);
 });
 
-test.skip('parse for with default sequence - on one line', t => {
+test('parse for with default sequence - on one line', t => {
 	const result = bashParser('for x in; do echo $x done');
 	// console.log(inspect(result, {depth:null}))
 	t.same(

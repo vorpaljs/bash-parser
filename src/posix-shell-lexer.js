@@ -19,8 +19,9 @@ module.exports = () => ({
 			rules.ioNumber,
 			rules.forNameVariable,
 			rules.reservedWords,
-			rules.assignmentWord,
 			logger('before'),
+			rules.assignmentWord,
+
 			rules.separator,
 			// logger('after'),
 			rules.operatorTokens,

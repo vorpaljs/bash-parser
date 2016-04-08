@@ -118,7 +118,7 @@ exports.assignmentWord = function * (tokens) {
 		if (!canBeCommandPrefix) {
 			// evaluate if this token could
 			// end a statement.
-			if (tk.NEWLINE || tk.TOKEN === ';' || tk.PIPE) {
+			if (tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE) {
 				canBeCommandPrefix = true;
 			}
 			yield tk;
@@ -127,7 +127,10 @@ exports.assignmentWord = function * (tokens) {
 			// TODO: allow also redirections
 			canBeCommandPrefix = false;
 			yield tk;
-		} else if (tk.TOKEN.indexOf('=') > 0) {
+		} else if (tk.TOKEN.indexOf('=') > 0 && (
+				// quoted token should be skipped
+				!(tk.TOKEN.startsWith('\'') || tk.TOKEN.startsWith('"'))
+			)) {
 			yield {ASSIGNMENT_WORD: tk.TOKEN};
 		} else {
 			canBeCommandPrefix = false;

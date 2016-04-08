@@ -56,6 +56,15 @@ module.exports = function * tokenDelimiter(source) {
 		if (isQuotingCharacter(currentCharacter) &&
 			quoting === QUOTING.NO) {
 			quoting = QUOTING_DELIM[currentCharacter];
+
+			if (currentCharacter !== '\\') {
+				if (token.TOKEN === undefined) {
+					token = mkToken(currentCharacter);
+				} else {
+					token.TOKEN += currentCharacter;
+				}
+			}
+
 			// skip to next character
 			continue;
 		}
@@ -64,6 +73,7 @@ module.exports = function * tokenDelimiter(source) {
 		if (currentCharacter === '\\' &&
 			quoting === QUOTING.DOUBLE) {
 			quoting = QUOTING.ESCAPE;
+
 			prevQuoting = QUOTING.DOUBLE;
 			// skip to next character
 			continue;
@@ -74,13 +84,8 @@ module.exports = function * tokenDelimiter(source) {
 			(quoting === QUOTING.SINGLE || quoting === QUOTING.DOUBLE)) {
 			quoting = QUOTING.NO;
 
-			const currentTk = Object.keys(token)[0];
-
-			// unquoting should happen later, after various expansions
-			token[currentTk] = currentCharacter + token[currentTk] + currentCharacter;
-
 			// skip to next character
-			continue;
+			// continue;
 		}
 
 		// RULE 5 - If the current character is an unquoted '$' or '`', the shell shall

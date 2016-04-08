@@ -101,7 +101,7 @@ test('commands with OR', t => {
 
 test('pipelines', t => {
 	const result = bashParser('run | cry');
-	console.log(inspect(result, {depth: null}));
+	// console.log(inspect(result, {depth: null}));
 	t.same(result, {
 		type: 'list',
 		andOrs: [{

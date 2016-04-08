@@ -115,27 +115,26 @@ exports.assignmentWord = function * (tokens) {
 	for (const tk of tokens) {
 		// apply only on valid positions
 		// (start of simple commands)
-		if (!canBeCommandPrefix) {
-			// evaluate if this token could
-			// end a statement.
-			if (tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE) {
-				canBeCommandPrefix = true;
-			}
+
+		// evaluate if this token could
+		// end a simple command.
+		if (tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE) {
+			canBeCommandPrefix = true;
 			yield tk;
-		} else if (tk.TOKEN === undefined) {
-			// apply only for token
-			// TODO: allow also redirections
-			canBeCommandPrefix = false;
-			yield tk;
-		} else if (tk.TOKEN.indexOf('=') > 0 && (
+			continue;
+		}
+
+		// check if it is an assignment
+		if (canBeCommandPrefix && tk.TOKEN && tk.TOKEN.indexOf('=') > 0 && (
 				// quoted token should be skipped
 				!(tk.TOKEN.startsWith('\'') || tk.TOKEN.startsWith('"'))
 			)) {
 			yield {ASSIGNMENT_WORD: tk.TOKEN};
-		} else {
-			canBeCommandPrefix = false;
-			yield tk;
+			continue;
 		}
+
+		canBeCommandPrefix = false;
+		yield tk;
 	}
 };
 

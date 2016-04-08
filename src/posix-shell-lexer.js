@@ -2,7 +2,7 @@
 const compose = require('compose-function');
 const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
-const logger = require('./logger-iterator');
+// const logger = require('./logger-iterator');
 
 module.exports = () => ({
 	lex() {
@@ -19,7 +19,7 @@ module.exports = () => ({
 			rules.ioNumber,
 			rules.forNameVariable,
 			rules.reservedWords,
-			logger('before'),
+			// logger('before'),
 			rules.assignmentWord,
 
 			rules.separator,

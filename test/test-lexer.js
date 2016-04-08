@@ -91,6 +91,13 @@ test('support &&', t => {
 	);
 });
 
+test('support &', t => {
+	t.same(
+		tokenize('run &'),
+		[{token: 'WORD', value: 'run'}, {token: 'SEPARATOR_OP', value: '&'}]
+	);
+});
+
 test('support ||', t => {
 	t.same(
 		tokenize('run || stop'),
@@ -104,9 +111,9 @@ test('support for', t => {
 		[{token: 'For', value: 'for'}, {token: 'NAME', value: 'x'},
 			{token: 'In', value: 'in'}, {token: 'WORD', value: 'a'},
 			{token: 'WORD', value: 'b'}, {token: 'WORD', value: 'c'},
-			{token: ';', value: ';'}, {token: 'Do', value: 'do'},
+			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Do', value: 'do'},
 			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: '$x'},
-			{token: ';', value: ';'}, {token: 'Done', value: 'done'}]
+			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Done', value: 'done'}]
 	);
 });
 
@@ -115,9 +122,9 @@ test('support for with default sequence', t => {
 		tokenize('for x in; do echo $x; done'),
 		[{token: 'For', value: 'for'}, {token: 'NAME', value: 'x'},
 			{token: 'In', value: 'in'},
-			{token: ';', value: ';'}, {token: 'Do', value: 'do'},
+			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Do', value: 'do'},
 			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: '$x'},
-			{token: ';', value: ';'}, {token: 'Done', value: 'done'}]
+			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Done', value: 'done'}]
 	);
 });
 
@@ -131,9 +138,8 @@ test('support double quotes', t => {
 test('support multiple commands', t => {
 	t.same(
 		tokenize('echo; \nls;'),
-		[{token: 'WORD', value: 'echo'}, {token: ';', value: ';'},
-			{token: 'NEWLINE_LIST', value: '\n'},
-		{token: 'WORD', value: 'ls'}, {token: ';', value: ';'}]
+		[{token: 'WORD', value: 'echo'}, {token: 'SEPARATOR_OP', value: ';\n'},
+		{token: 'WORD', value: 'ls'}, {token: 'SEPARATOR_OP', value: ';'}]
 	);
 });
 
@@ -142,9 +148,9 @@ test('support while', t => {
 		tokenize('while [[ -e foo ]]; do sleep 1; done'),
 		[{token: 'While', value: 'while'}, {token: 'WORD', value: '[['},
 		{token: 'WORD', value: '-e'}, {token: 'WORD', value: 'foo'},
-		{token: 'WORD', value: ']]'}, {token: ';', value: ';'},
+		{token: 'WORD', value: ']]'}, {token: 'SEPARATOR_OP', value: ';'},
 		{token: 'Do', value: 'do'}, {token: 'WORD', value: 'sleep'},
-		{token: 'WORD', value: '1'}, {token: ';', value: ';'},
+		{token: 'WORD', value: '1'}, {token: 'SEPARATOR_OP', value: ';'},
 		{token: 'Done', value: 'done'}]
 	);
 });

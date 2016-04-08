@@ -8,6 +8,8 @@
 %token  IO_NUMBER
 %token  NEWLINE_LIST
 %token  LINEBREAK_IN
+%token  SEPARATOR_OP
+
 
 /* The following are the operators mentioned above. */
 
@@ -49,7 +51,7 @@ complete_command : list separator EOF
 				 | list EOF
 					  { return $list }
 				 ;
-list             : list separator_op linebreak and_or
+list             : list separator and_or
 					  -> yy.listAppend($list, $and_or)
 				 | and_or
 					  -> yy.list($and_or)
@@ -102,12 +104,12 @@ term             : term separator and_or
 				 ;
 for_clause       : For name linebreak do_group
 				 	-> yy.forClauseDefault($name, $do_group)
-				 | For name LINEBREAK_IN sequential_sep do_group
+				 | For name LINEBREAK_IN separator do_group
 				 	-> yy.forClauseDefault($name, $do_group)
-				 | For name In sequential_sep do_group
+				 | For name In separator do_group
 				 	-> yy.forClauseDefault($name, $do_group)
-				 | For name in wordlist sequential_sep do_group
-					-> yy.forClause($name, $wordlist, $do_group)
+				 | For name in wordlist separator do_group
+					-> yy.forClause($name, $wordlist, $do_group)  /* todo: here allow only ';' separator */
 				 ;
 name             : NAME                    /* Apply rule 5 */
 				 ;
@@ -259,10 +261,8 @@ here_end         : WORD                     /* Apply rule 3 */
 linebreak       : NEWLINE_LIST
 				 | /* empty */
 				 ;
-separator_op     : '&'
-				 | ';'
-				 ;
-separator       : separator_op linebreak
+
+separator       : SEPARATOR_OP
 				 | NEWLINE_LIST
 				 ;
 sequential_sep   : ';' linebreak

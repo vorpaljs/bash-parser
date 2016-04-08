@@ -4,7 +4,7 @@ const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
 
 const logger = name => function * (tokens) {
-	console.log('logging ' + name)
+	// console.log('logging ' + name)
 	for (const tk of tokens) {
 		console.log(
 			name,
@@ -30,6 +30,7 @@ module.exports = () => ({
 			rules.forNameVariable,
 			rules.reservedWords,
 			rules.assignmentWord,
+			rules.separator,
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
 			// logger('after'),

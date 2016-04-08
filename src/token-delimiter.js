@@ -73,6 +73,12 @@ module.exports = function * tokenDelimiter(source) {
 		if (quoting === QUOTING_DELIM[currentCharacter] &&
 			(quoting === QUOTING.SINGLE || quoting === QUOTING.DOUBLE)) {
 			quoting = QUOTING.NO;
+
+			const currentTk = Object.keys(token)[0];
+
+			// unquoting should happen later, after various expansions
+			token[currentTk] = currentCharacter + token[currentTk] + currentCharacter;
+
 			// skip to next character
 			continue;
 		}

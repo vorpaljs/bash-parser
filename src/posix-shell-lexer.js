@@ -2,17 +2,7 @@
 const compose = require('compose-function');
 const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
-
-const logger = name => function * (tokens) {
-	// console.log('logging ' + name)
-	for (const tk of tokens) {
-		console.log(
-			name,
-			tk
-		);
-		yield tk;
-	}
-};
+// const logger = require('./logger-iterator');
 
 module.exports = () => ({
 	lex() {

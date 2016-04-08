@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const inspect = require('util').inspect;
+const inspect = require('util').inspect;
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
@@ -62,7 +62,7 @@ test('commands with AND', t => {
 
 test('commands with AND \\n', t => {
 	const result = bashParser('run && \n stop');
-	// console.log(inspect(result, {depth:null}))
+	// console.log(inspect(result, {depth: null}))
 	t.same(result, {
 		type: 'list',
 		andOrs: [{
@@ -492,6 +492,37 @@ test('parse for', t => {
 
 test('parse for with default sequence', t => {
 	const result = bashParser('for x\n do echo $x\n done');
+	// console.log(inspect(result, {depth:null}))
+	t.same(
+		result, {
+			type: 'list',
+			andOrs: [{
+				type: 'andOr',
+				left: [{
+					type: 'for',
+					name: 'x',
+					do: {
+						type: 'term',
+						andOrs: [{
+							type: 'andOr',
+							left: [{
+								type: 'simple_command',
+								name: 'echo',
+								suffix: {
+									type: 'cmd_suffix',
+									list: ['$x']
+								}
+							}]
+						}]
+					}
+				}]
+			}]
+		}
+	);
+});
+
+test.skip('parse for with default sequence - on one line', t => {
+	const result = bashParser('for x in; do echo $x done');
 	// console.log(inspect(result, {depth:null}))
 	t.same(
 		result, {

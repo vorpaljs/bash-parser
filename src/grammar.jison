@@ -6,6 +6,7 @@
 %token  NAME
 %token  NEWLINE
 %token  IO_NUMBER
+%token  NEWLINE_LIST
 
 /* The following are the operators mentioned above. */
 
@@ -86,11 +87,11 @@ subshell         : OPEN_PAREN compound_list CLOSE_PAREN
 				 ;
 compound_list   : term
 					-> $term
-				 | newline_list term
+				 | NEWLINE_LIST term
 					-> $term
 				 | term separator
 					-> $term
-				 | newline_list term separator
+				 | NEWLINE_LIST term separator
 					-> $term
 				 ;
 term             : term separator and_or
@@ -252,18 +253,15 @@ io_here         : DLESS    here_end
 				 ;
 here_end         : WORD                     /* Apply rule 3 */
 				 ;
-newline_list     :              NEWLINE
-				 | newline_list NEWLINE
-				 ;
-linebreak       : newline_list
+linebreak       : NEWLINE_LIST
 				 | /* empty */
 				 ;
 separator_op     : '&'
 				 | ';'
 				 ;
 separator       : separator_op linebreak
-				 | newline_list
+				 | NEWLINE_LIST
 				 ;
 sequential_sep   : ';' linebreak
-				 | newline_list
+				 | NEWLINE_LIST
 				 ;

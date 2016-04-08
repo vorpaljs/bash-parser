@@ -10,6 +10,6 @@ module.exports = function parse(sourceCode) {
 	try {
 		return parser.parse(sourceCode);
 	} catch (err) {
-		throw new Error(err.message);
+		throw new Error(err.stack);
 	}
 };

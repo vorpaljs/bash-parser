@@ -3,6 +3,17 @@ const compose = require('compose-function');
 const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
 
+const logger = name => function * (tokens) {
+	console.log('logging ' + name)
+	for (const tk of tokens) {
+		console.log(
+			name,
+			tk
+		);
+		yield tk;
+	}
+};
+
 module.exports = () => ({
 	lex() {
 		const item = this.tokenizer.next();
@@ -13,15 +24,7 @@ module.exports = () => ({
 	},
 	setInput(source) {
 		const tokenize = compose(
-			function * (tokens) {
-				for (const tk of tokens) {
-					/* console.log(
-						'final:tk',
-						tk
-					);*/
-					yield tk;
-				}
-			},
+			// logger('end'),
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,
@@ -29,6 +32,9 @@ module.exports = () => ({
 			rules.assignmentWord,
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
+			// logger('after'),
+			rules.newLineList,
+			// logger('before'),
 			tokenDelimiter
 		);
 		this.tokenizer = tokenize(source);

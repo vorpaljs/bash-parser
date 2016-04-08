@@ -140,3 +140,31 @@ exports.assignmentWord = function * (tokens) {
 		}
 	}
 };
+
+/* resolve a conflict in grammar by
+tokenize multiple NEWLINE s as a
+newline_list token (it was a rule in POSIX grammar)
+*/
+exports.newLineList = function * (tokens) {
+	let lastToken;
+	for (const tk of tokens) {
+		if (tk.NEWLINE) {
+			if (lastToken.NEWLINE_LIST) {
+				lastToken.NEWLINE_LIST += '\n';
+				continue;
+			} else {
+				tk.NEWLINE_LIST = '\n';
+				delete tk.NEWLINE;
+			}
+		}
+		if (lastToken) {
+			yield lastToken;
+		}
+		lastToken = tk;
+	}
+
+	if (lastToken) {
+		yield lastToken;
+	}
+};
+

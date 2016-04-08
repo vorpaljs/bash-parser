@@ -50,7 +50,7 @@ test('parse two operators on two lines', t => {
 	t.same(
 		tokenize('<<\n>>'),
 		[{token: 'DLESS', value: '<<'},
-		{token: 'NEWLINE', value: '\n'},
+		{token: 'NEWLINE_LIST', value: '\n'},
 		{token: 'DGREAT', value: '>>'}]
 	);
 });
@@ -110,6 +110,17 @@ test('support for', t => {
 	);
 });
 
+test('support for with default sequence', t => {
+	t.same(
+		tokenize('for x in; do echo $x; done'),
+		[{token: 'For', value: 'for'}, {token: 'NAME', value: 'x'},
+			{token: 'In', value: 'in'},
+			{token: ';', value: ';'}, {token: 'Do', value: 'do'},
+			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: '$x'},
+			{token: ';', value: ';'}, {token: 'Done', value: 'done'}]
+	);
+});
+
 test('support double quotes', t => {
 	t.same(
 		tokenize('echo "CIAO 42"'),
@@ -121,7 +132,7 @@ test('support multiple commands', t => {
 	t.same(
 		tokenize('echo; \nls;'),
 		[{token: 'WORD', value: 'echo'}, {token: ';', value: ';'},
-			{token: 'NEWLINE', value: '\n'},
+			{token: 'NEWLINE_LIST', value: '\n'},
 		{token: 'WORD', value: 'ls'}, {token: ';', value: ';'}]
 	);
 });

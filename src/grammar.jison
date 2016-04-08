@@ -40,10 +40,16 @@
 %token  In
 /*      'in'   */
 %token  EOF
+
+
+
 /* -------------------------------------------------------
    The Grammar
    ------------------------------------------------------- */
 %ebnf
+
+
+
 %start  complete_command
 %%
 complete_command : list separator EOF
@@ -92,14 +98,15 @@ compound_list   : term
 					-> $term
 				 | NEWLINE_LIST term
 					-> $term
+
 				 | term separator
 					-> $term
 				 | NEWLINE_LIST term separator
 					-> $term
 				 ;
 term             : term separator and_or
-				  -> yy.termAppend($term.concat, $and_or)
-				 |                and_or
+				  -> yy.termAppend($term, $and_or)
+				 | and_or
 				  -> yy.term($and_or)
 				 ;
 for_clause       : For name linebreak do_group
@@ -263,8 +270,5 @@ linebreak       : NEWLINE_LIST
 				 ;
 
 separator       : SEPARATOR_OP
-				 | NEWLINE_LIST
-				 ;
-sequential_sep   : ';' linebreak
 				 | NEWLINE_LIST
 				 ;

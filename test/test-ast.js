@@ -145,7 +145,7 @@ test('quotes within double quotes', t => {
 				name: 'echo',
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['TEST1 \'TEST2']
+					list: ['"TEST1 \'TEST2"']
 				}
 			}]
 		}]
@@ -163,7 +163,7 @@ test('escaped double quotes within double quotes', t => {
 				name: 'echo',
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['TEST1 "TEST2']
+					list: ['"TEST1 "TEST2"']
 				}
 			}]
 		}]
@@ -182,7 +182,7 @@ test('double quotes within single quotes', t => {
 				name: 'echo',
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['TEST1 "TEST2']
+					list: ['\'TEST1 "TEST2\'']
 				}
 			}]
 		}]

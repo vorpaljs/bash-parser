@@ -123,7 +123,7 @@ test('support quoting with single', t => {
 	t.same(
 		tokenize('echo \'< world >\' other'), [
 			{TOKEN: 'echo'},
-			{TOKEN: '< world >'},
+			{TOKEN: '\'< world >\''},
 			{TOKEN: 'other'},
 			{EOF: true}
 		]
@@ -134,7 +134,7 @@ test('support quoting with double', t => {
 	t.same(
 		tokenize('echo "< world >" other'), [
 			{TOKEN: 'echo'},
-			{TOKEN: '< world >'},
+			{TOKEN: '"< world >"'},
 			{TOKEN: 'other'},
 			{EOF: true}
 		]
@@ -146,7 +146,7 @@ test('escaped double quotes within double quotes', t => {
 	t.same(
 		result, [
 			{TOKEN: 'echo'},
-			{TOKEN: 'TEST1 "TEST2'},
+			{TOKEN: '"TEST1 "TEST2"'},
 			{TOKEN: 'ucci'},
 			{TOKEN: 'ucci'},
 			{EOF: true}

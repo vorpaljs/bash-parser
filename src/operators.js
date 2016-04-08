@@ -1,8 +1,8 @@
 'use strict';
 const operators = {
 	/*
-	'&': 'AND',
-	'|': 'PIPE',*/
+	'&': 'AND',*/
+	'|': 'PIPE',
 	'(': 'OPEN_PAREN',
 	')': 'CLOSE_PAREN',
 	'>': 'GREAT',

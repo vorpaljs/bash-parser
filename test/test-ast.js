@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const inspect = require('util').inspect;
+const inspect = require('util').inspect;
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
@@ -95,6 +95,22 @@ test('commands with OR', t => {
 				type: 'andOr',
 				left: [{type: 'simple_command', name: 'cry'}]
 			}
+		}]
+	});
+});
+
+test('pipelines', t => {
+	const result = bashParser('run | cry');
+	console.log(inspect(result, {depth: null}));
+	t.same(result, {
+		type: 'list',
+		andOrs: [{
+			type: 'andOr',
+			left: [{
+				type: 'simple_command', name: 'run'
+			}, {
+				type: 'simple_command', name: 'cry'
+			}]
 		}]
 	});
 });

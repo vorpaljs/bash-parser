@@ -23,6 +23,9 @@
 %token  CLOBBER
 /*      '>|'   */
 
+%token  PIPE
+/*      '|'   */
+
 /* The following are the reserved words. */
 
 %token  If    Then    Else    Elif    Fi    Do    Done
@@ -75,7 +78,7 @@ pipeline         : pipe_sequence
 				 ;
 pipe_sequence   : command
 					  -> yy.pipeSequence($command)
-				 | pipe_sequence '|' linebreak command
+				 | pipe_sequence PIPE linebreak command
 					  -> yy.pipeSequenceAppend($pipe_sequence, $command)
 				 ;
 command         : simple_command
@@ -161,7 +164,7 @@ case_item        : pattern CLOSE_PAREN linebreak DSEMI linebreak
 				 ;
 pattern         : WORD        /* Apply rule 4 */
 					->	[$1]
-				 | pattern '|' WORD        /* Do not apply rule 4 */
+				 | pattern PIPE WORD        /* Do not apply rule 4 */
 				 	-> $pattern.concat($3)
 				 ;
 if_clause       : If compound_list Then compound_list else_part Fi

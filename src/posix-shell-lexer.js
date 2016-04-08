@@ -21,7 +21,7 @@ module.exports = () => ({
 			rules.reservedWords,
 			rules.assignmentWord,
 			rules.separator,
-			logger('after'),
+			// logger('after'),
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
 

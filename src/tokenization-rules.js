@@ -118,7 +118,7 @@ exports.assignmentWord = function * (tokens) {
 		if (!canBeCommandPrefix) {
 			// evaluate if this token could
 			// end a statement.
-			if (tk.NEWLINE || tk.TOKEN === ';') {
+			if (tk.NEWLINE || tk.TOKEN === ';' || tk.PIPE) {
 				canBeCommandPrefix = true;
 			}
 			yield tk;

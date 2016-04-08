@@ -14,12 +14,13 @@ module.exports = () => ({
 	},
 	setInput(source) {
 		const tokenize = compose(
-			logger('end'),
+			// logger('end'),
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,
 			rules.reservedWords,
 			rules.assignmentWord,
+			logger('before'),
 			rules.separator,
 			// logger('after'),
 			rules.operatorTokens,

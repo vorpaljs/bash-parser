@@ -20,7 +20,11 @@ exports.reservedWords = function * (tokens) {
 		if (words.hasOwnProperty(tk.TOKEN)) {
 			yield {[words[tk.TOKEN]]: tk.TOKEN};
 		} else if (defined(tk.TOKEN)) {
-			yield {WORD: tk.TOKEN};
+			const word = {WORD: tk.TOKEN};
+			if (tk.expansion) {
+				word.expansion = tk.expansion;
+			}
+			yield word;
 		} else {
 			yield tk;
 		}

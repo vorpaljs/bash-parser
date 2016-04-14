@@ -10,6 +10,11 @@ module.exports = () => ({
 		const tk = item.value;
 		const tkType = Object.keys(tk)[0];
 		this.yytext = tk[tkType];
+		if (tk.expansion) {
+			this.expansion = tk.expansion;
+		} else {
+			delete this.expansion;
+		}
 		return tkType;
 	},
 	setInput(source) {

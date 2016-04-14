@@ -8,11 +8,33 @@ function tokenize(text) {
 	let token = lexer.lex();
 	while (token !== 'EOF') {
 		const value = lexer.yytext;
-		results.push({token, value});
+		const expansion = lexer.expansion;
+		if (expansion) {
+			results.push({token, value, expansion});
+		} else {
+			results.push({token, value});
+		}
 		token = lexer.lex();
 	}
 	return results;
 }
+
+test('parses parameter substitution', t => {
+	const result = tokenize('echo word${other}test');
+	t.same(result,
+		[{token: 'WORD', value: 'echo'},
+		{
+			token: 'WORD',
+			value: 'word${other}test',
+			expansion: {text: 'other', start: 4, end: 12}
+		}]
+	);
+
+	t.is(result[1].value.slice(
+		result[1].expansion.start,
+		result[1].expansion.end
+	), '${other}');
+});
 
 test('parse single operator', t => {
 	t.same(

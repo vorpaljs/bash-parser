@@ -1,16 +1,27 @@
 'use strict';
+
 const operators = require('./operators');
+
 const QUOTING = {
 	NO: {},
 	ESCAPE: {},
 	SINGLE: {},
 	DOUBLE: {}
 };
+
 const QUOTING_DELIM = {
 	'\\': QUOTING.ESCAPE,
 	'\'': QUOTING.SINGLE,
 	'"': QUOTING.DOUBLE
 };
+
+const EXPANDING = {
+	NO: {},
+	PARAMETER: {},
+	COMMAND: {},
+	ARITHMETIC: {}
+};
+
 const isOperatorStart = ch => '()|&!;<>'.indexOf(ch) !== -1;
 const isOperator = op => operators.hasOwnProperty(op);
 const empty = () => ({EMPTY: true});
@@ -27,6 +38,9 @@ module.exports = function * tokenDelimiter(source) {
 	let token = empty();
 	let quoting = QUOTING.NO;
 	let prevQuoting = null;
+	let expanding = EXPANDING.NO;
+	let expansion = null;
+	let startOfExpansion = 0;
 
 	for (const currentCharacter of source) {
 		if (token.OPERATOR) {
@@ -93,7 +107,35 @@ module.exports = function * tokenDelimiter(source) {
 		// command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 		// Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 		// or '`', and "$((", respectively.
-		// TODO
+		if (quoting !== QUOTING.ESCAPE &&
+				currentCharacter === '$' &&
+				expanding === EXPANDING.NO &&
+				expansion === null) {
+			// start of expansion candidate
+			expansion = '$';
+			startOfExpansion = token.EMPTY || !token.TOKEN ? 0 : token.TOKEN.length;
+		} else if (quoting !== QUOTING.ESCAPE &&
+			expansion === '$' &&
+			expanding === EXPANDING.NO &&
+			currentCharacter === '{'
+			) {
+			// start of parameter expansion
+			expanding = EXPANDING.PARAMETER;
+			expansion = '';
+		} else if (expanding === EXPANDING.PARAMETER && currentCharacter === '}') {
+			// end of parameter expansion
+			token.expansion = {
+				text: expansion,
+				start: startOfExpansion,
+				end: startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
+			};
+			startOfExpansion = 0;
+			expanding = EXPANDING.NO;
+			expansion = null;
+		} else if (expanding === EXPANDING.PARAMETER) {
+			// accumulation
+			expansion += currentCharacter;
+		}
 
 		// RULE 6 - If the current character is not quoted and can be used as the
 		// first character of a new operator, the current token (if any) shall be

@@ -36,6 +36,23 @@ test('parses parameter substitution', t => {
 	), '${other}');
 });
 
+test('parses unquoted parameter substitution', t => {
+	const result = tokenize('echo word$test');
+	t.same(result,
+		[{token: 'WORD', value: 'echo'},
+		{
+			token: 'WORD',
+			value: 'word$test',
+			expansion: {text: 'test', start: 4, end: 9}
+		}]
+	);
+
+	t.is(result[1].value.slice(
+		result[1].expansion.start,
+		result[1].expansion.end
+	), '$test');
+});
+
 test('parse single operator', t => {
 	t.same(
 		tokenize('<<'),
@@ -129,23 +146,23 @@ test('support ||', t => {
 
 test('support for', t => {
 	t.same(
-		tokenize('for x in a b c; do echo $x; done'),
+		tokenize('for x in a b c; do echo x; done'),
 		[{token: 'For', value: 'for'}, {token: 'NAME', value: 'x'},
 			{token: 'In', value: 'in'}, {token: 'WORD', value: 'a'},
 			{token: 'WORD', value: 'b'}, {token: 'WORD', value: 'c'},
 			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Do', value: 'do'},
-			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: '$x'},
+			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: 'x'},
 			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Done', value: 'done'}]
 	);
 });
 
 test('support for with default sequence', t => {
 	t.same(
-		tokenize('for x in; do echo $x; done'),
+		tokenize('for x in; do echo x; done'),
 		[{token: 'For', value: 'for'}, {token: 'NAME', value: 'x'},
 			{token: 'In', value: 'in'},
 			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Do', value: 'do'},
-			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: '$x'},
+			{token: 'WORD', value: 'echo'}, {token: 'WORD', value: 'x'},
 			{token: 'SEPARATOR_OP', value: ';'}, {token: 'Done', value: 'done'}]
 	);
 });

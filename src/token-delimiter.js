@@ -41,6 +41,7 @@ module.exports = function * tokenDelimiter(source) {
 	let expanding = EXPANDING.NO;
 	let expansion = null;
 	let startOfExpansion = 0;
+	let candidateParameterName = '';
 
 	for (const currentCharacter of source) {
 		if (token.OPERATOR) {
@@ -107,34 +108,59 @@ module.exports = function * tokenDelimiter(source) {
 		// command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 		// Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 		// or '`', and "$((", respectively.
-		if (quoting !== QUOTING.ESCAPE &&
-				currentCharacter === '$' &&
-				expanding === EXPANDING.NO &&
-				expansion === null) {
-			// start of expansion candidate
-			expansion = '$';
-			startOfExpansion = token.EMPTY || !token.TOKEN ? 0 : token.TOKEN.length;
-		} else if (quoting !== QUOTING.ESCAPE &&
-			expansion === '$' &&
-			expanding === EXPANDING.NO &&
-			currentCharacter === '{'
-			) {
-			// start of parameter expansion
-			expanding = EXPANDING.PARAMETER;
-			expansion = '';
-		} else if (expanding === EXPANDING.PARAMETER && currentCharacter === '}') {
-			// end of parameter expansion
-			token.expansion = {
-				text: expansion,
-				start: startOfExpansion,
-				end: startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
-			};
-			startOfExpansion = 0;
-			expanding = EXPANDING.NO;
-			expansion = null;
-		} else if (expanding === EXPANDING.PARAMETER) {
-			// accumulation
-			expansion += currentCharacter;
+
+		if (quoting !== QUOTING.ESCAPE) {				// skip if escaping character
+			if (expanding === EXPANDING.NO) {			// when no espanding is in progress
+				if (currentCharacter === '$' && expansion === null) {
+					// start of expansion candidate
+					expansion = '$';
+					startOfExpansion = token.EMPTY || !token.TOKEN ? 0 : token.TOKEN.length;
+				} else if (expansion === '$') {		// expansion candidate in progress
+					if (currentCharacter === '{') {
+						// start of parameter expansion quoted by braces
+						expanding = EXPANDING.PARAMETER;
+						expansion = '';
+					} else {		// expansion candidate failed
+						if (candidateParameterName === '' && currentCharacter.match(/[a-zA-z_]/)) {	// eslint-disable-line no-lonely-if
+							// first name character should be letter or underscore
+							candidateParameterName += currentCharacter;
+						} else if (candidateParameterName !== '' && currentCharacter.match(/[a-zA-z_0-9]/)) {
+							// from second character on name char could be letter or digits or underscore
+							candidateParameterName += currentCharacter;
+						} else {
+							// this character could not be part of a name
+
+							if (candidateParameterName !== '') {
+								// we have already accumulated a valid name, use it
+								// end of parameter expansion
+								token.expansion = {
+									text: candidateParameterName,
+									start: startOfExpansion,
+									end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+								};
+								expansion = null;
+							}
+
+							startOfExpansion = 0;
+						}
+					}
+				}
+			} else if (expanding === EXPANDING.PARAMETER) {
+				if (currentCharacter === '}') {
+					// end of parameter expansion
+					token.expansion = {
+						text: expansion,
+						start: startOfExpansion,
+						end: startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
+					};
+					startOfExpansion = 0;
+					expanding = EXPANDING.NO;
+					expansion = null;
+				} else {
+					// accumulation
+					expansion += currentCharacter;
+				}
+			}
 		}
 
 		// RULE 6 - If the current character is not quoted and can be used as the
@@ -208,6 +234,16 @@ module.exports = function * tokenDelimiter(source) {
 	// be delimited. If there is no current token, the end-of-input indicator
 	// shall be returned as the token.
 	if (!token.EMPTY) {
+		if (candidateParameterName !== '') {
+			// we have already accumulated a valid name for parameter expansion, use it
+			token.expansion = {
+				text: candidateParameterName,
+				start: startOfExpansion,
+				end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+			};
+			expansion = null;
+		}
+
 		yield token;
 	}
 	yield eof();

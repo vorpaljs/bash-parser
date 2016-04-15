@@ -53,6 +53,23 @@ test('parses unquoted parameter substitution', t => {
 	), '$test');
 });
 
+test.only('unquoted parameter delimited by symbol', t => {
+	const result = tokenize('echo word$test,,');
+	t.same(result,
+		[{token: 'WORD', value: 'echo'},
+		{
+			token: 'WORD',
+			value: 'word$test,,',
+			expansion: {text: 'test', start: 4, end: 9}
+		}]
+	);
+
+	t.is(result[1].value.slice(
+		result[1].expansion.start,
+		result[1].expansion.end
+	), '$test');
+});
+
 test('parse single operator', t => {
 	t.same(
 		tokenize('<<'),

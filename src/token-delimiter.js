@@ -129,7 +129,6 @@ module.exports = function * tokenDelimiter(source) {
 							candidateParameterName += currentCharacter;
 						} else {
 							// this character could not be part of a name
-
 							if (candidateParameterName !== '') {
 								// we have already accumulated a valid name, use it
 								// end of parameter expansion
@@ -139,6 +138,7 @@ module.exports = function * tokenDelimiter(source) {
 									end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
 								};
 								expansion = null;
+								candidateParameterName = '';
 							}
 
 							startOfExpansion = 0;

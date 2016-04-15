@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-const inspect = require('util').inspect;
+// const inspect = require('util').inspect;
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');

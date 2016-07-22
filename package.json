@@ -1,8 +1,8 @@
 {
-  "name": "bash-tokenizer",
+  "name": "bash-parser",
   "version": "0.0.0",
-  "description": "Standard compliant bash tokenizer",
-  "repository": "vorpal-js/bash-tokenizer",
+  "description": "Standard compliant bash parser",
+  "repository": "vorpaljs/bash-parser",
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {

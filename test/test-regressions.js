@@ -27,3 +27,22 @@ test('Redirect should be allowed immediately following argument', t => {
 	});
 });
 
+test('Equal sign should be allowed in arguments', t => {
+	const result = bashParser('echo foo=bar');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [{
+			type: 'andOr',
+			left: [{
+				type: 'simple_command',
+				name: 'echo',
+				suffix: {
+					type: 'cmd_suffix',
+					list: [
+						'foo=bar'
+					]
+				}
+			}]
+		}]
+	});
+});

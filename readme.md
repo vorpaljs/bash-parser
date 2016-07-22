@@ -22,27 +22,29 @@ npm install --save bash-parser
 
 you get this AST:
 
->{
->	type: 'list',
->	andOrs: [{
->		type: 'andOr',
->		left: [{
->			type: 'simple_command',
->			name: 'echo',
->			suffix: {
->				type: 'cmd_suffix',
->				list: [
->					'foo',
->					{
->						type: 'io_redirect',
->						op: '>,
->						file: 'file.txt'
->					}
->				]
->			}
->		}]
->	}]
->}
+```js
+{
+	type: 'list',
+	andOrs: [{
+		type: 'andOr',
+		left: [{
+			type: 'simple_command',
+			name: 'echo',
+			suffix: {
+				type: 'cmd_suffix',
+				list: [
+					'foo',
+					{
+						type: 'io_redirect',
+						op: ',
+						file: 'file.txt'
+					}
+				]
+			}
+		}]
+	}]
+}
+```
 
 # Related projects
 

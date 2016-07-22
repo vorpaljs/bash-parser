@@ -6,3 +6,5 @@ node_js:
 sudo: false
 before_script:
   - npm run build
+after_script:
+	- npm run coveralls

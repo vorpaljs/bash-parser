@@ -7,7 +7,9 @@
   "author": "vorpal-js",
   "scripts": {
     "test": "ava --no-babel && xo --ignore grammar.js",
-    "build": "jison src/grammar.jison > grammar.js"
+    "build": "jison src/grammar.jison > grammar.js",
+    "cover-test": "ava --no-babel",
+    "coveralls": "easy-coveralls cover-test"
   },
   "keywords": [],
   "engines": {
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "ava": "^0.15.2",
+    "easy-coveralls": "0.0.0",
     "jison": "^0.4.17",
     "xo": "^0.16.0"
   },

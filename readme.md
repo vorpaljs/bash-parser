@@ -3,6 +3,7 @@
 Parses bash into an AST
 
 [![Travis Build Status](https://img.shields.io/travis/parro-it/bash-parser.svg)](http://travis-ci.org/parro-it/bash-parser)
+[![Coveralls](https://img.shields.io/coveralls/parro-it/bash-parser.svg?maxAge=2592000)]()
 [![NPM module](https://img.shields.io/npm/v/bash-parser.svg)](https://npmjs.org/package/bash-parser)
 [![NPM downloads](https://img.shields.io/npm/dt/bash-parser.svg)](https://npmjs.org/package/bash-parser)
 

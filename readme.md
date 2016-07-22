@@ -22,7 +22,7 @@ npm install --save bash-parser
 
 you get this AST:
 
-```
+```js
 {
 	type: 'list',
 	andOrs: [{
@@ -36,7 +36,7 @@ you get this AST:
 					'foo',
 					{
 						type: 'io_redirect',
-						op: ',
+						op: '>',
 						file: 'file.txt'
 					}
 				]

@@ -9,8 +9,7 @@
   "scripts": {
     "test": "ava --no-babel && xo --ignore grammar.js",
     "build": "jison src/grammar.jison > grammar.js",
-    "cover-test": "ava --no-babel",
-    "coveralls": "easy-coveralls cover-test"
+    "cover-test": "nyc ava --no-babel"
   },
   "keywords": [],
   "engines": {
@@ -18,8 +17,9 @@
   },
   "devDependencies": {
     "ava": "^0.15.2",
-    "easy-coveralls": "0.0.0",
+    "coveralls": "^2.11.11",
     "jison": "^0.4.17",
+    "nyc": "^7.0.0",
     "xo": "^0.16.0"
   },
   "files": [

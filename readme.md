@@ -22,7 +22,7 @@ npm install --save bash-parser
 
 you get this AST:
 
-```js
+```
 {
 	type: 'list',
 	andOrs: [{

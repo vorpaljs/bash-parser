@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "engines": {
-    "node": ">=5"
+    "node": ">=4"
   },
   "devDependencies": {
     "ava": "^0.15.2",

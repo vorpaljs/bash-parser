@@ -5,7 +5,7 @@ const bashParser = require('../src');
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -25,7 +25,7 @@ test('command with one argument', t => {
 
 test('command with pre-assignment', t => {
 	const result = bashParser('TEST=1 run');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -43,7 +43,7 @@ test('command with pre-assignment', t => {
 
 test('commands with AND', t => {
 	const result = bashParser('run && stop');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -63,7 +63,7 @@ test('commands with AND', t => {
 test('commands with AND \\n', t => {
 	const result = bashParser('run && \n stop');
 	// console.log(inspect(result, {depth: null}))
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -82,7 +82,7 @@ test('commands with AND \\n', t => {
 
 test('commands with OR', t => {
 	const result = bashParser('run || cry');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -102,7 +102,7 @@ test('commands with OR', t => {
 test('pipelines', t => {
 	const result = bashParser('run | cry');
 	// console.log(inspect(result, {depth: null}));
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -117,7 +117,7 @@ test('pipelines', t => {
 
 test('no pre-assignment on suffix', t => {
 	const result = bashParser('echo TEST=1');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -136,7 +136,7 @@ test('no pre-assignment on suffix', t => {
 test('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// console.log(inspect(result, {depth:null}))
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -154,7 +154,7 @@ test('quotes within double quotes', t => {
 
 test('escaped double quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \\"TEST2"');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -173,7 +173,7 @@ test('escaped double quotes within double quotes', t => {
 test('double quotes within single quotes', t => {
 	const result = bashParser('echo \'TEST1 "TEST2\'');
 	// console.log(inspect(result, {depth:null}))
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -192,7 +192,7 @@ test('double quotes within single quotes', t => {
 test('command with multiple prefixes', t => {
 	const result = bashParser('TEST1=1 TEST2=2 echo world');
 	// console.log(inspect(result, {depth:null}))
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -212,7 +212,7 @@ test('command with multiple prefixes', t => {
 test('multi line commands', t => {
 	const result = bashParser('echo; \nls;\n');
 	// console.log(inspect(result, {depth:null}))
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -232,7 +232,7 @@ test('multi line commands', t => {
 
 test('command with redirection to file', t => {
 	const result = bashParser('ls > file.txt');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -257,7 +257,7 @@ test('command with redirection to file', t => {
 test('parse if', t => {
 	const result = bashParser('if true; then echo 1; fi');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -297,7 +297,7 @@ test('parse if', t => {
 test('parse if else', t => {
 	const result = bashParser('if true; then echo 1; else echo 2; fi');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -351,7 +351,7 @@ test('parse if else', t => {
 test('parse if else multiline', t => {
 	const result = bashParser('if true; then \n echo 1;\n else\n echo 2;\n fi');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -405,7 +405,7 @@ test('parse if else multiline', t => {
 test('parse if elif else', t => {
 	const result = bashParser('if true; then echo 1; elif false; then echo 3; else echo 2; fi');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -477,7 +477,7 @@ test('parse if elif else', t => {
 test('parse for', t => {
 	const result = bashParser('for x in a b c; do echo $x; done');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -509,7 +509,7 @@ test('parse for', t => {
 test('parse for with default sequence', t => {
 	const result = bashParser('for x\n do echo $x\n done');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -540,7 +540,7 @@ test('parse for with default sequence', t => {
 test('parse for with default sequence - on one line', t => {
 	const result = bashParser('for x in; do echo $x done');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -571,7 +571,7 @@ test('parse for with default sequence - on one line', t => {
 test('parse while', t => {
 	const result = bashParser('while true; do sleep 1; done');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -611,7 +611,7 @@ test('parse while', t => {
 test('parse until', t => {
 	const result = bashParser('until true; do sleep 1; done');
  //	console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -650,7 +650,7 @@ test('parse until', t => {
 
 test('parse multiple suffix', t => {
 	const result = bashParser('command foo --lol');
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -672,7 +672,7 @@ test('parse multiple suffix', t => {
 test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
 	// console.log(inspect(result, {depth:null}))
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -695,7 +695,7 @@ test('command with stderr redirection to file', t => {
 
 test('parse function declaration multiple lines', t => {
 	const result = bashParser('foo () \n{\n command bar --lol;\n}');
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -723,7 +723,7 @@ test('parse function declaration multiple lines', t => {
 test('parse function declaration', t => {
 	const result = bashParser('foo	(){ command bar --lol;}');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -751,7 +751,7 @@ test('parse function declaration', t => {
 test('parse subshell', t => {
 	const result = bashParser('( ls )');
 	// console.log(inspect(result, {depth:null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{
@@ -777,7 +777,7 @@ test('parse subshell', t => {
 test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
 	// console.log(inspect(result, {depth: null}))
-	t.same(
+	t.deepEqual(
 		result, {
 			type: 'list',
 			andOrs: [{

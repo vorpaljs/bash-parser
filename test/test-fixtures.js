@@ -5,6 +5,7 @@ const bashParser = require('../src');
 
 // various example taken from http://www.etalabs.net/sh_tricks.html
 
+/* TODO: make these pass
 test.skip('1', t => {
 	const result = bashParser(
 `echo () (
@@ -23,17 +24,18 @@ done
 printf "$fmt$end" "$*"
 )`
 );
-	t.same(result, {});
+	t.deepEqual(result, {});
 });
 
 test.skip('2', t => {
 	const result = bashParser('echo () { printf %s\\n "$*" ; }');
-	t.same(result, {});
+	t.deepEqual(result, {});
 });
+*/
 
 test('3', t => {
 	const result = bashParser('IFS= read -r var');
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -51,7 +53,7 @@ test('4', t => {
 	const result = bashParser('foo | IFS= read var');
 	// console.log(inspect(result, {depth: null}));
 
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
@@ -75,7 +77,7 @@ dest=bar
 eval "$dest=$foo"`
 );
 
-	t.same(result, {
+	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',

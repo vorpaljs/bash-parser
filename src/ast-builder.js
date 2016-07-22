@@ -1,4 +1,8 @@
 'use strict';
+
+/* eslint-disable no-sequences */
+/* eslint-disable no-return-assign */
+
 exports.list = andOr => ({type: 'list', andOrs: [andOr]});	// eslint-disable-line camelcase
 exports.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
 

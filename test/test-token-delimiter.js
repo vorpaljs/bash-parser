@@ -1,25 +1,28 @@
 'use strict';
 const test = require('ava');
 const tokenDelimiter = require('../src/token-delimiter');
+
 function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text));
 	return results;
 }
+
 test('emit EOF at end', t => {
-	t.same(
+	t.deepEqual(
 		tokenize(''),
 		[{EOF: true}]
 	);
 });
+
 test('parse single operator', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('<<'),
 		[{OPERATOR: '<<'}, {EOF: true}]
 	);
 });
 
 test('parse two operators on two lines', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('<<\n>>'), [
 			{OPERATOR: '<<'},
 			{NEWLINE: '\n'},
@@ -29,7 +32,7 @@ test('parse two operators on two lines', t => {
 	);
 });
 test('parse two operators on one line', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('<< >>'), [
 			{OPERATOR: '<<'},
 			{OPERATOR: '>>'},
@@ -39,7 +42,7 @@ test('parse two operators on one line', t => {
 });
 
 test('parse two tokens', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo 42'), [
 			{TOKEN: 'echo'},
 			{TOKEN: '42'},
@@ -49,7 +52,7 @@ test('parse two tokens', t => {
 });
 
 test('parse two tokens on two lines', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo\n42'), [
 			{TOKEN: 'echo'},
 			{NEWLINE: '\n'},
@@ -60,7 +63,7 @@ test('parse two tokens on two lines', t => {
 });
 
 test('keep multiple newlines', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo\n\n\n42'), [
 			{TOKEN: 'echo'},
 			{NEWLINE: '\n'},
@@ -73,7 +76,7 @@ test('keep multiple newlines', t => {
 });
 
 test('operator breaks words', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('e<'), [
 			{TOKEN: 'e'},
 			{OPERATOR: '<'},
@@ -83,7 +86,7 @@ test('operator breaks words', t => {
 });
 
 test('double breaks', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo>ciao'), [
 			{TOKEN: 'echo'},
 			{OPERATOR: '>'},
@@ -93,7 +96,7 @@ test('double breaks', t => {
 	);
 });
 test('word breaks operators', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('<e'), [
 			{OPERATOR: '<'},
 			{TOKEN: 'e'},
@@ -102,7 +105,7 @@ test('word breaks operators', t => {
 	);
 });
 test('support escaping chars', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo\\<'), [
 			{TOKEN: 'echo<'},
 			{EOF: true}
@@ -111,7 +114,7 @@ test('support escaping chars', t => {
 });
 
 test('character escaping is resetted on each char', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo\\<<'), [
 			{TOKEN: 'echo<'},
 			{OPERATOR: '<'},
@@ -120,7 +123,7 @@ test('character escaping is resetted on each char', t => {
 	);
 });
 test('support quoting with single', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo \'< world >\' other'), [
 			{TOKEN: 'echo'},
 			{TOKEN: '\'< world >\''},
@@ -131,7 +134,7 @@ test('support quoting with single', t => {
 });
 
 test('support quoting with double', t => {
-	t.same(
+	t.deepEqual(
 		tokenize('echo "< world >" other'), [
 			{TOKEN: 'echo'},
 			{TOKEN: '"< world >"'},
@@ -143,7 +146,7 @@ test('support quoting with double', t => {
 
 test('escaped double quotes within double quotes', t => {
 	const result = tokenize('echo "TEST1 \\"TEST2" ucci ucci');
-	t.same(
+	t.deepEqual(
 		result, [
 			{TOKEN: 'echo'},
 			{TOKEN: '"TEST1 "TEST2"'},

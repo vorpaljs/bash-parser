@@ -1,5 +1,5 @@
 'use strict';
-
+const hasOwnProperty = require('has-own-property');
 const operators = require('./operators');
 
 const QUOTING = {
@@ -23,17 +23,20 @@ const EXPANDING = {
 };
 
 const isOperatorStart = ch => '()|&!;<>'.indexOf(ch) !== -1;
-const isOperator = op => operators.hasOwnProperty(op);
+const isOperator = op => hasOwnProperty(operators, op);
 const empty = () => ({EMPTY: true});
 const newLine = () => ({NEWLINE: '\n'});
 const eof = () => ({EOF: true});
-const operator = (ch) => ({OPERATOR: ch});
-const mkToken = (tk) => ({TOKEN: tk});
-const isQuotingCharacter = ch => QUOTING_DELIM.hasOwnProperty(ch);
+const operator = ch => ({OPERATOR: ch});
+const mkToken = tk => ({TOKEN: tk});
+const isQuotingCharacter = ch => hasOwnProperty(QUOTING_DELIM, ch);
 /*
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
 */
+/* TODO: simplify */
+/* eslint-disable complexity */
+/* eslint-disable max-depth */
 module.exports = function * tokenDelimiter(source) {
 	let token = empty();
 	let quoting = QUOTING.NO;

@@ -1,9 +1,11 @@
 'use strict';
+const hasOwnProperty = require('has-own-property');
 const operators = require('./operators');
 const words = require('./reserved-words');
+
 exports.operatorTokens = function * (tokens) {
 	for (const tk of tokens) {
-		if (operators.hasOwnProperty(tk.OPERATOR)) {
+		if (hasOwnProperty(operators, tk.OPERATOR)) {
 			yield {[operators[tk.OPERATOR]]: tk.OPERATOR};
 		} else {
 			yield tk;
@@ -17,7 +19,7 @@ function defined(v) {
 
 exports.reservedWords = function * (tokens) {
 	for (const tk of tokens) {
-		if (words.hasOwnProperty(tk.TOKEN)) {
+		if (hasOwnProperty(words, tk.TOKEN)) {
 			yield {[words[tk.TOKEN]]: tk.TOKEN};
 		} else if (defined(tk.TOKEN)) {
 			const word = {WORD: tk.TOKEN};

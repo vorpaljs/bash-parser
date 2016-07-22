@@ -2,7 +2,7 @@
 
 Parses bash into an AST
 
-[![Travis Build Status](https://img.shields.io/travis/vorpaljs/bash-parser.svg)](http://travis-ci.org/vorpaljs/bash-parser)
+[![Travis Build Status](https://img.shields.io/travis/parro-it/bash-parser.svg)](http://travis-ci.org/parro-it/bash-parser)
 [![NPM module](https://img.shields.io/npm/v/bash-parser.svg)](https://npmjs.org/package/bash-parser)
 [![NPM downloads](https://img.shields.io/npm/dt/bash-parser.svg)](https://npmjs.org/package/bash-parser)
 

@@ -1,6 +1,6 @@
 # bash-parser
 
-Parses bash source code into an AST
+Parses bash source code to produce an AST
 
 [![Travis Build Status](https://img.shields.io/travis/parro-it/bash-parser.svg)](http://travis-ci.org/parro-it/bash-parser)
 [![Coveralls](https://img.shields.io/coveralls/parro-it/bash-parser.svg?maxAge=2592000)](https://coveralls.io/github/parro-it/bash-parser)
@@ -20,7 +20,7 @@ npm install --save bash-parser
   const ast = parse('echo foo>file.txt');
 ```
 
-you get this AST:
+`ast` is of the following form:
 
 ```js
 {
@@ -48,9 +48,9 @@ you get this AST:
 
 # Related projects
 
-* [cash](https://github.com/dthree/cash) - These parser should become the parser used by `cash`
-* [nsh](https://github.com/piranna/nsh) - These parser should become the parser used by `nsh`
-* [js-shell-parse](https://github.com/grncdr/js-shell-parse) - bash-parser was born as a fork of `js-shell-parse`, then it switched to `jison` grammar and was completely rewritten.
+* [cash](https://github.com/dthree/cash) - This parser should become the parser used by `cash` (and also [vorpal](https://github.com/dthree/vorpal))
+* [nsh](https://github.com/piranna/nsh) - This parser should become the parser used by `nsh`
+* [js-shell-parse](https://github.com/grncdr/js-shell-parse) - bash-parser was born as a fork of `js-shell-parse`, but was rewritten to use a `jison` grammar
 * [jison](https://github.com/zaach/jison) - Bison in JavaScript.
 
 

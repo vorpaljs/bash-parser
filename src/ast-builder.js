@@ -88,7 +88,45 @@ exports.command = (prefix, command, suffix) => {
 exports.ioRedirect = (op, file) => ({type: 'io_redirect', op, file});
 exports.numberIoRedirect = (ioRedirect, numberIo) =>
 	(ioRedirect.numberIo = numberIo, ioRedirect);
-exports.suffix = item => ({type: 'cmd_suffix', list: [item]});
-exports.suffixAppend = (suffix, item) => (suffix.list.push(item), suffix);
+
+exports.suffix = item => {
+	let enhancedItem;
+	if (item.type === 'io_redirect') {
+		enhancedItem = item;
+	} else if (typeof item === 'object') {
+		enhancedItem = {
+			type: 'cmd_argument',
+			value: item.text,
+			expansion: item.expansion
+		};
+	} else {
+		enhancedItem = {
+			type: 'cmd_argument',
+			value: item
+		};
+	}
+	return {type: 'cmd_suffix', list: [enhancedItem]};
+};
+
+exports.suffixAppend = (suffix, item) => {
+	let enhancedItem;
+	if (item.type === 'io_redirect') {
+		enhancedItem = item;
+	} else if (typeof item === 'object') {
+		enhancedItem = {
+			type: 'cmd_argument',
+			value: item.text,
+			expansion: item.expansion
+		};
+	} else {
+		enhancedItem = {
+			type: 'cmd_argument',
+			value: item
+		};
+	}
+	suffix.list.push(enhancedItem);
+	return suffix;
+};
+
 exports.prefix = item => ({type: 'cmd_prefix', list: [item]});
 exports.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);

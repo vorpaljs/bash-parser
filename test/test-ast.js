@@ -3,6 +3,38 @@ const test = require('ava');
 const bashParser = require('../src');
 // const inspect = require('util').inspect;
 
+test('parameter substitution', t => {
+	const result = bashParser('echo word${other}test');
+	console.log(JSON.stringify(result, null, 4));
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: 'echo',
+						suffix: {
+							type: 'cmd_suffix',
+							list: [
+								{
+									type: 'cmd_argument',
+									expansion: {
+										text: 'other',
+										start: 4,
+										end: 12
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
 test('command with one argument', t => {
 	const result = bashParser('echo world');
 	t.deepEqual(result, {

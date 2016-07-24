@@ -2,7 +2,6 @@
 const hasOwnProperty = require('has-own-property');
 // const values = require('object-values');
 const pairs = require('object-pairs');
-
 const operators = require('./operators');
 
 const QUOTING = {
@@ -48,10 +47,13 @@ function setParameterExpansion(token, parameterText, start, end) {
 
 	for (const [opName, opChars] of pairs(parameterOps)) {
 		const pos = parameterText.indexOf(opChars);
+		const parse = require('./index');
 
 		if (pos !== -1) {
 			parameter = parameterText.slice(0, pos);
-			word = {text: parameterText.slice(pos + 2)};
+			// TODO: This is probably very fragil,e need to be reimplemented
+			// in other ways
+			word = parse(parameterText.slice(pos + 2)).andOrs[0].left[0].name;
 			op = opName;
 			// only one operators is allowed
 			break;

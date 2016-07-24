@@ -178,6 +178,40 @@ test('parameter with assign default value', t => {
 	});
 });
 
+test('parameter with other parameter in word', t => {
+	const result = bashParser('${other:=default$value}');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {
+							text: '${other:=default$value}',
+							expansion: [{
+								parameter: 'other',
+								word: {
+									text: 'default$value',
+									expansion: [{
+										parameter: 'value',
+										start: 7,
+										end: 13
+									}]
+								},
+								op: 'assignDefaultValue',
+								start: 0,
+								end: 23
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
 test('parameter with indicate error if null', t => {
 	const result = bashParser('${other:?default_value}');
 	t.deepEqual(result, {

@@ -28,6 +28,8 @@
   ],
   "dependencies": {
     "compose-function": "^3.0.3",
-    "has-own-property": "^0.1.0"
+    "has-own-property": "^0.1.0",
+    "object-pairs": "^0.1.0",
+    "object-values": "^1.0.0"
   }
 }

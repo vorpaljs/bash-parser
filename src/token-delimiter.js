@@ -1,5 +1,7 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
+// const values = require('object-values');
+const pairs = require('object-pairs');
 const operators = require('./operators');
 
 const QUOTING = {
@@ -30,6 +32,47 @@ const eof = () => ({EOF: true});
 const operator = ch => ({OPERATOR: ch});
 const mkToken = tk => ({TOKEN: tk});
 const isQuotingCharacter = ch => hasOwnProperty(QUOTING_DELIM, ch);
+
+const parameterOps = {
+	useDefaultValue: ':-',
+	assignDefaultValue: ':=',
+	indicateErrorIfNull: ':?',
+	useAlternativeValue: ':+'
+};
+
+function setParameterExpansion(token, parameterText, start, end) {
+	let parameter = parameterText;
+	let word;
+	let op;
+
+	for (const pair of pairs(parameterOps)) {
+		const opName = pair[0];
+		const opChars = pair[1];
+
+		const pos = parameterText.indexOf(opChars);
+		const parse = require('./index');
+
+		if (pos !== -1) {
+			parameter = parameterText.slice(0, pos);
+
+			// TODO: This is probably very fragil,e need to be reimplemented
+			// in other ways
+			word = parse(parameterText.slice(pos + 2)).andOrs[0].left[0].name;
+			op = opName;
+			// only one operators is allowed
+			break;
+		}
+	}
+
+	token.expansion = (token.expansion || []).concat({
+		parameter,
+		word,
+		op,
+		start,
+		end
+	});
+}
+
 /*
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
@@ -135,11 +178,12 @@ module.exports = function * tokenDelimiter(source) {
 							if (candidateParameterName !== '') {
 								// we have already accumulated a valid name, use it
 								// end of parameter expansion
-								token.expansion = {
-									text: candidateParameterName,
-									start: startOfExpansion,
-									end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-								};
+								setParameterExpansion(
+									token,
+									candidateParameterName,
+									startOfExpansion,
+									startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+								);
 								expansion = null;
 								candidateParameterName = '';
 							}
@@ -151,11 +195,13 @@ module.exports = function * tokenDelimiter(source) {
 			} else if (expanding === EXPANDING.PARAMETER) {
 				if (currentCharacter === '}') {
 					// end of parameter expansion
-					token.expansion = {
-						text: expansion,
-						start: startOfExpansion,
-						end: startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
-					};
+					setParameterExpansion(
+						token,
+						expansion,
+						startOfExpansion,
+						startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
+					);
+
 					startOfExpansion = 0;
 					expanding = EXPANDING.NO;
 					expansion = null;
@@ -239,11 +285,13 @@ module.exports = function * tokenDelimiter(source) {
 	if (!token.EMPTY) {
 		if (candidateParameterName !== '') {
 			// we have already accumulated a valid name for parameter expansion, use it
-			token.expansion = {
-				text: candidateParameterName,
-				start: startOfExpansion,
-				end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-			};
+			setParameterExpansion(
+				token,
+				candidateParameterName,
+				startOfExpansion,
+				startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+			);
+
 			expansion = null;
 		}
 

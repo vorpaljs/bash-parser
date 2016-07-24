@@ -4,21 +4,22 @@ const bashParser = require('../src');
 
 test('Redirect should be allowed immediately following argument', t => {
 	const result = bashParser('echo foo>file.txt');
+
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
-						'foo',
+						{text: 'foo'},
 						{
 							type: 'io_redirect',
 							op: '>',
-							file: 'file.txt'
+							file: {text: 'file.txt'}
 						}
 					]
 				}
@@ -35,11 +36,11 @@ test('Equal sign should be allowed in arguments', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
-						'foo=bar'
+						{text: 'foo=bar'}
 					]
 				}
 			}]

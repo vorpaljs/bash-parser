@@ -9,12 +9,17 @@ module.exports = () => ({
 		const item = this.tokenizer.next();
 		const tk = item.value;
 		const tkType = Object.keys(tk)[0];
-		this.yytext = tk[tkType];
-		if (tk.expansion) {
-			this.expansion = tk.expansion;
+		const text = tk[tkType];
+		// expansion happens only on WORD and ASSIGNMENT_WORD tokens
+		if (tkType === 'WORD' || tkType === 'ASSIGNMENT_WORD') {
+			this.yytext = {
+				text: text,
+				expansion: tk.expansion
+			};
 		} else {
-			delete this.expansion;
+			this.yytext = text;
 		}
+
 		return tkType;
 	},
 	setInput(source) {

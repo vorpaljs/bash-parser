@@ -98,14 +98,14 @@ subshell         : OPEN_PAREN compound_list CLOSE_PAREN
 					-> yy.subshell($compound_list)
 				 ;
 compound_list   : term
-					-> $term
+					-> $term.text || $term
 				 | NEWLINE_LIST term
-					-> $term
+					-> $term.text || $term
 
 				 | term separator
-					-> $term
+					-> $term.text || $term
 				 | NEWLINE_LIST term separator
-					-> $term
+					-> $term.text || $term
 				 ;
 term             : term separator and_or
 				  -> yy.termAppend($term, $and_or)
@@ -145,22 +145,22 @@ case_list        : case_list case_item
 				 	-> [$case_item]
 				 ;
 case_item_ns     : pattern CLOSE_PAREN linebreak
-				 	-> {type: 'pattern', pattern: $pattern}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern}
 				 | pattern CLOSE_PAREN compound_list linebreak
-				 	-> {type: 'pattern', pattern: $pattern, body: $compound_list}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
 				 | OPEN_PAREN pattern CLOSE_PAREN linebreak
-				 	-> {type: 'pattern', pattern: $pattern}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern}
 				 | OPEN_PAREN pattern CLOSE_PAREN compound_list linebreak
-				 	-> {type: 'pattern', pattern: $pattern, body: $compound_list}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
 				 ;
 case_item        : pattern CLOSE_PAREN linebreak DSEMI linebreak
-					-> {type: 'pattern', pattern: $pattern}
+					-> {type: 'pattern', pattern: $pattern.text || $pattern}
 				 | pattern CLOSE_PAREN compound_list DSEMI linebreak
-				 	-> {type: 'pattern', pattern: $pattern, body: $compound_list}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
 				 | OPEN_PAREN pattern CLOSE_PAREN linebreak     DSEMI linebreak
-				 	-> {type: 'pattern', pattern: $pattern}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern}
 				 | OPEN_PAREN pattern CLOSE_PAREN compound_list DSEMI linebreak
-				 	-> {type: 'pattern', pattern: $pattern, body: $compound_list}
+				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
 				 ;
 pattern         : WORD        /* Apply rule 4 */
 					->	[$1]
@@ -204,7 +204,7 @@ simple_command   : cmd_prefix cmd_word cmd_suffix
 				 | cmd_prefix cmd_word
 					->yy.command($cmd_prefix, $cmd_word, null)
 				 | cmd_prefix
-					->yy.command($cmd_prefix, '')
+					->yy.command($cmd_prefix, {text:''})
 				 | cmd_name cmd_suffix
 					->yy.command(null, $cmd_name, $cmd_suffix)
 				 | cmd_name

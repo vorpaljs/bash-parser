@@ -116,6 +116,10 @@ exports.ioNumber = function * (tokens) {
 	}
 };
 
+function isValidName(text) {
+	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
+}
+
 exports.assignmentWord = function * (tokens) {
 	let canBeCommandPrefix = true;
 	for (const tk of tokens) {
@@ -132,10 +136,11 @@ exports.assignmentWord = function * (tokens) {
 
 		// check if it is an assignment
 		if (canBeCommandPrefix && tk.TOKEN && tk.TOKEN.indexOf('=') > 0 && (
-				// quoted token should be skipped
-				!(tk.TOKEN.startsWith('\'') || tk.TOKEN.startsWith('"'))
+				// left part must be a valid name
+				isValidName(tk.TOKEN.slice(0, tk.TOKEN.indexOf('=')))
+
 			)) {
-			yield {ASSIGNMENT_WORD: tk.TOKEN};
+			yield {ASSIGNMENT_WORD: tk.TOKEN, expansion: tk.expansion};
 			continue;
 		}
 

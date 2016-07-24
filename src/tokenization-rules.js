@@ -135,7 +135,7 @@ exports.assignmentWord = function * (tokens) {
 				// quoted token should be skipped
 				!(tk.TOKEN.startsWith('\'') || tk.TOKEN.startsWith('"'))
 			)) {
-			yield {ASSIGNMENT_WORD: tk.TOKEN};
+			yield {ASSIGNMENT_WORD: tk.TOKEN, expansion: tk.expansion};
 			continue;
 		}
 

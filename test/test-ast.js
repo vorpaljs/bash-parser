@@ -3,6 +3,36 @@ const test = require('ava');
 const bashParser = require('../src');
 // const inspect = require('util').inspect;
 
+test('parameter substitution in assignment', t => {
+	const result = bashParser('echoword=${other}test');
+
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=${other}test',
+								expansion: [{
+									text: 'other',
+									start: 9,
+									end: 17
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
 test('parameter substitution', t => {
 	const result = bashParser('echo word${other}test');
 	t.deepEqual(result, {
@@ -779,7 +809,6 @@ test('parse multiple suffix', t => {
 
 test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
-	// console.log(JSON.stringify(result, null, 4))
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{

@@ -23,7 +23,7 @@ exports.andAndOr = (left, right) => {
 	return {
 		type: 'andOr',
 		op: 'and',
-		left: left,
+		left,
 		right: exports.singleAndOr(right)
 	};
 };
@@ -31,34 +31,34 @@ exports.orAndOr = (left, right) => {
 	return {
 		type: 'andOr',
 		op: 'or',
-		left: left,
+		left,
 		right: exports.singleAndOr(right)
 	};
 };
 exports.forClause = (name, wordlist, doGroup) => ({
 	type: 'for',
-	name: name,
-	wordlist: wordlist.map(item => item),
+	name,
+	wordlist: wordlist,
 	do: doGroup
 });
 
 exports.forClauseDefault = (name, doGroup) => ({
 	type: 'for',
-	name: name,
+	name,
 	do: doGroup
 });
 
 exports.functionDefinition = (name, body) => ({
 	type: 'function',
-	name: name,
+	name,
 	body
 });
 
 exports.ifClause = (clause, then, elseBranch) => {
 	const node = {
 		type: 'if',
-		clause: clause,
-		then: then
+		clause,
+		then
 	};
 	if (elseBranch) {
 		node.else = elseBranch;
@@ -69,14 +69,15 @@ exports.ifClause = (clause, then, elseBranch) => {
 exports.elifClause = (clause, then, elseBranch) => {
 	const node = {
 		type: 'elif',
-		clause: clause,
-		then: then
+		clause,
+		then
 	};
 	if (elseBranch) {
 		node.else = elseBranch;
 	}
 	return node;
 };
+
 exports.while = (clause, body) => ({type: 'while', clause, do: body});
 exports.until = (clause, body) => ({type: 'until', clause, do: body});
 exports.command = (prefix, command, suffix) => {

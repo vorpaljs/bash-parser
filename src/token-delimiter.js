@@ -135,11 +135,11 @@ module.exports = function * tokenDelimiter(source) {
 							if (candidateParameterName !== '') {
 								// we have already accumulated a valid name, use it
 								// end of parameter expansion
-								token.expansion = {
+								token.expansion = (token.expansion || []).concat({
 									text: candidateParameterName,
 									start: startOfExpansion,
 									end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-								};
+								});
 								expansion = null;
 								candidateParameterName = '';
 							}
@@ -151,11 +151,11 @@ module.exports = function * tokenDelimiter(source) {
 			} else if (expanding === EXPANDING.PARAMETER) {
 				if (currentCharacter === '}') {
 					// end of parameter expansion
-					token.expansion = {
+					token.expansion = (token.expansion || []).concat({
 						text: expansion,
 						start: startOfExpansion,
 						end: startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
-					};
+					});
 					startOfExpansion = 0;
 					expanding = EXPANDING.NO;
 					expansion = null;
@@ -239,11 +239,11 @@ module.exports = function * tokenDelimiter(source) {
 	if (!token.EMPTY) {
 		if (candidateParameterName !== '') {
 			// we have already accumulated a valid name for parameter expansion, use it
-			token.expansion = {
+			token.expansion = token.expansion = (token.expansion || []).concat({
 				text: candidateParameterName,
 				start: startOfExpansion,
 				end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-			};
+			});
 			expansion = null;
 		}
 

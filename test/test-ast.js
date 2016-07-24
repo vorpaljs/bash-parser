@@ -18,11 +18,70 @@ test('parameter substitution', t => {
 							type: 'cmd_suffix',
 							list: [{
 								text: 'word${other}test',
-								expansion: {
+								expansion: [{
 									text: 'other',
 									start: 4,
 									end: 12
-								}
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('multiple parameter substitution', t => {
+	const result = bashParser('echo word${other}t$est');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{
+								text: 'word${other}t$est',
+								expansion: [{
+									text: 'other',
+									start: 4,
+									end: 12
+								},
+								{
+									text: 'est',
+									start: 13,
+									end: 17
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('command with only parameter substitution', t => {
+	const result = bashParser('$other');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {
+							text: '$other',
+							expansion: [{
+								text: 'other',
+								start: 0,
+								end: 6
 							}]
 						}
 					}
@@ -525,11 +584,11 @@ test('parse for', t => {
 									type: 'cmd_suffix',
 									list: [{
 										text: '$x',
-										expansion: {
+										expansion: [{
 											text: 'x',
 											start: 0,
 											end: 2
-										}
+										}]
 									}]
 								}
 							}]
@@ -563,11 +622,11 @@ test('parse for with default sequence', t => {
 									type: 'cmd_suffix',
 									list: [{
 										text: '$x',
-										expansion: {
+										expansion: [{
 											text: 'x',
 											start: 0,
 											end: 2
-										}
+										}]
 									}]
 								}
 							}]
@@ -601,11 +660,11 @@ test('parse for with default sequence - on one line', t => {
 									type: 'cmd_suffix',
 									list: [{
 										text: '$x',
-										expansion: {
+										expansion: [{
 											text: 'x',
 											start: 0,
 											end: 2
-										}
+										}]
 									}]
 								}
 							}]

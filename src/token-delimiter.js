@@ -1,5 +1,8 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
+// const values = require('object-values');
+const pairs = require('object-pairs');
+
 const operators = require('./operators');
 
 const QUOTING = {
@@ -31,9 +34,34 @@ const operator = ch => ({OPERATOR: ch});
 const mkToken = tk => ({TOKEN: tk});
 const isQuotingCharacter = ch => hasOwnProperty(QUOTING_DELIM, ch);
 
+const parameterOps = {
+	useDefaultValue: ':-',
+	assignDefaultValue: ':=',
+	indicateErrorIfNull: ':?',
+	useAlternativeValue: ':+'
+};
+
 function setParameterExpansion(token, parameterText, start, end) {
+	let parameter = parameterText;
+	let word;
+	let op;
+
+	for (const [opName, opChars] of pairs(parameterOps)) {
+		const pos = parameterText.indexOf(opChars);
+
+		if (pos !== -1) {
+			parameter = parameterText.slice(0, pos);
+			word = {text: parameterText.slice(pos + 2)};
+			op = opName;
+			// only one operators is allowed
+			break;
+		}
+	}
+
 	token.expansion = (token.expansion || []).concat({
-		parameter: parameterText,
+		parameter,
+		word,
+		op,
 		start,
 		end
 	});

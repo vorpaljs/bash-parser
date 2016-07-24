@@ -120,9 +120,8 @@ test('command consisting of only parameter substitution', t => {
 	});
 });
 
-test('parameter with default value', t => {
+test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
-	console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [
@@ -138,7 +137,94 @@ test('parameter with default value', t => {
 								word: {
 									text: 'default_value'
 								},
-								op: ':-',
+								op: 'useDefaultValue',
+								start: 0,
+								end: 23
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('parameter with assign default value', t => {
+	const result = bashParser('${other:=default_value}');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {
+							text: '${other:=default_value}',
+							expansion: [{
+								parameter: 'other',
+								word: {
+									text: 'default_value'
+								},
+								op: 'assignDefaultValue',
+								start: 0,
+								end: 23
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('parameter with indicate error if null', t => {
+	const result = bashParser('${other:?default_value}');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {
+							text: '${other:?default_value}',
+							expansion: [{
+								parameter: 'other',
+								word: {
+									text: 'default_value'
+								},
+								op: 'indicateErrorIfNull',
+								start: 0,
+								end: 23
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('parameter with use alternative value', t => {
+	const result = bashParser('${other:+default_value}');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {
+							text: '${other:+default_value}',
+							expansion: [{
+								parameter: 'other',
+								word: {
+									text: 'default_value'
+								},
+								op: 'useAlternativeValue',
 								start: 0,
 								end: 23
 							}]

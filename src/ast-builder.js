@@ -11,38 +11,46 @@ exports.termAppend = (term, andOr) => (term.andOrs.push(andOr), term);
 exports.subshell = list => ({type: 'subshell', list});
 exports.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
 
-exports.pipeSequence = command => ([command]);
+exports.pipeSequence = command => {
+	return [command];
+};
 exports.pipeSequenceAppend = (pipe, command) => (pipe.push(command), pipe);
 exports.bangPipeSequence = pipe => (pipe.bang = true, pipe);
-exports.singleAndOr = pipe => ({type: 'andOr', left: pipe});
-exports.andAndOr = (left, right) => ({
-	type: 'andOr',
-	op: 'and',
-	left: left,
-	right: exports.singleAndOr(right)
-});
-exports.orAndOr = (left, right) => ({
-	type: 'andOr',
-	op: 'or',
-	left: left,
-	right: exports.singleAndOr(right)
-});
+exports.singleAndOr = pipe => {
+	return {type: 'andOr', left: pipe};
+};
+exports.andAndOr = (left, right) => {
+	return {
+		type: 'andOr',
+		op: 'and',
+		left: left,
+		right: exports.singleAndOr(right)
+	};
+};
+exports.orAndOr = (left, right) => {
+	return {
+		type: 'andOr',
+		op: 'or',
+		left: left,
+		right: exports.singleAndOr(right)
+	};
+};
 exports.forClause = (name, wordlist, doGroup) => ({
 	type: 'for',
-	name: name,
-	wordlist: wordlist,
+	name: name.text,
+	wordlist: wordlist.map(item => item.text || item),
 	do: doGroup
 });
 
 exports.forClauseDefault = (name, doGroup) => ({
 	type: 'for',
-	name: name,
+	name: name.text,
 	do: doGroup
 });
 
 exports.functionDefinition = (name, body) => ({
 	type: 'function',
-	name,
+	name: name.text,
 	body
 });
 
@@ -74,7 +82,7 @@ exports.until = (clause, body) => ({type: 'until', clause, do: body});
 exports.command = (prefix, command, suffix) => {
 	const node = {
 		type: 'simple_command',
-		name: command
+		name: command.text || command
 	};
 	if (prefix) {
 		node.prefix = prefix;
@@ -85,48 +93,18 @@ exports.command = (prefix, command, suffix) => {
 	// console.log(JSON.stringify(node,null,2))
 	return node;
 };
-exports.ioRedirect = (op, file) => ({type: 'io_redirect', op, file});
+exports.ioRedirect = (op, file) => ({type: 'io_redirect', op: op.text, file: file.text});
 exports.numberIoRedirect = (ioRedirect, numberIo) =>
-	(ioRedirect.numberIo = numberIo, ioRedirect);
+	(ioRedirect.numberIo = numberIo.text, ioRedirect);
 
 exports.suffix = item => {
-	let enhancedItem;
-	if (item.type === 'io_redirect') {
-		enhancedItem = item;
-	} else if (typeof item === 'object') {
-		enhancedItem = {
-			type: 'cmd_argument',
-			value: item.text,
-			expansion: item.expansion
-		};
-	} else {
-		enhancedItem = {
-			type: 'cmd_argument',
-			value: item
-		};
-	}
-	return {type: 'cmd_suffix', list: [enhancedItem]};
+	return {type: 'cmd_suffix', list: [item.text || item]};
 };
 
 exports.suffixAppend = (suffix, item) => {
-	let enhancedItem;
-	if (item.type === 'io_redirect') {
-		enhancedItem = item;
-	} else if (typeof item === 'object') {
-		enhancedItem = {
-			type: 'cmd_argument',
-			value: item.text,
-			expansion: item.expansion
-		};
-	} else {
-		enhancedItem = {
-			type: 'cmd_argument',
-			value: item
-		};
-	}
-	suffix.list.push(enhancedItem);
+	suffix.list.push(item.text || item);
 	return suffix;
 };
 
-exports.prefix = item => ({type: 'cmd_prefix', list: [item]});
-exports.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);
+exports.prefix = item => ({type: 'cmd_prefix', list: [item.text || item]});
+exports.prefixAppend = (prefix, item) => (prefix.list.push(item.text || item), prefix);

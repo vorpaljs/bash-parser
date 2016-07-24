@@ -33,9 +33,9 @@ test.skip('2', t => {
 });
 */
 
-test.only('3', t => {
+test('3', t => {
 	const result = bashParser('IFS= read -r var');
-	console.log(JSON.stringify(result, null, 5))
+	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{

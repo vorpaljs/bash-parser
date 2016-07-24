@@ -10,14 +10,10 @@ module.exports = () => ({
 		const tk = item.value;
 		const tkType = Object.keys(tk)[0];
 		const text = tk[tkType];
-		if (tk.expansion) {
-			this.yytext = {
-				yytext: text,
-				expansion: tk.expansion
-			};
-		} else {
-			this.yytext = text;
-		}
+		this.yytext = {
+			text: text,
+			expansion: tk.expansion
+		};
 		return tkType;
 	},
 	setInput(source) {

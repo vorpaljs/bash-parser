@@ -2,7 +2,7 @@
 const test = require('ava');
 const bashParser = require('../src');
 // const inspect = require('util').inspect;
-
+/*
 test('parameter substitution', t => {
 	const result = bashParser('echo word${other}test');
 	console.log(JSON.stringify(result, null, 4));
@@ -34,7 +34,7 @@ test('parameter substitution', t => {
 		]
 	});
 });
-
+*/
 test('command with one argument', t => {
 	const result = bashParser('echo world');
 	t.deepEqual(result, {
@@ -508,7 +508,7 @@ test('parse if elif else', t => {
 
 test('parse for', t => {
 	const result = bashParser('for x in a b c; do echo $x; done');
-	// console.log(inspect(result, {depth:null}))
+
 	t.deepEqual(
 		result, {
 			type: 'list',
@@ -808,7 +808,7 @@ test('parse subshell', t => {
 
 test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
-	// console.log(inspect(result, {depth: null}))
+	// console.log(JSON.stringify(result, null, 4))
 	t.deepEqual(
 		result, {
 			type: 'list',

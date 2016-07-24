@@ -11,7 +11,7 @@ parser.yy = astBuilder;
 
 module.exports = function parse(sourceCode) {
 	try {
-		return parser.parse(sourceCode);
+		return JSON.parse(JSON.stringify(parser.parse(sourceCode)));
 	} catch (err) {
 		throw new Error(err.stack || err.message);
 	}

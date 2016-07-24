@@ -14,7 +14,7 @@ test('parameter substitution', t => {
 				left: [
 					{
 						type: 'simple_command',
-						name: 'echo',
+						name: {text: 'echo'},
 						suffix: {
 							type: 'cmd_suffix',
 							list: [
@@ -43,7 +43,7 @@ test('command with one argument', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
@@ -63,7 +63,7 @@ test('command with pre-assignment', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'run',
+				name: {text: 'run'},
 				prefix: {
 					type: 'cmd_prefix',
 					list: ['TEST=1']
@@ -82,11 +82,11 @@ test('commands with AND', t => {
 			op: 'and',
 			left: {
 				type: 'andOr',
-				left: [{type: 'simple_command', name: 'run'}]
+				left: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
 				type: 'andOr',
-				left: [{type: 'simple_command', name: 'stop'}]
+				left: [{type: 'simple_command', name: {text: 'stop'}}]
 			}
 		}]
 	});
@@ -102,11 +102,11 @@ test('commands with AND \\n', t => {
 			op: 'and',
 			left: {
 				type: 'andOr',
-				left: [{type: 'simple_command', name: 'run'}]
+				left: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
 				type: 'andOr',
-				left: [{type: 'simple_command', name: 'stop'}]
+				left: [{type: 'simple_command', name: {text: 'stop'}}]
 			}
 		}]
 	});
@@ -121,11 +121,11 @@ test('commands with OR', t => {
 			op: 'or',
 			left: {
 				type: 'andOr',
-				left: [{type: 'simple_command', name: 'run'}]
+				left: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
 				type: 'andOr',
-				left: [{type: 'simple_command', name: 'cry'}]
+				left: [{type: 'simple_command', name: {text: 'cry'}}]
 			}
 		}]
 	});
@@ -139,9 +139,9 @@ test('pipelines', t => {
 		andOrs: [{
 			type: 'andOr',
 			left: [{
-				type: 'simple_command', name: 'run'
+				type: 'simple_command', name: {text: 'run'}
 			}, {
-				type: 'simple_command', name: 'cry'
+				type: 'simple_command', name: {text: 'cry'}
 			}]
 		}]
 	});
@@ -155,7 +155,7 @@ test('no pre-assignment on suffix', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: ['TEST=1']
@@ -174,7 +174,7 @@ test('quotes within double quotes', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: ['"TEST1 \'TEST2"']
@@ -192,7 +192,7 @@ test('escaped double quotes within double quotes', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: ['"TEST1 "TEST2"']
@@ -211,7 +211,7 @@ test('double quotes within single quotes', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: ['\'TEST1 "TEST2\'']
@@ -230,7 +230,7 @@ test('command with multiple prefixes', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				prefix: {type: 'cmd_prefix', list: ['TEST1=1', 'TEST2=2']},
 				suffix: {
 					type: 'cmd_suffix',
@@ -250,13 +250,13 @@ test('multi line commands', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo'
+				name: {text: 'echo'}
 			}]
 		}, {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'ls'
+				name: {text: 'ls'}
 			}]
 		}]
 	});
@@ -270,7 +270,7 @@ test('command with redirection to file', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'ls',
+				name: {text: 'ls'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
@@ -302,7 +302,7 @@ test('parse if', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'true'
+								name: {text: 'true'}
 							}]
 						}]
 					},
@@ -312,7 +312,7 @@ test('parse if', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['1']
@@ -342,7 +342,7 @@ test('parse if else', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'true'
+								name: {text: 'true'}
 							}]
 						}]
 					},
@@ -352,7 +352,7 @@ test('parse if else', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['1']
@@ -366,7 +366,7 @@ test('parse if else', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['2']
@@ -396,7 +396,7 @@ test('parse if else multiline', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'true'
+								name: {text: 'true'}
 							}]
 						}]
 					},
@@ -406,7 +406,7 @@ test('parse if else multiline', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['1']
@@ -420,7 +420,7 @@ test('parse if else multiline', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['2']
@@ -450,7 +450,7 @@ test('parse if elif else', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'true'
+								name: {text: 'true'}
 							}]
 						}]
 					},
@@ -460,7 +460,7 @@ test('parse if elif else', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['1']
@@ -474,7 +474,7 @@ test('parse if elif else', t => {
 							type: 'term',
 							andOrs: [{
 								type: 'andOr',
-								left: [{type: 'simple_command', name: 'false'}]
+								left: [{type: 'simple_command', name: {text: 'false'}}]
 							}]
 						},
 						then: {
@@ -483,7 +483,7 @@ test('parse if elif else', t => {
 								type: 'andOr',
 								left: [{
 									type: 'simple_command',
-									name: 'echo',
+									name: {text: 'echo'},
 									suffix: {type: 'cmd_suffix', list: ['3']}
 								}]
 							}]
@@ -494,7 +494,7 @@ test('parse if elif else', t => {
 								type: 'andOr',
 								left: [{
 									type: 'simple_command',
-									name: 'echo',
+									name: {text: 'echo'},
 									suffix: {type: 'cmd_suffix', list: ['2']}
 								}]
 							}]
@@ -524,7 +524,7 @@ test('parse for', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['$x']
@@ -555,7 +555,7 @@ test('parse for with default sequence', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['$x']
@@ -586,7 +586,7 @@ test('parse for with default sequence - on one line', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['$x']
@@ -616,7 +616,7 @@ test('parse while', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'true'
+								name: {text: 'true'}
 							}]
 						}]
 					},
@@ -626,7 +626,7 @@ test('parse while', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'sleep',
+								name: {text: 'sleep'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['1']
@@ -656,7 +656,7 @@ test('parse until', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'true'
+								name: {text: 'true'}
 							}]
 						}]
 					},
@@ -666,7 +666,7 @@ test('parse until', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'sleep',
+								name: {text: 'sleep'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['1']
@@ -690,7 +690,7 @@ test('parse multiple suffix', t => {
 				left:
 				[{
 					type: 'simple_command',
-					name: 'command',
+					name: {text: 'command'},
 					suffix: {
 						type: 'cmd_suffix',
 						list: ['foo', '--lol']
@@ -710,7 +710,7 @@ test('command with stderr redirection to file', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'ls',
+				name: {text: 'ls'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [{
@@ -741,7 +741,7 @@ test('parse function declaration multiple lines', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'command',
+								name: {text: 'command'},
 								suffix: {type: 'cmd_suffix', list: ['bar', '--lol']}
 							}]
 						}]
@@ -769,7 +769,7 @@ test('parse function declaration', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'command',
+								name: {text: 'command'},
 								suffix: {type: 'cmd_suffix', list: ['bar', '--lol']}
 							}]
 						}]
@@ -796,7 +796,7 @@ test('parse subshell', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'ls'
+								name: {text: 'ls'}
 							}]
 						}]
 					}
@@ -806,7 +806,7 @@ test('parse subshell', t => {
 	);
 });
 
-test.skip('parse case with substitutions in clause', t => {});
+// test.skip('parse case with substitutions in clause', t => {});
 
 test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
@@ -831,7 +831,7 @@ test('parse case', t => {
 							type: 'andOr',
 							left: [{
 								type: 'simple_command',
-								name: 'echo',
+								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
 									list: ['bar']

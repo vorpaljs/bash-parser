@@ -204,7 +204,7 @@ simple_command   : cmd_prefix cmd_word cmd_suffix
 				 | cmd_prefix cmd_word
 					->yy.command($cmd_prefix, $cmd_word, null)
 				 | cmd_prefix
-					->yy.command($cmd_prefix, '')
+					->yy.command($cmd_prefix, {text:''})
 				 | cmd_name cmd_suffix
 					->yy.command(null, $cmd_name, $cmd_suffix)
 				 | cmd_name

@@ -35,14 +35,13 @@ test.skip('2', t => {
 
 test('3', t => {
 	const result = bashParser('IFS= read -r var');
-	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'read',
+				name: {text: 'read'},
 				prefix: {type: 'cmd_prefix', list: ['IFS=']},
 				suffix: {type: 'cmd_suffix', list: ['-r', 'var']}
 			}]
@@ -60,10 +59,10 @@ test('4', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'foo'
+				name: {text: 'foo'}
 			}, {
 				type: 'simple_command',
-				name: 'read',
+				name: {text: 'read'},
 				prefix: {type: 'cmd_prefix', list: ['IFS=']},
 				suffix: {type: 'cmd_suffix', list: ['var']}
 			}]
@@ -77,6 +76,7 @@ test('5', t => {
 dest=bar
 eval "$dest=$foo"`
 );
+	// console.log(JSON.stringify(result, null, 5))
 
 	t.deepEqual(result, {
 		type: 'list',
@@ -84,7 +84,7 @@ eval "$dest=$foo"`
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: '',
+				name: {text: ''},
 				prefix: {
 					type: 'cmd_prefix',
 					list: ['foo=\'hello ; rm -rf /\'']
@@ -94,7 +94,7 @@ eval "$dest=$foo"`
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: '',
+				name: {text: ''},
 				prefix: {
 					type: 'cmd_prefix',
 					list: ['dest=bar']
@@ -104,7 +104,7 @@ eval "$dest=$foo"`
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'eval',
+				name: {text: 'eval'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: ['"$dest=$foo"']

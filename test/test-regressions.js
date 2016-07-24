@@ -10,7 +10,7 @@ test('Redirect should be allowed immediately following argument', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
@@ -35,7 +35,7 @@ test('Equal sign should be allowed in arguments', t => {
 			type: 'andOr',
 			left: [{
 				type: 'simple_command',
-				name: 'echo',
+				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
 					list: [

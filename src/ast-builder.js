@@ -82,7 +82,7 @@ exports.until = (clause, body) => ({type: 'until', clause, do: body});
 exports.command = (prefix, command, suffix) => {
 	const node = {
 		type: 'simple_command',
-		name: command.text || command
+		name: command
 	};
 	if (prefix) {
 		node.prefix = prefix;

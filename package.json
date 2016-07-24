@@ -26,6 +26,11 @@
     "src",
     "./grammar.js"
   ],
+  "nyc": {
+    "exclude": [
+      "./grammar.js"
+    ]
+  },
   "dependencies": {
     "compose-function": "^3.0.3",
     "has-own-property": "^0.1.0",

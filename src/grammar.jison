@@ -230,9 +230,9 @@ cmd_suffix       : io_redirect
 				 | cmd_suffix io_redirect
 					-> yy.suffixAppend($cmd_suffix, $io_redirect)
 				 | WORD
-					-> yy.suffix($1, yytext, yyleng, yylineno, yy, yystate)
+					-> yy.suffix($1)
 				 | cmd_suffix WORD
-					-> yy.suffixAppend($cmd_suffix, $2, yytext, yyleng, yylineno, yy, yystate)
+					-> yy.suffixAppend($cmd_suffix, $2)
 				 ;
 redirect_list   : io_redirect
 					-> [$io_redirect]

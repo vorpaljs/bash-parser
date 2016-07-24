@@ -14,7 +14,7 @@ test('Redirect should be allowed immediately following argument', t => {
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
-						'foo',
+						{text: 'foo'},
 						{
 							type: 'io_redirect',
 							op: '>',
@@ -39,7 +39,7 @@ test('Equal sign should be allowed in arguments', t => {
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
-						'foo=bar'
+						{text: 'foo=bar'}
 					]
 				}
 			}]

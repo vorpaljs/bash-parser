@@ -42,8 +42,8 @@ test('3', t => {
 			left: [{
 				type: 'simple_command',
 				name: {text: 'read'},
-				prefix: {type: 'cmd_prefix', list: ['IFS=']},
-				suffix: {type: 'cmd_suffix', list: ['-r', 'var']}
+				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
+				suffix: {type: 'cmd_suffix', list: [{text: '-r'}, {text: 'var'}]}
 			}]
 		}]
 	});
@@ -63,8 +63,8 @@ test('4', t => {
 			}, {
 				type: 'simple_command',
 				name: {text: 'read'},
-				prefix: {type: 'cmd_prefix', list: ['IFS=']},
-				suffix: {type: 'cmd_suffix', list: ['var']}
+				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
+				suffix: {type: 'cmd_suffix', list: [{text: 'var'}]}
 			}]
 		}]
 	});
@@ -74,7 +74,7 @@ test('5', t => {
 	const result = bashParser(
 `foo='hello ; rm -rf /'
 dest=bar
-eval "$dest=$foo"`
+eval "dest=foo"`
 );
 	// console.log(JSON.stringify(result, null, 5))
 
@@ -87,7 +87,7 @@ eval "$dest=$foo"`
 				name: {text: ''},
 				prefix: {
 					type: 'cmd_prefix',
-					list: ['foo=\'hello ; rm -rf /\'']
+					list: [{text: 'foo=\'hello ; rm -rf /\''}]
 				}
 			}]
 		}, {
@@ -97,7 +97,7 @@ eval "$dest=$foo"`
 				name: {text: ''},
 				prefix: {
 					type: 'cmd_prefix',
-					list: ['dest=bar']
+					list: [{text: 'dest=bar'}]
 				}
 			}]
 		}, {
@@ -107,7 +107,7 @@ eval "$dest=$foo"`
 				name: {text: 'eval'},
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['"$dest=$foo"']
+					list: [{text: '"dest=foo"'}]
 				}
 			}]
 		}]

@@ -97,13 +97,13 @@ exports.numberIoRedirect = (ioRedirect, numberIo) =>
 	(ioRedirect.numberIo = numberIo.text, ioRedirect);
 
 exports.suffix = item => {
-	return {type: 'cmd_suffix', list: [item.text || item]};
+	return {type: 'cmd_suffix', list: [item]};
 };
 
 exports.suffixAppend = (suffix, item) => {
-	suffix.list.push(item.text || item);
+	suffix.list.push(item);
 	return suffix;
 };
 
-exports.prefix = item => ({type: 'cmd_prefix', list: [item.text || item]});
-exports.prefixAppend = (prefix, item) => (prefix.list.push(item.text || item), prefix);
+exports.prefix = item => ({type: 'cmd_prefix', list: [item]});
+exports.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);

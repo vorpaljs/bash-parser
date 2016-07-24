@@ -47,7 +47,7 @@ test('command with one argument', t => {
 				suffix: {
 					type: 'cmd_suffix',
 					list: [
-						'world'
+						{text: 'world'}
 					]
 				}
 			}]
@@ -66,7 +66,7 @@ test('command with pre-assignment', t => {
 				name: {text: 'run'},
 				prefix: {
 					type: 'cmd_prefix',
-					list: ['TEST=1']
+					list: [{text: 'TEST=1'}]
 				}
 			}]
 		}]
@@ -158,7 +158,7 @@ test('no pre-assignment on suffix', t => {
 				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['TEST=1']
+					list: [{text: 'TEST=1'}]
 				}
 			}]
 		}]
@@ -177,7 +177,7 @@ test('quotes within double quotes', t => {
 				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['"TEST1 \'TEST2"']
+					list: [{text: '"TEST1 \'TEST2"'}]
 				}
 			}]
 		}]
@@ -195,7 +195,7 @@ test('escaped double quotes within double quotes', t => {
 				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['"TEST1 "TEST2"']
+					list: [{text: '"TEST1 "TEST2"'}]
 				}
 			}]
 		}]
@@ -214,7 +214,7 @@ test('double quotes within single quotes', t => {
 				name: {text: 'echo'},
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['\'TEST1 "TEST2\'']
+					list: [{text: '\'TEST1 "TEST2\''}]
 				}
 			}]
 		}]
@@ -231,10 +231,10 @@ test('command with multiple prefixes', t => {
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},
-				prefix: {type: 'cmd_prefix', list: ['TEST1=1', 'TEST2=2']},
+				prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
 				suffix: {
 					type: 'cmd_suffix',
-					list: ['world']
+					list: [{text: 'world'}]
 				}
 			}]
 		}]
@@ -315,7 +315,7 @@ test('parse if', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['1']
+									list: [{text: '1'}]
 								}
 							}]
 						}]
@@ -355,7 +355,7 @@ test('parse if else', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['1']
+									list: [{text: '1'}]
 								}
 							}]
 						}]
@@ -369,7 +369,7 @@ test('parse if else', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['2']
+									list: [{text: '2'}]
 								}
 							}]
 						}]
@@ -409,7 +409,7 @@ test('parse if else multiline', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['1']
+									list: [{text: '1'}]
 								}
 							}]
 						}]
@@ -423,7 +423,7 @@ test('parse if else multiline', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['2']
+									list: [{text: '2'}]
 								}
 							}]
 						}]
@@ -463,7 +463,7 @@ test('parse if elif else', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['1']
+									list: [{text: '1'}]
 								}
 							}]
 						}]
@@ -484,7 +484,7 @@ test('parse if elif else', t => {
 								left: [{
 									type: 'simple_command',
 									name: {text: 'echo'},
-									suffix: {type: 'cmd_suffix', list: ['3']}
+									suffix: {type: 'cmd_suffix', list: [{text: '3'}]}
 								}]
 							}]
 						},
@@ -495,7 +495,7 @@ test('parse if elif else', t => {
 								left: [{
 									type: 'simple_command',
 									name: {text: 'echo'},
-									suffix: {type: 'cmd_suffix', list: ['2']}
+									suffix: {type: 'cmd_suffix', list: [{text: '2'}]}
 								}]
 							}]
 						}
@@ -508,7 +508,6 @@ test('parse if elif else', t => {
 
 test('parse for', t => {
 	const result = bashParser('for x in a b c; do echo $x; done');
-
 	t.deepEqual(
 		result, {
 			type: 'list',
@@ -527,7 +526,14 @@ test('parse for', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['$x']
+									list: [{
+										text: '$x',
+										expansion: {
+											text: 'x',
+											start: 0,
+											end: 2
+										}
+									}]
 								}
 							}]
 						}]
@@ -558,7 +564,14 @@ test('parse for with default sequence', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['$x']
+									list: [{
+										text: '$x',
+										expansion: {
+											text: 'x',
+											start: 0,
+											end: 2
+										}
+									}]
 								}
 							}]
 						}]
@@ -589,7 +602,14 @@ test('parse for with default sequence - on one line', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['$x']
+									list: [{
+										text: '$x',
+										expansion: {
+											text: 'x',
+											start: 0,
+											end: 2
+										}
+									}]
 								}
 							}]
 						}]
@@ -629,7 +649,7 @@ test('parse while', t => {
 								name: {text: 'sleep'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['1']
+									list: [{text: '1'}]
 								}
 							}]
 						}]
@@ -669,7 +689,7 @@ test('parse until', t => {
 								name: {text: 'sleep'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['1']
+									list: [{text: '1'}]
 								}
 							}]
 						}]
@@ -693,7 +713,7 @@ test('parse multiple suffix', t => {
 					name: {text: 'command'},
 					suffix: {
 						type: 'cmd_suffix',
-						list: ['foo', '--lol']
+						list: [{text: 'foo'}, {text: '--lol'}]
 					}
 				}]
 			}]
@@ -742,7 +762,7 @@ test('parse function declaration multiple lines', t => {
 							left: [{
 								type: 'simple_command',
 								name: {text: 'command'},
-								suffix: {type: 'cmd_suffix', list: ['bar', '--lol']}
+								suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
 							}]
 						}]
 					}
@@ -770,7 +790,7 @@ test('parse function declaration', t => {
 							left: [{
 								type: 'simple_command',
 								name: {text: 'command'},
-								suffix: {type: 'cmd_suffix', list: ['bar', '--lol']}
+								suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
 							}]
 						}]
 					}
@@ -834,7 +854,7 @@ test('parse case', t => {
 								name: {text: 'echo'},
 								suffix: {
 									type: 'cmd_suffix',
-									list: ['bar']
+									list: [{text: 'bar'}]
 								}
 							}]
 						}]

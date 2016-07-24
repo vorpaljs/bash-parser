@@ -45,12 +45,16 @@ function setParameterExpansion(token, parameterText, start, end) {
 	let word;
 	let op;
 
-	for (const [opName, opChars] of pairs(parameterOps)) {
+	for (const pair of pairs(parameterOps)) {
+		const opName = pair[0];
+		const opChars = pair[1];
+
 		const pos = parameterText.indexOf(opChars);
 		const parse = require('./index');
 
 		if (pos !== -1) {
 			parameter = parameterText.slice(0, pos);
+
 			// TODO: This is probably very fragil,e need to be reimplemented
 			// in other ways
 			word = parse(parameterText.slice(pos + 2)).andOrs[0].left[0].name;

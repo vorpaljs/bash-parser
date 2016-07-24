@@ -25,7 +25,7 @@ test('parse for', t => {
 									list: [{
 										text: '$x',
 										expansion: [{
-											text: 'x',
+											parameter: 'x',
 											start: 0,
 											end: 2
 										}]
@@ -63,7 +63,7 @@ test('parse for with default sequence', t => {
 									list: [{
 										text: '$x',
 										expansion: [{
-											text: 'x',
+											parameter: 'x',
 											start: 0,
 											end: 2
 										}]
@@ -101,7 +101,7 @@ test('parse for with default sequence - on one line', t => {
 									list: [{
 										text: '$x',
 										expansion: [{
-											text: 'x',
+											parameter: 'x',
 											start: 0,
 											end: 2
 										}]

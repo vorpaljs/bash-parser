@@ -19,7 +19,7 @@ test('parameter substitution in assignment', t => {
 							list: [{
 								text: 'echoword=${other}test',
 								expansion: [{
-									text: 'other',
+									parameter: 'other',
 									start: 9,
 									end: 17
 								}]
@@ -48,7 +48,7 @@ test('parameter substitution', t => {
 							list: [{
 								text: 'word${other}test',
 								expansion: [{
-									text: 'other',
+									parameter: 'other',
 									start: 4,
 									end: 12
 								}]
@@ -77,12 +77,12 @@ test('multiple parameter substitution', t => {
 							list: [{
 								text: 'word${other}t$est',
 								expansion: [{
-									text: 'other',
+									parameter: 'other',
 									start: 4,
 									end: 12
 								},
 								{
-									text: 'est',
+									parameter: 'est',
 									start: 13,
 									end: 17
 								}]
@@ -108,7 +108,7 @@ test('command with only parameter substitution', t => {
 						name: {
 							text: '$other',
 							expansion: [{
-								text: 'other',
+								parameter: 'other',
 								start: 0,
 								end: 6
 							}]

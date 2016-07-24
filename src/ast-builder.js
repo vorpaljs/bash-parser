@@ -90,7 +90,6 @@ exports.command = (prefix, command, suffix) => {
 	if (suffix) {
 		node.suffix = suffix;
 	}
-	// console.log(JSON.stringify(node,null,2))
 	return node;
 };
 exports.ioRedirect = (op, file) => ({type: 'io_redirect', op: op.text, file: file.text});

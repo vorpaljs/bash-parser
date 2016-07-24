@@ -128,11 +128,11 @@ in               : In                      /* Apply rule 6 */
 wordlist         : WORD+
 				 ;
 case_clause     : Case WORD linebreak in linebreak case_list    Esac
-					-> {type: 'case', clause: $2.text || $2, cases: $case_list}
+					-> {type: 'case', clause: $2, cases: $case_list}
 				 | Case WORD linebreak in linebreak case_list_ns Esac
-				 	-> {type: 'case', clause: $2.text || $2, cases: $case_list_ns}
+				 	-> {type: 'case', clause: $2, cases: $case_list_ns}
 				 | Case WORD linebreak in linebreak             Esac
-				 	-> {type: 'case', clause: $2.text || $2}
+				 	-> {type: 'case', clause: $2}
 				 ;
 case_list_ns     : case_list case_item_ns
 					-> $case_list.concat($case_item_ns)
@@ -163,9 +163,9 @@ case_item        : pattern CLOSE_PAREN linebreak DSEMI linebreak
 				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
 				 ;
 pattern         : WORD        /* Apply rule 4 */
-					->	[$1.text || $1]
+					->	[$1]
 				 | pattern PIPE WORD        /* Do not apply rule 4 */
-				 	-> $pattern.concat($3.text || $3)
+				 	-> $pattern.concat($3)
 				 ;
 if_clause       : If compound_list Then compound_list else_part Fi
 					-> yy.ifClause($2, $4, $else_part)

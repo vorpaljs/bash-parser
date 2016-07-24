@@ -806,37 +806,44 @@ test('parse subshell', t => {
 	);
 });
 
+test.skip('parse case with substitutions in clause', t => {});
+
 test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
-	// console.log(JSON.stringify(result, null, 4))
-	t.deepEqual(
-		result, {
-			type: 'list',
-			andOrs: [{
-				type: 'andOr',
-				left: [{
-					type: 'case',
-					clause: 'foo',
-					cases: [{
-						type: 'pattern',
-						pattern: ['*'],
-						body: {
-							type: 'term',
-							andOrs: [{
-								type: 'andOr',
-								left: [{
-									type: 'simple_command',
-									name: 'echo',
-									suffix: {
-										type: 'cmd_suffix',
-										list: ['bar']
-									}
-								}]
+
+	const expected = {
+		type: 'list',
+		andOrs: [{
+			type: 'andOr',
+			left: [{
+				type: 'case',
+				clause: {
+					text: 'foo'
+				},
+				cases: [{
+					type: 'pattern',
+					pattern: [{
+						text: '*'
+					}],
+					body: {
+						type: 'term',
+						andOrs: [{
+							type: 'andOr',
+							left: [{
+								type: 'simple_command',
+								name: 'echo',
+								suffix: {
+									type: 'cmd_suffix',
+									list: ['bar']
+								}
 							}]
-						}
-					}]
+						}]
+					}
 				}]
 			}]
-		}
-	);
+		}]
+	};
+
+	t.is(JSON.stringify(result), JSON.stringify(expected));
 });
+

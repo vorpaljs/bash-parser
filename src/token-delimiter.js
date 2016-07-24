@@ -30,6 +30,15 @@ const eof = () => ({EOF: true});
 const operator = ch => ({OPERATOR: ch});
 const mkToken = tk => ({TOKEN: tk});
 const isQuotingCharacter = ch => hasOwnProperty(QUOTING_DELIM, ch);
+
+function setParameterExpansion(token, parameterText, start, end) {
+	token.expansion = (token.expansion || []).concat({
+		parameter: parameterText,
+		start,
+		end
+	});
+}
+
 /*
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
@@ -135,11 +144,12 @@ module.exports = function * tokenDelimiter(source) {
 							if (candidateParameterName !== '') {
 								// we have already accumulated a valid name, use it
 								// end of parameter expansion
-								token.expansion = (token.expansion || []).concat({
-									parameter: candidateParameterName,
-									start: startOfExpansion,
-									end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-								});
+								setParameterExpansion(
+									token,
+									candidateParameterName,
+									startOfExpansion,
+									startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+								);
 								expansion = null;
 								candidateParameterName = '';
 							}
@@ -151,12 +161,13 @@ module.exports = function * tokenDelimiter(source) {
 			} else if (expanding === EXPANDING.PARAMETER) {
 				if (currentCharacter === '}') {
 					// end of parameter expansion
+					setParameterExpansion(
+						token,
+						expansion,
+						startOfExpansion,
+						startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
+					);
 
-					token.expansion = (token.expansion || []).concat({
-						parameter: expansion,
-						start: startOfExpansion,
-						end: startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
-					});
 					startOfExpansion = 0;
 					expanding = EXPANDING.NO;
 					expansion = null;
@@ -240,11 +251,13 @@ module.exports = function * tokenDelimiter(source) {
 	if (!token.EMPTY) {
 		if (candidateParameterName !== '') {
 			// we have already accumulated a valid name for parameter expansion, use it
-			token.expansion = (token.expansion || []).concat({
-				parameter: candidateParameterName,
-				start: startOfExpansion,
-				end: startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-			});
+			setParameterExpansion(
+				token,
+				candidateParameterName,
+				startOfExpansion,
+				startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+			);
+
 			expansion = null;
 		}
 

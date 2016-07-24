@@ -95,7 +95,7 @@ test('multiple parameter substitution', t => {
 	});
 });
 
-test('command with only parameter substitution', t => {
+test('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
 	t.deepEqual(result, {
 		type: 'list',
@@ -111,6 +111,36 @@ test('command with only parameter substitution', t => {
 								parameter: 'other',
 								start: 0,
 								end: 6
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('parameter with default value', t => {
+	const result = bashParser('${other:-default_value}');
+	console.log(JSON.stringify(result, null, 5))
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {
+							text: '${other:-default_value}',
+							expansion: [{
+								parameter: 'other',
+								word: {
+									text: 'default_value'
+								},
+								op: ':-',
+								start: 0,
+								end: 23
 							}]
 						}
 					}

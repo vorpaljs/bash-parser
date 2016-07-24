@@ -10,10 +10,16 @@ module.exports = () => ({
 		const tk = item.value;
 		const tkType = Object.keys(tk)[0];
 		const text = tk[tkType];
-		this.yytext = {
-			text: text,
-			expansion: tk.expansion
-		};
+		// expansion happens only on WORD and ASSIGNMENT_WORD tokens
+		if (tkType === 'WORD' || tkType === 'ASSIGNMENT_WORD') {
+			this.yytext = {
+				text: text,
+				expansion: tk.expansion
+			};
+		} else {
+			this.yytext = text;
+		}
+
 		return tkType;
 	},
 	setInput(source) {

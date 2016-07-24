@@ -4,6 +4,7 @@ const bashParser = require('../src');
 
 test('Redirect should be allowed immediately following argument', t => {
 	const result = bashParser('echo foo>file.txt');
+
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
@@ -18,7 +19,7 @@ test('Redirect should be allowed immediately following argument', t => {
 						{
 							type: 'io_redirect',
 							op: '>',
-							file: 'file.txt'
+							file: {text: 'file.txt'}
 						}
 					]
 				}

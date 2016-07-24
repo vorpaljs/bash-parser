@@ -2,10 +2,9 @@
 const test = require('ava');
 const bashParser = require('../src');
 // const inspect = require('util').inspect;
-/*
+
 test('parameter substitution', t => {
 	const result = bashParser('echo word${other}test');
-	console.log(JSON.stringify(result, null, 4));
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [
@@ -17,16 +16,14 @@ test('parameter substitution', t => {
 						name: {text: 'echo'},
 						suffix: {
 							type: 'cmd_suffix',
-							list: [
-								{
-									type: 'cmd_argument',
-									expansion: {
-										text: 'other',
-										start: 4,
-										end: 12
-									}
+							list: [{
+								text: 'word${other}test',
+								expansion: {
+									text: 'other',
+									start: 4,
+									end: 12
 								}
-							]
+							}]
 						}
 					}
 				]
@@ -34,7 +31,7 @@ test('parameter substitution', t => {
 		]
 	});
 });
-*/
+
 test('command with one argument', t => {
 	const result = bashParser('echo world');
 	t.deepEqual(result, {
@@ -277,7 +274,7 @@ test('command with redirection to file', t => {
 						{
 							type: 'io_redirect',
 							op: '>',
-							file: 'file.txt'
+							file: {text: 'file.txt'}
 						}
 					]
 				}
@@ -516,7 +513,7 @@ test('parse for', t => {
 				left: [{
 					type: 'for',
 					name: 'x',
-					wordlist: ['a', 'b', 'c'],
+					wordlist: [{text: 'a'}, {text: 'b'}, {text: 'c'}],
 					do: {
 						type: 'term',
 						andOrs: [{
@@ -723,7 +720,7 @@ test('parse multiple suffix', t => {
 
 test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
-	// console.log(inspect(result, {depth:null}))
+	// console.log(JSON.stringify(result, null, 4))
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [{
@@ -736,7 +733,7 @@ test('command with stderr redirection to file', t => {
 					list: [{
 						type: 'io_redirect',
 						op: '>',
-						file: 'file.txt',
+						file: {text: 'file.txt'},
 						numberIo: '2'
 					}]
 				}
@@ -747,6 +744,8 @@ test('command with stderr redirection to file', t => {
 
 test('parse function declaration multiple lines', t => {
 	const result = bashParser('foo () \n{\n command bar --lol;\n}');
+	// console.log(JSON.stringify(result, null, 4));
+
 	t.deepEqual(
 		result, {
 			type: 'list',

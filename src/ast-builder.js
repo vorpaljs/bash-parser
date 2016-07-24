@@ -37,20 +37,20 @@ exports.orAndOr = (left, right) => {
 };
 exports.forClause = (name, wordlist, doGroup) => ({
 	type: 'for',
-	name: name.text,
-	wordlist: wordlist.map(item => item.text || item),
+	name: name,
+	wordlist: wordlist.map(item => item),
 	do: doGroup
 });
 
 exports.forClauseDefault = (name, doGroup) => ({
 	type: 'for',
-	name: name.text,
+	name: name,
 	do: doGroup
 });
 
 exports.functionDefinition = (name, body) => ({
 	type: 'function',
-	name: name.text,
+	name: name,
 	body
 });
 
@@ -92,9 +92,9 @@ exports.command = (prefix, command, suffix) => {
 	}
 	return node;
 };
-exports.ioRedirect = (op, file) => ({type: 'io_redirect', op: op.text, file: file.text});
+exports.ioRedirect = (op, file) => ({type: 'io_redirect', op: op, file: file});
 exports.numberIoRedirect = (ioRedirect, numberIo) =>
-	(ioRedirect.numberIo = numberIo.text, ioRedirect);
+	(ioRedirect.numberIo = numberIo, ioRedirect);
 
 exports.suffix = item => {
 	return {type: 'cmd_suffix', list: [item]};

@@ -8,7 +8,7 @@ function tokenize(text) {
 	const results = [];
 	let token = lexer.lex();
 	while (token !== 'EOF') {
-		const value = lexer.yytext.text;
+		const value = lexer.yytext.text || lexer.yytext;
 		const expansion = lexer.expansion;
 		if (expansion) {
 			results.push({token, value, expansion});

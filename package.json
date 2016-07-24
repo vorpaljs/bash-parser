@@ -9,7 +9,7 @@
   "scripts": {
     "test": "ava --no-babel && xo --ignore grammar.js",
     "build": "jison src/grammar.jison > grammar.js",
-    "cover-test": "nyc ava --no-babel"
+    "cover-test": "nyc ava --no-babel && xo --ignore grammar.js"
   },
   "keywords": [],
   "engines": {
@@ -28,7 +28,7 @@
   ],
   "nyc": {
     "exclude": [
-      "./grammar.js"
+      "grammar.js"
     ]
   },
   "dependencies": {

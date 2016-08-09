@@ -2,75 +2,94 @@
 const test = require('ava');
 const posixLexer = require('../src/posix-shell-lexer');
 
-function tokenize(text) {
+function tokenize(text, rawTokens) {
 	const lexer = posixLexer();
 	lexer.setInput(text);
 	const results = [];
 	let token = lexer.lex();
 	while (token !== 'EOF') {
-		const value = lexer.yytext.text || lexer.yytext;
-		const expansion = lexer.expansion;
-		if (expansion) {
-			results.push({token, value, expansion});
+		if (rawTokens) {
+			results.push({token, value: JSON.parse(JSON.stringify(lexer.yytext))});
 		} else {
-			results.push({token, value});
+			const value = lexer.yytext.text || lexer.yytext;
+			const expansion = lexer.expansion;
+			if (expansion) {
+				results.push({token, value, expansion});
+			} else {
+				results.push({token, value});
+			}
 		}
+
 		token = lexer.lex();
 	}
 	return results;
 }
-/*
-test('parses parameter substitution', t => {
-	const result = tokenize('echo word${other}test');
-	t.deepEqual(result,
-		[{token: 'WORD', value: 'echo'},
-		{
-			token: 'WORD',
-			value: 'word${other}test',
-			expansion: {text: 'other', start: 4, end: 12}
-		}]
-	);
 
-	t.is(result[1].value.slice(
-		result[1].expansion.start,
-		result[1].expansion.end
+test('parses parameter substitution', t => {
+	const result = tokenize('echo word${other}test', true);
+	t.deepEqual(result,
+		[{
+			token: 'WORD',
+			value: {
+				text: 'echo'
+			}
+		}, {
+			token: 'WORD',
+			value: {
+				text: 'word${other}test',
+				expansion: [{
+					parameter: 'other',
+					start: 4,
+					end: 12
+				}]
+			}
+		}]);
+
+	t.is(result[1].value.text.slice(
+		result[1].value.expansion[0].start,
+		result[1].value.expansion[0].end
 	), '${other}');
 });
 
 test('parses unquoted parameter substitution', t => {
-	const result = tokenize('echo word$test');
+	const result = tokenize('echo word$test', true);
 	t.deepEqual(result,
-		[{token: 'WORD', value: 'echo'},
+		[{token: 'WORD', value: {text: 'echo'}},
 		{
 			token: 'WORD',
-			value: 'word$test',
-			expansion: {text: 'test', start: 4, end: 9}
+			value: {
+				text: 'word$test',
+				expansion: [{parameter: 'test', start: 4, end: 9}]
+			}
 		}]
 	);
 
-	t.is(result[1].value.slice(
-		result[1].expansion.start,
-		result[1].expansion.end
+	t.is(result[1].value.text.slice(
+		result[1].value.expansion[0].start,
+		result[1].value.expansion[0].end
 	), '$test');
 });
 
 test('unquoted parameter delimited by symbol', t => {
-	const result = tokenize('echo word$test,,');
+	const result = tokenize('echo word$test,,', true);
+
 	t.deepEqual(result,
-		[{token: 'WORD', value: 'echo'},
+		[{token: 'WORD', value: {text: 'echo'}},
 		{
 			token: 'WORD',
-			value: 'word$test,,',
-			expansion: {text: 'test', start: 4, end: 9}
+			value: {
+				text: 'word$test,,',
+				expansion: [{parameter: 'test', start: 4, end: 9}]
+			}
 		}]
 	);
 
-	t.is(result[1].value.slice(
-		result[1].expansion.start,
-		result[1].expansion.end
+	t.is(result[1].value.text.slice(
+		result[1].value.expansion[0].start,
+		result[1].value.expansion[0].end
 	), '$test');
 });
-*/
+
 test('parse single operator', t => {
 	t.deepEqual(
 		tokenize('<<'),

@@ -1,7 +1,6 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
 // const values = require('object-values');
-const pairs = require('object-pairs');
 const operators = require('./operators');
 
 const QUOTING = {
@@ -17,13 +16,6 @@ const QUOTING_DELIM = {
 	'"': QUOTING.DOUBLE
 };
 
-const EXPANDING = {
-	NO: {},
-	PARAMETER: {},
-	COMMAND: {},
-	ARITHMETIC: {}
-};
-
 const isOperatorStart = ch => '()|&!;<>'.indexOf(ch) !== -1;
 const isOperator = op => hasOwnProperty(operators, op);
 const empty = () => ({EMPTY: true});
@@ -32,46 +24,6 @@ const eof = () => ({EOF: true});
 const operator = ch => ({OPERATOR: ch});
 const mkToken = tk => ({TOKEN: tk});
 const isQuotingCharacter = ch => hasOwnProperty(QUOTING_DELIM, ch);
-
-const parameterOps = {
-	useDefaultValue: ':-',
-	assignDefaultValue: ':=',
-	indicateErrorIfNull: ':?',
-	useAlternativeValue: ':+'
-};
-
-function setParameterExpansion(token, parameterText, start, end) {
-	let parameter = parameterText;
-	let word;
-	let op;
-
-	for (const pair of pairs(parameterOps)) {
-		const opName = pair[0];
-		const opChars = pair[1];
-
-		const pos = parameterText.indexOf(opChars);
-		const parse = require('./index');
-
-		if (pos !== -1) {
-			parameter = parameterText.slice(0, pos);
-
-			// TODO: This is probably very fragil,e need to be reimplemented
-			// in other ways
-			word = parse(parameterText.slice(pos + 2)).andOrs[0].left[0].name;
-			op = opName;
-			// only one operators is allowed
-			break;
-		}
-	}
-
-	token.expansion = (token.expansion || []).concat({
-		parameter,
-		word,
-		op,
-		start,
-		end
-	});
-}
 
 /*
 	delimit tokens on source according to rules defined
@@ -84,10 +36,6 @@ module.exports = function * tokenDelimiter(source) {
 	let token = empty();
 	let quoting = QUOTING.NO;
 	let prevQuoting = null;
-	let expanding = EXPANDING.NO;
-	let expansion = null;
-	let startOfExpansion = 0;
-	let candidateParameterName = '';
 
 	for (const currentCharacter of source) {
 		if (token.OPERATOR) {
@@ -147,69 +95,6 @@ module.exports = function * tokenDelimiter(source) {
 
 			// skip to next character
 			// continue;
-		}
-
-		// RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
-		// identify the start of any candidates for parameter expansion (Parameter Expansion),
-		// command substitution (Command Substitution), or arithmetic expansion (Arithmetic
-		// Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
-		// or '`', and "$((", respectively.
-
-		if (quoting !== QUOTING.ESCAPE) {				// skip if escaping character
-			if (expanding === EXPANDING.NO) {			// when no espanding is in progress
-				if (currentCharacter === '$' && expansion === null) {
-					// start of expansion candidate
-					expansion = '$';
-					startOfExpansion = token.EMPTY || !token.TOKEN ? 0 : token.TOKEN.length;
-				} else if (expansion === '$') {		// expansion candidate in progress
-					if (currentCharacter === '{') {
-						// start of parameter expansion quoted by braces
-						expanding = EXPANDING.PARAMETER;
-						expansion = '';
-					} else {		// expansion candidate failed
-						if (candidateParameterName === '' && currentCharacter.match(/[a-zA-z_]/)) {	// eslint-disable-line no-lonely-if
-							// first name character should be letter or underscore
-							candidateParameterName += currentCharacter;
-						} else if (candidateParameterName !== '' && currentCharacter.match(/[a-zA-z_0-9]/)) {
-							// from second character on name char could be letter or digits or underscore
-							candidateParameterName += currentCharacter;
-						} else {
-							// this character could not be part of a name
-							if (candidateParameterName !== '') {
-								// we have already accumulated a valid name, use it
-								// end of parameter expansion
-								setParameterExpansion(
-									token,
-									candidateParameterName,
-									startOfExpansion,
-									startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-								);
-								expansion = null;
-								candidateParameterName = '';
-							}
-
-							startOfExpansion = 0;
-						}
-					}
-				}
-			} else if (expanding === EXPANDING.PARAMETER) {
-				if (currentCharacter === '}') {
-					// end of parameter expansion
-					setParameterExpansion(
-						token,
-						expansion,
-						startOfExpansion,
-						startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
-					);
-
-					startOfExpansion = 0;
-					expanding = EXPANDING.NO;
-					expansion = null;
-				} else {
-					// accumulation
-					expansion += currentCharacter;
-				}
-			}
 		}
 
 		// RULE 6 - If the current character is not quoted and can be used as the
@@ -283,18 +168,6 @@ module.exports = function * tokenDelimiter(source) {
 	// be delimited. If there is no current token, the end-of-input indicator
 	// shall be returned as the token.
 	if (!token.EMPTY) {
-		if (candidateParameterName !== '') {
-			// we have already accumulated a valid name for parameter expansion, use it
-			setParameterExpansion(
-				token,
-				candidateParameterName,
-				startOfExpansion,
-				startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
-			);
-
-			expansion = null;
-		}
-
 		yield token;
 	}
 	yield eof();

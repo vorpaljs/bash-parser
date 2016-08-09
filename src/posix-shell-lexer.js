@@ -2,6 +2,7 @@
 const compose = require('compose-function');
 const tokenDelimiter = require('./token-delimiter');
 const rules = require('./tokenization-rules');
+const parameterExpansion = require('./parameter-expansion');
 // const logger = require('./logger-iterator');
 
 module.exports = () => ({
@@ -28,12 +29,15 @@ module.exports = () => ({
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,
-			rules.reservedWords,
+			// logger('after'),
+			parameterExpansion,
 			// logger('before'),
+			rules.reservedWords,
+
 			rules.assignmentWord,
 
 			rules.separator,
-			// logger('after'),
+
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
 

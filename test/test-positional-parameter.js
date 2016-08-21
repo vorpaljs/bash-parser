@@ -2,6 +2,24 @@
 const test = require('ava');
 const bashParser = require('../src');
 
+test('positional parameter with word following', t => {
+	const result = bashParser('echoword=$1ciao')
+		.andOrs[0].left[0].prefix;
+
+	t.deepEqual(result, {
+		type: 'cmd_prefix',
+		list: [{
+			text: 'echoword=$1ciao',
+			expansion: [{
+				kind: 'positional',
+				parameter: 1,
+				start: 9,
+				end: 11
+			}]
+		}]
+	});
+});
+
 test('positional parameter in braces', t => {
 	const result = bashParser('echoword=${11}test');
 	t.deepEqual(result, {

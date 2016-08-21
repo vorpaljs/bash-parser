@@ -110,7 +110,7 @@ function expandWord(token) {
 			return true;
 		}
 
-		if (isSpecialParameter(candidateParameterName) && isSpecialParameter(currentCharacter)) {
+		if (isSpecialParameter(candidateParameterName)) {
 			// positional, single digit parameter allowed if not brace quoted
 			// reset candidateParameterName
 			// candidateParameterName = '';

@@ -1,20 +1,18 @@
 'use strict';
-
-const EXPANDING = {
-	NO: {},
-	PARAMETER: {},
-	COMMAND: {},
-	ARITHMETIC: {}
-};
-
-function setCommandExpansion(token, commandText, start, end) {
+function setCommandExpansion({token, commandText, start, end, expandingCommand}) {
 	let command = commandText;
 	let word;
 	let op;
 
+	if (expandingCommand === '`') {
+		command = command.replace(/\\`/g, '`');
+	}
+	const bashParser = require('./index');
+
 	token.expansion = (token.expansion || []).concat({
 		kind: 'command',
 		command,
+		commandAST: bashParser(command),
 		word,
 		op,
 		start,
@@ -25,40 +23,61 @@ function setCommandExpansion(token, commandText, start, end) {
 function expandWord(token) {
 	const text = token.WORD || token.ASSIGNMENT_WORD;
 
-	let expanding = EXPANDING.NO;
+	let expandingCommand = null;
 	let expansion = null;
 	let startOfExpansion = 0;
 	let currentCharIdx = 0;
+	let escaping = false;
 
 	for (const currentCharacter of text) {
-		if (expanding === EXPANDING.NO) {			// when no espanding is in progress
-			if (currentCharacter === '$' && expansion === null) {
+		if (!expandingCommand) {			// when no espanding is in progress
+			if (!escaping && currentCharacter === '$' && expansion === null) {
 				// start of expansion candidate
 				expansion = '$';
 				startOfExpansion = currentCharIdx;
-			} else if (expansion === '$' && currentCharacter === '(') {
+			} else if (!escaping && currentCharacter === '`' && expansion === null) {
+				// start of expansion candidate
+				expandingCommand = '`';
+				expansion = '';
+				startOfExpansion = currentCharIdx;
+			} else if (expansion === '$' && !escaping && currentCharacter === '(') {
 				// start of command expansion
-				expanding = EXPANDING.COMMAND;
+				expandingCommand = '$';
 				expansion = '';
 			}
-		} else if (expanding === EXPANDING.COMMAND) {
-			if (currentCharacter === ')') {
+		} else if (expandingCommand) {
+			if (!escaping && currentCharacter === ')' && expandingCommand === '$') {
 				// end of command expansion
-				setCommandExpansion(
+				setCommandExpansion({
 					token,
-					expansion,
-					startOfExpansion,
-					startOfExpansion + expansion.length + 3  // add 3 to take in account $()
-				);
+					commandText: expansion,
+					start: startOfExpansion,
+					end: startOfExpansion + expansion.length + 3,  // add 3 to take in account $()
+					expandingCommand
+				});
 
 				startOfExpansion = 0;
-				expanding = EXPANDING.NO;
+				expandingCommand = null;
+				expansion = null;
+			} else if (!escaping && currentCharacter === '`' && expandingCommand === '`') {
+				// end of command expansion
+				setCommandExpansion({
+					token,
+					commandText: expansion,
+					start: startOfExpansion,
+					end: startOfExpansion + expansion.length + 2,  // add 2 to take in account ``
+					expandingCommand
+				});
+
+				startOfExpansion = 0;
+				expandingCommand = null;
 				expansion = null;
 			} else {
 				// accumulation
 				expansion += currentCharacter;
 			}
 		}
+		escaping = currentCharacter === '\\';
 
 		currentCharIdx++;
 	}

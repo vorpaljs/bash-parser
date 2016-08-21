@@ -1,5 +1,12 @@
 'use strict';
-function setCommandExpansion({token, commandText, start, end, expandingCommand}) {
+
+function setCommandExpansion(args) {
+	const token = args.token;
+	const commandText = args.commandText;
+	const start = args.start;
+	const end = args.end;
+	const expandingCommand = args.expandingCommand;
+
 	let command = commandText;
 	let word;
 	let op;

@@ -7,13 +7,17 @@ const QUOTING = {
 	NO: {},
 	ESCAPE: {},
 	SINGLE: {},
-	DOUBLE: {}
+	DOUBLE: {},
+	PARAMETER: {},
+	COMMAND: {}
 };
 
 const QUOTING_DELIM = {
 	'\\': QUOTING.ESCAPE,
 	'\'': QUOTING.SINGLE,
-	'"': QUOTING.DOUBLE
+	'"': QUOTING.DOUBLE,
+	'${': QUOTING.PARAMETER,
+	'$(': QUOTING.COMMAND
 };
 
 const isOperatorStart = (ch, lastCh) => lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
@@ -23,7 +27,7 @@ const newLine = () => ({NEWLINE: '\n'});
 const eof = () => ({EOF: true});
 const operator = ch => ({OPERATOR: ch});
 const mkToken = tk => ({TOKEN: tk});
-const isQuotingCharacter = ch => hasOwnProperty(QUOTING_DELIM, ch);
+const isQuotingCharacter = (ch, lastCh) => hasOwnProperty(QUOTING_DELIM, ch) || hasOwnProperty(QUOTING_DELIM, lastCh + ch);
 
 /*
 	delimit tokens on source according to rules defined
@@ -64,7 +68,7 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		if (isQuotingCharacter(currentCharacter) &&
+		if (isQuotingCharacter(currentCharacter, lastCharacter) &&
 			quoting === QUOTING.NO) {
 			quoting = QUOTING_DELIM[currentCharacter];
 

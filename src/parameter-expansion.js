@@ -20,6 +20,19 @@ function setParameterExpansion(token, parameterText, start, end) {
 	let word;
 	let op;
 
+	if (parameter.match(/[0-9]+/)) {
+		token.expansion = (token.expansion || []).concat({
+			kind: 'positional',
+			parameter: Number(parameter),
+			word,
+			op,
+			start,
+			end
+		});
+
+		return;
+	}
+
 	for (const pair of pairs(parameterOps)) {
 		const opName = pair[0];
 		const opChars = pair[1];
@@ -62,6 +75,18 @@ function expandWord(token) {
 	function charCouldBePartOfName(currentCharacter) {
 		if (candidateParameterName === '' && currentCharacter.match(/[a-zA-z_]/)) {
 			return true;
+		}
+
+		if (candidateParameterName === '' && currentCharacter.match(/[1-9]/)) {
+			// positional, single digit parameter
+			return true;
+		}
+
+		if (candidateParameterName.match(/[1-9]/) && currentCharacter.match(/[1-9]/)) {
+			// positional, single digit parameter allowed if not brace quoted
+			// reset candidateParameterName
+			candidateParameterName = '';
+			return false;
 		}
 
 		if (candidateParameterName !== '' && currentCharacter.match(/[a-zA-z_0-9]/)) {

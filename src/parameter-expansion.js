@@ -15,15 +15,43 @@ const EXPANDING = {
 	ARITHMETIC: {}
 };
 
+const specialParameterNames = {
+	'!': 'last-background-pid',
+	'@': 'positional-list',
+	'-': 'current-option-flags',
+	'#': 'positional-count',
+	'?': 'last-exit-status',
+	'*': 'positional-string',
+	'$': 'shell-process-id',
+	'0': 'shell-script-name'
+};
+
+function isSpecialParameter(currentCharacter) {
+	return currentCharacter.match(/^[0-9\-!@#\?\*\$]$/);
+}
+
 function setParameterExpansion(token, parameterText, start, end) {
 	let parameter = parameterText;
 	let word;
 	let op;
 
-	if (parameter.match(/[0-9]+/)) {
+	if (parameter.match(/^[0-9]+$/) && parameter !== '0') {
 		token.expansion = (token.expansion || []).concat({
 			kind: 'positional',
 			parameter: Number(parameter),
+			word,
+			op,
+			start,
+			end
+		});
+
+		return;
+	}
+
+	if (isSpecialParameter(parameter)) {
+		token.expansion = (token.expansion || []).concat({
+			kind: specialParameterNames[parameter],
+			parameter: parameter,
 			word,
 			op,
 			start,
@@ -77,15 +105,15 @@ function expandWord(token) {
 			return true;
 		}
 
-		if (candidateParameterName === '' && currentCharacter.match(/[1-9]/)) {
+		if (candidateParameterName === '' && isSpecialParameter(currentCharacter)) {
 			// positional, single digit parameter
 			return true;
 		}
 
-		if (candidateParameterName.match(/[1-9]/) && currentCharacter.match(/[1-9]/)) {
+		if (isSpecialParameter(candidateParameterName) && isSpecialParameter(currentCharacter)) {
 			// positional, single digit parameter allowed if not brace quoted
 			// reset candidateParameterName
-			candidateParameterName = '';
+			// candidateParameterName = '';
 			return false;
 		}
 

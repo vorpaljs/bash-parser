@@ -122,6 +122,7 @@ test('command consisting of only parameter substitution', t => {
 
 test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
+	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [

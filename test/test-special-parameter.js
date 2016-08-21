@@ -2,38 +2,8 @@
 const test = require('ava');
 const bashParser = require('../src');
 
-test('positional parameter in braces', t => {
-	const result = bashParser('echoword=${11}test');
-	t.deepEqual(result, {
-		type: 'list',
-		andOrs: [
-			{
-				type: 'andOr',
-				left: [
-					{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=${11}test',
-								expansion: [{
-									parameter: 11,
-									kind: 'positional',
-									start: 9,
-									end: 14
-								}]
-							}]
-						}
-					}
-				]
-			}
-		]
-	});
-});
-
-test('positional parameter without braces', t => {
-	const result = bashParser('echoword=$1');
+test('positional list paramter', t => {
+	const result = bashParser('echoword=$@');
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
@@ -47,10 +17,10 @@ test('positional parameter without braces', t => {
 						prefix: {
 							type: 'cmd_prefix',
 							list: [{
-								text: 'echoword=$1',
+								text: 'echoword=$@',
 								expansion: [{
-									parameter: 1,
-									kind: 'positional',
+									parameter: '@',
+									kind: 'positional-list',
 									start: 9,
 									end: 11
 								}]
@@ -63,9 +33,8 @@ test('positional parameter without braces', t => {
 	});
 });
 
-test('positional parameter without braces allow one digit only', t => {
-	const result = bashParser('echoword=$11');
-	// console.log(JSON.stringify(result, null, 5))
+test('positional string paramter', t => {
+	const result = bashParser('echoword=$*');
 	t.deepEqual(result, {
 		type: 'list',
 		andOrs: [
@@ -78,7 +47,193 @@ test('positional parameter without braces allow one digit only', t => {
 						prefix: {
 							type: 'cmd_prefix',
 							list: [{
-								text: 'echoword=$11'
+								text: 'echoword=$*',
+								expansion: [{
+									parameter: '*',
+									kind: 'positional-string',
+									start: 9,
+									end: 11
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('positional count paramter', t => {
+	const result = bashParser('echoword=$#');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=$#',
+								expansion: [{
+									parameter: '#',
+									kind: 'positional-count',
+									start: 9,
+									end: 11
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('last exit status', t => {
+	const result = bashParser('echoword=$?');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=$?',
+								expansion: [{
+									parameter: '?',
+									kind: 'last-exit-status',
+									start: 9,
+									end: 11
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('current option flags', t => {
+	const result = bashParser('echoword=$-');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=$-',
+								expansion: [{
+									parameter: '-',
+									kind: 'current-option-flags',
+									start: 9,
+									end: 11
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('shell process id', t => {
+	const result = bashParser('echoword=$$');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=$$',
+								expansion: [{
+									parameter: '$',
+									kind: 'shell-process-id',
+									start: 9,
+									end: 11
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('last background pid', t => {
+	const result = bashParser('echoword=$!');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=$!',
+								expansion: [{
+									parameter: '!',
+									kind: 'last-background-pid',
+									start: 9,
+									end: 11
+								}]
+							}]
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
+test('shell script name', t => {
+	const result = bashParser('echoword=$0');
+	t.deepEqual(result, {
+		type: 'list',
+		andOrs: [
+			{
+				type: 'andOr',
+				left: [
+					{
+						type: 'simple_command',
+						name: {text: ''},
+						prefix: {
+							type: 'cmd_prefix',
+							list: [{
+								text: 'echoword=$0',
+								expansion: [{
+									parameter: '0',
+									kind: 'shell-script-name',
+									start: 9,
+									end: 11
+								}]
 							}]
 						}
 					}

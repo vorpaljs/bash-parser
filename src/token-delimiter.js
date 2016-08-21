@@ -16,7 +16,7 @@ const QUOTING_DELIM = {
 	'"': QUOTING.DOUBLE
 };
 
-const isOperatorStart = ch => '()|&!;<>'.indexOf(ch) !== -1;
+const isOperatorStart = (ch, lastCh) => lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
 const isOperator = op => hasOwnProperty(operators, op);
 const empty = () => ({EMPTY: true});
 const newLine = () => ({NEWLINE: '\n'});
@@ -36,6 +36,7 @@ module.exports = function * tokenDelimiter(source) {
 	let token = empty();
 	let quoting = QUOTING.NO;
 	let prevQuoting = null;
+	let lastCharacter = null;
 
 	for (const currentCharacter of source) {
 		if (token.OPERATOR) {
@@ -46,6 +47,7 @@ module.exports = function * tokenDelimiter(source) {
 				isOperator(token.OPERATOR + currentCharacter)) {
 				token.OPERATOR += currentCharacter;
 				// skip to next character
+				lastCharacter = currentCharacter;
 				continue;
 			}
 			// RULE 3 - If the previous character was used as part of an operator and the
@@ -75,6 +77,7 @@ module.exports = function * tokenDelimiter(source) {
 			}
 
 			// skip to next character
+			lastCharacter = currentCharacter;
 			continue;
 		}
 
@@ -85,6 +88,7 @@ module.exports = function * tokenDelimiter(source) {
 
 			prevQuoting = QUOTING.DOUBLE;
 			// skip to next character
+			lastCharacter = currentCharacter;
 			continue;
 		}
 
@@ -101,7 +105,7 @@ module.exports = function * tokenDelimiter(source) {
 		// first character of a new operator, the current token (if any) shall be
 		// delimited. The current character shall be used as the beginning of the
 		// next (operator) token.
-		if (isOperatorStart(currentCharacter) &&
+		if (isOperatorStart(currentCharacter, lastCharacter) &&
 			quoting === QUOTING.NO) {
 			// emit current token if not empty
 			if (!token.EMPTY) {
@@ -109,6 +113,7 @@ module.exports = function * tokenDelimiter(source) {
 			}
 			token = operator(currentCharacter);
 			// skip to next character
+			lastCharacter = currentCharacter;
 			continue;
 		}
 
@@ -123,6 +128,7 @@ module.exports = function * tokenDelimiter(source) {
 			token = empty();
 			yield newLine();
 			// skip to next character
+			lastCharacter = currentCharacter;
 			continue;
 		}
 
@@ -138,6 +144,7 @@ module.exports = function * tokenDelimiter(source) {
 			}
 			token = empty();
 			// skip to next character
+			lastCharacter = currentCharacter;
 			continue;
 		}
 
@@ -152,6 +159,7 @@ module.exports = function * tokenDelimiter(source) {
 		if (token.TOKEN !== undefined) {
 			token.TOKEN += currentCharacter;
 			// skip to next character
+			lastCharacter = currentCharacter;
 			continue;
 		}
 
@@ -162,6 +170,7 @@ module.exports = function * tokenDelimiter(source) {
 		// TODO
 		// RULE 11 - The current character is used as the start of a new word.
 		token = mkToken(currentCharacter);
+		lastCharacter = currentCharacter;
 	}
 
 	// RULE 1 - If the end of input is recognized, the current token shall

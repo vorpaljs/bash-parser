@@ -101,7 +101,7 @@ function expandWord(token) {
 	let currentCharIdx = 0;
 
 	function charCouldBePartOfName(currentCharacter) {
-		if (candidateParameterName === '' && currentCharacter.match(/[a-zA-z_]/)) {
+		if (candidateParameterName === '' && currentCharacter.match(/^[a-zA-z_]$/)) {
 			return true;
 		}
 
@@ -117,7 +117,7 @@ function expandWord(token) {
 			return false;
 		}
 
-		if (candidateParameterName !== '' && currentCharacter.match(/[a-zA-z_0-9]/)) {
+		if (candidateParameterName !== '' && currentCharacter.match(/^[a-zA-z_0-9]$/)) {
 			return true;
 		}
 
@@ -145,7 +145,7 @@ function expandWord(token) {
 				expansion = null;
 				candidateParameterName = '';
 			}
-
+			expansion = null;
 			startOfExpansion = 0;
 		}
 	}

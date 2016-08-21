@@ -79,6 +79,15 @@ test('command consisting of only parameter substitution', t => {
 	});
 });
 
+test('invalid name paramter substitution', t => {
+	const result = bashParser('$(other');
+	// console.log(JSON.stringify(result, null, 5))
+
+	t.deepEqual(result.andOrs[0].left[0].name, {
+		text: '$(other'
+	});
+});
+
 test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
 	// console.log(JSON.stringify(result, null, 5))

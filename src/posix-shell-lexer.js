@@ -32,8 +32,8 @@ module.exports = () => ({
 			this.yyloc = {
 				first_column: tk.loc.startColumn,
 				first_line: tk.loc.startLine,
-				last_line: tk.loc.endColumn,
-				last_column: tk.loc.endLine
+				last_line: tk.loc.endLine,
+				last_column: tk.loc.endColumn
 			};
 			this.yylloc = this.yyloc;
 			this.yylineno = tk.loc.startLine;

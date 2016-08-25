@@ -2,7 +2,7 @@
 const test = require('ava');
 const bashParser = require('../src');
 
-test('quotes within double quotes', t => {
+test.only('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {

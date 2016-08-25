@@ -36,6 +36,7 @@ module.exports = () => ({
 				last_column: tk.loc.endLine
 			};
 			this.yylloc = this.yyloc;
+			this.yylineno = tk.loc.startLine;
 		}
 
 		return tkType;

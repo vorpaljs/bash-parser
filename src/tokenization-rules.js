@@ -6,7 +6,10 @@ const words = require('./reserved-words');
 exports.operatorTokens = function * (tokens) {
 	for (const tk of tokens) {
 		if (hasOwnProperty(operators, tk.OPERATOR)) {
-			yield {[operators[tk.OPERATOR]]: tk.OPERATOR};
+			yield {
+				[operators[tk.OPERATOR]]: tk.OPERATOR,
+				loc: tk.loc
+			};
 		} else {
 			yield tk;
 		}
@@ -20,12 +23,20 @@ function defined(v) {
 exports.reservedWords = function * (tokens) {
 	for (const tk of tokens) {
 		if (hasOwnProperty(words, tk.TOKEN)) {
-			yield {[words[tk.TOKEN]]: tk.TOKEN};
+			yield {
+				[words[tk.TOKEN]]: tk.TOKEN,
+				loc: tk.loc
+			};
 		} else if (defined(tk.TOKEN)) {
-			const word = {WORD: tk.TOKEN};
+			const word = {
+				WORD: tk.TOKEN,
+				loc: tk.loc
+			};
+
 			if (tk.expansion) {
 				word.expansion = tk.expansion;
 			}
+
 			yield word;
 		} else {
 			yield tk;
@@ -36,9 +47,15 @@ exports.reservedWords = function * (tokens) {
 exports.replaceLineTerminationToken = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk.TOKEN === ';') {
-			yield {';': tk.TOKEN};
+			yield {
+				';': tk.TOKEN,
+				'loc': tk.loc
+			};
 		} else if (tk.OPERATOR === ';') {
-			yield {';': tk.OPERATOR};
+			yield {
+				';': tk.OPERATOR,
+				'loc': tk.loc
+			};
 		} else {
 			yield tk;
 		}
@@ -49,7 +66,10 @@ exports.forNameVariable = function * (tokens) {
 	let lastToken = {};
 	for (const tk of tokens) {
 		if (lastToken.For && tk.WORD && tk.WORD.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
-			yield {NAME: tk.WORD};
+			yield {
+				NAME: tk.WORD,
+				loc: tk.loc
+			};
 		} else {
 			yield tk;
 		}
@@ -81,20 +101,18 @@ exports.functionName = function * (tokens) {
 			const prevTk = lastTokens[0];
 			prevTk.NAME = prevTk.WORD;
 			delete prevTk.WORD;
-			// console.log('MATCHES!',lastTokens[0] )
 		}
-
+		// TODO: refactor to own module, iterable with defined
+		// lookahead cache
 		if (lastTokens.length > 10) {
 			const tky = lastTokens.shift();
-			// console.log(lastTokens.length, {tky})
 			yield tky;
 		}
 		lastTokens.push(tk);
 	}
-// console.log('fine', lastTokens)
+
 	while (lastTokens.length) {
 		const tky = lastTokens.shift();
-			// console.log({tky})
 		yield tky;
 	}
 };
@@ -104,7 +122,10 @@ exports.ioNumber = function * (tokens) {
 	for (const tk of tokens) {
 		if (lastToken.WORD && lastToken.WORD.match(/^[0-9]+$/) &&
 			(tk.GREAT || tk.LESS)) {
-			lastToken = {IO_NUMBER: lastToken.WORD};
+			lastToken = {
+				IO_NUMBER: lastToken.WORD,
+				loc: tk.loc
+			};
 		}
 		if (!lastToken.EMPTY) {
 			yield lastToken;
@@ -140,7 +161,11 @@ exports.assignmentWord = function * (tokens) {
 				isValidName(tk.TOKEN.slice(0, tk.TOKEN.indexOf('=')))
 
 			)) {
-			yield {ASSIGNMENT_WORD: tk.TOKEN, expansion: tk.expansion};
+			yield {
+				ASSIGNMENT_WORD: tk.TOKEN,
+				expansion: tk.expansion,
+				loc: tk.loc
+			};
 			continue;
 		}
 
@@ -159,6 +184,7 @@ exports.newLineList = function * (tokens) {
 		if (tk.NEWLINE) {
 			if (lastToken.NEWLINE_LIST) {
 				lastToken.NEWLINE_LIST += '\n';
+				// TODO: alter loc
 				continue;
 			} else {
 				tk.NEWLINE_LIST = '\n';
@@ -185,6 +211,7 @@ exports.linebreakIn = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk.In && lastToken.NEWLINE) {
 			lastToken.LINEBREAK_IN = '\nin';
+			// TODO: alter loc
 			delete lastToken.NEWLINE;
 			continue;
 		}
@@ -223,11 +250,13 @@ exports.separator = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk.NEWLINE_LIST && lastToken.SEPARATOR_OP) {
 			lastToken.SEPARATOR_OP += tk.NEWLINE_LIST;
+			// TODO: alter loc
 			continue;
 		}
 
 		if (tk[';'] || tk.OPERATOR === '&') {
 			tk.SEPARATOR_OP = (tk[';'] || '') + (tk.OPERATOR || '');
+			// TODO: alter loc
 			delete tk[';'];
 			delete tk.OPERATOR;
 		}

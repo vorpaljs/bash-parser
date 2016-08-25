@@ -23,14 +23,48 @@ const QUOTING_DELIM = {
 };
 
 const isOperatorStart = (ch, lastCh) => lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
-const isOperator = op => hasOwnProperty(operators, op);
-const empty = () => ({EMPTY: true});
-const newLine = () => ({NEWLINE: '\n'});
-const eof = () => ({EOF: true});
-const operator = ch => ({OPERATOR: ch});
-const mkToken = tk => ({TOKEN: tk});
-const isQuotingCharacter = (ch, lastCh) => hasOwnProperty(QUOTING_DELIM, ch) || hasOwnProperty(QUOTING_DELIM, lastCh + ch);
 
+const isOperator = op => hasOwnProperty(operators, op);
+
+const mkLoc = (lineNumber, columnNumber) => ({
+	startLine: lineNumber,
+	startColumn: columnNumber
+});
+
+const finalizeLoc = (tk, lineNumber, columnNumber) => {
+	Object.assign(tk.loc, {
+		endLine: lineNumber,
+		endColumn: columnNumber
+	});
+	return tk;
+};
+
+const empty = (lineNumber, columnNumber) => ({
+	EMPTY: true,
+	loc: mkLoc(lineNumber, columnNumber)
+});
+
+const newLine = (lineNumber, columnNumber) => ({
+	NEWLINE: '\n',
+	loc: mkLoc(lineNumber, columnNumber)
+});
+
+const eof = (lineNumber, columnNumber) => ({
+	EOF: true,
+	loc: mkLoc(lineNumber, columnNumber)
+});
+
+const operator = (ch, lineNumber, columnNumber) => ({
+	OPERATOR: ch,
+	loc: mkLoc(lineNumber, columnNumber)
+});
+
+const mkToken = (tk, lineNumber, columnNumber) => ({
+	TOKEN: tk,
+	loc: mkLoc(lineNumber, columnNumber)
+});
+
+const isQuotingCharacter = (ch, lastCh) => hasOwnProperty(QUOTING_DELIM, ch) || hasOwnProperty(QUOTING_DELIM, lastCh + ch);
 /*
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
@@ -44,6 +78,30 @@ module.exports = function * tokenDelimiter(source) {
 	let prevQuoting = null;
 	let lastCharacter = null;
 
+	let lineNumber = 0;
+	let columnNumber = 0;
+	let prevLineNumber = 0;
+	let prevColumnNumber = 0;
+
+	function advanceLoc(currentCharacter) {
+		prevLineNumber = lineNumber;
+		prevColumnNumber = columnNumber;
+
+		if (currentCharacter === '\n') {
+			lineNumber++;
+			columnNumber = 0;
+		} else {
+			columnNumber++;
+		}
+		/* console.log({
+			currentCharacter,
+			prevLineNumber,
+			prevColumnNumber,
+			lineNumber,
+			columnNumber
+		})*/
+	}
+
 	for (const currentCharacter of source) {
 		if (token.OPERATOR) {
 			// RULE 2 -If the previous character was used as part of an operator and the
@@ -52,19 +110,28 @@ module.exports = function * tokenDelimiter(source) {
 			if (quoting === QUOTING.NO &&
 				isOperator(token.OPERATOR + currentCharacter)) {
 				token.OPERATOR += currentCharacter;
+
 				// skip to next character
 				lastCharacter = currentCharacter;
+				advanceLoc(currentCharacter);
 				continue;
 			}
 			// RULE 3 - If the previous character was used as part of an operator and the
 			// current character cannot be used with the current characters to form an operator,
 			// the operator containing the previous character shall be delimited.
 			if (isOperator(token.OPERATOR)) {
-				yield token;
+				yield finalizeLoc(token, prevLineNumber, prevColumnNumber);
 			} else {
-				yield mkToken(token.OPERATOR);
+				// TODO: test this, this should be emitted as an operator, not a token?
+				const alteredTk = mkToken(
+					token.OPERATOR,
+					token.loc.startLine,
+					token.loc.startColumn
+				);
+				yield finalizeLoc(alteredTk, prevLineNumber, prevColumnNumber);
 			}
-			token = empty();
+
+			token = empty(lineNumber, columnNumber);
 		}
 
 		// RULE 4 - If the current character is <backslash>, single-quote, or
@@ -74,9 +141,11 @@ module.exports = function * tokenDelimiter(source) {
 			quoting === QUOTING.NO) {
 			quoting = QUOTING_DELIM[currentCharacter];
 
+			// TODO: test this, why a quoting character should e appended
+			// to TOKEN?
 			if (currentCharacter !== '\\') {
 				if (token.TOKEN === undefined) {
-					token = mkToken(currentCharacter);
+					token = mkToken(currentCharacter, lineNumber, columnNumber);
 				} else {
 					token.TOKEN += currentCharacter;
 				}
@@ -84,6 +153,7 @@ module.exports = function * tokenDelimiter(source) {
 
 			// skip to next character
 			lastCharacter = currentCharacter;
+			advanceLoc(currentCharacter);
 			continue;
 		}
 
@@ -95,6 +165,7 @@ module.exports = function * tokenDelimiter(source) {
 			prevQuoting = QUOTING.DOUBLE;
 			// skip to next character
 			lastCharacter = currentCharacter;
+			advanceLoc(currentCharacter);
 			continue;
 		}
 
@@ -114,12 +185,15 @@ module.exports = function * tokenDelimiter(source) {
 		if (isOperatorStart(currentCharacter, lastCharacter) &&
 			quoting === QUOTING.NO) {
 			// emit current token if not empty
+
 			if (!token.EMPTY) {
-				yield token;
+				yield finalizeLoc(token, prevLineNumber, prevColumnNumber);
 			}
-			token = operator(currentCharacter);
+			token = operator(currentCharacter, lineNumber, columnNumber);
+
 			// skip to next character
 			lastCharacter = currentCharacter;
+			advanceLoc(currentCharacter);
 			continue;
 		}
 
@@ -129,12 +203,16 @@ module.exports = function * tokenDelimiter(source) {
 				currentCharacter === '\n') {
 			// emit current token if not empty
 			if (!token.EMPTY) {
-				yield token;
+				yield finalizeLoc(token, prevLineNumber, prevColumnNumber);
 			}
-			token = empty();
-			yield newLine();
+
+			token = empty(lineNumber, columnNumber);
+
+			yield finalizeLoc(newLine(lineNumber, columnNumber), lineNumber, columnNumber);
+
 			// skip to next character
 			lastCharacter = currentCharacter;
+			advanceLoc(currentCharacter);
 			continue;
 		}
 
@@ -146,11 +224,14 @@ module.exports = function * tokenDelimiter(source) {
 			currentCharacter.match(/\s/)) {
 			// emit current token if not empty
 			if (!token.EMPTY) {
-				yield token;
+				yield finalizeLoc(token, prevLineNumber, prevColumnNumber);
 			}
-			token = empty();
+
+			token = empty(lineNumber, columnNumber);
+
 			// skip to next character
 			lastCharacter = currentCharacter;
+			advanceLoc(currentCharacter);
 			continue;
 		}
 
@@ -164,8 +245,10 @@ module.exports = function * tokenDelimiter(source) {
 		// character shall be appended to that word.
 		if (token.TOKEN !== undefined) {
 			token.TOKEN += currentCharacter;
+
 			// skip to next character
 			lastCharacter = currentCharacter;
+			advanceLoc(currentCharacter);
 			continue;
 		}
 
@@ -175,15 +258,19 @@ module.exports = function * tokenDelimiter(source) {
 		// of the comment.
 		// TODO
 		// RULE 11 - The current character is used as the start of a new word.
-		token = mkToken(currentCharacter);
+		token = mkToken(currentCharacter, lineNumber, columnNumber);
 		lastCharacter = currentCharacter;
+
+		advanceLoc(currentCharacter);
 	}
 
 	// RULE 1 - If the end of input is recognized, the current token shall
 	// be delimited. If there is no current token, the end-of-input indicator
 	// shall be returned as the token.
 	if (!token.EMPTY) {
-		yield token;
+		yield finalizeLoc(token, prevLineNumber, prevColumnNumber);
 	}
-	yield eof();
+
+	advanceLoc('');
+	yield finalizeLoc(eof(prevLineNumber, prevColumnNumber), prevLineNumber, prevColumnNumber);
 };

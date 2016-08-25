@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict';
 const compose = require('compose-function');
 const tokenDelimiter = require('./token-delimiter');
@@ -9,8 +10,13 @@ const commandExpansion = require('./command-expansion');
 module.exports = () => ({
 	lex() {
 		const item = this.tokenizer.next();
+
 		const tk = item.value;
-		const tkType = Object.keys(tk)[0];
+
+		const tkType = Object.keys(tk).filter(k =>
+			k !== 'loc' && k !== 'expansion'
+		)[0];
+
 		const text = tk[tkType];
 		// expansion happens only on WORD and ASSIGNMENT_WORD tokens
 		if (tkType === 'WORD' || tkType === 'ASSIGNMENT_WORD') {
@@ -20,6 +26,16 @@ module.exports = () => ({
 			};
 		} else {
 			this.yytext = text;
+		}
+
+		if (tk.loc) {
+			this.yyloc = {
+				first_column: tk.loc.startColumn,
+				first_line: tk.loc.startLine,
+				last_line: tk.loc.endColumn,
+				last_column: tk.loc.endLine
+			};
+			this.yylloc = this.yyloc;
 		}
 
 		return tkType;

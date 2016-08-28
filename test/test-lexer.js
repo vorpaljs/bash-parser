@@ -3,7 +3,7 @@ const test = require('ava');
 const posixLexer = require('../src/posix-shell-lexer');
 
 function tokenize(text, rawTokens) {
-	const lexer = posixLexer();
+	const lexer = posixLexer({});
 	lexer.setInput(text);
 	const results = [];
 	let token = lexer.lex();

@@ -7,7 +7,7 @@ const parameterExpansion = require('./parameter-expansion');
 const commandExpansion = require('./command-expansion');
 // const logger = require('./logger-iterator');
 
-module.exports = () => ({
+module.exports = options => ({
 	lex() {
 		const item = this.tokenizer.next();
 
@@ -18,29 +18,24 @@ module.exports = () => ({
 		)[0];
 
 		const text = tk[tkType];
-		// expansion happens only on WORD and ASSIGNMENT_WORD tokens
-		if (tkType === 'WORD' || tkType === 'ASSIGNMENT_WORD') {
-			this.yytext = {
-				text: text,
-				expansion: tk.expansion
-			};
-		} else {
-			this.yytext = text;
+
+		this.yytext = {text};
+
+		if (tk.expansion) {
+			this.yytext.expansion = tk.expansion;
+		}
+
+		if (options.insertLOC && tk.loc) {
+			this.yytext.loc = tk.loc;
 		}
 
 		if (tk.loc) {
-			this.yyloc = {
-				first_column: tk.loc.startColumn,
-				first_line: tk.loc.startLine,
-				last_line: tk.loc.endLine,
-				last_column: tk.loc.endColumn
-			};
-			this.yylloc = this.yyloc;
 			this.yylineno = tk.loc.startLine;
 		}
 
 		return tkType;
 	},
+
 	setInput(source) {
 		const tokenize = compose(
 			// logger('end'),

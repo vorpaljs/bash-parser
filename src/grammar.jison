@@ -211,7 +211,7 @@ simple_command   : cmd_prefix cmd_word cmd_suffix
 					->yy.command(null, $cmd_name)
 				 ;
 cmd_name         : WORD
-					-> yytext  /* Apply rule 7a */
+					->yy.commandName(yytext) /* Apply rule 7a */
 				 ;
 cmd_word         : WORD
 					-> yytext  /* Apply rule 7B */

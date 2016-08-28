@@ -83,6 +83,9 @@ module.exports = options => {
 
 	builder.while = (clause, body) => ({type: 'while', clause, do: body});
 	builder.until = (clause, body) => ({type: 'until', clause, do: body});
+
+	builder.commandName = name => name;
+
 	builder.command = function command(prefix, command, suffix) {
 		const node = {
 			type: 'simple_command',
@@ -90,7 +93,7 @@ module.exports = options => {
 		};
 
 		if (options.insertLOC) {
-			node.loc = this.lexer.yyloc;
+			node.loc = command.loc;
 		}
 
 		if (prefix) {

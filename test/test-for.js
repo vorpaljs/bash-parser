@@ -11,7 +11,7 @@ test('parse for', t => {
 				type: 'andOr',
 				left: [{
 					type: 'for',
-					name: 'x',
+					name: {text: 'x'},
 					wordlist: [{text: 'a'}, {text: 'b'}, {text: 'c'}],
 					do: {
 						type: 'term',
@@ -42,7 +42,6 @@ test('parse for', t => {
 
 test('parse for with default sequence', t => {
 	const result = bashParser('for x\n do echo $x\n done');
-	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
 			type: 'list',
@@ -50,7 +49,7 @@ test('parse for with default sequence', t => {
 				type: 'andOr',
 				left: [{
 					type: 'for',
-					name: 'x',
+					name: {text: 'x'},
 					do: {
 						type: 'term',
 						andOrs: [{
@@ -88,7 +87,7 @@ test('parse for with default sequence - on one line', t => {
 				type: 'andOr',
 				left: [{
 					type: 'for',
-					name: 'x',
+					name: {text: 'x'},
 					do: {
 						type: 'term',
 						andOrs: [{

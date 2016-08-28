@@ -4,7 +4,6 @@ const bashParser = require('../src');
 
 test('parse function declaration multiple lines', t => {
 	const result = bashParser('foo () \n{\n command bar --lol;\n}');
-	// console.log(JSON.stringify(result, null, 4));
 
 	t.deepEqual(
 		result, {
@@ -13,7 +12,7 @@ test('parse function declaration multiple lines', t => {
 				type: 'andOr',
 				left: [{
 					type: 'function',
-					name: 'foo',
+					name: {text: 'foo'},
 					body: {
 						type: 'term',
 						andOrs: [{
@@ -33,7 +32,7 @@ test('parse function declaration multiple lines', t => {
 
 test('parse function declaration', t => {
 	const result = bashParser('foo	(){ command bar --lol;}');
-	// console.log(inspect(result, {depth:null}))
+
 	t.deepEqual(
 		result, {
 			type: 'list',
@@ -41,7 +40,7 @@ test('parse function declaration', t => {
 				type: 'andOr',
 				left: [{
 					type: 'function',
-					name: 'foo',
+					name: {text: 'foo'},
 					body: {
 						type: 'term',
 						andOrs: [{

@@ -93,7 +93,24 @@ module.exports = options => {
 		};
 
 		if (options.insertLOC) {
-			node.loc = command.loc;
+			node.loc = {};
+			if (prefix) {
+				const firstPrefix = prefix.list[0];
+				node.loc.startLine = firstPrefix.loc.startLine;
+				node.loc.startColumn = firstPrefix.loc.startColumn;
+			} else {
+				node.loc.startLine = command.loc.startLine;
+				node.loc.startColumn = command.loc.startColumn;
+			}
+
+			if (suffix) {
+				const lastSuffix = suffix.list[suffix.list.length - 1];
+				node.loc.endLine = lastSuffix.loc.endLine;
+				node.loc.endColumn = lastSuffix.loc.endColumn;
+			} else {
+				node.loc.endLine = command.loc.endLine;
+				node.loc.endColumn = command.loc.endColumn;
+			}
 		}
 
 		if (prefix) {
@@ -109,7 +126,11 @@ module.exports = options => {
 		(ioRedirect.numberIo = numberIo, ioRedirect);
 
 	builder.suffix = item => {
-		return {type: 'cmd_suffix', list: [item]};
+		const node = {
+			type: 'cmd_suffix',
+			list: [item]
+		};
+		return node;
 	};
 
 	builder.suffixAppend = (suffix, item) => {

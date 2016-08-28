@@ -261,7 +261,8 @@ io_file         : LESS      filename
 				 | CLOBBER   filename
 					->yy.ioRedirect($1, $filename)
 				 ;
-filename         : WORD                     /* Apply rule 2 */
+filename         : WORD
+					->yy.filename($1)                     /* Apply rule 2 */
 				 ;
 io_here         : DLESS    here_end
 				 | DLESSDASH here_end

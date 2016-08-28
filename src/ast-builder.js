@@ -121,9 +121,27 @@ module.exports = options => {
 		}
 		return node;
 	};
-	builder.ioRedirect = (op, file) => ({type: 'io_redirect', op: op, file: file});
-	builder.numberIoRedirect = (ioRedirect, numberIo) =>
-		(ioRedirect.numberIo = numberIo, ioRedirect);
+
+	builder.ioRedirect = (op, file) => {
+		const node = {
+			type: 'io_redirect',
+			op: op,
+			file: file
+		};
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, op.loc), file.loc);
+		}
+
+		return node;
+	};
+
+	builder.numberIoRedirect = (ioRedirect, numberIo) => {
+		const node = Object.assign({}, ioRedirect, {numberIo});
+		if (options.insertLOC) {
+			setLocStart(node.loc, numberIo.loc);
+		}
+		return node;
+	};
 
 	builder.suffix = item => {
 		const node = {
@@ -141,5 +159,21 @@ module.exports = options => {
 	builder.prefix = item => ({type: 'cmd_prefix', list: [item]});
 	builder.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);
 
+	builder.filename = name => {
+		return name;
+	};
+
 	return builder;
 };
+
+function setLocStart(target, source) {
+	target.startLine = source.startLine;
+	target.startColumn = source.startColumn;
+	return target;
+}
+
+function setLocEnd(target, source) {
+	target.endLine = source.endLine;
+	target.endColumn = source.endColumn;
+	return target;
+}

@@ -124,7 +124,7 @@ exports.ioNumber = function * (tokens) {
 			(tk.GREAT || tk.LESS)) {
 			lastToken = {
 				IO_NUMBER: lastToken.WORD,
-				loc: tk.loc
+				loc: lastToken.loc
 			};
 		}
 		if (!lastToken.EMPTY) {

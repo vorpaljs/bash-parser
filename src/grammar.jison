@@ -168,16 +168,16 @@ pattern         : WORD        /* Apply rule 4 */
 				 	-> $pattern.concat($3)
 				 ;
 if_clause       : If compound_list Then compound_list else_part Fi
-					-> yy.ifClause($2, $4, $else_part)
+					-> yy.ifClause($2, $4, $else_part, $If.loc, $Fi.loc)
 				 | If compound_list Then compound_list           Fi
-					-> yy.ifClause($2, $4)
+					-> yy.ifClause($2, $4, null, $If.loc, $Fi.loc)
 				 ;
 else_part       : Elif compound_list Then compound_list
-					-> yy.ifClause($2, $4)
+					-> yy.ifClause($2, $4, null, $Elif.loc, $4.loc)
 				 | Elif compound_list Then compound_list else_part
-					-> yy.ifClause($2, $4, $else_part)
+					-> yy.ifClause($2, $4, $else_part, $Elif.loc, $else_part.loc)
 				 | Else compound_list
-					-> $2
+					-> yy.elseClause($compound_list, $Else)
 				 ;
 while_clause     : While compound_list do_group
 					-> yy.while($2, $3, $While)

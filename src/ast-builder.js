@@ -95,15 +95,30 @@ module.exports = options => {
 		body
 	});
 
-	builder.ifClause = (clause, then, elseBranch) => {
+	builder.elseClause = (compoundList, locStart) => {
+		if (options.insertLOC) {
+			setLocStart(compoundList.loc, locStart.loc);
+		}
+
+		return compoundList;
+	};
+
+	// eslint-disable-next-line max-params
+	builder.ifClause = (clause, then, elseBranch, locStart, locEnd) => {
 		const node = {
 			type: 'if',
 			clause,
 			then
 		};
+
 		if (elseBranch) {
 			node.else = elseBranch;
 		}
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, locStart), locEnd);
+		}
+
 		return node;
 	};
 

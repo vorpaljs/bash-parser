@@ -1,6 +1,6 @@
 'use strict';
 // const json = require('json5');
-const {diff} = require('rus-diff');
+// const {diff} = require('rus-diff');
 const test = require('ava');
 const bashParser = require('../src');
 
@@ -192,7 +192,7 @@ test('loc in until statement', t => {
 			]
 		}
 	};
-	console.log(diff(result.andOrs[0].left[0], expected));
+	// console.log(diff(result.andOrs[0].left[0], expected));
 
 	t.deepEqual(result.andOrs[0].left[0], expected);
 });

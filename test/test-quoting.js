@@ -9,14 +9,17 @@ test('quotes within double quotes', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '"TEST1 \'TEST2"'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [{text: '"TEST1 \'TEST2"'}]
+					}
+				}]
+			}
 		}]
 	});
 });
@@ -27,14 +30,17 @@ test('escaped double quotes within double quotes', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '"TEST1 "TEST2"'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [{text: '"TEST1 "TEST2"'}]
+					}
+				}]
+			}
 		}]
 	});
 });
@@ -46,14 +52,17 @@ test('double quotes within single quotes', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '\'TEST1 "TEST2\''}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [{text: '\'TEST1 "TEST2\''}]
+					}
+				}]
+			}
 		}]
 	});
 });

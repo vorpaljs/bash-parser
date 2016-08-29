@@ -97,16 +97,13 @@ compound_command : brace_group
 subshell         : OPEN_PAREN compound_list CLOSE_PAREN
 					-> yy.subshell($compound_list)
 				 ;
-compound_list   : term
-					-> $term.text || $term
-				 | NEWLINE_LIST term
-					-> $term.text || $term
+compound_list   : term -> $term
+				 | NEWLINE_LIST term -> $term
 
-				 | term separator
-					-> $term.text || $term
-				 | NEWLINE_LIST term separator
-					-> $term.text || $term
+				 | term separator -> $term
+				 | NEWLINE_LIST term separator -> $term
 				 ;
+
 term             : term separator and_or
 				  -> yy.termAppend($term, $and_or)
 				 | and_or

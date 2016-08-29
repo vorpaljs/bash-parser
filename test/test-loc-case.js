@@ -13,7 +13,7 @@ esac
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 
-	// console.log(json.stringify(result.and_ors[0].left[0], null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(result.and_ors[0].left.commands[0], null, '\t').replace(/"/g, '\''));
 	const expected = {
 		type: 'case',
 		loc: {
@@ -56,40 +56,43 @@ esac
 					and_ors: [
 						{
 							type: 'and_or',
-							left: [
-								{
-									type: 'simple_command',
-									name: {
-										text: 'echo',
+							left: {
+								type: 'pipeline',
+								commands: [
+									{
+										type: 'simple_command',
+										name: {
+											text: 'echo',
+											loc: {
+												startLine: 2,
+												startColumn: 2,
+												endLine: 2,
+												endColumn: 5
+											}
+										},
 										loc: {
 											startLine: 2,
 											startColumn: 2,
 											endLine: 2,
-											endColumn: 5
-										}
-									},
-									loc: {
-										startLine: 2,
-										startColumn: 2,
-										endLine: 2,
-										endColumn: 9
-									},
-									suffix: {
-										type: 'cmd_suffix',
-										list: [
-											{
-												text: 'bar',
-												loc: {
-													startLine: 2,
-													startColumn: 7,
-													endLine: 2,
-													endColumn: 9
+											endColumn: 9
+										},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [
+												{
+													text: 'bar',
+													loc: {
+														startLine: 2,
+														startColumn: 7,
+														endLine: 2,
+														endColumn: 9
+													}
 												}
-											}
-										]
+											]
+										}
 									}
-								}
-							],
+								]
+							},
 							loc: {
 								startLine: 2,
 								startColumn: 2,
@@ -108,7 +111,7 @@ esac
 			}
 		]
 	};
-	// console.log(json.stringify(diff(expected.cases, result.and_ors[0].left[0].cases), null, 4));
+	// console.log(json.stringify(diff(expected.cases, result.and_ors[0].left.commands[0].cases), null, 4));
 
-	t.deepEqual(result.and_ors[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left.commands[0], expected);
 });

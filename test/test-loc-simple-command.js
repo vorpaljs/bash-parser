@@ -7,7 +7,7 @@ const mkloc = require('./_utils').mkloc;
 /* eslint-disable camelcase */
 test('simple command with prefixes and name', t => {
 	const result = bashParser('a=1 b=2 echo', {insertLOC: true});
-	t.deepEqual(result.and_ors[0].left[0], {
+	t.deepEqual(result.and_ors[0].left.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
@@ -29,7 +29,7 @@ test('simple command with prefixes and name', t => {
 
 test('simple command with only name', t => {
 	const result = bashParser('echo', {insertLOC: true});
-	t.deepEqual(result.and_ors[0].left[0], {
+	t.deepEqual(result.and_ors[0].left.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
@@ -44,28 +44,31 @@ test('simple command with pipeline', t => {
 	// console.log(JSON.stringify(result, null, 4));
 	t.deepEqual(result.and_ors[0], {
 		type: 'and_or',
-		left: [{
-			type: 'simple_command',
-			name: {
-				text: 'echo',
+		left: {
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {
+					text: 'echo',
+					loc: mkloc(0, 0, 0, 3)
+				},
 				loc: mkloc(0, 0, 0, 3)
-			},
-			loc: mkloc(0, 0, 0, 3)
-		}, {
-			type: 'simple_command',
-			name: {
-				text: 'grep',
+			}, {
+				type: 'simple_command',
+				name: {
+					text: 'grep',
+					loc: mkloc(0, 7, 0, 10)
+				},
 				loc: mkloc(0, 7, 0, 10)
-			},
-			loc: mkloc(0, 7, 0, 10)
-		}],
+			}]
+		},
 		loc: mkloc(0, 0, 0, 10)
 	});
 });
 
 test('simple command with suffixes', t => {
 	const result = bashParser('echo 42 43', {insertLOC: true});
-	t.deepEqual(result.and_ors[0].left[0], {
+	t.deepEqual(result.and_ors[0].left.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
@@ -87,8 +90,7 @@ test('simple command with suffixes', t => {
 
 test('simple command with IO redirection', t => {
 	const result = bashParser('echo > 43', {insertLOC: true});
-
-	t.deepEqual(result.and_ors[0].left[0], {
+	t.deepEqual(result.and_ors[0].left.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
@@ -146,14 +148,14 @@ test('simple command with numbered IO redirection', t => {
 			]
 		}
 	};
-	// console.log(json.stringify(diff(result.and_ors[0].left[0], expected), null, 4));
+	// console.log(json.stringify(diff(result.and_ors[0].left.commands[0], expected), null, 4));
 
-	t.deepEqual(result.and_ors[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left.commands[0], expected);
 });
 
 test('simple command with suffixes & prefixes', t => {
 	const result = bashParser('a=1 b=2 echo 42 43', {insertLOC: true});
-	t.deepEqual(result.and_ors[0].left[0], {
+	t.deepEqual(result.and_ors[0].left.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',

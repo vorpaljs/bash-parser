@@ -1,10 +1,14 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+// const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
-		.and_ors[0].left[0].prefix;
+		.and_ors[0].left.commands[0].prefix;
+	// utils.logResults(result);
+	//
 
 	t.deepEqual(result, {
 		type: 'cmd_prefix',
@@ -27,8 +31,9 @@ test('positional parameter in braces', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -43,8 +48,8 @@ test('positional parameter in braces', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -58,8 +63,9 @@ test('positional parameter without braces', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -74,8 +80,8 @@ test('positional parameter without braces', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -89,8 +95,9 @@ test('positional parameter without braces allow one digit only', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -105,8 +112,8 @@ test('positional parameter without braces allow one digit only', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});

@@ -7,29 +7,28 @@ test('positional list paramter', t => {
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
-			{
-				type: 'and_or',
-				left: [
-					{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$@',
-								expansion: [{
-									parameter: '@',
-									kind: 'positional-list',
-									start: 9,
-									end: 11
-								}]
+		and_ors: [{
+			type: 'and_or',
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$@',
+							expansion: [{
+								parameter: '@',
+								kind: 'positional-list',
+								start: 9,
+								end: 11
 							}]
-						}
+						}]
 					}
-				]
+				}]
 			}
-		]
+		}]
 	});
 });
 
@@ -37,29 +36,28 @@ test('positional string paramter', t => {
 	const result = bashParser('echoword=$*');
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
-			{
-				type: 'and_or',
-				left: [
-					{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$*',
-								expansion: [{
-									parameter: '*',
-									kind: 'positional-string',
-									start: 9,
-									end: 11
-								}]
+		and_ors: [{
+			type: 'and_or',
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$*',
+							expansion: [{
+								parameter: '*',
+								kind: 'positional-string',
+								start: 9,
+								end: 11
 							}]
-						}
+						}]
 					}
-				]
+				}]
 			}
-		]
+		}]
 	});
 });
 
@@ -70,8 +68,9 @@ test('positional count paramter', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -86,8 +85,8 @@ test('positional count paramter', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -100,8 +99,9 @@ test('last exit status', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -116,8 +116,8 @@ test('last exit status', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -130,8 +130,9 @@ test('current option flags', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -146,8 +147,8 @@ test('current option flags', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -160,8 +161,9 @@ test('shell process id', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -176,8 +178,8 @@ test('shell process id', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -190,8 +192,9 @@ test('last background pid', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -206,8 +209,8 @@ test('last background pid', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});
@@ -220,8 +223,9 @@ test('shell script name', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {text: ''},
 						prefix: {
@@ -236,8 +240,8 @@ test('shell script name', t => {
 								}]
 							}]
 						}
-					}
-				]
+					}]
+				}
 			}
 		]
 	});

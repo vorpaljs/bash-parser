@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
-// const inspect = require('util').inspect;
+// const utils = require('./_utils');
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
@@ -10,16 +10,19 @@ test('command with one argument', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [
-						{text: 'world'}
-					]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{text: 'world'}
+						]
+					}
+				}]
+			}
 		}]
 	});
 });
@@ -30,20 +33,21 @@ test('command with pre-assignment', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'run'},
-				prefix: {
-					type: 'cmd_prefix',
-					list: [{text: 'TEST=1'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'run'},
+					prefix: {type: 'cmd_prefix', list: [{text: 'TEST=1'}]}
+				}]
+			}
 		}]
 	});
 });
 
 test('commands with AND', t => {
 	const result = bashParser('run && stop');
+	// utils.logResults(result)
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
@@ -51,11 +55,14 @@ test('commands with AND', t => {
 			op: 'and',
 			left: {
 				type: 'and_or',
-				left: [{type: 'simple_command', name: {text: 'run'}}]
+				left: {
+					type: 'pipeline',
+					commands: [{type: 'simple_command', name: {text: 'run'}}]
+				}
 			},
 			right: {
-				type: 'and_or',
-				left: [{type: 'simple_command', name: {text: 'stop'}}]
+				type: 'pipeline',
+				commands: [{type: 'simple_command', name: {text: 'stop'}}]
 			}
 		}]
 	});
@@ -71,11 +78,14 @@ test('commands with AND \\n', t => {
 			op: 'and',
 			left: {
 				type: 'and_or',
-				left: [{type: 'simple_command', name: {text: 'run'}}]
+				left: {
+					type: 'pipeline',
+					commands: [{type: 'simple_command', name: {text: 'run'}}]
+				}
 			},
 			right: {
-				type: 'and_or',
-				left: [{type: 'simple_command', name: {text: 'stop'}}]
+				type: 'pipeline',
+				commands: [{type: 'simple_command', name: {text: 'stop'}}]
 			}
 		}]
 	});
@@ -90,11 +100,14 @@ test('commands with OR', t => {
 			op: 'or',
 			left: {
 				type: 'and_or',
-				left: [{type: 'simple_command', name: {text: 'run'}}]
+				left: {
+					type: 'pipeline',
+					commands: [{type: 'simple_command', name: {text: 'run'}}]
+				}
 			},
 			right: {
-				type: 'and_or',
-				left: [{type: 'simple_command', name: {text: 'cry'}}]
+				type: 'pipeline',
+				commands: [{type: 'simple_command', name: {text: 'cry'}}]
 			}
 		}]
 	});
@@ -107,11 +120,13 @@ test('pipelines', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command', name: {text: 'run'}
-			}, {
-				type: 'simple_command', name: {text: 'cry'}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [
+					{type: 'simple_command', name: {text: 'run'}},
+					{type: 'simple_command', name: {text: 'cry'}}
+				]
+			}
 		}]
 	});
 });
@@ -122,55 +137,59 @@ test('no pre-assignment on suffix', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: 'TEST=1'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {type: 'cmd_suffix', list: [{text: 'TEST=1'}]}
+				}]
+			}
 		}]
 	});
 });
 
 test('command with multiple prefixes', t => {
 	const result = bashParser('TEST1=1 TEST2=2 echo world');
-	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: 'world'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
+					suffix: {type: 'cmd_suffix', list: [{text: 'world'}]}
+				}]
+			}
 		}]
 	});
 });
 
 test('multi line commands', t => {
 	const result = bashParser('echo; \nls;\n');
-	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'}
+				}]
+			}
 		}, {
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'ls'}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'ls'}
+				}]
+			}
 		}]
 	});
 });
@@ -181,20 +200,23 @@ test('command with redirection to file', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'ls'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [
-						{
-							type: 'io_redirect',
-							op: {text: '>'},
-							file: {text: 'file.txt'}
-						}
-					]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'ls'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{
+								type: 'io_redirect',
+								op: {text: '>'},
+								file: {text: 'file.txt'}
+							}
+						]
+					}
+				}]
+			}
 		}]
 	});
 });
@@ -206,15 +228,17 @@ test('parse multiple suffix', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left:
-				[{
-					type: 'simple_command',
-					name: {text: 'command'},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [{text: 'foo'}, {text: '--lol'}]
-					}
-				}]
+				left: {
+					type: 'pipeline',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'command'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: 'foo'}, {text: '--lol'}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -222,50 +246,52 @@ test('parse multiple suffix', t => {
 
 test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
-
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'ls'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{
-						type: 'io_redirect',
-						op: {text: '>'},
-						file: {text: 'file.txt'},
-						numberIo: {text: '2'}
-					}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'ls'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [{
+							type: 'io_redirect',
+							op: {text: '>'},
+							file: {text: 'file.txt'},
+							numberIo: {text: '2'}
+						}]
+					}
+				}]
+			}
 		}]
 	});
 });
 
 test('parse subshell', t => {
 	const result = bashParser('( ls )');
-	// console.log(inspect(result, {depth:null}))
-	t.deepEqual(
-		result, {
-			type: 'complete_command',
-			and_ors: [{
-				type: 'and_or',
-				left: [{
+	t.deepEqual(result, {
+		type: 'complete_command',
+		and_ors: [{
+			type: 'and_or',
+			left: {
+				type: 'pipeline',
+				commands: [{
 					type: 'subshell',
 					list: {
 						type: 'term',
 						and_ors: [{
 							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'ls'}
-							}]
+							left: {
+								type: 'pipeline',
+								commands: [{type: 'simple_command', name: {text: 'ls'}}]
+							}
 						}]
 					}
 				}]
-			}]
-		}
-	);
+			}
+		}]
+	});
 });

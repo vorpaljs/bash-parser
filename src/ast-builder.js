@@ -88,17 +88,29 @@ module.exports = options => {
 	builder.subshell = list => ({type: 'subshell', list});
 
 	builder.pipeSequence = command => {
-		return [command];
+		return {
+			type: 'pipeline',
+			commands: [command]
+		};
 	};
-	builder.pipeSequenceAppend = (pipe, command) => (pipe.push(command), pipe);
-	builder.bangPipeSequence = pipe => (pipe.bang = true, pipe);
+	builder.pipeSequenceAppend = (pipe, command) => {
+		pipe.commands.push(command);
+		return pipe;
+	};
+	builder.bangPipeSequence = pipe => {
+		pipe.bang = true;
+		return pipe;
+	};
 
 	builder.singleAndOr = pipe => {
 		const node = {
 			type: 'and_or', left: pipe
 		};
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, pipe[0].loc), pipe[pipe.length - 1].loc);
+			const firstCommand = pipe.commands[0];
+			const lastCommand = pipe.commands[pipe.commands.length - 1];
+
+			node.loc = setLocEnd(setLocStart({}, firstCommand.loc), lastCommand.loc);
 		}
 		return node;
 	};
@@ -108,11 +120,11 @@ module.exports = options => {
 			type: 'and_or',
 			op: 'and',
 			left,
-			right: builder.singleAndOr(right)
+			right
 		};
 
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, left.loc), right[right.length - 1].loc);
+			node.loc = setLocEnd(setLocStart({}, left.loc), right.loc);
 		}
 
 		return node;
@@ -123,11 +135,11 @@ module.exports = options => {
 			type: 'and_or',
 			op: 'or',
 			left,
-			right: builder.singleAndOr(right)
+			right
 		};
 
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, left.loc), right[right.length - 1].loc);
+			node.loc = setLocEnd(setLocStart({}, left.loc), right.loc);
 		}
 
 		return node;

@@ -9,21 +9,24 @@ test('Redirect should be allowed immediately following argument', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [
-						{text: 'foo'},
-						{
-							type: 'io_redirect',
-							op: {text: '>'},
-							file: {text: 'file.txt'}
-						}
-					]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{text: 'foo'},
+							{
+								type: 'io_redirect',
+								op: {text: '>'},
+								file: {text: 'file.txt'}
+							}
+						]
+					}
+				}]
+			}
 		}]
 	});
 });
@@ -34,16 +37,19 @@ test('Equal sign should be allowed in arguments', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [
-						{text: 'foo=bar'}
-					]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'echo'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{text: 'foo=bar'}
+						]
+					}
+				}]
+			}
 		}]
 	});
 });

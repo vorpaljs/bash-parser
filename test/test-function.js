@@ -10,21 +10,27 @@ test('parse function declaration multiple lines', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left: [{
-					type: 'function',
-					name: {text: 'foo'},
-					body: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'command'},
-								suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+				left: {
+					type: 'pipeline',
+					commands: [{
+						type: 'function',
+						name: {text: 'foo'},
+						body: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'command'},
+										suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+									}]
+								}
 							}]
-						}]
-					}
-				}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -38,21 +44,27 @@ test('parse function declaration', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left: [{
-					type: 'function',
-					name: {text: 'foo'},
-					body: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'command'},
-								suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+				left: {
+					type: 'pipeline',
+					commands: [{
+						type: 'function',
+						name: {text: 'foo'},
+						body: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'command'},
+										suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+									}]
+								}
 							}]
-						}]
-					}
-				}]
+						}
+					}]
+				}
 			}]
 		}
 	);

@@ -11,7 +11,7 @@ test('syntax error contains line number', async t => {
 
 test('AST can include loc', t => {
 	const result = bashParser('echo', {insertLOC: true});
-	t.deepEqual(result.and_ors[0].left[0].name, {
+	t.deepEqual(result.and_ors[0].left.commands[0].name, {
 		text: 'echo',
 		loc: mkloc(0, 0, 0, 3)
 	});
@@ -26,30 +26,32 @@ test('double command with only name', t => {
 		and_ors: [
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {
 							text: 'echo',
 							loc: mkloc(0, 0, 0, 3)
 						},
 						loc: mkloc(0, 0, 0, 3)
-					}
-				],
+					}]
+				},
 				loc: mkloc(0, 0, 0, 3)
 			},
 			{
 				type: 'and_or',
-				left: [
-					{
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'simple_command',
 						name: {
 							text: 'ciao',
 							loc: mkloc(0, 6, 0, 9)
 						},
 						loc: mkloc(0, 6, 0, 9)
-					}
-				],
+					}]
+				},
 				loc: mkloc(0, 6, 0, 9)
 			}
 		]
@@ -59,7 +61,7 @@ test('double command with only name', t => {
 test('loc are composed by all tokens', t => {
 	const result = bashParser('echo 42', {insertLOC: true});
 	// console.log(JSON.stringify(result, null, 4));
-	t.deepEqual(result.and_ors[0].left[0], {
+	t.deepEqual(result.and_ors[0].left.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',

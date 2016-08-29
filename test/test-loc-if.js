@@ -15,7 +15,7 @@ fi
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 
-	// console.log(json.stringify(result.and_ors[0].left[0], null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(result.and_ors[0].left.commands[0], null, '\t').replace(/"/g, '\''));
 	const expected = {
 		type: 'if',
 		clause: {
@@ -23,26 +23,29 @@ fi
 			and_ors: [
 				{
 					type: 'and_or',
-					left: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'true',
+					left: {
+						type: 'pipeline',
+						commands: [
+							{
+								type: 'simple_command',
+								name: {
+									text: 'true',
+									loc: {
+										startLine: 0,
+										startColumn: 3,
+										endLine: 0,
+										endColumn: 6
+									}
+								},
 								loc: {
 									startLine: 0,
 									startColumn: 3,
 									endLine: 0,
 									endColumn: 6
 								}
-							},
-							loc: {
-								startLine: 0,
-								startColumn: 3,
-								endLine: 0,
-								endColumn: 6
 							}
-						}
-					],
+						]
+					},
 					loc: {
 						startLine: 0,
 						startColumn: 3,
@@ -63,40 +66,43 @@ fi
 			and_ors: [
 				{
 					type: 'and_or',
-					left: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'echo',
+					left: {
+						type: 'pipeline',
+						commands: [
+							{
+								type: 'simple_command',
+								name: {
+									text: 'echo',
+									loc: {
+										startLine: 1,
+										startColumn: 1,
+										endLine: 1,
+										endColumn: 4
+									}
+								},
 								loc: {
 									startLine: 1,
 									startColumn: 1,
 									endLine: 1,
-									endColumn: 4
-								}
-							},
-							loc: {
-								startLine: 1,
-								startColumn: 1,
-								endLine: 1,
-								endColumn: 6
-							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: '1',
-										loc: {
-											startLine: 1,
-											startColumn: 6,
-											endLine: 1,
-											endColumn: 6
+									endColumn: 6
+								},
+								suffix: {
+									type: 'cmd_suffix',
+									list: [
+										{
+											text: '1',
+											loc: {
+												startLine: 1,
+												startColumn: 6,
+												endLine: 1,
+												endColumn: 6
+											}
 										}
-									}
-								]
+									]
+								}
 							}
-						}
-					],
+						]
+					},
 					loc: {
 						startLine: 1,
 						startColumn: 1,
@@ -119,26 +125,29 @@ fi
 				and_ors: [
 					{
 						type: 'and_or',
-						left: [
-							{
-								type: 'simple_command',
-								name: {
-									text: 'false',
+						left: {
+							type: 'pipeline',
+							commands: [
+								{
+									type: 'simple_command',
+									name: {
+										text: 'false',
+										loc: {
+											startLine: 2,
+											startColumn: 5,
+											endLine: 2,
+											endColumn: 9
+										}
+									},
 									loc: {
 										startLine: 2,
 										startColumn: 5,
 										endLine: 2,
 										endColumn: 9
 									}
-								},
-								loc: {
-									startLine: 2,
-									startColumn: 5,
-									endLine: 2,
-									endColumn: 9
 								}
-							}
-						],
+							]
+						},
 						loc: {
 							startLine: 2,
 							startColumn: 5,
@@ -159,8 +168,9 @@ fi
 				and_ors: [
 					{
 						type: 'and_or',
-						left: [
-							{
+						left: {
+							type: 'pipeline',
+							commands: [{
 								type: 'simple_command',
 								name: {
 									text: 'echo',
@@ -191,8 +201,8 @@ fi
 										}
 									]
 								}
-							}
-						],
+							}]
+						},
 						loc: {
 							startLine: 3,
 							startColumn: 1,
@@ -213,8 +223,9 @@ fi
 				and_ors: [
 					{
 						type: 'and_or',
-						left: [
-							{
+						left: {
+							type: 'pipeline',
+							commands: [{
 								type: 'simple_command',
 								name: {
 									text: 'echo',
@@ -245,8 +256,8 @@ fi
 										}
 									]
 								}
-							}
-						],
+							}]
+						},
 						loc: {
 							startLine: 5,
 							startColumn: 1,
@@ -276,7 +287,7 @@ fi
 			endColumn: 1
 		}
 	};
-	// console.log(diff(result.and_ors[0].left[0], expected));
+	// console.log(diff(result.and_ors[0].left.commands[0], expected));
 
-	t.deepEqual(result.and_ors[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left.commands[0], expected);
 });

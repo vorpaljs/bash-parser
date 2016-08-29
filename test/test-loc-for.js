@@ -61,47 +61,50 @@ done
 			and_ors: [
 				{
 					type: 'and_or',
-					left: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'echo',
+					left: {
+						type: 'pipeline',
+						commands: [
+							{
+								type: 'simple_command',
+								name: {
+									text: 'echo',
+									loc: {
+										startLine: 1,
+										startColumn: 1,
+										endLine: 1,
+										endColumn: 4
+									}
+								},
 								loc: {
 									startLine: 1,
 									startColumn: 1,
 									endLine: 1,
-									endColumn: 4
-								}
-							},
-							loc: {
-								startLine: 1,
-								startColumn: 1,
-								endLine: 1,
-								endColumn: 7
-							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: '$x',
-										expansion: [
-											{
-												parameter: 'x',
-												start: 0,
-												end: 2
+									endColumn: 7
+								},
+								suffix: {
+									type: 'cmd_suffix',
+									list: [
+										{
+											text: '$x',
+											expansion: [
+												{
+													parameter: 'x',
+													start: 0,
+													end: 2
+												}
+											],
+											loc: {
+												startLine: 1,
+												startColumn: 6,
+												endLine: 1,
+												endColumn: 7
 											}
-										],
-										loc: {
-											startLine: 1,
-											startColumn: 6,
-											endLine: 1,
-											endColumn: 7
 										}
-									}
-								]
+									]
+								}
 							}
-						}
-					],
+						]
+					},
 					loc: {
 						startLine: 1,
 						startColumn: 1,
@@ -119,5 +122,5 @@ done
 		}
 	};
 
-	t.deepEqual(result.and_ors[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left.commands[0], expected);
 });

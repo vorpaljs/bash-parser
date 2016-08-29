@@ -10,33 +10,42 @@ test('parse if', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left: [{
-					type: 'if',
-					clause: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
+				left: {
+					type: 'pipeline',
+					commands: [{
+						type: 'if',
+						clause: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'true'}
+									}]
 								}
 							}]
-						}]
-					}
-				}]
+						},
+						then: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'echo'},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [{text: '1'}]
+										}
+									}]
+								}
+							}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -50,47 +59,59 @@ test('parse if else', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left: [{
-					type: 'if',
-					clause: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
+				left: {
+					type: 'pipeline',
+					commands: [{
+						type: 'if',
+						clause: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'true'}
+									}]
 								}
 							}]
-						}]
-					},
-					else: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '2'}]
+						},
+						then: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'echo'},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [{text: '1'}]
+										}
+									}]
 								}
 							}]
-						}]
-					}
-				}]
+						},
+						else: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'echo'},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [{text: '2'}]
+										}
+									}]
+								}
+							}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -104,47 +125,59 @@ test('parse if else multiline', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left: [{
-					type: 'if',
-					clause: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
+				left: {
+					type: 'pipeline',
+					commands: [{
+						type: 'if',
+						clause: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'true'}
+									}]
 								}
 							}]
-						}]
-					},
-					else: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '2'}]
+						},
+						then: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'echo'},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [{text: '1'}]
+										}
+									}]
 								}
 							}]
-						}]
-					}
-				}]
+						},
+						else: {
+							type: 'term',
+							and_ors: [{
+								type: 'and_or',
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'echo'},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [{text: '2'}]
+										}
+									}]
+								}
+							}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -158,65 +191,83 @@ test('parse if elif else', t => {
 			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
-				left: [{
-					type: 'if',
-					clause: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'term',
-						and_ors: [{
-							type: 'and_or',
-							left: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
-						}]
-					},
-					else: {
+				left: {
+					type: 'pipeline',
+					commands: [{
 						type: 'if',
 						clause: {
 							type: 'term',
 							and_ors: [{
 								type: 'and_or',
-								left: [{type: 'simple_command', name: {text: 'false'}}]
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'true'}
+									}]
+								}
 							}]
 						},
 						then: {
 							type: 'term',
 							and_ors: [{
 								type: 'and_or',
-								left: [{
-									type: 'simple_command',
-									name: {text: 'echo'},
-									suffix: {type: 'cmd_suffix', list: [{text: '3'}]}
-								}]
+								left: {
+									type: 'pipeline',
+									commands: [{
+										type: 'simple_command',
+										name: {text: 'echo'},
+										suffix: {
+											type: 'cmd_suffix',
+											list: [{text: '1'}]
+										}
+									}]
+								}
 							}]
 						},
 						else: {
-							type: 'term',
-							and_ors: [{
-								type: 'and_or',
-								left: [{
-									type: 'simple_command',
-									name: {text: 'echo'},
-									suffix: {type: 'cmd_suffix', list: [{text: '2'}]}
+							type: 'if',
+							clause: {
+								type: 'term',
+								and_ors: [{
+									type: 'and_or',
+									left: {
+										type: 'pipeline',
+										commands: [{type: 'simple_command', name: {text: 'false'}}]
+									}
 								}]
-							}]
+							},
+							then: {
+								type: 'term',
+								and_ors: [{
+									type: 'and_or',
+									left: {
+										type: 'pipeline',
+										commands: [{
+											type: 'simple_command',
+											name: {text: 'echo'},
+											suffix: {type: 'cmd_suffix', list: [{text: '3'}]}
+										}]
+									}
+								}]
+							},
+							else: {
+								type: 'term',
+								and_ors: [{
+									type: 'and_or',
+									left: {
+										type: 'pipeline',
+										commands: [{
+											type: 'simple_command',
+											name: {text: 'echo'},
+											suffix: {type: 'cmd_suffix', list: [{text: '2'}]}
+										}]
+									}
+								}]
+							}
 						}
-					}
-				}]
+					}]
+				}
 			}]
 		}
 	);

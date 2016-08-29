@@ -40,12 +40,15 @@ test('3', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'read'},
-				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
-				suffix: {type: 'cmd_suffix', list: [{text: '-r'}, {text: 'var'}]}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'read'},
+					prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
+					suffix: {type: 'cmd_suffix', list: [{text: '-r'}, {text: 'var'}]}
+				}]
+			}
 		}]
 	});
 });
@@ -58,15 +61,18 @@ test('4', t => {
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'foo'}
-			}, {
-				type: 'simple_command',
-				name: {text: 'read'},
-				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
-				suffix: {type: 'cmd_suffix', list: [{text: 'var'}]}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'foo'}
+				}, {
+					type: 'simple_command',
+					name: {text: 'read'},
+					prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
+					suffix: {type: 'cmd_suffix', list: [{text: 'var'}]}
+				}]
+			}
 		}]
 	});
 });
@@ -83,34 +89,43 @@ eval "dest=foo"`
 		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: ''},
-				prefix: {
-					type: 'cmd_prefix',
-					list: [{text: 'foo=\'hello ; rm -rf /\''}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{text: 'foo=\'hello ; rm -rf /\''}]
+					}
+				}]
+			}
 		}, {
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: ''},
-				prefix: {
-					type: 'cmd_prefix',
-					list: [{text: 'dest=bar'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{text: 'dest=bar'}]
+					}
+				}]
+			}
 		}, {
 			type: 'and_or',
-			left: [{
-				type: 'simple_command',
-				name: {text: 'eval'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '"dest=foo"'}]
-				}
-			}]
+			left: {
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'eval'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [{text: '"dest=foo"'}]
+					}
+				}]
+			}
 		}]
 	});
 });

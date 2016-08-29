@@ -1,5 +1,6 @@
 'use strict';
-const json = require('json5');
+// const json = require('json5');
+// const {diff} = require('rus-diff');
 const test = require('ava');
 const bashParser = require('../src');
 
@@ -173,9 +174,7 @@ test('simple command with IO redirection', t => {
 
 test('simple command with numbered IO redirection', t => {
 	const result = bashParser('echo 2> 43', {insertLOC: true});
-	// console.log(json.stringify(result, null, '\t'));
-
-	t.deepEqual(result.andOrs[0].left[0], {
+	const expected = {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
@@ -233,7 +232,10 @@ test('simple command with numbered IO redirection', t => {
 				}
 			]
 		}
-	});
+	};
+	// console.log(json.stringify(diff(result.andOrs[0].left[0], expected), null, 4));
+
+	t.deepEqual(result.andOrs[0].left[0], expected);
 });
 
 test('simple command with suffixes & prefixes', t => {

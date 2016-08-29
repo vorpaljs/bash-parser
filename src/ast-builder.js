@@ -2,15 +2,31 @@
 
 /* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */
+/* eslint-disable camelcase */
 
 module.exports = options => {
 	const builder = {};
 
-	builder.list = andOr => ({type: 'list', andOrs: [andOr]});	// eslint-disable-line camelcase
+	builder.list = andOr => ({type: 'list', andOrs: [andOr]});
 	builder.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
 
-	builder.term = andOr => ({type: 'term', andOrs: [andOr]});	// eslint-disable-line camelcase
-	builder.termAppend = (term, andOr) => (term.andOrs.push(andOr), term);
+	builder.term = andOr => {
+		const node = {
+			type: 'term',
+			andOrs: [andOr]
+		};
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, andOr.loc), andOr.loc);
+		}
+		return node;
+	};
+
+	builder.termAppend = (term, andOr) => {
+		term.andOrs.push(andOr);
+		setLocEnd(term.loc, andOr.loc);
+		return term;
+	};
+
 	builder.subshell = list => ({type: 'subshell', list});
 	builder.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
 
@@ -19,25 +35,47 @@ module.exports = options => {
 	};
 	builder.pipeSequenceAppend = (pipe, command) => (pipe.push(command), pipe);
 	builder.bangPipeSequence = pipe => (pipe.bang = true, pipe);
+
 	builder.singleAndOr = pipe => {
-		return {type: 'andOr', left: pipe};
+		const node = {
+			type: 'andOr', left: pipe
+		};
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, pipe[0].loc), pipe[pipe.length - 1].loc);
+		}
+		return node;
 	};
+
 	builder.andAndOr = (left, right) => {
-		return {
+		const node = {
 			type: 'andOr',
 			op: 'and',
 			left,
 			right: builder.singleAndOr(right)
 		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, left.loc), right[right.length - 1].loc);
+		}
+
+		return node;
 	};
+
 	builder.orAndOr = (left, right) => {
-		return {
+		const node = {
 			type: 'andOr',
 			op: 'or',
 			left,
 			right: builder.singleAndOr(right)
 		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, left.loc), right[right.length - 1].loc);
+		}
+
+		return node;
 	};
+
 	builder.forClause = (name, wordlist, doGroup) => ({
 		type: 'for',
 		name,
@@ -81,7 +119,20 @@ module.exports = options => {
 		return node;
 	};
 
-	builder.while = (clause, body) => ({type: 'while', clause, do: body});
+	builder.while = (clause, body, whileWord) => {
+		const node = {
+			type: 'while',
+			clause,
+			do: body
+		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, whileWord.loc), body.loc);
+		}
+
+		return node;
+	};
+
 	builder.until = (clause, body) => ({type: 'until', clause, do: body});
 
 	builder.commandName = name => name;
@@ -167,13 +218,17 @@ module.exports = options => {
 };
 
 function setLocStart(target, source) {
-	target.startLine = source.startLine;
-	target.startColumn = source.startColumn;
+	if (source) {
+		target.startLine = source.startLine;
+		target.startColumn = source.startColumn;
+	}
 	return target;
 }
 
 function setLocEnd(target, source) {
-	target.endLine = source.endLine;
-	target.endColumn = source.endColumn;
+	if (source) {
+		target.endLine = source.endLine;
+		target.endColumn = source.endColumn;
+	}
 	return target;
 }

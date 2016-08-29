@@ -133,7 +133,19 @@ module.exports = options => {
 		return node;
 	};
 
-	builder.until = (clause, body) => ({type: 'until', clause, do: body});
+	builder.until = (clause, body, whileWord) => {
+		const node = {
+			type: 'until',
+			clause,
+			do: body
+		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, whileWord.loc), body.loc);
+		}
+
+		return node;
+	};
 
 	builder.commandName = name => name;
 

@@ -180,10 +180,10 @@ else_part       : Elif compound_list Then compound_list
 					-> $2
 				 ;
 while_clause     : While compound_list do_group
-					-> yy.while($2, $3)
+					-> yy.while($2, $3, $While)
 				 ;
 until_clause     : Until compound_list do_group
-					-> yy.until($2, $3)
+					-> yy.until($2, $3, $Until)
 				 ;
 function_definition : fname OPEN_PAREN CLOSE_PAREN linebreak function_body
 					-> yy.functionDefinition($fname, $function_body)

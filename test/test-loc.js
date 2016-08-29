@@ -21,7 +21,7 @@ test('double command with only name', t => {
 	const result = bashParser('echo; ciao;', {insertLOC: true});
 	// logResults(result);
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		loc: mkloc(0, 0, 0, 9),
 		and_ors: [
 			{

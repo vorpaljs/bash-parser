@@ -7,7 +7,7 @@ test('parse if', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -47,7 +47,7 @@ test('parse if else', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -101,7 +101,7 @@ test('parse if else multiline', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -155,7 +155,7 @@ test('parse if elif else', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{

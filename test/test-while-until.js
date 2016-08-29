@@ -7,7 +7,7 @@ test('parse while', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -47,7 +47,7 @@ test('parse until', t => {
  //	console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{

@@ -6,7 +6,7 @@ test('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -24,7 +24,7 @@ test('quotes within double quotes', t => {
 test('escaped double quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \\"TEST2"');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -43,7 +43,7 @@ test('double quotes within single quotes', t => {
 	const result = bashParser('echo \'TEST1 "TEST2\'');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{

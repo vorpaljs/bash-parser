@@ -37,7 +37,7 @@ test.skip('2', t => {
 test('3', t => {
 	const result = bashParser('IFS= read -r var');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -55,7 +55,7 @@ test('4', t => {
 	// console.log(inspect(result, {depth: null}));
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -80,7 +80,7 @@ eval "dest=foo"`
 	// console.log(JSON.stringify(result, null, 5))
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{

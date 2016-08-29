@@ -6,7 +6,7 @@ test('command substitution', t => {
 	const result = bashParser('variable=$(echo ciao)');
 	delete result.and_ors[0].left[0].prefix.list[0].expansion[0].commandAST;
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -37,7 +37,7 @@ test('command substitution in suffix', t => {
 	const result = bashParser('echo $(ciao)');
 	delete result.and_ors[0].left[0].suffix.list[0].expansion[0].commandAST;
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -69,7 +69,7 @@ test('command substitution in suffix with backticks', t => {
 	delete result.and_ors[0].left[0].suffix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -101,7 +101,7 @@ test('command ast is recursively parsed', t => {
 		.and_ors[0].left[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -127,7 +127,7 @@ test('command substitution with backticks', t => {
 	delete result.and_ors[0].left[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -159,7 +159,7 @@ test('quoted backtick are removed within command substitution with backticks', t
 	delete result.and_ors[0].left[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -191,7 +191,7 @@ test('quoted backtick are not removed within command substitution with parenthes
 	delete result.and_ors[0].left[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',

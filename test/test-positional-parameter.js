@@ -23,7 +23,7 @@ test('positional parameter with word following', t => {
 test('positional parameter in braces', t => {
 	const result = bashParser('echoword=${11}test');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -54,7 +54,7 @@ test('positional parameter without braces', t => {
 	const result = bashParser('echoword=$1');
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -85,7 +85,7 @@ test('positional parameter without braces allow one digit only', t => {
 	const result = bashParser('echoword=$11');
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',

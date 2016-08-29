@@ -6,7 +6,7 @@ test('parse for', t => {
 	const result = bashParser('for x in a b c; do echo $x; done');
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -44,7 +44,7 @@ test('parse for with default sequence', t => {
 	const result = bashParser('for x\n do echo $x\n done');
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -82,7 +82,7 @@ test('parse for with default sequence - on one line', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{

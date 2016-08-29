@@ -6,7 +6,7 @@ test('positional list paramter', t => {
 	const result = bashParser('echoword=$@');
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -36,7 +36,7 @@ test('positional list paramter', t => {
 test('positional string paramter', t => {
 	const result = bashParser('echoword=$*');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -66,7 +66,7 @@ test('positional string paramter', t => {
 test('positional count paramter', t => {
 	const result = bashParser('echoword=$#');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -96,7 +96,7 @@ test('positional count paramter', t => {
 test('last exit status', t => {
 	const result = bashParser('echoword=$?');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -126,7 +126,7 @@ test('last exit status', t => {
 test('current option flags', t => {
 	const result = bashParser('echoword=$-');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -156,7 +156,7 @@ test('current option flags', t => {
 test('shell process id', t => {
 	const result = bashParser('echoword=$$');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -186,7 +186,7 @@ test('shell process id', t => {
 test('last background pid', t => {
 	const result = bashParser('echoword=$!');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',
@@ -216,7 +216,7 @@ test('last background pid', t => {
 test('shell script name', t => {
 	const result = bashParser('echoword=$0');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [
 			{
 				type: 'and_or',

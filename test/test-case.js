@@ -7,7 +7,7 @@ test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
 
 	const expected = {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{

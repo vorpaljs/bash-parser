@@ -7,7 +7,7 @@ const bashParser = require('../src');
 test('command with one argument', t => {
 	const result = bashParser('echo world');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -27,7 +27,7 @@ test('command with one argument', t => {
 test('command with pre-assignment', t => {
 	const result = bashParser('TEST=1 run');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -45,7 +45,7 @@ test('command with pre-assignment', t => {
 test('commands with AND', t => {
 	const result = bashParser('run && stop');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			op: 'and',
@@ -65,7 +65,7 @@ test('commands with AND \\n', t => {
 	const result = bashParser('run && \n stop');
 	// console.log(inspect(result, {depth: null}))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			op: 'and',
@@ -84,7 +84,7 @@ test('commands with AND \\n', t => {
 test('commands with OR', t => {
 	const result = bashParser('run || cry');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			op: 'or',
@@ -104,7 +104,7 @@ test('pipelines', t => {
 	const result = bashParser('run | cry');
 	// console.log(inspect(result, {depth: null}));
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -119,7 +119,7 @@ test('pipelines', t => {
 test('no pre-assignment on suffix', t => {
 	const result = bashParser('echo TEST=1');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -138,7 +138,7 @@ test('command with multiple prefixes', t => {
 	const result = bashParser('TEST1=1 TEST2=2 echo world');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -158,7 +158,7 @@ test('multi line commands', t => {
 	const result = bashParser('echo; \nls;\n');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -178,7 +178,7 @@ test('multi line commands', t => {
 test('command with redirection to file', t => {
 	const result = bashParser('ls > file.txt');
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -203,7 +203,7 @@ test('parse multiple suffix', t => {
 	const result = bashParser('command foo --lol');
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left:
@@ -224,7 +224,7 @@ test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
 
 	t.deepEqual(result, {
-		type: 'list',
+		type: 'complete_command',
 		and_ors: [{
 			type: 'and_or',
 			left: [{
@@ -249,7 +249,7 @@ test('parse subshell', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{

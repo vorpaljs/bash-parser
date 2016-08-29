@@ -7,7 +7,7 @@ test('parse function declaration multiple lines', t => {
 
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{
@@ -35,7 +35,7 @@ test('parse function declaration', t => {
 
 	t.deepEqual(
 		result, {
-			type: 'list',
+			type: 'complete_command',
 			and_ors: [{
 				type: 'and_or',
 				left: [{

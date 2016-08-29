@@ -54,7 +54,7 @@ module.exports = options => {
 	};
 
 	builder.list = and_or => {
-		const node = {type: 'list', and_ors: [and_or]};
+		const node = {type: 'complete_command', and_ors: [and_or]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
 		}

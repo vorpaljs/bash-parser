@@ -53,8 +53,20 @@ module.exports = options => {
 		return group;
 	};
 
-	builder.list = andOr => ({type: 'list', andOrs: [andOr]});
-	builder.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
+	builder.list = andOr => {
+		const node = {type: 'list', andOrs: [andOr]};
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, andOr.loc), andOr.loc);
+		}
+		return node;
+	};
+	builder.listAppend = (list, andOr) => {
+		list.andOrs.push(andOr);
+		if (options.insertLOC) {
+			setLocEnd(list.loc, andOr.loc);
+		}
+		return list;
+	};
 
 	builder.term = andOr => {
 		const node = {

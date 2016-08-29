@@ -29,7 +29,6 @@ test('simple command with prefixes and name', t => {
 
 test('simple command with only name', t => {
 	const result = bashParser('echo', {insertLOC: true});
-	// console.log(JSON.stringify(result, null, 4));
 	t.deepEqual(result.andOrs[0].left[0], {
 		type: 'simple_command',
 		name: {
@@ -37,6 +36,30 @@ test('simple command with only name', t => {
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 3)
+	});
+});
+
+test('simple command with pipeline', t => {
+	const result = bashParser('echo | grep', {insertLOC: true});
+	// console.log(JSON.stringify(result, null, 4));
+	t.deepEqual(result.andOrs[0], {
+		type: 'andOr',
+		left: [{
+			type: 'simple_command',
+			name: {
+				text: 'echo',
+				loc: mkloc(0, 0, 0, 3)
+			},
+			loc: mkloc(0, 0, 0, 3)
+		}, {
+			type: 'simple_command',
+			name: {
+				text: 'grep',
+				loc: mkloc(0, 7, 0, 10)
+			},
+			loc: mkloc(0, 7, 0, 10)
+		}],
+		loc: mkloc(0, 0, 0, 10)
 	});
 });
 

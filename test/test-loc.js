@@ -3,7 +3,7 @@ const test = require('ava');
 const bashParser = require('../src');
 const mkloc = require('./_utils').mkloc;
 // const logResults = require('./_utils').logResults;
-
+/* eslint-disable camelcase */
 test('syntax error contains line number', async t => {
 	const error = t.throws(() => bashParser('ecoh\necho <'));
 	t.is(error.message, 'Parse error on line 2: Unexpected \'EOF\'');
@@ -11,7 +11,7 @@ test('syntax error contains line number', async t => {
 
 test('AST can include loc', t => {
 	const result = bashParser('echo', {insertLOC: true});
-	t.deepEqual(result.andOrs[0].left[0].name, {
+	t.deepEqual(result.and_ors[0].left[0].name, {
 		text: 'echo',
 		loc: mkloc(0, 0, 0, 3)
 	});
@@ -23,9 +23,9 @@ test('double command with only name', t => {
 	t.deepEqual(result, {
 		type: 'list',
 		loc: mkloc(0, 0, 0, 9),
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -39,7 +39,7 @@ test('double command with only name', t => {
 				loc: mkloc(0, 0, 0, 3)
 			},
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -59,7 +59,7 @@ test('double command with only name', t => {
 test('loc are composed by all tokens', t => {
 	const result = bashParser('echo 42', {insertLOC: true});
 	// console.log(JSON.stringify(result, null, 4));
-	t.deepEqual(result.andOrs[0].left[0], {
+	t.deepEqual(result.and_ors[0].left[0], {
 		type: 'simple_command',
 		name: {
 			text: 'echo',

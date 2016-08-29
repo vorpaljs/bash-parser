@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('loc in function declaration', t => {
 	const cmd =
 `foo () {
@@ -35,9 +35,9 @@ test('loc in function declaration', t => {
 				endLine: 2,
 				endColumn: 0
 			},
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					left: [
 						{
 							type: 'simple_command',
@@ -93,5 +93,5 @@ test('loc in function declaration', t => {
 		}
 	};
 
-	t.deepEqual(result.andOrs[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left[0], expected);
 });

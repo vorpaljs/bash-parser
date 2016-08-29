@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('loc in for statement', t => {
 	const cmd =
 `for x in a b c; do
@@ -58,9 +58,9 @@ done
 		],
 		do: {
 			type: 'term',
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					left: [
 						{
 							type: 'simple_command',
@@ -119,5 +119,5 @@ done
 		}
 	};
 
-	t.deepEqual(result.andOrs[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left[0], expected);
 });

@@ -1,10 +1,10 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
-		.andOrs[0].left[0].prefix;
+		.and_ors[0].left[0].prefix;
 
 	t.deepEqual(result, {
 		type: 'cmd_prefix',
@@ -24,9 +24,9 @@ test('positional parameter in braces', t => {
 	const result = bashParser('echoword=${11}test');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -55,9 +55,9 @@ test('positional parameter without braces', t => {
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -86,9 +86,9 @@ test('positional parameter without braces allow one digit only', t => {
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',

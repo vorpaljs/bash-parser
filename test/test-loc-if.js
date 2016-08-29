@@ -3,7 +3,7 @@ const test = require('ava');
 // const json = require('json5');
 // const {diff} = require('rus-diff');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('parse if elif else', t => {
 	const cmd = `if true; then
 	echo 1;
@@ -15,14 +15,14 @@ fi
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 
-	// console.log(json.stringify(result.andOrs[0].left[0], null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(result.and_ors[0].left[0], null, '\t').replace(/"/g, '\''));
 	const expected = {
 		type: 'if',
 		clause: {
 			type: 'term',
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					left: [
 						{
 							type: 'simple_command',
@@ -60,9 +60,9 @@ fi
 		},
 		then: {
 			type: 'term',
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					left: [
 						{
 							type: 'simple_command',
@@ -116,9 +116,9 @@ fi
 			type: 'if',
 			clause: {
 				type: 'term',
-				andOrs: [
+				and_ors: [
 					{
-						type: 'andOr',
+						type: 'and_or',
 						left: [
 							{
 								type: 'simple_command',
@@ -156,9 +156,9 @@ fi
 			},
 			then: {
 				type: 'term',
-				andOrs: [
+				and_ors: [
 					{
-						type: 'andOr',
+						type: 'and_or',
 						left: [
 							{
 								type: 'simple_command',
@@ -210,9 +210,9 @@ fi
 			},
 			else: {
 				type: 'term',
-				andOrs: [
+				and_ors: [
 					{
-						type: 'andOr',
+						type: 'and_or',
 						left: [
 							{
 								type: 'simple_command',
@@ -276,7 +276,7 @@ fi
 			endColumn: 1
 		}
 	};
-	// console.log(diff(result.andOrs[0].left[0], expected));
+	// console.log(diff(result.and_ors[0].left[0], expected));
 
-	t.deepEqual(result.andOrs[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left[0], expected);
 });

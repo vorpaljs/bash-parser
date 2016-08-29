@@ -2,7 +2,7 @@
 const test = require('ava');
 const tokenDelimiter = require('../src/token-delimiter');
 const mkloc = require('./_utils').mkloc;
-
+/* eslint-disable camelcase */
 function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text));
 	return results;

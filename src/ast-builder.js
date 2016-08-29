@@ -53,35 +53,35 @@ module.exports = options => {
 		return group;
 	};
 
-	builder.list = andOr => {
-		const node = {type: 'list', andOrs: [andOr]};
+	builder.list = and_or => {
+		const node = {type: 'list', and_ors: [and_or]};
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, andOr.loc), andOr.loc);
+			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
 		}
 		return node;
 	};
-	builder.listAppend = (list, andOr) => {
-		list.andOrs.push(andOr);
+	builder.listAppend = (list, and_or) => {
+		list.and_ors.push(and_or);
 		if (options.insertLOC) {
-			setLocEnd(list.loc, andOr.loc);
+			setLocEnd(list.loc, and_or.loc);
 		}
 		return list;
 	};
 
-	builder.term = andOr => {
+	builder.term = and_or => {
 		const node = {
 			type: 'term',
-			andOrs: [andOr]
+			and_ors: [and_or]
 		};
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, andOr.loc), andOr.loc);
+			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
 		}
 		return node;
 	};
 
-	builder.termAppend = (term, andOr) => {
-		term.andOrs.push(andOr);
-		setLocEnd(term.loc, andOr.loc);
+	builder.termAppend = (term, and_or) => {
+		term.and_ors.push(and_or);
+		setLocEnd(term.loc, and_or.loc);
 		return term;
 	};
 
@@ -95,7 +95,7 @@ module.exports = options => {
 
 	builder.singleAndOr = pipe => {
 		const node = {
-			type: 'andOr', left: pipe
+			type: 'and_or', left: pipe
 		};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, pipe[0].loc), pipe[pipe.length - 1].loc);
@@ -105,7 +105,7 @@ module.exports = options => {
 
 	builder.andAndOr = (left, right) => {
 		const node = {
-			type: 'andOr',
+			type: 'and_or',
 			op: 'and',
 			left,
 			right: builder.singleAndOr(right)
@@ -120,7 +120,7 @@ module.exports = options => {
 
 	builder.orAndOr = (left, right) => {
 		const node = {
-			type: 'andOr',
+			type: 'and_or',
 			op: 'or',
 			left,
 			right: builder.singleAndOr(right)

@@ -1,15 +1,15 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('positional list paramter', t => {
 	const result = bashParser('echoword=$@');
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -37,9 +37,9 @@ test('positional string paramter', t => {
 	const result = bashParser('echoword=$*');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -67,9 +67,9 @@ test('positional count paramter', t => {
 	const result = bashParser('echoword=$#');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -97,9 +97,9 @@ test('last exit status', t => {
 	const result = bashParser('echoword=$?');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -127,9 +127,9 @@ test('current option flags', t => {
 	const result = bashParser('echoword=$-');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -157,9 +157,9 @@ test('shell process id', t => {
 	const result = bashParser('echoword=$$');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -187,9 +187,9 @@ test('last background pid', t => {
 	const result = bashParser('echoword=$!');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',
@@ -217,9 +217,9 @@ test('shell script name', t => {
 	const result = bashParser('echoword=$0');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [
+		and_ors: [
 			{
-				type: 'andOr',
+				type: 'and_or',
 				left: [
 					{
 						type: 'simple_command',

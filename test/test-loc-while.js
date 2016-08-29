@@ -3,7 +3,7 @@ const test = require('ava');
 const bashParser = require('../src');
 // const json = require('json5');
 // const {diff} = require('rus-diff');
-
+/* eslint-disable camelcase */
 test('loc in while statement', t => {
 	const result = bashParser('while true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
 	const expected = {
@@ -22,9 +22,9 @@ test('loc in while statement', t => {
 				endColumn: 14
 			},
 			type: 'term',
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					op: 'and',
 					loc: {
 						startLine: 0,
@@ -33,7 +33,7 @@ test('loc in while statement', t => {
 						endColumn: 14
 					},
 					left: {
-						type: 'andOr',
+						type: 'and_or',
 						loc: {
 							startLine: 0,
 							startColumn: 6,
@@ -62,7 +62,7 @@ test('loc in while statement', t => {
 						]
 					},
 					right: {
-						type: 'andOr',
+						type: 'and_or',
 						loc: {
 							startLine: 0,
 							startColumn: 14,
@@ -101,9 +101,9 @@ test('loc in while statement', t => {
 				endLine: 0,
 				endColumn: 42
 			},
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					loc: {
 						startLine: 0,
 						startColumn: 20,
@@ -146,7 +146,7 @@ test('loc in while statement', t => {
 					]
 				},
 				{
-					type: 'andOr',
+					type: 'and_or',
 					loc: {
 						startLine: 0,
 						startColumn: 28,
@@ -191,7 +191,7 @@ test('loc in while statement', t => {
 			]
 		}
 	};
-	// console.log(json.stringify(diff(expected, result.andOrs[0].left[0]), null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(diff(expected, result.and_ors[0].left[0]), null, '\t').replace(/"/g, '\''));
 
-	t.deepEqual(result.andOrs[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left[0], expected);
 });

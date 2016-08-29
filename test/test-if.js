@@ -1,21 +1,21 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('parse if', t => {
 	const result = bashParser('if true; then echo 1; fi');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'if',
 					clause: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'true'}
@@ -24,8 +24,8 @@ test('parse if', t => {
 					},
 					then: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},
@@ -48,14 +48,14 @@ test('parse if else', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'if',
 					clause: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'true'}
@@ -64,8 +64,8 @@ test('parse if else', t => {
 					},
 					then: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},
@@ -78,8 +78,8 @@ test('parse if else', t => {
 					},
 					else: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},
@@ -102,14 +102,14 @@ test('parse if else multiline', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'if',
 					clause: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'true'}
@@ -118,8 +118,8 @@ test('parse if else multiline', t => {
 					},
 					then: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},
@@ -132,8 +132,8 @@ test('parse if else multiline', t => {
 					},
 					else: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},
@@ -156,14 +156,14 @@ test('parse if elif else', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'if',
 					clause: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'true'}
@@ -172,8 +172,8 @@ test('parse if elif else', t => {
 					},
 					then: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},
@@ -188,15 +188,15 @@ test('parse if elif else', t => {
 						type: 'if',
 						clause: {
 							type: 'term',
-							andOrs: [{
-								type: 'andOr',
+							and_ors: [{
+								type: 'and_or',
 								left: [{type: 'simple_command', name: {text: 'false'}}]
 							}]
 						},
 						then: {
 							type: 'term',
-							andOrs: [{
-								type: 'andOr',
+							and_ors: [{
+								type: 'and_or',
 								left: [{
 									type: 'simple_command',
 									name: {text: 'echo'},
@@ -206,8 +206,8 @@ test('parse if elif else', t => {
 						},
 						else: {
 							type: 'term',
-							andOrs: [{
-								type: 'andOr',
+							and_ors: [{
+								type: 'and_or',
 								left: [{
 									type: 'simple_command',
 									name: {text: 'echo'},

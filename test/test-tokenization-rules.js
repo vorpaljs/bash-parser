@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const rules = require('../src/tokenization-rules');
-
+/* eslint-disable camelcase */
 test('operatorTokens - identify operator with their tokens', t => {
 	t.deepEqual(
 		Array.from(rules.operatorTokens([{OPERATOR: '<<', loc: 42}])),

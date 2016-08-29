@@ -3,7 +3,7 @@ const test = require('ava');
 // const json = require('json5');
 // const {diff} = require('rus-diff');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('case statement has loc', t => {
 	const cmd =
 `case foo in
@@ -13,7 +13,7 @@ esac
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 
-	// console.log(json.stringify(result.andOrs[0].left[0], null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(result.and_ors[0].left[0], null, '\t').replace(/"/g, '\''));
 	const expected = {
 		type: 'case',
 		loc: {
@@ -53,9 +53,9 @@ esac
 				],
 				body: {
 					type: 'term',
-					andOrs: [
+					and_ors: [
 						{
-							type: 'andOr',
+							type: 'and_or',
 							left: [
 								{
 									type: 'simple_command',
@@ -108,7 +108,7 @@ esac
 			}
 		]
 	};
-	// console.log(json.stringify(diff(expected.cases, result.andOrs[0].left[0].cases), null, 4));
+	// console.log(json.stringify(diff(expected.cases, result.and_ors[0].left[0].cases), null, 4));
 
-	t.deepEqual(result.andOrs[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left[0], expected);
 });

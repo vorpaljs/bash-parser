@@ -3,10 +3,10 @@
 // const {diff} = require('rus-diff');
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('loc in until statement', t => {
 	const result = bashParser('until true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
-	// console.log(json.stringify(result.andOrs[0].left[0], null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(result.and_ors[0].left[0], null, '\t').replace(/"/g, '\''));
 	const expected = {
 		type: 'until',
 		loc: {
@@ -23,9 +23,9 @@ test('loc in until statement', t => {
 				endColumn: 14
 			},
 			type: 'term',
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					op: 'and',
 					loc: {
 						startLine: 0,
@@ -34,7 +34,7 @@ test('loc in until statement', t => {
 						endColumn: 14
 					},
 					left: {
-						type: 'andOr',
+						type: 'and_or',
 						loc: {
 							startLine: 0,
 							startColumn: 6,
@@ -63,7 +63,7 @@ test('loc in until statement', t => {
 						]
 					},
 					right: {
-						type: 'andOr',
+						type: 'and_or',
 						loc: {
 							startLine: 0,
 							startColumn: 14,
@@ -102,9 +102,9 @@ test('loc in until statement', t => {
 				endLine: 0,
 				endColumn: 42
 			},
-			andOrs: [
+			and_ors: [
 				{
-					type: 'andOr',
+					type: 'and_or',
 					loc: {
 						startLine: 0,
 						startColumn: 20,
@@ -147,7 +147,7 @@ test('loc in until statement', t => {
 					]
 				},
 				{
-					type: 'andOr',
+					type: 'and_or',
 					loc: {
 						startLine: 0,
 						startColumn: 28,
@@ -192,7 +192,7 @@ test('loc in until statement', t => {
 			]
 		}
 	};
-	// console.log(diff(result.andOrs[0].left[0], expected));
+	// console.log(diff(result.and_ors[0].left[0], expected));
 
-	t.deepEqual(result.andOrs[0].left[0], expected);
+	t.deepEqual(result.and_ors[0].left[0], expected);
 });

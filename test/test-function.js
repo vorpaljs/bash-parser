@@ -1,22 +1,22 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('parse function declaration multiple lines', t => {
 	const result = bashParser('foo () \n{\n command bar --lol;\n}');
 
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'function',
 					name: {text: 'foo'},
 					body: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'command'},
@@ -36,15 +36,15 @@ test('parse function declaration', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'function',
 					name: {text: 'foo'},
 					body: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'command'},

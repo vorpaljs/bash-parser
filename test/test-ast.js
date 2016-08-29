@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
 // const inspect = require('util').inspect;
@@ -7,8 +8,8 @@ test('command with one argument', t => {
 	const result = bashParser('echo world');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},
@@ -27,8 +28,8 @@ test('command with pre-assignment', t => {
 	const result = bashParser('TEST=1 run');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'run'},
@@ -45,15 +46,15 @@ test('commands with AND', t => {
 	const result = bashParser('run && stop');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			op: 'and',
 			left: {
-				type: 'andOr',
+				type: 'and_or',
 				left: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
-				type: 'andOr',
+				type: 'and_or',
 				left: [{type: 'simple_command', name: {text: 'stop'}}]
 			}
 		}]
@@ -65,15 +66,15 @@ test('commands with AND \\n', t => {
 	// console.log(inspect(result, {depth: null}))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			op: 'and',
 			left: {
-				type: 'andOr',
+				type: 'and_or',
 				left: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
-				type: 'andOr',
+				type: 'and_or',
 				left: [{type: 'simple_command', name: {text: 'stop'}}]
 			}
 		}]
@@ -84,15 +85,15 @@ test('commands with OR', t => {
 	const result = bashParser('run || cry');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			op: 'or',
 			left: {
-				type: 'andOr',
+				type: 'and_or',
 				left: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
-				type: 'andOr',
+				type: 'and_or',
 				left: [{type: 'simple_command', name: {text: 'cry'}}]
 			}
 		}]
@@ -104,8 +105,8 @@ test('pipelines', t => {
 	// console.log(inspect(result, {depth: null}));
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command', name: {text: 'run'}
 			}, {
@@ -119,8 +120,8 @@ test('no pre-assignment on suffix', t => {
 	const result = bashParser('echo TEST=1');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},
@@ -138,8 +139,8 @@ test('command with multiple prefixes', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},
@@ -158,14 +159,14 @@ test('multi line commands', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'}
 			}]
 		}, {
-			type: 'andOr',
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'ls'}
@@ -178,8 +179,8 @@ test('command with redirection to file', t => {
 	const result = bashParser('ls > file.txt');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'ls'},
@@ -203,8 +204,8 @@ test('parse multiple suffix', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left:
 				[{
 					type: 'simple_command',
@@ -224,8 +225,8 @@ test('command with stderr redirection to file', t => {
 
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'ls'},
@@ -249,14 +250,14 @@ test('parse subshell', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'subshell',
 					list: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'ls'}

@@ -1,6 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+/* eslint-disable camelcase */
 // const inspect = require('util').inspect;
 
 // various example taken from http://www.etalabs.net/sh_tricks.html
@@ -37,8 +38,8 @@ test('3', t => {
 	const result = bashParser('IFS= read -r var');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'read'},
@@ -55,8 +56,8 @@ test('4', t => {
 
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'foo'}
@@ -80,8 +81,8 @@ eval "dest=foo"`
 
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: ''},
@@ -91,7 +92,7 @@ eval "dest=foo"`
 				}
 			}]
 		}, {
-			type: 'andOr',
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: ''},
@@ -101,7 +102,7 @@ eval "dest=foo"`
 				}
 			}]
 		}, {
-			type: 'andOr',
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'eval'},

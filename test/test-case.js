@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
 
@@ -7,8 +8,8 @@ test('parse case', t => {
 
 	const expected = {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'case',
 				clause: {
@@ -21,8 +22,8 @@ test('parse case', t => {
 					}],
 					body: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'echo'},

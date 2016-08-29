@@ -1,21 +1,21 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('parse while', t => {
 	const result = bashParser('while true; do sleep 1; done');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'while',
 					clause: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'true'}
@@ -24,8 +24,8 @@ test('parse while', t => {
 					},
 					do: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'sleep'},
@@ -48,14 +48,14 @@ test('parse until', t => {
 	t.deepEqual(
 		result, {
 			type: 'list',
-			andOrs: [{
-				type: 'andOr',
+			and_ors: [{
+				type: 'and_or',
 				left: [{
 					type: 'until',
 					clause: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'true'}
@@ -64,8 +64,8 @@ test('parse until', t => {
 					},
 					do: {
 						type: 'term',
-						andOrs: [{
-							type: 'andOr',
+						and_ors: [{
+							type: 'and_or',
 							left: [{
 								type: 'simple_command',
 								name: {text: 'sleep'},

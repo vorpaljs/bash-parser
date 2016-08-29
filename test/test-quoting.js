@@ -1,14 +1,14 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-
+/* eslint-disable camelcase */
 test('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},
@@ -25,8 +25,8 @@ test('escaped double quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \\"TEST2"');
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},
@@ -44,8 +44,8 @@ test('double quotes within single quotes', t => {
 	// console.log(inspect(result, {depth:null}))
 	t.deepEqual(result, {
 		type: 'list',
-		andOrs: [{
-			type: 'andOr',
+		and_ors: [{
+			type: 'and_or',
 			left: [{
 				type: 'simple_command',
 				name: {text: 'echo'},

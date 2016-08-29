@@ -38,7 +38,7 @@ test('3', t => {
 	const result = bashParser('IFS= read -r var');
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'pipeline',
 			commands: [{
 				type: 'simple_command',
@@ -56,7 +56,7 @@ test('4', t => {
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'pipeline',
 			commands: [{
 				type: 'simple_command',
@@ -81,7 +81,7 @@ eval "dest=foo"`
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'pipeline',
 			commands: [{
 				type: 'simple_command',

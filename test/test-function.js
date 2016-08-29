@@ -8,14 +8,14 @@ test('parse function declaration multiple lines', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'function',
 					name: {text: 'foo'},
 					body: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -36,14 +36,14 @@ test('parse function declaration', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'function',
 					name: {text: 'foo'},
 					body: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',

@@ -39,7 +39,7 @@ esac
 				],
 				body: {
 					type: 'compound_list',
-					and_ors: [
+					commands: [
 						{
 							type: 'pipeline',
 							commands: [
@@ -106,7 +106,7 @@ esac
 			endColumn: 3
 		}
 	};
-	// utils.logResults(result.and_ors[0].commands[0]);
+	// utils.logResults(result.commands[0].commands[0]);
 
-	t.deepEqual(result.and_ors[0].commands[0], expected);
+	t.deepEqual(result.commands[0].commands[0], expected);
 });

@@ -7,7 +7,7 @@ test('Redirect should be allowed immediately following argument', t => {
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'pipeline',
 			commands: [{
 				type: 'simple_command',
@@ -32,7 +32,7 @@ test('Equal sign should be allowed in arguments', t => {
 	const result = bashParser('echo foo=bar');
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'pipeline',
 			commands: [{
 				type: 'simple_command',

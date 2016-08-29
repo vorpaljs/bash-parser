@@ -35,7 +35,7 @@ test('loc in function declaration', t => {
 				endLine: 2,
 				endColumn: 0
 			},
-			and_ors: [
+			commands: [
 				{
 					type: 'pipeline',
 					commands: [
@@ -93,5 +93,5 @@ test('loc in function declaration', t => {
 		}
 	};
 
-	t.deepEqual(result.and_ors[0].commands[0], expected);
+	t.deepEqual(result.commands[0].commands[0], expected);
 });

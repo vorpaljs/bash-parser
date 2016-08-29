@@ -8,13 +8,13 @@ test('parse if', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'if',
 					clause: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -24,7 +24,7 @@ test('parse if', t => {
 					},
 					then: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -48,13 +48,13 @@ test('parse if else', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'if',
 					clause: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -64,7 +64,7 @@ test('parse if else', t => {
 					},
 					then: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -78,7 +78,7 @@ test('parse if else', t => {
 					},
 					else: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -102,13 +102,13 @@ test('parse if else multiline', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'if',
 					clause: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -118,7 +118,7 @@ test('parse if else multiline', t => {
 					},
 					then: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -132,7 +132,7 @@ test('parse if else multiline', t => {
 					},
 					else: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -156,13 +156,13 @@ test('parse if elif else', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'if',
 					clause: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -172,7 +172,7 @@ test('parse if elif else', t => {
 					},
 					then: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -188,14 +188,14 @@ test('parse if elif else', t => {
 						type: 'if',
 						clause: {
 							type: 'compound_list',
-							and_ors: [{
+							commands: [{
 								type: 'pipeline',
 								commands: [{type: 'simple_command', name: {text: 'false'}}]
 							}]
 						},
 						then: {
 							type: 'compound_list',
-							and_ors: [{
+							commands: [{
 								type: 'pipeline',
 								commands: [{
 									type: 'simple_command',
@@ -206,7 +206,7 @@ test('parse if elif else', t => {
 						},
 						else: {
 							type: 'compound_list',
-							and_ors: [{
+							commands: [{
 								type: 'pipeline',
 								commands: [{
 									type: 'simple_command',

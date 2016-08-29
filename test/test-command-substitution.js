@@ -6,10 +6,10 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('command substitution', t => {
 	const result = bashParser('variable=$(echo ciao)');
-	delete result.and_ors[0].commands[0].prefix.list[0].expansion[0].commandAST;
+	delete result.commands[0].commands[0].prefix.list[0].expansion[0].commandAST;
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [
@@ -37,10 +37,10 @@ test('command substitution', t => {
 
 test('command substitution in suffix', t => {
 	const result = bashParser('echo $(ciao)');
-	delete result.and_ors[0].commands[0].suffix.list[0].expansion[0].commandAST;
+	delete result.commands[0].commands[0].suffix.list[0].expansion[0].commandAST;
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [
@@ -68,11 +68,11 @@ test('command substitution in suffix', t => {
 
 test('command substitution in suffix with backticks', t => {
 	const result = bashParser('echo `ciao`');
-	delete result.and_ors[0].commands[0].suffix.list[0].expansion[0].commandAST;
+	delete result.commands[0].commands[0].suffix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [
@@ -100,11 +100,11 @@ test('command substitution in suffix with backticks', t => {
 
 test('command ast is recursively parsed', t => {
 	const result = bashParser('variable=$(echo ciao)')
-		.and_ors[0].commands[0].prefix.list[0].expansion[0].commandAST;
+		.commands[0].commands[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [
@@ -126,11 +126,11 @@ test('command ast is recursively parsed', t => {
 
 test('command substitution with backticks', t => {
 	const result = bashParser('variable=`echo ciao`');
-	delete result.and_ors[0].commands[0].prefix.list[0].expansion[0].commandAST;
+	delete result.commands[0].commands[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [
@@ -158,11 +158,11 @@ test('command substitution with backticks', t => {
 
 test('quoted backtick are removed within command substitution with backticks', t => {
 	const result = bashParser('variable=`echo \\`echo ciao\\``');
-	delete result.and_ors[0].commands[0].prefix.list[0].expansion[0].commandAST;
+	delete result.commands[0].commands[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [
@@ -190,11 +190,11 @@ test('quoted backtick are removed within command substitution with backticks', t
 
 test('quoted backtick are not removed within command substitution with parenthesis', t => {
 	const result = bashParser('variable=$(echo \\`echo ciao\\`)');
-	delete result.and_ors[0].commands[0].prefix.list[0].expansion[0].commandAST;
+	delete result.commands[0].commands[0].prefix.list[0].expansion[0].commandAST;
 
 	t.deepEqual(result, {
 		type: 'complete_command',
-		and_ors: [
+		commands: [
 			{
 				type: 'pipeline',
 				commands: [

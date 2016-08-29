@@ -8,13 +8,13 @@ test('parse while', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'while',
 					clause: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -24,7 +24,7 @@ test('parse while', t => {
 					},
 					do: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -48,13 +48,13 @@ test('parse until', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'until',
 					clause: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -64,7 +64,7 @@ test('parse until', t => {
 					},
 					do: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',

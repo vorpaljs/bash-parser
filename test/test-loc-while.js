@@ -5,12 +5,12 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('loc in while statement', t => {
 	const result = bashParser('while true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
-	// utils.logResults(result.and_ors[0].commands[0]);
+	// utils.logResults(result.commands[0].commands[0]);
 	const expected = {
 		type: 'while',
 		clause: {
 			type: 'compound_list',
-			and_ors: [
+			commands: [
 				{
 					type: 'and_or',
 					op: 'and',
@@ -89,7 +89,7 @@ test('loc in while statement', t => {
 		},
 		do: {
 			type: 'compound_list',
-			and_ors: [
+			commands: [
 				{
 					type: 'pipeline',
 					commands: [
@@ -191,6 +191,6 @@ test('loc in while statement', t => {
 			endColumn: 42
 		}
 	};
-	// utils.logDiff(result.and_ors[0].commands[0], expected)
-	t.deepEqual(result.and_ors[0].commands[0], expected);
+	// utils.logDiff(result.commands[0].commands[0], expected)
+	t.deepEqual(result.commands[0].commands[0], expected);
 });

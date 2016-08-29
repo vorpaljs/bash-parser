@@ -9,7 +9,7 @@ test('parse case', t => {
 	// utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'pipeline',
 			commands: [{
 				type: 'case',
@@ -23,7 +23,7 @@ test('parse case', t => {
 					}],
 					body: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -48,7 +48,7 @@ test.skip('parse case with compound list', t => {
 	utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
-		and_ors: [{
+		commands: [{
 			type: 'and_or',
 			left: {
 				type: 'pipeline',
@@ -64,7 +64,7 @@ test.skip('parse case with compound list', t => {
 						}],
 						body: {
 							type: 'compound_list',
-							and_ors: [{
+							commands: [{
 								type: 'and_or',
 								left: {
 									type: 'pipeline',

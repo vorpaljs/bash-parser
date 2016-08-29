@@ -7,7 +7,7 @@ test('parse for', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'for',
@@ -15,7 +15,7 @@ test('parse for', t => {
 					wordlist: [{text: 'a'}, {text: 'b'}, {text: 'c'}],
 					do: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -45,14 +45,14 @@ test('parse for with default sequence', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'for',
 					name: {text: 'x'},
 					do: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',
@@ -84,14 +84,14 @@ test('parse for with default sequence - on one line', t => {
 	t.deepEqual(
 		result, {
 			type: 'complete_command',
-			and_ors: [{
+			commands: [{
 				type: 'pipeline',
 				commands: [{
 					type: 'for',
 					name: {text: 'x'},
 					do: {
 						type: 'compound_list',
-						and_ors: [{
+						commands: [{
 							type: 'pipeline',
 							commands: [{
 								type: 'simple_command',

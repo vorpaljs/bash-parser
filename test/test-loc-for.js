@@ -58,7 +58,7 @@ done
 		],
 		do: {
 			type: 'compound_list',
-			and_ors: [
+			commands: [
 				{
 					type: 'pipeline',
 					commands: [
@@ -119,5 +119,5 @@ done
 		}
 	};
 
-	t.deepEqual(result.and_ors[0].commands[0], expected);
+	t.deepEqual(result.commands[0].commands[0], expected);
 });

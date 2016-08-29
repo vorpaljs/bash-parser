@@ -54,14 +54,14 @@ module.exports = options => {
 	};
 
 	builder.list = and_or => {
-		const node = {type: 'complete_command', and_ors: [and_or]};
+		const node = {type: 'complete_command', commands: [and_or]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
 		}
 		return node;
 	};
 	builder.listAppend = (list, and_or) => {
-		list.and_ors.push(and_or);
+		list.commands.push(and_or);
 		if (options.insertLOC) {
 			setLocEnd(list.loc, and_or.loc);
 		}
@@ -71,7 +71,7 @@ module.exports = options => {
 	builder.term = and_or => {
 		const node = {
 			type: 'compound_list',
-			and_ors: [and_or]
+			commands: [and_or]
 		};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
@@ -80,7 +80,7 @@ module.exports = options => {
 	};
 
 	builder.termAppend = (term, and_or) => {
-		term.and_ors.push(and_or);
+		term.commands.push(and_or);
 		setLocEnd(term.loc, and_or.loc);
 		return term;
 	};

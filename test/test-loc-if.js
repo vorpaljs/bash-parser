@@ -15,12 +15,12 @@ fi
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 
-	// console.log(json.stringify(result.and_ors[0].left.commands[0], null, '\t').replace(/"/g, '\''));
+	// console.log(json.stringify(result.commands[0].left.commands[0], null, '\t').replace(/"/g, '\''));
 	const expected = {
 		type: 'if',
 		clause: {
 			type: 'compound_list',
-			and_ors: [
+			commands: [
 				{
 					type: 'pipeline',
 					commands: [
@@ -60,7 +60,7 @@ fi
 		},
 		then: {
 			type: 'compound_list',
-			and_ors: [
+			commands: [
 				{
 					type: 'pipeline',
 					commands: [
@@ -116,7 +116,7 @@ fi
 			type: 'if',
 			clause: {
 				type: 'compound_list',
-				and_ors: [
+				commands: [
 					{
 						type: 'pipeline',
 						commands: [
@@ -156,7 +156,7 @@ fi
 			},
 			then: {
 				type: 'compound_list',
-				and_ors: [
+				commands: [
 					{
 						type: 'pipeline',
 						commands: [{
@@ -208,7 +208,7 @@ fi
 			},
 			else: {
 				type: 'compound_list',
-				and_ors: [
+				commands: [
 					{
 						type: 'pipeline',
 						commands: [{
@@ -272,7 +272,7 @@ fi
 			endColumn: 1
 		}
 	};
-	// console.log(diff(result.and_ors[0].left.commands[0], expected));
+	// console.log(diff(result.commands[0].left.commands[0], expected));
 
-	t.deepEqual(result.and_ors[0].commands[0], expected);
+	t.deepEqual(result.commands[0].commands[0], expected);
 });

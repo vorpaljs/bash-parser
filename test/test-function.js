@@ -16,7 +16,7 @@ test('parse function declaration multiple lines', t => {
 						type: 'function',
 						name: {text: 'foo'},
 						body: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -50,7 +50,7 @@ test('parse function declaration', t => {
 						type: 'function',
 						name: {text: 'foo'},
 						body: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {

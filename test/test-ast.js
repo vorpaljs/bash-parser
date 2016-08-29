@@ -281,7 +281,7 @@ test('parse subshell', t => {
 				commands: [{
 					type: 'subshell',
 					list: {
-						type: 'term',
+						type: 'compound_list',
 						and_ors: [{
 							type: 'and_or',
 							left: {

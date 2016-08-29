@@ -28,7 +28,7 @@ test('loc in function declaration', t => {
 			}
 		},
 		body: {
-			type: 'term',
+			type: 'compound_list',
 			loc: {
 				startLine: 0,
 				startColumn: 7,

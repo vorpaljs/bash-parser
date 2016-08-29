@@ -9,7 +9,7 @@ test('loc in while statement', t => {
 	const expected = {
 		type: 'while',
 		clause: {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [
 				{
 					type: 'and_or',
@@ -81,7 +81,7 @@ test('loc in while statement', t => {
 			}
 		},
 		do: {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [
 				{
 					type: 'and_or',

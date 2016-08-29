@@ -19,7 +19,7 @@ fi
 	const expected = {
 		type: 'if',
 		clause: {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [
 				{
 					type: 'and_or',
@@ -62,7 +62,7 @@ fi
 			}
 		},
 		then: {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [
 				{
 					type: 'and_or',
@@ -121,7 +121,7 @@ fi
 		else: {
 			type: 'if',
 			clause: {
-				type: 'term',
+				type: 'compound_list',
 				and_ors: [
 					{
 						type: 'and_or',
@@ -164,7 +164,7 @@ fi
 				}
 			},
 			then: {
-				type: 'term',
+				type: 'compound_list',
 				and_ors: [
 					{
 						type: 'and_or',
@@ -219,7 +219,7 @@ fi
 				}
 			},
 			else: {
-				type: 'term',
+				type: 'compound_list',
 				and_ors: [
 					{
 						type: 'and_or',

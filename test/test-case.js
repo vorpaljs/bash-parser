@@ -24,7 +24,7 @@ test('parse case', t => {
 							text: '*'
 						}],
 						body: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -69,7 +69,7 @@ test.skip('parse case with compound list', t => {
 							text: '*'
 						}],
 						body: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {

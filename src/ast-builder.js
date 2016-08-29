@@ -70,7 +70,7 @@ module.exports = options => {
 
 	builder.term = and_or => {
 		const node = {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [and_or]
 		};
 		if (options.insertLOC) {

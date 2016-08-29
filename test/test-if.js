@@ -15,7 +15,7 @@ test('parse if', t => {
 					commands: [{
 						type: 'if',
 						clause: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -28,7 +28,7 @@ test('parse if', t => {
 							}]
 						},
 						then: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -64,7 +64,7 @@ test('parse if else', t => {
 					commands: [{
 						type: 'if',
 						clause: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -77,7 +77,7 @@ test('parse if else', t => {
 							}]
 						},
 						then: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -94,7 +94,7 @@ test('parse if else', t => {
 							}]
 						},
 						else: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -130,7 +130,7 @@ test('parse if else multiline', t => {
 					commands: [{
 						type: 'if',
 						clause: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -143,7 +143,7 @@ test('parse if else multiline', t => {
 							}]
 						},
 						then: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -160,7 +160,7 @@ test('parse if else multiline', t => {
 							}]
 						},
 						else: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -196,7 +196,7 @@ test('parse if elif else', t => {
 					commands: [{
 						type: 'if',
 						clause: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -209,7 +209,7 @@ test('parse if elif else', t => {
 							}]
 						},
 						then: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -228,7 +228,7 @@ test('parse if elif else', t => {
 						else: {
 							type: 'if',
 							clause: {
-								type: 'term',
+								type: 'compound_list',
 								and_ors: [{
 									type: 'and_or',
 									left: {
@@ -238,7 +238,7 @@ test('parse if elif else', t => {
 								}]
 							},
 							then: {
-								type: 'term',
+								type: 'compound_list',
 								and_ors: [{
 									type: 'and_or',
 									left: {
@@ -252,7 +252,7 @@ test('parse if elif else', t => {
 								}]
 							},
 							else: {
-								type: 'term',
+								type: 'compound_list',
 								and_ors: [{
 									type: 'and_or',
 									left: {

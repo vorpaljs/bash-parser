@@ -11,7 +11,7 @@ test('loc in until statement', t => {
 	const expected = {
 		type: 'until',
 		clause: {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [
 				{
 					type: 'and_or',
@@ -83,7 +83,7 @@ test('loc in until statement', t => {
 			}
 		},
 		do: {
-			type: 'term',
+			type: 'compound_list',
 			and_ors: [
 				{
 					type: 'and_or',

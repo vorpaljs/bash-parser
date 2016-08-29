@@ -15,7 +15,7 @@ test('parse while', t => {
 					commands: [{
 						type: 'while',
 						clause: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -28,7 +28,7 @@ test('parse while', t => {
 							}]
 						},
 						do: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -64,7 +64,7 @@ test('parse until', t => {
 					commands: [{
 						type: 'until',
 						clause: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -77,7 +77,7 @@ test('parse until', t => {
 							}]
 						},
 						do: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {

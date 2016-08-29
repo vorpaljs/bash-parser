@@ -16,7 +16,7 @@ test('parse for', t => {
 						name: {text: 'x'},
 						wordlist: [{text: 'a'}, {text: 'b'}, {text: 'c'}],
 						do: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -59,7 +59,7 @@ test('parse for with default sequence', t => {
 						type: 'for',
 						name: {text: 'x'},
 						do: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {
@@ -104,7 +104,7 @@ test('parse for with default sequence - on one line', t => {
 						type: 'for',
 						name: {text: 'x'},
 						do: {
-							type: 'term',
+							type: 'compound_list',
 							and_ors: [{
 								type: 'and_or',
 								left: {

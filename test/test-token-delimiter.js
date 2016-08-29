@@ -1,14 +1,11 @@
 'use strict';
 const test = require('ava');
 const tokenDelimiter = require('../src/token-delimiter');
+const mkloc = require('./_utils').mkloc;
 
 function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text));
 	return results;
-}
-
-function mkloc(startLine, startColumn, endLine, endColumn) {
-	return {startLine, startColumn, endLine, endColumn};
 }
 
 test('emit EOF at end', t => {

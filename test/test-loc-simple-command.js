@@ -3,6 +3,7 @@
 // const {diff} = require('rus-diff');
 const test = require('ava');
 const bashParser = require('../src');
+const mkloc = require('./_utils').mkloc;
 
 test('simple command with prefixes and name', t => {
 	const result = bashParser('a=1 b=2 echo', {insertLOC: true});
@@ -10,37 +11,17 @@ test('simple command with prefixes and name', t => {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
-			loc: {
-				startLine: 0,
-				startColumn: 8,
-				endLine: 0,
-				endColumn: 11
-			}
+			loc: mkloc(0, 8, 0, 11)
 		},
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 11
-		},
+		loc: mkloc(0, 0, 0, 11),
 		prefix: {
 			type: 'cmd_prefix',
 			list: [{
 				text: 'a=1',
-				loc: {
-					startLine: 0,
-					startColumn: 0,
-					endLine: 0,
-					endColumn: 2
-				}
+				loc: mkloc(0, 0, 0, 2)
 			}, {
 				text: 'b=2',
-				loc: {
-					startLine: 0,
-					startColumn: 4,
-					endLine: 0,
-					endColumn: 6
-				}
+				loc: mkloc(0, 4, 0, 6)
 			}]
 		}
 	});
@@ -53,19 +34,9 @@ test('simple command with only name', t => {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
-			loc: {
-				startLine: 0,
-				startColumn: 0,
-				endLine: 0,
-				endColumn: 3
-			}
+			loc: mkloc(0, 0, 0, 3)
 		},
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 3
-		}
+		loc: mkloc(0, 0, 0, 3)
 	});
 });
 
@@ -75,37 +46,17 @@ test('simple command with suffixes', t => {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
-			loc: {
-				startLine: 0,
-				startColumn: 0,
-				endLine: 0,
-				endColumn: 3
-			}
+			loc: mkloc(0, 0, 0, 3)
 		},
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 9
-		},
+		loc: mkloc(0, 0, 0, 9),
 		suffix: {
 			type: 'cmd_suffix',
 			list: [{
 				text: '42',
-				loc: {
-					startLine: 0,
-					startColumn: 5,
-					endLine: 0,
-					endColumn: 6
-				}
+				loc: mkloc(0, 5, 0, 6)
 			}, {
 				text: '43',
-				loc: {
-					startLine: 0,
-					startColumn: 8,
-					endLine: 0,
-					endColumn: 9
-				}
+				loc: mkloc(0, 8, 0, 9)
 			}]
 		}
 	});
@@ -118,19 +69,9 @@ test('simple command with IO redirection', t => {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
-			loc: {
-				startLine: 0,
-				startColumn: 0,
-				endLine: 0,
-				endColumn: 3
-			}
+			loc: mkloc(0, 0, 0, 3)
 		},
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 8
-		},
+		loc: mkloc(0, 0, 0, 8),
 		suffix: {
 			type: 'cmd_suffix',
 			list: [
@@ -138,28 +79,13 @@ test('simple command with IO redirection', t => {
 					type: 'io_redirect',
 					op: {
 						text: '>',
-						loc: {
-							startLine: 0,
-							startColumn: 5,
-							endLine: 0,
-							endColumn: 5
-						}
+						loc: mkloc(0, 5, 0, 5)
 					},
 					file: {
 						text: '43',
-						loc: {
-							startLine: 0,
-							startColumn: 7,
-							endLine: 0,
-							endColumn: 8
-						}
+						loc: mkloc(0, 7, 0, 8)
 					},
-					loc: {
-						startLine: 0,
-						startColumn: 5,
-						endLine: 0,
-						endColumn: 8
-					}
+					loc: mkloc(0, 5, 0, 8)
 				}
 			]
 		}
@@ -172,19 +98,9 @@ test('simple command with numbered IO redirection', t => {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
-			loc: {
-				startLine: 0,
-				startColumn: 0,
-				endLine: 0,
-				endColumn: 3
-			}
+			loc: mkloc(0, 0, 0, 3)
 		},
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 9
-		},
+		loc: mkloc(0, 0, 0, 9),
 		suffix: {
 			type: 'cmd_suffix',
 			list: [
@@ -192,36 +108,16 @@ test('simple command with numbered IO redirection', t => {
 					type: 'io_redirect',
 					op: {
 						text: '>',
-						loc: {
-							startLine: 0,
-							startColumn: 6,
-							endLine: 0,
-							endColumn: 6
-						}
+						loc: mkloc(0, 6, 0, 6)
 					},
 					file: {
 						text: '43',
-						loc: {
-							startLine: 0,
-							startColumn: 8,
-							endLine: 0,
-							endColumn: 9
-						}
+						loc: mkloc(0, 8, 0, 9)
 					},
-					loc: {
-						startLine: 0,
-						startColumn: 5,
-						endLine: 0,
-						endColumn: 9
-					},
+					loc: mkloc(0, 5, 0, 9),
 					numberIo: {
 						text: '2',
-						loc: {
-							startLine: 0,
-							startColumn: 5,
-							endLine: 0,
-							endColumn: 5
-						}
+						loc: mkloc(0, 5, 0, 5)
 					}
 				}
 			]
@@ -238,57 +134,27 @@ test('simple command with suffixes & prefixes', t => {
 		type: 'simple_command',
 		name: {
 			text: 'echo',
-			loc: {
-				startLine: 0,
-				startColumn: 8,
-				endLine: 0,
-				endColumn: 11
-			}
+			loc: mkloc(0, 8, 0, 11)
 		},
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 17
-		},
+		loc: mkloc(0, 0, 0, 17),
 		prefix: {
 			type: 'cmd_prefix',
 			list: [{
 				text: 'a=1',
-				loc: {
-					startLine: 0,
-					startColumn: 0,
-					endLine: 0,
-					endColumn: 2
-				}
+				loc: mkloc(0, 0, 0, 2)
 			}, {
 				text: 'b=2',
-				loc: {
-					startLine: 0,
-					startColumn: 4,
-					endLine: 0,
-					endColumn: 6
-				}
+				loc: mkloc(0, 4, 0, 6)
 			}]
 		},
 		suffix: {
 			type: 'cmd_suffix',
 			list: [{
 				text: '42',
-				loc: {
-					startLine: 0,
-					startColumn: 13,
-					endLine: 0,
-					endColumn: 14
-				}
+				loc: mkloc(0, 13, 0, 14)
 			}, {
 				text: '43',
-				loc: {
-					startLine: 0,
-					startColumn: 16,
-					endLine: 0,
-					endColumn: 17
-				}
+				loc: mkloc(0, 16, 0, 17)
 			}]
 		}
 	});

@@ -2,8 +2,6 @@
 const test = require('ava');
 const bashParser = require('../src');
 
-// test.skip('parse case with substitutions in clause', t => {});
-
 test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
 

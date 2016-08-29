@@ -13,7 +13,7 @@ test('loc in until statement', t => {
 			startLine: 0,
 			startColumn: 0,
 			endLine: 0,
-			endColumn: 36
+			endColumn: 42
 		},
 		clause: {
 			loc: {
@@ -98,9 +98,9 @@ test('loc in until statement', t => {
 			type: 'term',
 			loc: {
 				startLine: 0,
-				startColumn: 20,
+				startColumn: 17,
 				endLine: 0,
-				endColumn: 36
+				endColumn: 42
 			},
 			andOrs: [
 				{

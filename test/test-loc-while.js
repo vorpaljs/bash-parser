@@ -1,6 +1,8 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+// const json = require('json5');
+// const {diff} = require('rus-diff');
 
 test('loc in while statement', t => {
 	const result = bashParser('while true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
@@ -10,7 +12,7 @@ test('loc in while statement', t => {
 			startLine: 0,
 			startColumn: 0,
 			endLine: 0,
-			endColumn: 36
+			endColumn: 42
 		},
 		clause: {
 			loc: {
@@ -95,9 +97,9 @@ test('loc in while statement', t => {
 			type: 'term',
 			loc: {
 				startLine: 0,
-				startColumn: 20,
+				startColumn: 17,
 				endLine: 0,
-				endColumn: 36
+				endColumn: 42
 			},
 			andOrs: [
 				{
@@ -189,6 +191,7 @@ test('loc in while statement', t => {
 			]
 		}
 	};
+	// console.log(json.stringify(diff(expected, result.andOrs[0].left[0]), null, '\t').replace(/"/g, '\''));
 
 	t.deepEqual(result.andOrs[0].left[0], expected);
 });

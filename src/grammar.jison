@@ -113,13 +113,13 @@ term             : term separator and_or
 				  -> yy.term($and_or)
 				 ;
 for_clause       : For name linebreak do_group
-				 	-> yy.forClauseDefault($name, $do_group)
+				 	-> yy.forClauseDefault($name, $do_group, $For.loc)
 				 | For name LINEBREAK_IN separator do_group
-				 	-> yy.forClauseDefault($name, $do_group)
+				 	-> yy.forClauseDefault($name, $do_group, $For.loc)
 				 | For name In separator do_group
-				 	-> yy.forClauseDefault($name, $do_group)
+				 	-> yy.forClauseDefault($name, $do_group, $For.loc)
 				 | For name in wordlist separator do_group
-					-> yy.forClause($name, $wordlist, $do_group)  /* todo: here allow only ';' separator */
+					-> yy.forClause($name, $wordlist, $do_group, $For.loc)  /* todo: here allow only ';' separator */
 				 ;
 name             : NAME                    /* Apply rule 5 */
 				 ;
@@ -128,44 +128,44 @@ in               : In                      /* Apply rule 6 */
 wordlist         : WORD+
 				 ;
 case_clause     : Case WORD linebreak in linebreak case_list    Esac
-					-> {type: 'case', clause: $2, cases: $case_list}
+					-> yy.caseClause($WORD, $case_list, $Case.loc, $Esac.loc)
 				 | Case WORD linebreak in linebreak case_list_ns Esac
-				 	-> {type: 'case', clause: $2, cases: $case_list_ns}
+				 	-> yy.caseClause($WORD, $case_list_ns, $Case.loc, $Esac.loc)
 				 | Case WORD linebreak in linebreak             Esac
-				 	-> {type: 'case', clause: $2}
+				 	-> yy.caseClause($WORD, null, $Case.loc, $Esac.loc)
 				 ;
 case_list_ns     : case_list case_item_ns
-					-> $case_list.concat($case_item_ns)
+					-> yy.caseListAppend($case_list, $case_item_ns)
 				 | case_item_ns
-				 	-> [$case_item_ns]
+				 	-> yy.caseList($case_item_ns)
 				 ;
 case_list        : case_list case_item
-					-> $case_list.concat($case_item)
+					-> yy.caseListAppend($case_list, $case_item)
 				 | case_item
-				 	-> [$case_item]
+				 	-> yy.caseList($case_item)
 				 ;
 case_item_ns     : pattern CLOSE_PAREN linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern}
+				 	-> yy.caseItem($pattern, null, $pattern.loc, $CLOSE_PAREN.loc)
 				 | pattern CLOSE_PAREN compound_list linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
+				 	-> yy.caseItem($pattern, $compound_list, $pattern.loc, $compound_list.loc)
 				 | OPEN_PAREN pattern CLOSE_PAREN linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern}
+				 	-> yy.caseItem($pattern, null, $OPEN_PAREN.loc, $CLOSE_PAREN.loc )
 				 | OPEN_PAREN pattern CLOSE_PAREN compound_list linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
+				 	-> yy.caseItem($pattern, $compound_list, $OPEN_PAREN.loc, $compound_list.loc)
 				 ;
 case_item        : pattern CLOSE_PAREN linebreak DSEMI linebreak
-					-> {type: 'pattern', pattern: $pattern.text || $pattern}
+					-> yy.caseItem($pattern, null, $pattern.loc, $DSEMI.loc)
 				 | pattern CLOSE_PAREN compound_list DSEMI linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
+				 	-> yy.caseItem($pattern, $compound_list, $pattern.loc, $DSEMI.loc)
 				 | OPEN_PAREN pattern CLOSE_PAREN linebreak     DSEMI linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern}
+				 	-> yy.caseItem($pattern, null, $OPEN_PAREN.loc, $DSEMI.loc )
 				 | OPEN_PAREN pattern CLOSE_PAREN compound_list DSEMI linebreak
-				 	-> {type: 'pattern', pattern: $pattern.text || $pattern, body: $compound_list}
+				 	-> yy.caseItem($pattern, $compound_list, $OPEN_PAREN.loc, $compound_list.loc)
 				 ;
 pattern         : WORD        /* Apply rule 4 */
-					->	[$1]
+					-> yy.pattern($WORD)
 				 | pattern PIPE WORD        /* Do not apply rule 4 */
-				 	-> $pattern.concat($3)
+				 	-> yy.patternAppend(pattern, $WORD)
 				 ;
 if_clause       : If compound_list Then compound_list else_part Fi
 					-> yy.ifClause($2, $4, $else_part, $If.loc, $Fi.loc)
@@ -191,13 +191,14 @@ function_definition : fname OPEN_PAREN CLOSE_PAREN linebreak function_body
 function_body   : compound_command                /* Apply rule 9 */
 				 | compound_command redirect_list /* Apply rule 9 */
 				 ;
+
 fname           : NAME                            /* Apply rule 8 */
 				 ;
 brace_group     : Lbrace compound_list Rbrace
-					-> $compound_list
+					-> yy.braceGroup($compound_list, $Lbrace.loc, $Rbrace.loc)
 				 ;
 do_group         : Do compound_list Done           /* Apply rule 6 */
-					-> $2
+					-> yy.doGroup($compound_list, $Do.loc, $Done.loc)
 				 ;
 simple_command   : cmd_prefix cmd_word cmd_suffix
 					->yy.command($cmd_prefix, $cmd_word, $cmd_suffix)

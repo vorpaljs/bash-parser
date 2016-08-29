@@ -7,6 +7,43 @@
 module.exports = options => {
 	const builder = {};
 
+	builder.caseList = item => ([item]);
+	builder.caseListAppend = (caseList, item) => (caseList.push(item), caseList);
+
+	builder.pattern = item => ([item]);
+	builder.patternAppend = (pattern, item) => (pattern.push(item), pattern);
+
+	builder.caseItem = (pattern, body, locStart, locEnd) => {
+		return {type: 'pattern', pattern, body};
+	};
+
+	builder.caseClause = (clause, cases, locStart, locEnd) => {
+		const node = {
+			type: 'case',
+			clause
+		};
+
+		if (cases) {
+			Object.assign(node, {cases});
+		}
+
+		return node;
+	};
+
+	builder.doGroup = (group, locStart, locEnd) => {
+		if (options.insertLOC) {
+			setLocEnd(setLocStart(group.loc, locStart), locEnd);
+		}
+		return group;
+	};
+
+	builder.braceGroup = (group, locStart, locEnd) => {
+		if (options.insertLOC) {
+			setLocEnd(setLocStart(group.loc, locStart), locEnd);
+		}
+		return group;
+	};
+
 	builder.list = andOr => ({type: 'list', andOrs: [andOr]});
 	builder.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
 
@@ -76,24 +113,48 @@ module.exports = options => {
 		return node;
 	};
 
-	builder.forClause = (name, wordlist, doGroup) => ({
-		type: 'for',
-		name,
-		wordlist: wordlist,
-		do: doGroup
-	});
+	builder.forClause = (name, wordlist, doGroup, locStart) => {
+		const node = {
+			type: 'for',
+			name,
+			wordlist: wordlist,
+			do: doGroup
+		};
 
-	builder.forClauseDefault = (name, doGroup) => ({
-		type: 'for',
-		name,
-		do: doGroup
-	});
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, locStart), doGroup.loc);
+		}
 
-	builder.functionDefinition = (name, body) => ({
-		type: 'function',
-		name,
-		body
-	});
+		return node;
+	};
+
+	builder.forClauseDefault = (name, doGroup, locStart) => {
+		const node = {
+			type: 'for',
+			name,
+			do: doGroup
+		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, locStart), doGroup.loc);
+		}
+
+		return node;
+	};
+
+	builder.functionDefinition = (name, body) => {
+		const node = {
+			type: 'function',
+			name,
+			body
+		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, name.loc), body.loc);
+		}
+
+		return node;
+	};
 
 	builder.elseClause = (compoundList, locStart) => {
 		if (options.insertLOC) {

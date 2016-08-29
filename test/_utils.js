@@ -1,5 +1,5 @@
 const json = require('json5');
-const {diff} = require('rus-diff');
+const diff = require('rus-diff').diff;
 
 exports.mkloc = function mkloc(startLine, startColumn, endLine, endColumn) {
 	return {startLine, startColumn, endLine, endColumn};

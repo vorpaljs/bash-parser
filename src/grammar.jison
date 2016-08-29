@@ -145,22 +145,22 @@ case_list        : case_list case_item
 				 	-> yy.caseList($case_item)
 				 ;
 case_item_ns     : pattern CLOSE_PAREN linebreak
-				 	-> yy.caseItem($pattern, null, $pattern.loc, $CLOSE_PAREN.loc)
+				 	-> yy.caseItem($pattern, null, $pattern[0].loc, $CLOSE_PAREN.loc)
 				 | pattern CLOSE_PAREN compound_list linebreak
-				 	-> yy.caseItem($pattern, $compound_list, $pattern.loc, $compound_list.loc)
+				 	-> yy.caseItem($pattern, $compound_list, $pattern[0].loc, $compound_list.loc)
 				 | OPEN_PAREN pattern CLOSE_PAREN linebreak
 				 	-> yy.caseItem($pattern, null, $OPEN_PAREN.loc, $CLOSE_PAREN.loc )
 				 | OPEN_PAREN pattern CLOSE_PAREN compound_list linebreak
 				 	-> yy.caseItem($pattern, $compound_list, $OPEN_PAREN.loc, $compound_list.loc)
 				 ;
 case_item        : pattern CLOSE_PAREN linebreak DSEMI linebreak
-					-> yy.caseItem($pattern, null, $pattern.loc, $DSEMI.loc)
+					-> yy.caseItem($pattern, null, $pattern[0].loc, $DSEMI.loc)
 				 | pattern CLOSE_PAREN compound_list DSEMI linebreak
-				 	-> yy.caseItem($pattern, $compound_list, $pattern.loc, $DSEMI.loc)
+				 	-> yy.caseItem($pattern, $compound_list, $pattern[0].loc, $DSEMI.loc)
 				 | OPEN_PAREN pattern CLOSE_PAREN linebreak     DSEMI linebreak
 				 	-> yy.caseItem($pattern, null, $OPEN_PAREN.loc, $DSEMI.loc )
 				 | OPEN_PAREN pattern CLOSE_PAREN compound_list DSEMI linebreak
-				 	-> yy.caseItem($pattern, $compound_list, $OPEN_PAREN.loc, $compound_list.loc)
+				 	-> yy.caseItem($pattern, $compound_list, $OPEN_PAREN.loc, $DSEMI.loc)
 				 ;
 pattern         : WORD        /* Apply rule 4 */
 					-> yy.pattern($WORD)

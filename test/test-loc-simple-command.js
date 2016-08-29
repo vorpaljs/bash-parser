@@ -25,26 +25,23 @@ test('simple command with prefixes and name', t => {
 		},
 		prefix: {
 			type: 'cmd_prefix',
-			list: [
-				{
-					text: 'a=1',
-					loc: {
-						startLine: 0,
-						startColumn: 0,
-						endLine: 0,
-						endColumn: 2
-					}
-				},
-				{
-					text: 'b=2',
-					loc: {
-						startLine: 0,
-						startColumn: 4,
-						endLine: 0,
-						endColumn: 6
-					}
+			list: [{
+				text: 'a=1',
+				loc: {
+					startLine: 0,
+					startColumn: 0,
+					endLine: 0,
+					endColumn: 2
 				}
-			]
+			}, {
+				text: 'b=2',
+				loc: {
+					startLine: 0,
+					startColumn: 4,
+					endLine: 0,
+					endColumn: 6
+				}
+			}]
 		}
 	});
 });
@@ -93,26 +90,23 @@ test('simple command with suffixes', t => {
 		},
 		suffix: {
 			type: 'cmd_suffix',
-			list: [
-				{
-					text: '42',
-					loc: {
-						startLine: 0,
-						startColumn: 5,
-						endLine: 0,
-						endColumn: 6
-					}
-				},
-				{
-					text: '43',
-					loc: {
-						startLine: 0,
-						startColumn: 8,
-						endLine: 0,
-						endColumn: 9
-					}
+			list: [{
+				text: '42',
+				loc: {
+					startLine: 0,
+					startColumn: 5,
+					endLine: 0,
+					endColumn: 6
 				}
-			]
+			}, {
+				text: '43',
+				loc: {
+					startLine: 0,
+					startColumn: 8,
+					endLine: 0,
+					endColumn: 9
+				}
+			}]
 		}
 	});
 });
@@ -259,49 +253,43 @@ test('simple command with suffixes & prefixes', t => {
 		},
 		prefix: {
 			type: 'cmd_prefix',
-			list: [
-				{
-					text: 'a=1',
-					loc: {
-						startLine: 0,
-						startColumn: 0,
-						endLine: 0,
-						endColumn: 2
-					}
-				},
-				{
-					text: 'b=2',
-					loc: {
-						startLine: 0,
-						startColumn: 4,
-						endLine: 0,
-						endColumn: 6
-					}
+			list: [{
+				text: 'a=1',
+				loc: {
+					startLine: 0,
+					startColumn: 0,
+					endLine: 0,
+					endColumn: 2
 				}
-			]
+			}, {
+				text: 'b=2',
+				loc: {
+					startLine: 0,
+					startColumn: 4,
+					endLine: 0,
+					endColumn: 6
+				}
+			}]
 		},
 		suffix: {
 			type: 'cmd_suffix',
-			list: [
-				{
-					text: '42',
-					loc: {
-						startLine: 0,
-						startColumn: 13,
-						endLine: 0,
-						endColumn: 14
-					}
-				},
-				{
-					text: '43',
-					loc: {
-						startLine: 0,
-						startColumn: 16,
-						endLine: 0,
-						endColumn: 17
-					}
+			list: [{
+				text: '42',
+				loc: {
+					startLine: 0,
+					startColumn: 13,
+					endLine: 0,
+					endColumn: 14
 				}
-			]
+			}, {
+				text: '43',
+				loc: {
+					startLine: 0,
+					startColumn: 16,
+					endLine: 0,
+					endColumn: 17
+				}
+			}]
 		}
 	});
 });

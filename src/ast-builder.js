@@ -1,20 +1,25 @@
-'use strict';
-
+/* eslint-disable max-lines */
 /* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 
 module.exports = options => {
 	const builder = {};
-
-	builder.caseList = item => ([item]);
-	builder.caseListAppend = (caseList, item) => (caseList.push(item), caseList);
-
-	builder.pattern = item => ([item]);
-	builder.patternAppend = (pattern, item) => (pattern.push(item), pattern);
+	mkListHelper(builder, 'caseList');
+	mkListHelper(builder, 'pattern');
 
 	builder.caseItem = (pattern, body, locStart, locEnd) => {
-		return {type: 'pattern', pattern, body};
+		const node = {
+			type: 'pattern',
+			pattern,
+			body
+		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, locStart), locEnd);
+		}
+
+		return node;
 	};
 
 	builder.caseClause = (clause, cases, locStart, locEnd) => {
@@ -25,6 +30,10 @@ module.exports = options => {
 
 		if (cases) {
 			Object.assign(node, {cases});
+		}
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, locStart), locEnd);
 		}
 
 		return node;
@@ -65,7 +74,6 @@ module.exports = options => {
 	};
 
 	builder.subshell = list => ({type: 'subshell', list});
-	builder.listAppend = (list, andOr) => (list.andOrs.push(andOr), list);
 
 	builder.pipeSequence = command => {
 		return [command];
@@ -297,10 +305,7 @@ module.exports = options => {
 
 	builder.prefix = item => ({type: 'cmd_prefix', list: [item]});
 	builder.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);
-
-	builder.filename = name => {
-		return name;
-	};
+	builder.filename = name => name;
 
 	return builder;
 };
@@ -319,4 +324,14 @@ function setLocEnd(target, source) {
 		target.endColumn = source.endColumn;
 	}
 	return target;
+}
+
+function mkListHelper(builder, listName) {
+	builder[listName] = item => {
+		return [item];
+	};
+	builder[`${listName}Append`] = (list, item) => {
+		list.push(item);
+		return list;
+	};
 }

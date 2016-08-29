@@ -60,53 +60,42 @@ done
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'pipeline',
-					commands: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'echo',
-								loc: {
-									startLine: 1,
-									startColumn: 1,
-									endLine: 1,
-									endColumn: 4
-								}
-							},
-							loc: {
-								startLine: 1,
-								startColumn: 1,
-								endLine: 1,
-								endColumn: 7
-							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: '$x',
-										expansion: [
-											{
-												parameter: 'x',
-												start: 0,
-												end: 2
-											}
-										],
-										loc: {
-											startLine: 1,
-											startColumn: 6,
-											endLine: 1,
-											endColumn: 7
-										}
-									}
-								]
-							}
+					type: 'simple_command',
+					name: {
+						text: 'echo',
+						loc: {
+							startLine: 1,
+							startColumn: 1,
+							endLine: 1,
+							endColumn: 4
 						}
-					],
+					},
 					loc: {
 						startLine: 1,
 						startColumn: 1,
 						endLine: 1,
 						endColumn: 7
+					},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{
+								text: '$x',
+								expansion: [
+									{
+										parameter: 'x',
+										start: 0,
+										end: 2
+									}
+								],
+								loc: {
+									startLine: 1,
+									startColumn: 6,
+									endLine: 1,
+									endColumn: 7
+								}
+							}
+						]
 					}
 				}
 			],
@@ -119,5 +108,5 @@ done
 		}
 	};
 
-	t.deepEqual(result.commands[0].commands[0], expected);
+	t.deepEqual(result.commands[0], expected);
 });

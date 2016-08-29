@@ -8,15 +8,12 @@ test('quotes within double quotes', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '"TEST1 \'TEST2"'}]
-				}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'},
+			suffix: {
+				type: 'cmd_suffix',
+				list: [{text: '"TEST1 \'TEST2"'}]
+			}
 		}]
 	});
 });
@@ -26,15 +23,12 @@ test('escaped double quotes within double quotes', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '"TEST1 "TEST2"'}]
-				}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'},
+			suffix: {
+				type: 'cmd_suffix',
+				list: [{text: '"TEST1 "TEST2"'}]
+			}
 		}]
 	});
 });
@@ -45,15 +39,12 @@ test('double quotes within single quotes', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: '\'TEST1 "TEST2\''}]
-				}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'},
+			suffix: {
+				type: 'cmd_suffix',
+				list: [{text: '\'TEST1 "TEST2\''}]
+			}
 		}]
 	});
 });

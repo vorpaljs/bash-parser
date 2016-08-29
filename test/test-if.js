@@ -9,34 +9,25 @@ test('parse if', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'if',
-					clause: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
-						}]
-					}
-				}]
+				type: 'if',
+				clause: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'true'}
+					}]
+				},
+				then: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '1'}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -49,48 +40,36 @@ test('parse if else', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'if',
-					clause: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
-						}]
-					},
-					else: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '2'}]
-								}
-							}]
-						}]
-					}
-				}]
+				type: 'if',
+				clause: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'true'}
+					}]
+				},
+				then: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '1'}]
+						}
+					}]
+				},
+				else: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '2'}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -103,48 +82,36 @@ test('parse if else multiline', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'if',
-					clause: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					then: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
-						}]
-					},
-					else: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '2'}]
-								}
-							}]
-						}]
-					}
-				}]
+				type: 'if',
+				clause: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'true'}
+					}]
+				},
+				then: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '1'}]
+						}
+					}]
+				},
+				else: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '2'}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -157,66 +124,51 @@ test('parse if elif else', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
+				type: 'if',
+				clause: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'true'}
+					}]
+				},
+				then: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '1'}]
+						}
+					}]
+				},
+				else: {
 					type: 'if',
 					clause: {
 						type: 'compound_list',
 						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
+							type: 'simple_command',
+							name: {text: 'false'}
 						}]
 					},
 					then: {
 						type: 'compound_list',
 						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
+							type: 'simple_command',
+							name: {text: 'echo'},
+							suffix: {type: 'cmd_suffix', list: [{text: '3'}]}
 						}]
 					},
 					else: {
-						type: 'if',
-						clause: {
-							type: 'compound_list',
-							commands: [{
-								type: 'pipeline',
-								commands: [{type: 'simple_command', name: {text: 'false'}}]
-							}]
-						},
-						then: {
-							type: 'compound_list',
-							commands: [{
-								type: 'pipeline',
-								commands: [{
-									type: 'simple_command',
-									name: {text: 'echo'},
-									suffix: {type: 'cmd_suffix', list: [{text: '3'}]}
-								}]
-							}]
-						},
-						else: {
-							type: 'compound_list',
-							commands: [{
-								type: 'pipeline',
-								commands: [{
-									type: 'simple_command',
-									name: {text: 'echo'},
-									suffix: {type: 'cmd_suffix', list: [{text: '2'}]}
-								}]
-							}]
-						}
+						type: 'compound_list',
+						commands: [{
+							type: 'simple_command',
+							name: {text: 'echo'},
+							suffix: {type: 'cmd_suffix', list: [{text: '2'}]}
+						}]
 					}
-				}]
+				}
 			}]
 		}
 	);

@@ -10,32 +10,26 @@ test('parse case', t => {
 	const expected = {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'case',
-				clause: {
-					text: 'foo'
-				},
-				cases: [{
-					type: 'case_item',
-					pattern: [{
-						text: '*'
-					}],
-					body: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'echo'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: 'bar'}]
-								}
-							}]
-						}]
-					}
-				}]
+			type: 'case',
+			clause: {
+				text: 'foo'
+			},
+			cases: [{
+				type: 'case_item',
+				pattern: [{
+					text: '*'
+				}],
+				body: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'echo'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: 'bar'}]
+						}
+					}]
+				}
 			}]
 		}]
 	};

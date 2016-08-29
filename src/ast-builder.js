@@ -105,8 +105,19 @@ module.exports = options => {
 		}
 		return pipe;
 	};
-	builder.bangPipeSequence = pipe => {
-		pipe.bang = true;
+
+	builder.bangPipeLine = pipe => {
+		const bang = true;
+		if (pipe.commands.length === 1) {
+			return Object.assign(pipe.commands[0], {bang});
+		}
+		return Object.assign(pipe, {bang});
+	};
+
+	builder.pipeLine = pipe => {
+		if (pipe.commands.length === 1) {
+			return pipe.commands[0];
+		}
 		return pipe;
 	};
 

@@ -17,27 +17,16 @@ test('loc in until statement', t => {
 					type: 'and_or',
 					op: 'and',
 					left: {
-						type: 'pipeline',
-						commands: [
-							{
-								type: 'simple_command',
-								name: {
-									text: 'true',
-									loc: {
-										startLine: 0,
-										startColumn: 6,
-										endLine: 0,
-										endColumn: 9
-									}
-								},
-								loc: {
-									startLine: 0,
-									startColumn: 6,
-									endLine: 0,
-									endColumn: 9
-								}
+						type: 'simple_command',
+						name: {
+							text: 'true',
+							loc: {
+								startLine: 0,
+								startColumn: 6,
+								endLine: 0,
+								endColumn: 9
 							}
-						],
+						},
 						loc: {
 							startLine: 0,
 							startColumn: 6,
@@ -46,27 +35,16 @@ test('loc in until statement', t => {
 						}
 					},
 					right: {
-						type: 'pipeline',
-						commands: [
-							{
-								type: 'simple_command',
-								name: {
-									text: '1',
-									loc: {
-										startLine: 0,
-										startColumn: 14,
-										endLine: 0,
-										endColumn: 14
-									}
-								},
-								loc: {
-									startLine: 0,
-									startColumn: 14,
-									endLine: 0,
-									endColumn: 14
-								}
+						type: 'simple_command',
+						name: {
+							text: '1',
+							loc: {
+								startLine: 0,
+								startColumn: 14,
+								endLine: 0,
+								endColumn: 14
 							}
-						],
+						},
 						loc: {
 							startLine: 0,
 							startColumn: 14,
@@ -93,89 +71,67 @@ test('loc in until statement', t => {
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'pipeline',
-					commands: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'sleep',
-								loc: {
-									startLine: 0,
-									startColumn: 20,
-									endLine: 0,
-									endColumn: 24
-								}
-							},
-							loc: {
-								startLine: 0,
-								startColumn: 20,
-								endLine: 0,
-								endColumn: 26
-							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: '1',
-										loc: {
-											startLine: 0,
-											startColumn: 26,
-											endLine: 0,
-											endColumn: 26
-										}
-									}
-								]
-							}
+					type: 'simple_command',
+					name: {
+						text: 'sleep',
+						loc: {
+							startLine: 0,
+							startColumn: 20,
+							endLine: 0,
+							endColumn: 24
 						}
-					],
+					},
 					loc: {
 						startLine: 0,
 						startColumn: 20,
 						endLine: 0,
 						endColumn: 26
+					},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{
+								text: '1',
+								loc: {
+									startLine: 0,
+									startColumn: 26,
+									endLine: 0,
+									endColumn: 26
+								}
+							}
+						]
 					}
 				},
 				{
-					type: 'pipeline',
-					commands: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'echo',
-								loc: {
-									startLine: 0,
-									startColumn: 28,
-									endLine: 0,
-									endColumn: 31
-								}
-							},
-							loc: {
-								startLine: 0,
-								startColumn: 28,
-								endLine: 0,
-								endColumn: 36
-							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: 'ciao',
-										loc: {
-											startLine: 0,
-											startColumn: 33,
-											endLine: 0,
-											endColumn: 36
-										}
-									}
-								]
-							}
+					type: 'simple_command',
+					name: {
+						text: 'echo',
+						loc: {
+							startLine: 0,
+							startColumn: 28,
+							endLine: 0,
+							endColumn: 31
 						}
-					],
+					},
 					loc: {
 						startLine: 0,
 						startColumn: 28,
 						endLine: 0,
 						endColumn: 36
+					},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{
+								text: 'ciao',
+								loc: {
+									startLine: 0,
+									startColumn: 33,
+									endLine: 0,
+									endColumn: 36
+								}
+							}
+						]
 					}
 				}
 			],
@@ -194,5 +150,5 @@ test('loc in until statement', t => {
 		}
 	};
 
-	t.deepEqual(result.commands[0].commands[0], expected);
+	t.deepEqual(result.commands[0], expected);
 });

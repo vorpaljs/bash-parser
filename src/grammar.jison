@@ -73,8 +73,9 @@ and_or           : pipeline
 					  -> yy.orAndOr($and_or, $pipeline)
 				 ;
 pipeline         : pipe_sequence
+					-> yy.pipeLine($pipe_sequence)
 				 | Bang pipe_sequence
-					  -> yy.bangPipeSequence($pipe_sequence)
+					  -> yy.bangPipeLine($pipe_sequence)
 				 ;
 pipe_sequence   : command
 					  -> yy.pipeSequence($command)

@@ -37,55 +37,44 @@ test('loc in function declaration', t => {
 			},
 			commands: [
 				{
-					type: 'pipeline',
-					commands: [
-						{
-							type: 'simple_command',
-							name: {
-								text: 'command',
-								loc: {
-									startLine: 1,
-									startColumn: 1,
-									endLine: 1,
-									endColumn: 7
-								}
-							},
-							loc: {
-								startLine: 1,
-								startColumn: 1,
-								endLine: 1,
-								endColumn: 17
-							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: 'bar',
-										loc: {
-											startLine: 1,
-											startColumn: 9,
-											endLine: 1,
-											endColumn: 11
-										}
-									},
-									{
-										text: '--lol',
-										loc: {
-											startLine: 1,
-											startColumn: 13,
-											endLine: 1,
-											endColumn: 17
-										}
-									}
-								]
-							}
+					type: 'simple_command',
+					name: {
+						text: 'command',
+						loc: {
+							startLine: 1,
+							startColumn: 1,
+							endLine: 1,
+							endColumn: 7
 						}
-					],
+					},
 					loc: {
 						startLine: 1,
 						startColumn: 1,
 						endLine: 1,
 						endColumn: 17
+					},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [
+							{
+								text: 'bar',
+								loc: {
+									startLine: 1,
+									startColumn: 9,
+									endLine: 1,
+									endColumn: 11
+								}
+							},
+							{
+								text: '--lol',
+								loc: {
+									startLine: 1,
+									startColumn: 13,
+									endLine: 1,
+									endColumn: 17
+								}
+							}
+						]
 					}
 				}
 			]
@@ -93,5 +82,5 @@ test('loc in function declaration', t => {
 		}
 	};
 
-	t.deepEqual(result.commands[0].commands[0], expected);
+	t.deepEqual(result.commands[0], expected);
 });

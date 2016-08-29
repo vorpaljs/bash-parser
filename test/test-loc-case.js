@@ -41,46 +41,35 @@ esac
 					type: 'compound_list',
 					commands: [
 						{
-							type: 'pipeline',
-							commands: [
-								{
-									type: 'simple_command',
-									name: {
-										text: 'echo',
-										loc: {
-											startLine: 2,
-											startColumn: 2,
-											endLine: 2,
-											endColumn: 5
-										}
-									},
-									loc: {
-										startLine: 2,
-										startColumn: 2,
-										endLine: 2,
-										endColumn: 9
-									},
-									suffix: {
-										type: 'cmd_suffix',
-										list: [
-											{
-												text: 'bar',
-												loc: {
-													startLine: 2,
-													startColumn: 7,
-													endLine: 2,
-													endColumn: 9
-												}
-											}
-										]
-									}
+							type: 'simple_command',
+							name: {
+								text: 'echo',
+								loc: {
+									startLine: 2,
+									startColumn: 2,
+									endLine: 2,
+									endColumn: 5
 								}
-							],
+							},
 							loc: {
 								startLine: 2,
 								startColumn: 2,
 								endLine: 2,
 								endColumn: 9
+							},
+							suffix: {
+								type: 'cmd_suffix',
+								list: [
+									{
+										text: 'bar',
+										loc: {
+											startLine: 2,
+											startColumn: 7,
+											endLine: 2,
+											endColumn: 9
+										}
+									}
+								]
 							}
 						}
 					],
@@ -108,5 +97,5 @@ esac
 	};
 	// utils.logResults(result.commands[0].commands[0]);
 
-	t.deepEqual(result.commands[0].commands[0], expected);
+	t.deepEqual(result.commands[0], expected);
 });

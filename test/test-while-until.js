@@ -9,34 +9,25 @@ test('parse while', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'while',
-					clause: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					do: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'sleep'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
-						}]
-					}
-				}]
+				type: 'while',
+				clause: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'true'}
+					}]
+				},
+				do: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'sleep'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '1'}]
+						}
+					}]
+				}
 			}]
 		}
 	);
@@ -49,34 +40,25 @@ test('parse until', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'until',
-					clause: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'true'}
-							}]
-						}]
-					},
-					do: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'sleep'},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [{text: '1'}]
-								}
-							}]
-						}]
-					}
-				}]
+				type: 'until',
+				clause: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'true'}
+					}]
+				},
+				do: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'sleep'},
+						suffix: {
+							type: 'cmd_suffix',
+							list: [{text: '1'}]
+						}
+					}]
+				}
 			}]
 		}
 	);

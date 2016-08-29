@@ -9,22 +9,16 @@ test('parse function declaration multiple lines', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'function',
-					name: {text: 'foo'},
-					body: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'command'},
-								suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
-							}]
-						}]
-					}
-				}]
+				type: 'function',
+				name: {text: 'foo'},
+				body: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'command'},
+						suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+					}]
+				}
 			}]
 		}
 	);
@@ -37,22 +31,16 @@ test('parse function declaration', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'function',
-					name: {text: 'foo'},
-					body: {
-						type: 'compound_list',
-						commands: [{
-							type: 'pipeline',
-							commands: [{
-								type: 'simple_command',
-								name: {text: 'command'},
-								suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
-							}]
-						}]
-					}
-				}]
+				type: 'function',
+				name: {text: 'foo'},
+				body: {
+					type: 'compound_list',
+					commands: [{
+						type: 'simple_command',
+						name: {text: 'command'},
+						suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+					}]
+				}
 			}]
 		}
 	);

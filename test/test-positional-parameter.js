@@ -6,7 +6,7 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
-		.commands[0].commands[0].prefix;
+		.commands[0].prefix;
 	// utils.logResults(result);
 	//
 
@@ -30,23 +30,20 @@ test('positional parameter in braces', t => {
 		type: 'complete_command',
 		commands: [
 			{
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{
-							text: 'echoword=${11}test',
-							expansion: [{
-								parameter: 11,
-								kind: 'positional',
-								start: 9,
-								end: 14
-							}]
+				type: 'simple_command',
+				name: {text: ''},
+				prefix: {
+					type: 'cmd_prefix',
+					list: [{
+						text: 'echoword=${11}test',
+						expansion: [{
+							parameter: 11,
+							kind: 'positional',
+							start: 9,
+							end: 14
 						}]
-					}
-				}]
+					}]
+				}
 			}
 		]
 	});
@@ -57,27 +54,22 @@ test('positional parameter without braces', t => {
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'complete_command',
-		commands: [
-			{
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{
-							text: 'echoword=$1',
-							expansion: [{
-								parameter: 1,
-								kind: 'positional',
-								start: 9,
-								end: 11
-							}]
-						}]
-					}
+		commands: [{
+			type: 'simple_command',
+			name: {text: ''},
+			prefix: {
+				type: 'cmd_prefix',
+				list: [{
+					text: 'echoword=$1',
+					expansion: [{
+						parameter: 1,
+						kind: 'positional',
+						start: 9,
+						end: 11
+					}]
 				}]
 			}
-		]
+		}]
 	});
 });
 
@@ -86,26 +78,21 @@ test('positional parameter without braces allow one digit only', t => {
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result, {
 		type: 'complete_command',
-		commands: [
-			{
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{
-							text: 'echoword=$11',
-							expansion: [{
-								parameter: 1,
-								kind: 'positional',
-								start: 9,
-								end: 11
-							}]
-						}]
-					}
+		commands: [{
+			type: 'simple_command',
+			name: {text: ''},
+			prefix: {
+				type: 'cmd_prefix',
+				list: [{
+					text: 'echoword=$11',
+					expansion: [{
+						parameter: 1,
+						kind: 'positional',
+						start: 9,
+						end: 11
+					}]
 				}]
 			}
-		]
+		}]
 	});
 });

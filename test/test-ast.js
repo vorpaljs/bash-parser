@@ -9,17 +9,14 @@ test('command with one argument', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [
-						{text: 'world'}
-					]
-				}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'},
+			suffix: {
+				type: 'cmd_suffix',
+				list: [
+					{text: 'world'}
+				]
+			}
 		}]
 	});
 });
@@ -29,12 +26,9 @@ test('command with pre-assignment', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'run'},
-				prefix: {type: 'cmd_prefix', list: [{text: 'TEST=1'}]}
-			}]
+			type: 'simple_command',
+			name: {text: 'run'},
+			prefix: {type: 'cmd_prefix', list: [{text: 'TEST=1'}]}
 		}]
 	});
 });
@@ -47,14 +41,8 @@ test('commands with AND', t => {
 		commands: [{
 			type: 'and_or',
 			op: 'and',
-			left: {
-				type: 'pipeline',
-				commands: [{type: 'simple_command', name: {text: 'run'}}]
-			},
-			right: {
-				type: 'pipeline',
-				commands: [{type: 'simple_command', name: {text: 'stop'}}]
-			}
+			left: {type: 'simple_command', name: {text: 'run'}},
+			right: {type: 'simple_command', name: {text: 'stop'}}
 		}]
 	});
 });
@@ -67,14 +55,8 @@ test('commands with AND \\n', t => {
 		commands: [{
 			type: 'and_or',
 			op: 'and',
-			left: {
-				type: 'pipeline',
-				commands: [{type: 'simple_command', name: {text: 'run'}}]
-			},
-			right: {
-				type: 'pipeline',
-				commands: [{type: 'simple_command', name: {text: 'stop'}}]
-			}
+			left: {type: 'simple_command', name: {text: 'run'}},
+			right: {type: 'simple_command', name: {text: 'stop'}}
 		}]
 	});
 });
@@ -86,14 +68,8 @@ test('commands with OR', t => {
 		commands: [{
 			type: 'and_or',
 			op: 'or',
-			left: {
-				type: 'pipeline',
-				commands: [{type: 'simple_command', name: {text: 'run'}}]
-			},
-			right: {
-				type: 'pipeline',
-				commands: [{type: 'simple_command', name: {text: 'cry'}}]
-			}
+			left: {type: 'simple_command', name: {text: 'run'}},
+			right: {type: 'simple_command', name: {text: 'cry'}}
 		}]
 	});
 });
@@ -118,12 +94,9 @@ test('no pre-assignment on suffix', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: {type: 'cmd_suffix', list: [{text: 'TEST=1'}]}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'},
+			suffix: {type: 'cmd_suffix', list: [{text: 'TEST=1'}]}
 		}]
 	});
 });
@@ -133,13 +106,10 @@ test('command with multiple prefixes', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'},
-				prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
-				suffix: {type: 'cmd_suffix', list: [{text: 'world'}]}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'},
+			prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
+			suffix: {type: 'cmd_suffix', list: [{text: 'world'}]}
 		}]
 	});
 });
@@ -149,17 +119,11 @@ test('multi line commands', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'echo'}
-			}]
+			type: 'simple_command',
+			name: {text: 'echo'}
 		}, {
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'ls'}
-			}]
+			type: 'simple_command',
+			name: {text: 'ls'}
 		}]
 	});
 });
@@ -169,21 +133,18 @@ test('command with redirection to file', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'ls'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [
-						{
-							type: 'io_redirect',
-							op: {text: '>'},
-							file: {text: 'file.txt'}
-						}
-					]
-				}
-			}]
+			type: 'simple_command',
+			name: {text: 'ls'},
+			suffix: {
+				type: 'cmd_suffix',
+				list: [
+					{
+						type: 'io_redirect',
+						op: {text: '>'},
+						file: {text: 'file.txt'}
+					}
+				]
+			}
 		}]
 	});
 });
@@ -194,15 +155,12 @@ test('parse multiple suffix', t => {
 		result, {
 			type: 'complete_command',
 			commands: [{
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'command'},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [{text: 'foo'}, {text: '--lol'}]
-					}
-				}]
+				type: 'simple_command',
+				name: {text: 'command'},
+				suffix: {
+					type: 'cmd_suffix',
+					list: [{text: 'foo'}, {text: '--lol'}]
+				}
 			}]
 		}
 	);
@@ -213,20 +171,17 @@ test('command with stderr redirection to file', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'simple_command',
-				name: {text: 'ls'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{
-						type: 'io_redirect',
-						op: {text: '>'},
-						file: {text: 'file.txt'},
-						numberIo: {text: '2'}
-					}]
-				}
-			}]
+			type: 'simple_command',
+			name: {text: 'ls'},
+			suffix: {
+				type: 'cmd_suffix',
+				list: [{
+					type: 'io_redirect',
+					op: {text: '>'},
+					file: {text: 'file.txt'},
+					numberIo: {text: '2'}
+				}]
+			}
 		}]
 	});
 });
@@ -236,17 +191,11 @@ test('parse subshell', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
-			type: 'pipeline',
-			commands: [{
-				type: 'subshell',
-				list: {
-					type: 'compound_list',
-					commands: [{
-						type: 'pipeline',
-						commands: [{type: 'simple_command', name: {text: 'ls'}}]
-					}]
-				}
-			}]
+			type: 'subshell',
+			list: {
+				type: 'compound_list',
+				commands: [{type: 'simple_command', name: {text: 'ls'}}]
+			}
 		}]
 	});
 });

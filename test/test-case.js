@@ -16,7 +16,7 @@ test('parse case', t => {
 					text: 'foo'
 				},
 				cases: [{
-					type: 'pattern',
+					type: 'case_item',
 					pattern: [{
 						text: '*'
 					}],

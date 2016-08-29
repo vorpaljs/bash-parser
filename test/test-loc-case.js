@@ -33,7 +33,7 @@ esac
 		},
 		cases: [
 			{
-				type: 'pattern',
+				type: 'case_item',
 				loc: {
 					startLine: 1,
 					startColumn: 1,

@@ -10,7 +10,7 @@ module.exports = options => {
 
 	builder.caseItem = (pattern, body, locStart, locEnd) => {
 		const node = {
-			type: 'pattern',
+			type: 'case_item',
 			pattern,
 			body
 		};

@@ -8,39 +8,33 @@ test('parse for', t => {
 		result, {
 			type: 'complete_command',
 			and_ors: [{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'for',
-						name: {text: 'x'},
-						wordlist: [{text: 'a'}, {text: 'b'}, {text: 'c'}],
-						do: {
-							type: 'compound_list',
-							and_ors: [{
-								type: 'and_or',
-								left: {
-									type: 'pipeline',
-									commands: [{
-										type: 'simple_command',
-										name: {text: 'echo'},
-										suffix: {
-											type: 'cmd_suffix',
-											list: [{
-												text: '$x',
-												expansion: [{
-													parameter: 'x',
-													start: 0,
-													end: 2
-												}]
-											}]
-										}
+				type: 'pipeline',
+				commands: [{
+					type: 'for',
+					name: {text: 'x'},
+					wordlist: [{text: 'a'}, {text: 'b'}, {text: 'c'}],
+					do: {
+						type: 'compound_list',
+						and_ors: [{
+							type: 'pipeline',
+							commands: [{
+								type: 'simple_command',
+								name: {text: 'echo'},
+								suffix: {
+									type: 'cmd_suffix',
+									list: [{
+										text: '$x',
+										expansion: [{
+											parameter: 'x',
+											start: 0,
+											end: 2
+										}]
 									}]
 								}
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}]
 		}
 	);
@@ -52,39 +46,33 @@ test('parse for with default sequence', t => {
 		result, {
 			type: 'complete_command',
 			and_ors: [{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'for',
-						name: {text: 'x'},
-						do: {
-							type: 'compound_list',
-							and_ors: [{
-								type: 'and_or',
-								left: {
-									type: 'pipeline',
-									commands: [{
-										type: 'simple_command',
-										name: {text: 'echo'},
-										suffix: {
-											type: 'cmd_suffix',
-											list: [{
-												text: '$x',
-												expansion: [{
-													parameter: 'x',
-													start: 0,
-													end: 2
-												}]
-											}]
-										}
+				type: 'pipeline',
+				commands: [{
+					type: 'for',
+					name: {text: 'x'},
+					do: {
+						type: 'compound_list',
+						and_ors: [{
+							type: 'pipeline',
+							commands: [{
+								type: 'simple_command',
+								name: {text: 'echo'},
+								suffix: {
+									type: 'cmd_suffix',
+									list: [{
+										text: '$x',
+										expansion: [{
+											parameter: 'x',
+											start: 0,
+											end: 2
+										}]
 									}]
 								}
 							}]
-						}
+						}]
+					}
 
-					}]
-				}
+				}]
 			}]
 		}
 	);
@@ -97,38 +85,32 @@ test('parse for with default sequence - on one line', t => {
 		result, {
 			type: 'complete_command',
 			and_ors: [{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'for',
-						name: {text: 'x'},
-						do: {
-							type: 'compound_list',
-							and_ors: [{
-								type: 'and_or',
-								left: {
-									type: 'pipeline',
-									commands: [{
-										type: 'simple_command',
-										name: {text: 'echo'},
-										suffix: {
-											type: 'cmd_suffix',
-											list: [{
-												text: '$x',
-												expansion: [{
-													parameter: 'x',
-													start: 0,
-													end: 2
-												}]
-											}]
-										}
+				type: 'pipeline',
+				commands: [{
+					type: 'for',
+					name: {text: 'x'},
+					do: {
+						type: 'compound_list',
+						and_ors: [{
+							type: 'pipeline',
+							commands: [{
+								type: 'simple_command',
+								name: {text: 'echo'},
+								suffix: {
+									type: 'cmd_suffix',
+									list: [{
+										text: '$x',
+										expansion: [{
+											parameter: 'x',
+											start: 0,
+											end: 2
+										}]
 									}]
 								}
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}]
 		}
 	);

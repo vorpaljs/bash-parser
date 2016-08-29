@@ -39,16 +39,13 @@ test('3', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'read'},
-					prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
-					suffix: {type: 'cmd_suffix', list: [{text: '-r'}, {text: 'var'}]}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'read'},
+				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
+				suffix: {type: 'cmd_suffix', list: [{text: '-r'}, {text: 'var'}]}
+			}]
 		}]
 	});
 });
@@ -60,19 +57,16 @@ test('4', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'foo'}
-				}, {
-					type: 'simple_command',
-					name: {text: 'read'},
-					prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
-					suffix: {type: 'cmd_suffix', list: [{text: 'var'}]}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'foo'}
+			}, {
+				type: 'simple_command',
+				name: {text: 'read'},
+				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
+				suffix: {type: 'cmd_suffix', list: [{text: 'var'}]}
+			}]
 		}]
 	});
 });
@@ -88,44 +82,35 @@ eval "dest=foo"`
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{text: 'foo=\'hello ; rm -rf /\''}]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: ''},
+				prefix: {
+					type: 'cmd_prefix',
+					list: [{text: 'foo=\'hello ; rm -rf /\''}]
+				}
+			}]
 		}, {
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{text: 'dest=bar'}]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: ''},
+				prefix: {
+					type: 'cmd_prefix',
+					list: [{text: 'dest=bar'}]
+				}
+			}]
 		}, {
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'eval'},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [{text: '"dest=foo"'}]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'eval'},
+				suffix: {
+					type: 'cmd_suffix',
+					list: [{text: '"dest=foo"'}]
+				}
+			}]
 		}]
 	});
 });

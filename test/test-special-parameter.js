@@ -8,26 +8,23 @@ test('positional list paramter', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{
-							text: 'echoword=$@',
-							expansion: [{
-								parameter: '@',
-								kind: 'positional-list',
-								start: 9,
-								end: 11
-							}]
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: ''},
+				prefix: {
+					type: 'cmd_prefix',
+					list: [{
+						text: 'echoword=$@',
+						expansion: [{
+							parameter: '@',
+							kind: 'positional-list',
+							start: 9,
+							end: 11
 						}]
-					}
-				}]
-			}
+					}]
+				}
+			}]
 		}]
 	});
 });
@@ -37,26 +34,23 @@ test('positional string paramter', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: ''},
-					prefix: {
-						type: 'cmd_prefix',
-						list: [{
-							text: 'echoword=$*',
-							expansion: [{
-								parameter: '*',
-								kind: 'positional-string',
-								start: 9,
-								end: 11
-							}]
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: ''},
+				prefix: {
+					type: 'cmd_prefix',
+					list: [{
+						text: 'echoword=$*',
+						expansion: [{
+							parameter: '*',
+							kind: 'positional-string',
+							start: 9,
+							end: 11
 						}]
-					}
-				}]
-			}
+					}]
+				}
+			}]
 		}]
 	});
 });
@@ -67,26 +61,23 @@ test('positional count paramter', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$#',
-								expansion: [{
-									parameter: '#',
-									kind: 'positional-count',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$#',
+							expansion: [{
+								parameter: '#',
+								kind: 'positional-count',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -98,26 +89,23 @@ test('last exit status', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$?',
-								expansion: [{
-									parameter: '?',
-									kind: 'last-exit-status',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$?',
+							expansion: [{
+								parameter: '?',
+								kind: 'last-exit-status',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -129,26 +117,23 @@ test('current option flags', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$-',
-								expansion: [{
-									parameter: '-',
-									kind: 'current-option-flags',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$-',
+							expansion: [{
+								parameter: '-',
+								kind: 'current-option-flags',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -160,26 +145,23 @@ test('shell process id', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$$',
-								expansion: [{
-									parameter: '$',
-									kind: 'shell-process-id',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$$',
+							expansion: [{
+								parameter: '$',
+								kind: 'shell-process-id',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -191,26 +173,23 @@ test('last background pid', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$!',
-								expansion: [{
-									parameter: '!',
-									kind: 'last-background-pid',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$!',
+							expansion: [{
+								parameter: '!',
+								kind: 'last-background-pid',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -222,26 +201,23 @@ test('shell script name', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$0',
-								expansion: [{
-									parameter: '0',
-									kind: 'shell-script-name',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$0',
+							expansion: [{
+								parameter: '0',
+								kind: 'shell-script-name',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});

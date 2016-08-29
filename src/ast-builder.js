@@ -88,31 +88,26 @@ module.exports = options => {
 	builder.subshell = list => ({type: 'subshell', list});
 
 	builder.pipeSequence = command => {
-		return {
+		const node = {
 			type: 'pipeline',
 			commands: [command]
 		};
+
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, command.loc), command.loc);
+		}
+		return node;
 	};
 	builder.pipeSequenceAppend = (pipe, command) => {
 		pipe.commands.push(command);
+		if (options.insertLOC) {
+			setLocEnd(pipe.loc, command.loc);
+		}
 		return pipe;
 	};
 	builder.bangPipeSequence = pipe => {
 		pipe.bang = true;
 		return pipe;
-	};
-
-	builder.singleAndOr = pipe => {
-		const node = {
-			type: 'and_or', left: pipe
-		};
-		if (options.insertLOC) {
-			const firstCommand = pipe.commands[0];
-			const lastCommand = pipe.commands[pipe.commands.length - 1];
-
-			node.loc = setLocEnd(setLocStart({}, firstCommand.loc), lastCommand.loc);
-		}
-		return node;
 	};
 
 	builder.andAndOr = (left, right) => {

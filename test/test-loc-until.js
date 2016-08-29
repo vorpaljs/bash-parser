@@ -17,30 +17,27 @@ test('loc in until statement', t => {
 					type: 'and_or',
 					op: 'and',
 					left: {
-						type: 'and_or',
-						left: {
-							type: 'pipeline',
-							commands: [
-								{
-									type: 'simple_command',
-									name: {
-										text: 'true',
-										loc: {
-											startLine: 0,
-											startColumn: 6,
-											endLine: 0,
-											endColumn: 9
-										}
-									},
+						type: 'pipeline',
+						commands: [
+							{
+								type: 'simple_command',
+								name: {
+									text: 'true',
 									loc: {
 										startLine: 0,
 										startColumn: 6,
 										endLine: 0,
 										endColumn: 9
 									}
+								},
+								loc: {
+									startLine: 0,
+									startColumn: 6,
+									endLine: 0,
+									endColumn: 9
 								}
-							]
-						},
+							}
+						],
 						loc: {
 							startLine: 0,
 							startColumn: 6,
@@ -69,61 +66,68 @@ test('loc in until statement', t => {
 									endColumn: 14
 								}
 							}
-						]
+						],
+						loc: {
+							startLine: 0,
+							startColumn: 14,
+							endLine: 0,
+							endColumn: 14
+						}
 					},
 					loc: {
 						startLine: 0,
-						startColumn: 6
+						startColumn: 6,
+						endLine: 0,
+						endColumn: 14
 					}
 				}
 			],
 			loc: {
 				startLine: 0,
-				startColumn: 6
+				startColumn: 6,
+				endLine: 0,
+				endColumn: 14
 			}
 		},
 		do: {
 			type: 'compound_list',
 			and_ors: [
 				{
-					type: 'and_or',
-					left: {
-						type: 'pipeline',
-						commands: [
-							{
-								type: 'simple_command',
-								name: {
-									text: 'sleep',
-									loc: {
-										startLine: 0,
-										startColumn: 20,
-										endLine: 0,
-										endColumn: 24
-									}
-								},
+					type: 'pipeline',
+					commands: [
+						{
+							type: 'simple_command',
+							name: {
+								text: 'sleep',
 								loc: {
 									startLine: 0,
 									startColumn: 20,
 									endLine: 0,
-									endColumn: 26
-								},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [
-										{
-											text: '1',
-											loc: {
-												startLine: 0,
-												startColumn: 26,
-												endLine: 0,
-												endColumn: 26
-											}
-										}
-									]
+									endColumn: 24
 								}
+							},
+							loc: {
+								startLine: 0,
+								startColumn: 20,
+								endLine: 0,
+								endColumn: 26
+							},
+							suffix: {
+								type: 'cmd_suffix',
+								list: [
+									{
+										text: '1',
+										loc: {
+											startLine: 0,
+											startColumn: 26,
+											endLine: 0,
+											endColumn: 26
+										}
+									}
+								]
 							}
-						]
-					},
+						}
+					],
 					loc: {
 						startLine: 0,
 						startColumn: 20,
@@ -132,44 +136,41 @@ test('loc in until statement', t => {
 					}
 				},
 				{
-					type: 'and_or',
-					left: {
-						type: 'pipeline',
-						commands: [
-							{
-								type: 'simple_command',
-								name: {
-									text: 'echo',
-									loc: {
-										startLine: 0,
-										startColumn: 28,
-										endLine: 0,
-										endColumn: 31
-									}
-								},
+					type: 'pipeline',
+					commands: [
+						{
+							type: 'simple_command',
+							name: {
+								text: 'echo',
 								loc: {
 									startLine: 0,
 									startColumn: 28,
 									endLine: 0,
-									endColumn: 36
-								},
-								suffix: {
-									type: 'cmd_suffix',
-									list: [
-										{
-											text: 'ciao',
-											loc: {
-												startLine: 0,
-												startColumn: 33,
-												endLine: 0,
-												endColumn: 36
-											}
-										}
-									]
+									endColumn: 31
 								}
+							},
+							loc: {
+								startLine: 0,
+								startColumn: 28,
+								endLine: 0,
+								endColumn: 36
+							},
+							suffix: {
+								type: 'cmd_suffix',
+								list: [
+									{
+										text: 'ciao',
+										loc: {
+											startLine: 0,
+											startColumn: 33,
+											endLine: 0,
+											endColumn: 36
+										}
+									}
+								]
 							}
-						]
-					},
+						}
+					],
 					loc: {
 						startLine: 0,
 						startColumn: 28,
@@ -192,7 +193,6 @@ test('loc in until statement', t => {
 			endColumn: 42
 		}
 	};
-	// console.log(diff(result.and_ors[0].left.commands[0], expected));
 
-	t.deepEqual(result.and_ors[0].left.commands[0], expected);
+	t.deepEqual(result.and_ors[0].commands[0], expected);
 });

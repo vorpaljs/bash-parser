@@ -6,7 +6,7 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
-		.and_ors[0].left.commands[0].prefix;
+		.and_ors[0].commands[0].prefix;
 	// utils.logResults(result);
 	//
 
@@ -30,26 +30,23 @@ test('positional parameter in braces', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=${11}test',
-								expansion: [{
-									parameter: 11,
-									kind: 'positional',
-									start: 9,
-									end: 14
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=${11}test',
+							expansion: [{
+								parameter: 11,
+								kind: 'positional',
+								start: 9,
+								end: 14
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -62,26 +59,23 @@ test('positional parameter without braces', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$1',
-								expansion: [{
-									parameter: 1,
-									kind: 'positional',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$1',
+							expansion: [{
+								parameter: 1,
+								kind: 'positional',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});
@@ -94,26 +88,23 @@ test('positional parameter without braces allow one digit only', t => {
 		type: 'complete_command',
 		and_ors: [
 			{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: ''},
-						prefix: {
-							type: 'cmd_prefix',
-							list: [{
-								text: 'echoword=$11',
-								expansion: [{
-									parameter: 1,
-									kind: 'positional',
-									start: 9,
-									end: 11
-								}]
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: ''},
+					prefix: {
+						type: 'cmd_prefix',
+						list: [{
+							text: 'echoword=$11',
+							expansion: [{
+								parameter: 1,
+								kind: 'positional',
+								start: 9,
+								end: 11
 							}]
-						}
-					}]
-				}
+						}]
+					}
+				}]
 			}
 		]
 	});

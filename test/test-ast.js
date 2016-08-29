@@ -9,20 +9,17 @@ test('command with one argument', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'echo'},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
-							{text: 'world'}
-						]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'echo'},
+				suffix: {
+					type: 'cmd_suffix',
+					list: [
+						{text: 'world'}
+					]
+				}
+			}]
 		}]
 	});
 });
@@ -32,15 +29,12 @@ test('command with pre-assignment', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'run'},
-					prefix: {type: 'cmd_prefix', list: [{text: 'TEST=1'}]}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'run'},
+				prefix: {type: 'cmd_prefix', list: [{text: 'TEST=1'}]}
+			}]
 		}]
 	});
 });
@@ -54,11 +48,8 @@ test('commands with AND', t => {
 			type: 'and_or',
 			op: 'and',
 			left: {
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{type: 'simple_command', name: {text: 'run'}}]
-				}
+				type: 'pipeline',
+				commands: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
 				type: 'pipeline',
@@ -77,11 +68,8 @@ test('commands with AND \\n', t => {
 			type: 'and_or',
 			op: 'and',
 			left: {
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{type: 'simple_command', name: {text: 'run'}}]
-				}
+				type: 'pipeline',
+				commands: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
 				type: 'pipeline',
@@ -99,11 +87,8 @@ test('commands with OR', t => {
 			type: 'and_or',
 			op: 'or',
 			left: {
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{type: 'simple_command', name: {text: 'run'}}]
-				}
+				type: 'pipeline',
+				commands: [{type: 'simple_command', name: {text: 'run'}}]
 			},
 			right: {
 				type: 'pipeline',
@@ -119,14 +104,11 @@ test('pipelines', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [
-					{type: 'simple_command', name: {text: 'run'}},
-					{type: 'simple_command', name: {text: 'cry'}}
-				]
-			}
+			type: 'pipeline',
+			commands: [
+				{type: 'simple_command', name: {text: 'run'}},
+				{type: 'simple_command', name: {text: 'cry'}}
+			]
 		}]
 	});
 });
@@ -136,15 +118,12 @@ test('no pre-assignment on suffix', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'echo'},
-					suffix: {type: 'cmd_suffix', list: [{text: 'TEST=1'}]}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'echo'},
+				suffix: {type: 'cmd_suffix', list: [{text: 'TEST=1'}]}
+			}]
 		}]
 	});
 });
@@ -154,16 +133,13 @@ test('command with multiple prefixes', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'echo'},
-					prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
-					suffix: {type: 'cmd_suffix', list: [{text: 'world'}]}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'echo'},
+				prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
+				suffix: {type: 'cmd_suffix', list: [{text: 'world'}]}
+			}]
 		}]
 	});
 });
@@ -173,23 +149,17 @@ test('multi line commands', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'echo'}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'echo'}
+			}]
 		}, {
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'ls'}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'ls'}
+			}]
 		}]
 	});
 });
@@ -199,24 +169,21 @@ test('command with redirection to file', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'ls'},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
-							{
-								type: 'io_redirect',
-								op: {text: '>'},
-								file: {text: 'file.txt'}
-							}
-						]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'ls'},
+				suffix: {
+					type: 'cmd_suffix',
+					list: [
+						{
+							type: 'io_redirect',
+							op: {text: '>'},
+							file: {text: 'file.txt'}
+						}
+					]
+				}
+			}]
 		}]
 	});
 });
@@ -227,18 +194,15 @@ test('parse multiple suffix', t => {
 		result, {
 			type: 'complete_command',
 			and_ors: [{
-				type: 'and_or',
-				left: {
-					type: 'pipeline',
-					commands: [{
-						type: 'simple_command',
-						name: {text: 'command'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{text: 'foo'}, {text: '--lol'}]
-						}
-					}]
-				}
+				type: 'pipeline',
+				commands: [{
+					type: 'simple_command',
+					name: {text: 'command'},
+					suffix: {
+						type: 'cmd_suffix',
+						list: [{text: 'foo'}, {text: '--lol'}]
+					}
+				}]
 			}]
 		}
 	);
@@ -249,23 +213,20 @@ test('command with stderr redirection to file', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'simple_command',
-					name: {text: 'ls'},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [{
-							type: 'io_redirect',
-							op: {text: '>'},
-							file: {text: 'file.txt'},
-							numberIo: {text: '2'}
-						}]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'simple_command',
+				name: {text: 'ls'},
+				suffix: {
+					type: 'cmd_suffix',
+					list: [{
+						type: 'io_redirect',
+						op: {text: '>'},
+						file: {text: 'file.txt'},
+						numberIo: {text: '2'}
+					}]
+				}
+			}]
 		}]
 	});
 });
@@ -275,23 +236,17 @@ test('parse subshell', t => {
 	t.deepEqual(result, {
 		type: 'complete_command',
 		and_ors: [{
-			type: 'and_or',
-			left: {
-				type: 'pipeline',
-				commands: [{
-					type: 'subshell',
-					list: {
-						type: 'compound_list',
-						and_ors: [{
-							type: 'and_or',
-							left: {
-								type: 'pipeline',
-								commands: [{type: 'simple_command', name: {text: 'ls'}}]
-							}
-						}]
-					}
-				}]
-			}
+			type: 'pipeline',
+			commands: [{
+				type: 'subshell',
+				list: {
+					type: 'compound_list',
+					and_ors: [{
+						type: 'pipeline',
+						commands: [{type: 'simple_command', name: {text: 'ls'}}]
+					}]
+				}
+			}]
 		}]
 	});
 });

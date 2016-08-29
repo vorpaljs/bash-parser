@@ -66,7 +66,7 @@ list             : list separator and_or
 					  -> yy.list($and_or)
 				 ;
 and_or           : pipeline
-					  -> yy.singleAndOr($pipeline)
+					  -> $pipeline
 				 | and_or AND_IF linebreak pipeline
 					  -> yy.andAndOr($and_or, $pipeline)
 				 | and_or OR_IF linebreak pipeline

@@ -87,6 +87,7 @@ module.exports = options => {
 		return term;
 	};
 
+	// TODO: implement loc
 	builder.subshell = list => ({type: 'subshell', list});
 
 	builder.pipeSequence = command => {
@@ -158,7 +159,7 @@ module.exports = options => {
 		const node = {
 			type: 'for',
 			name,
-			wordlist: wordlist,
+			wordlist,
 			do: doGroup
 		};
 

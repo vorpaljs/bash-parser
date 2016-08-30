@@ -188,6 +188,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 	type: 'subshell',
 	list: compound_list
 }
+```
 
 # for
 

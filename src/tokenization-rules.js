@@ -43,7 +43,8 @@ exports.reservedWords = function * (tokens) {
 		}
 	}
 };
-// is this really necessary?
+
+// TODO: is this really necessary?
 exports.replaceLineTerminationToken = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk.TOKEN === ';') {

@@ -1,6 +1,44 @@
 # AST
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Introduction](#introduction)
+- [complete_command](#complete_command)
+- [pipeline](#pipeline)
+- [and_or](#and_or)
+- [simple_command](#simple_command)
+- [function](#function)
+- [name](#name)
+- [compound_list](#compound_list)
+- [subshell](#subshell)
+- [case](#case)
+- [case_item](#case_item)
+- [if](#if)
+- [while](#while)
+- [until](#until)
+- [word](#word)
+- [assignment_word](#assignment_word)
+- [arithmetic_expansion](#arithmetic_expansion)
+- [command_expansion](#command_expansion)
+- [parameter_expansion](#parameter_expansion)
+- [io_redirect](#io_redirect)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Introduction
+
 Each AST node has a `type` property that define the type of the node.
+
+If the source is parsed specifing the `insertLOC` option, each node contins a `loc` property that contains the starting and ending lines and columns of the node:
+
+```js
+{
+	endLine: Number,
+	endColumn: Number
+}
+```
 
 
 # complete_command

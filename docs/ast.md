@@ -10,7 +10,7 @@ Each AST node has a `type` property that define the type of the node.
 ```js
 {
 	type: 'complete_command',
-	commands: Array<and_or |
+	commands: Array<[and_or](#and_or) |
 					pipeline |
 					simple_command |
 					function |

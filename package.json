@@ -30,7 +30,8 @@
   ],
   "nyc": {
     "exclude": [
-      "grammar.js"
+      "grammar.js",
+      "test/_utils.js"
     ]
   },
   "dependencies": {

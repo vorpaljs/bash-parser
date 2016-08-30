@@ -84,6 +84,21 @@ test('pipelines', t => {
 	});
 });
 
+test('bang pipelines', t => {
+	const result = bashParser('! run | cry');
+	t.deepEqual(result, {
+		type: 'complete_command',
+		commands: [{
+			type: 'pipeline',
+			bang: true,
+			commands: [
+				{type: 'simple_command', name: {type: 'word', text: 'run'}},
+				{type: 'simple_command', name: {type: 'word', text: 'cry'}}
+			]
+		}]
+	});
+});
+
 test('no pre-assignment on suffix', t => {
 	const result = bashParser('echo TEST=1');
 	t.deepEqual(result, {

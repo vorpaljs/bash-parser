@@ -6,7 +6,7 @@ const bashParser = require('../src');
 
 /* eslint-disable camelcase */
 test('loc in until statement', t => {
-	const result = bashParser('until true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
+	const result = bashParser('until true || 1; do sleep 1;echo ciao; done', {insertLOC: true});
 	// utils.logResults(result.commands[0].left.commands[0]);
 	const expected = {
 		type: 'until',
@@ -15,7 +15,7 @@ test('loc in until statement', t => {
 			commands: [
 				{
 					type: 'and_or',
-					op: 'and',
+					op: 'or',
 					left: {
 						type: 'simple_command',
 						name: {

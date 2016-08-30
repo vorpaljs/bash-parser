@@ -225,18 +225,6 @@ module.exports = options => {
 		return node;
 	};
 
-	builder.elifClause = (clause, then, elseBranch) => {
-		const node = {
-			type: 'elif',
-			clause,
-			then
-		};
-		if (elseBranch) {
-			node.else = elseBranch;
-		}
-		return node;
-	};
-
 	builder.while = (clause, body, whileWord) => {
 		const node = {
 			type: 'while',

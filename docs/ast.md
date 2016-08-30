@@ -7,20 +7,22 @@ Each AST node has a `type` property that define the type of the node.
 
 > `complete_command` is the root node of the AST.
 
-	{
-		type: 'complete_command',
-		commands: Array<[and_or](#and_or) |
-						pipeline |
-						simple_command |
-						function |
-						subshell |
-						for |
-						case |
-						if_clause |
-						while_clause |
-						until_clause>
-	}
 
+```js
+{
+	type: 'complete_command',
+	commands: Array<and_or |
+					pipeline |
+					simple_command |
+					function |
+					subshell |
+					for |
+					case |
+					if_clause |
+					while_clause |
+					until_clause>
+}
+```
 
 # pipeline
 

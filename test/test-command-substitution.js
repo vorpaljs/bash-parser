@@ -6,6 +6,7 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('command substitution', t => {
 	const result = bashParser('variable=$(echo ciao)');
+	// utils.logResults(result)
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
 	t.deepEqual(result, {
 		type: 'complete_command',

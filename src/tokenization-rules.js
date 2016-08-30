@@ -3,13 +3,20 @@ const hasOwnProperty = require('has-own-property');
 const operators = require('./operators');
 const words = require('./reserved-words');
 
+function copyTempObject(tk, newTk) {
+	if (hasOwnProperty(tk, '_')) {
+		newTk._ = tk._;
+	}
+	return newTk;
+}
+
 exports.operatorTokens = function * (tokens) {
 	for (const tk of tokens) {
 		if (hasOwnProperty(operators, tk.OPERATOR)) {
-			yield {
+			yield copyTempObject(tk, {
 				[operators[tk.OPERATOR]]: tk.OPERATOR,
 				loc: tk.loc
-			};
+			});
 		} else {
 			yield tk;
 		}
@@ -23,10 +30,10 @@ function defined(v) {
 exports.reservedWords = function * (tokens) {
 	for (const tk of tokens) {
 		if (hasOwnProperty(words, tk.TOKEN)) {
-			yield {
+			yield copyTempObject(tk, {
 				[words[tk.TOKEN]]: tk.TOKEN,
 				loc: tk.loc
-			};
+			});
 		} else if (defined(tk.TOKEN)) {
 			const word = {
 				WORD: tk.TOKEN,
@@ -49,11 +56,13 @@ exports.replaceLineTerminationToken = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk.TOKEN === ';') {
 			yield {
+				'_': tk._,
 				';': tk.TOKEN,
 				'loc': tk.loc
 			};
 		} else if (tk.OPERATOR === ';') {
 			yield {
+				'_': tk._,
 				';': tk.OPERATOR,
 				'loc': tk.loc
 			};
@@ -67,10 +76,10 @@ exports.forNameVariable = function * (tokens) {
 	let lastToken = {};
 	for (const tk of tokens) {
 		if (lastToken.For && tk.WORD && tk.WORD.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
-			yield {
+			yield copyTempObject(tk, {
 				NAME: tk.WORD,
 				loc: tk.loc
-			};
+			});
 		} else {
 			yield tk;
 		}
@@ -142,18 +151,20 @@ function isValidName(text) {
 	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
 }
 
+exports.removeTempObject = function * (tokens) {
+	for (const tk of tokens) {
+		delete tk._;
+		yield tk;
+	}
+};
+
 exports.assignmentWord = function * (tokens) {
 	let canBeCommandPrefix = true;
 	for (const tk of tokens) {
 		// apply only on valid positions
 		// (start of simple commands)
-
-		// evaluate if this token could
-		// end a simple command.
-		if (tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE) {
+		if (tk._.maybeStartOfSimpleCommand) {
 			canBeCommandPrefix = true;
-			yield tk;
-			continue;
 		}
 
 		// check if it is an assignment
@@ -162,15 +173,30 @@ exports.assignmentWord = function * (tokens) {
 				isValidName(tk.TOKEN.slice(0, tk.TOKEN.indexOf('=')))
 
 			)) {
-			yield {
+			yield copyTempObject(tk, {
 				ASSIGNMENT_WORD: tk.TOKEN,
 				expansion: tk.expansion,
 				loc: tk.loc
-			};
+			});
 			continue;
 		}
 
 		canBeCommandPrefix = false;
+		yield tk;
+	}
+};
+
+exports.identifyMaybeSimpleCommands = function * (tokens) {
+	let maybeStartOfSimpleCommand = true;
+	for (const tk of tokens) {
+		tk._ = (tk._ || {});
+		tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
+
+		// evaluate if next token could start a simple command
+		maybeStartOfSimpleCommand = Boolean(
+			tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE
+		);
+
 		yield tk;
 	}
 };

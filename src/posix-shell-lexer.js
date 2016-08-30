@@ -45,6 +45,7 @@ module.exports = options => ({
 	setInput(source) {
 		const tokenize = compose(
 			// logger('end'),
+			rules.removeTempObject,
 			defaultNodeType,
 			// logger('end'),
 			// logger('end'),
@@ -59,6 +60,7 @@ module.exports = options => ({
 			rules.reservedWords,
 
 			rules.assignmentWord,
+			rules.identifyMaybeSimpleCommands,
 
 			rules.separator,
 

@@ -12,26 +12,27 @@ test('parse case', t => {
 		commands: [{
 			type: 'case',
 			clause: {
+				type: 'word',
 				text: 'foo'
 			},
 			cases: [{
 				type: 'case_item',
 				pattern: [{
+					type: 'word',
 					text: '*'
 				}],
 				body: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: 'bar'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: 'bar'}]
 					}]
 				}
 			}]
 		}]
 	};
-
-	t.is(JSON.stringify(result), JSON.stringify(expected));
+	t.deepEqual(result, expected);
 });
 /*
 test.skip('parse case with compound list', t => {

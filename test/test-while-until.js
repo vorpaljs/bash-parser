@@ -14,15 +14,15 @@ test('parse while', t => {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'true'}
+						name: {type: 'word', text: 'true'}
 					}]
 				},
 				do: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'sleep'},
-						suffix: [{text: '1'}]
+						name: {type: 'word', text: 'sleep'},
+						suffix: [{type: 'word', text: '1'}]
 					}]
 				}
 			}]
@@ -42,15 +42,15 @@ test('parse until', t => {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'true'}
+						name: {type: 'word', text: 'true'}
 					}]
 				},
 				do: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'sleep'},
-						suffix: [{text: '1'}]
+						name: {type: 'word', text: 'sleep'},
+						suffix: [{type: 'word', text: '1'}]
 					}]
 				}
 			}]

@@ -24,6 +24,7 @@ fi
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'true',
 						loc: {
 							startLine: 0,
@@ -53,6 +54,7 @@ fi
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'echo',
 						loc: {
 							startLine: 1,
@@ -68,6 +70,7 @@ fi
 						endColumn: 6
 					},
 					suffix: [{
+						type: 'word',
 						text: '1',
 						loc: {
 							startLine: 1,
@@ -93,6 +96,7 @@ fi
 					{
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: 'false',
 							loc: {
 								startLine: 2,
@@ -122,6 +126,7 @@ fi
 					{
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: 'echo',
 							loc: {
 								startLine: 3,
@@ -137,6 +142,7 @@ fi
 							endColumn: 6
 						},
 						suffix: [{
+							type: 'word',
 							text: '3',
 							loc: {
 								startLine: 3,
@@ -160,6 +166,7 @@ fi
 					{
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: 'echo',
 							loc: {
 								startLine: 5,
@@ -175,6 +182,7 @@ fi
 							endColumn: 6
 						},
 						suffix: [{
+							type: 'word',
 							text: '2',
 							loc: {
 								startLine: 5,

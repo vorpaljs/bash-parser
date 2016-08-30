@@ -15,6 +15,7 @@ esac
 	const expected = {
 		type: 'case',
 		clause: {
+			type: 'word',
 			text: 'foo',
 			loc: {
 				startLine: 0,
@@ -28,6 +29,7 @@ esac
 				type: 'case_item',
 				pattern: [
 					{
+						type: 'word',
 						text: '*',
 						loc: {
 							startLine: 1,
@@ -43,6 +45,7 @@ esac
 						{
 							type: 'simple_command',
 							name: {
+								type: 'word',
 								text: 'echo',
 								loc: {
 									startLine: 2,
@@ -58,6 +61,7 @@ esac
 								endColumn: 9
 							},
 							suffix: [{
+								type: 'word',
 								text: 'bar',
 								loc: {
 									startLine: 2,

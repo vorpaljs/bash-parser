@@ -11,6 +11,7 @@ test('positional parameter with word following', t => {
 	//
 
 	t.deepEqual(result, [{
+		type: 'assignment_word',
 		text: 'echoword=$1ciao',
 		expansion: [{
 			kind: 'positional',
@@ -28,8 +29,9 @@ test('positional parameter in braces', t => {
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: ''},
+				name: {type: 'word', text: ''},
 				prefix: [{
+					type: 'assignment_word',
 					text: 'echoword=${11}test',
 					expansion: [{
 						parameter: 11,
@@ -50,8 +52,9 @@ test('positional parameter without braces', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$1',
 				expansion: [{
 					parameter: 1,
@@ -71,8 +74,9 @@ test('positional parameter without braces allow one digit only', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$11',
 				expansion: [{
 					parameter: 1,

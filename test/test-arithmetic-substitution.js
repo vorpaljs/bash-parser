@@ -10,6 +10,7 @@ test('arithmetic substitution', t => {
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
 	t.deepEqual(result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
+		type: 'assignment_word',
 		expansion: [{
 			expression: '42 + 43',
 			kind: 'arithmetic',
@@ -25,6 +26,7 @@ test('arithmetic & parameter substitution', t => {
 	// utils.logResults(result.commands[0].prefix[0]);
 	t.deepEqual(result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43)) $ciao',
+		type: 'assignment_word',
 		expansion: [{
 			parameter: 'ciao',
 			start: 22,
@@ -42,6 +44,7 @@ test('arithmetic substitution in suffix', t => {
 	const result = bashParser('echo $((42 + 43))');
 	delete result.commands[0].suffix[0].expansion[0].arithmeticAST;
 	t.deepEqual(result.commands[0].suffix[0], {
+		type: 'word',
 		text: '$((42 + 43))',
 		expansion: [{
 			expression: '42 + 43',

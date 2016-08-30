@@ -12,6 +12,7 @@ test('syntax error contains line number', async t => {
 test('AST can include loc', t => {
 	const result = bashParser('echo', {insertLOC: true});
 	t.deepEqual(result.commands[0].name, {
+		type: 'word',
 		text: 'echo',
 		loc: mkloc(0, 0, 0, 3)
 	});
@@ -27,6 +28,7 @@ test('double command with only name', t => {
 			{
 				type: 'simple_command',
 				name: {
+					type: 'word',
 					text: 'echo',
 					loc: mkloc(0, 0, 0, 3)
 				},
@@ -35,6 +37,7 @@ test('double command with only name', t => {
 			{
 				type: 'simple_command',
 				name: {
+					type: 'word',
 					text: 'ciao',
 					loc: mkloc(0, 6, 0, 9)
 				},
@@ -50,11 +53,13 @@ test('loc are composed by all tokens', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 6),
 		suffix: [{
+			type: 'word',
 			text: '42',
 			loc: mkloc(0, 5, 0, 6)
 		}]

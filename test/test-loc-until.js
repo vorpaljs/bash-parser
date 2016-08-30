@@ -19,6 +19,7 @@ test('loc in until statement', t => {
 					left: {
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: 'true',
 							loc: {
 								startLine: 0,
@@ -37,6 +38,7 @@ test('loc in until statement', t => {
 					right: {
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: '1',
 							loc: {
 								startLine: 0,
@@ -73,6 +75,7 @@ test('loc in until statement', t => {
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'sleep',
 						loc: {
 							startLine: 0,
@@ -88,6 +91,7 @@ test('loc in until statement', t => {
 						endColumn: 26
 					},
 					suffix: [{
+						type: 'word',
 						text: '1',
 						loc: {
 							startLine: 0,
@@ -100,6 +104,7 @@ test('loc in until statement', t => {
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'echo',
 						loc: {
 							startLine: 0,
@@ -115,6 +120,7 @@ test('loc in until statement', t => {
 						endColumn: 36
 					},
 					suffix: [{
+						type: 'word',
 						text: 'ciao',
 						loc: {
 							startLine: 0,

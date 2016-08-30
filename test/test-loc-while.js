@@ -17,6 +17,7 @@ test('loc in while statement', t => {
 					left: {
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: 'true',
 							loc: {
 								startLine: 0,
@@ -35,6 +36,7 @@ test('loc in while statement', t => {
 					right: {
 						type: 'simple_command',
 						name: {
+							type: 'word',
 							text: '1',
 							loc: {
 								startLine: 0,
@@ -71,6 +73,7 @@ test('loc in while statement', t => {
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'sleep',
 						loc: {
 							startLine: 0,
@@ -86,6 +89,7 @@ test('loc in while statement', t => {
 						endColumn: 26
 					},
 					suffix: [{
+						type: 'word',
 						text: '1',
 						loc: {
 							startLine: 0,
@@ -98,6 +102,7 @@ test('loc in while statement', t => {
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'echo',
 						loc: {
 							startLine: 0,
@@ -113,6 +118,7 @@ test('loc in while statement', t => {
 						endColumn: 36
 					},
 					suffix: [{
+						type: 'word',
 						text: 'ciao',
 						loc: {
 							startLine: 0,

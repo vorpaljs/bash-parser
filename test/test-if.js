@@ -16,15 +16,15 @@ test('parse if', t => {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'true'}
+						name: {type: 'word', text: 'true'}
 					}]
 				},
 				then: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '1'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '1'}]
 					}]
 				}
 			}]
@@ -44,23 +44,23 @@ test('parse if else', t => {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'true'}
+						name: {type: 'word', text: 'true'}
 					}]
 				},
 				then: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '1'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '1'}]
 					}]
 				},
 				else: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '2'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '2'}]
 					}]
 				}
 			}]
@@ -80,23 +80,23 @@ test('parse if else multiline', t => {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'true'}
+						name: {type: 'word', text: 'true'}
 					}]
 				},
 				then: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '1'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '1'}]
 					}]
 				},
 				else: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '2'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '2'}]
 					}]
 				}
 			}]
@@ -115,15 +115,15 @@ test('parse if elif else', t => {
 				type: 'compound_list',
 				commands: [{
 					type: 'simple_command',
-					name: {text: 'true'}
+					name: {type: 'word', text: 'true'}
 				}]
 			},
 			then: {
 				type: 'compound_list',
 				commands: [{
 					type: 'simple_command',
-					name: {text: 'echo'},
-					suffix: [{text: '1'}]
+					name: {type: 'word', text: 'echo'},
+					suffix: [{type: 'word', text: '1'}]
 				}]
 			},
 			else: {
@@ -132,23 +132,23 @@ test('parse if elif else', t => {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'false'}
+						name: {type: 'word', text: 'false'}
 					}]
 				},
 				then: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '3'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '3'}]
 					}]
 				},
 				else: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'echo'},
-						suffix: [{text: '2'}]
+						name: {type: 'word', text: 'echo'},
+						suffix: [{type: 'word', text: '2'}]
 					}]
 				}
 			}

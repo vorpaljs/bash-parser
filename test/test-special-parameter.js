@@ -9,8 +9,9 @@ test('positional list paramter', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$@',
 				expansion: [{
 					parameter: '@',
@@ -29,8 +30,9 @@ test('positional string paramter', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$*',
 				expansion: [{
 					parameter: '*',
@@ -49,8 +51,9 @@ test('positional count paramter', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$#',
 				expansion: [{
 					parameter: '#',
@@ -69,8 +72,9 @@ test('last exit status', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$?',
 				expansion: [{
 					parameter: '?',
@@ -89,8 +93,9 @@ test('current option flags', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$-',
 				expansion: [{
 					parameter: '-',
@@ -109,8 +114,9 @@ test('shell process id', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$$',
 				expansion: [{
 					parameter: '$',
@@ -129,8 +135,9 @@ test('last background pid', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$!',
 				expansion: [{
 					parameter: '!',
@@ -149,8 +156,9 @@ test('shell script name', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
+			name: {type: 'word', text: ''},
 			prefix: [{
+				type: 'assignment_word',
 				text: 'echoword=$0',
 				expansion: [{
 					parameter: '0',

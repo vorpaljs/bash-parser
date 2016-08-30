@@ -10,14 +10,17 @@ test('simple command with prefixes and name', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 8, 0, 11)
 		},
 		loc: mkloc(0, 0, 0, 11),
 		prefix: [{
+			type: 'assignment_word',
 			text: 'a=1',
 			loc: mkloc(0, 0, 0, 2)
 		}, {
+			type: 'assignment_word',
 			text: 'b=2',
 			loc: mkloc(0, 4, 0, 6)
 		}]
@@ -29,6 +32,7 @@ test('simple command with only name', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 0, 0, 3)
 		},
@@ -44,6 +48,7 @@ test('simple command with pipeline', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {
+				type: 'word',
 				text: 'echo',
 				loc: mkloc(0, 0, 0, 3)
 			},
@@ -51,6 +56,7 @@ test('simple command with pipeline', t => {
 		}, {
 			type: 'simple_command',
 			name: {
+				type: 'word',
 				text: 'grep',
 				loc: mkloc(0, 7, 0, 10)
 			},
@@ -65,14 +71,17 @@ test('simple command with suffixes', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 9),
 		suffix: [{
+			type: 'word',
 			text: '42',
 			loc: mkloc(0, 5, 0, 6)
 		}, {
+			type: 'word',
 			text: '43',
 			loc: mkloc(0, 8, 0, 9)
 		}]
@@ -84,6 +93,7 @@ test('simple command with IO redirection', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 0, 0, 3)
 		},
@@ -95,6 +105,7 @@ test('simple command with IO redirection', t => {
 				loc: mkloc(0, 5, 0, 5)
 			},
 			file: {
+				type: 'word',
 				text: '43',
 				loc: mkloc(0, 7, 0, 8)
 			},
@@ -108,6 +119,7 @@ test('simple command with numbered IO redirection', t => {
 	const expected = {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 0, 0, 3)
 		},
@@ -119,6 +131,7 @@ test('simple command with numbered IO redirection', t => {
 				loc: mkloc(0, 6, 0, 6)
 			},
 			file: {
+				type: 'word',
 				text: '43',
 				loc: mkloc(0, 8, 0, 9)
 			},
@@ -139,21 +152,26 @@ test('simple command with suffixes & prefixes', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
+			type: 'word',
 			text: 'echo',
 			loc: mkloc(0, 8, 0, 11)
 		},
 		loc: mkloc(0, 0, 0, 17),
 		prefix: [{
+			type: 'assignment_word',
 			text: 'a=1',
 			loc: mkloc(0, 0, 0, 2)
 		}, {
+			type: 'assignment_word',
 			text: 'b=2',
 			loc: mkloc(0, 4, 0, 6)
 		}],
 		suffix: [{
+			type: 'word',
 			text: '42',
 			loc: mkloc(0, 13, 0, 14)
 		}, {
+			type: 'word',
 			text: '43',
 			loc: mkloc(0, 16, 0, 17)
 		}]

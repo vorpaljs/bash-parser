@@ -10,13 +10,13 @@ test('parse function declaration multiple lines', t => {
 			type: 'complete_command',
 			commands: [{
 				type: 'function',
-				name: {text: 'foo'},
+				name: {type: 'name', text: 'foo'},
 				body: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'command'},
-						suffix: [{text: 'bar'}, {text: '--lol'}]
+						name: {type: 'word', text: 'command'},
+						suffix: [{type: 'word', text: 'bar'}, {type: 'word', text: '--lol'}]
 					}]
 				}
 			}]
@@ -32,13 +32,13 @@ test('parse function declaration', t => {
 			type: 'complete_command',
 			commands: [{
 				type: 'function',
-				name: {text: 'foo'},
+				name: {type: 'name', text: 'foo'},
 				body: {
 					type: 'compound_list',
 					commands: [{
 						type: 'simple_command',
-						name: {text: 'command'},
-						suffix: [{text: 'bar'}, {text: '--lol'}]
+						name: {type: 'word', text: 'command'},
+						suffix: [{type: 'word', text: 'bar'}, {type: 'word', text: '--lol'}]
 					}]
 				}
 			}]

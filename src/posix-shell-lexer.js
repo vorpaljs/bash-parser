@@ -6,6 +6,7 @@ const rules = require('./tokenization-rules');
 const parameterExpansion = require('./parameter-expansion');
 const commandExpansion = require('./command-expansion');
 const arithmeticExpansion = require('./arithmetic-expansion');
+const defaultNodeType = require('./default-node-type');
 // const logger = require('./logger-iterator');
 
 module.exports = options => ({
@@ -26,6 +27,10 @@ module.exports = options => ({
 			this.yytext.expansion = tk.expansion;
 		}
 
+		if (tk.type) {
+			this.yytext.type = tk.type;
+		}
+
 		if (options.insertLOC && tk.loc) {
 			this.yytext.loc = tk.loc;
 		}
@@ -39,6 +44,9 @@ module.exports = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
+			// logger('end'),
+			defaultNodeType,
+			// logger('end'),
 			// logger('end'),
 			rules.functionName,
 			rules.ioNumber,

@@ -12,8 +12,9 @@ test('command substitution', t => {
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: ''},
+				name: {type: 'word', text: ''},
 				prefix: [{
+					type: 'assignment_word',
 					text: 'variable=$(echo ciao)',
 					expansion: [{
 						command: 'echo ciao',
@@ -35,8 +36,9 @@ test('command substitution in suffix', t => {
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: 'echo'},
+				name: {type: 'word', text: 'echo'},
 				suffix: [{
+					type: 'word',
 					text: '$(ciao)',
 					expansion: [{
 						command: 'ciao',
@@ -59,8 +61,9 @@ test('command substitution in suffix with backticks', t => {
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: 'echo'},
+				name: {type: 'word', text: 'echo'},
 				suffix: [{
+					type: 'word',
 					text: '`ciao`',
 					expansion: [{
 						command: 'ciao',
@@ -83,8 +86,8 @@ test('command ast is recursively parsed', t => {
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: 'echo'},
-				suffix: [{text: 'ciao'}]
+				name: {type: 'word', text: 'echo'},
+				suffix: [{type: 'word', text: 'ciao'}]
 			}
 		]
 	});
@@ -99,8 +102,9 @@ test('command substitution with backticks', t => {
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: ''},
+				name: {type: 'word', text: ''},
 				prefix: [{
+					type: 'assignment_word',
 					text: 'variable=`echo ciao`',
 					expansion: [{
 						command: 'echo ciao',
@@ -123,8 +127,9 @@ test('quoted backtick are removed within command substitution with backticks', t
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: ''},
+				name: {type: 'word', text: ''},
 				prefix: [{
+					type: 'assignment_word',
 					text: 'variable=`echo \\`echo ciao\\``',
 					expansion: [{
 						command: 'echo `echo ciao`',
@@ -141,14 +146,15 @@ test('quoted backtick are removed within command substitution with backticks', t
 test('quoted backtick are not removed within command substitution with parenthesis', t => {
 	const result = bashParser('variable=$(echo \\`echo ciao\\`)');
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
-
+	// utils.logResults(result);
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [
 			{
 				type: 'simple_command',
-				name: {text: ''},
+				name: {type: 'word', text: ''},
 				prefix: [{
+					type: 'assignment_word',
 					text: 'variable=$(echo \\`echo ciao\\`)',
 					expansion: [{
 						command: 'echo \\`echo ciao\\`',

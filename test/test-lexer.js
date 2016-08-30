@@ -8,11 +8,16 @@ function tokenize(text, rawTokens) {
 	const results = [];
 	let token = lexer.lex();
 	while (token !== 'EOF') {
+		delete token.type;
+
 		if (rawTokens) {
-			results.push({token, value: JSON.parse(JSON.stringify(lexer.yytext))});
+			const value = JSON.parse(JSON.stringify(lexer.yytext));
+			delete value.type;
+			results.push({token, value});
 		} else {
 			const value = lexer.yytext.text || lexer.yytext;
 			const expansion = lexer.expansion;
+			delete value.type;
 			if (expansion) {
 				results.push({token, value, expansion});
 			} else {

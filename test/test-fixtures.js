@@ -40,9 +40,9 @@ test('3', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'read'},
-			prefix: [{text: 'IFS='}],
-			suffix: [{text: '-r'}, {text: 'var'}]
+			name: {type: 'word', text: 'read'},
+			prefix: [{type: 'assignment_word', text: 'IFS='}],
+			suffix: [{type: 'word', text: '-r'}, {type: 'word', text: 'var'}]
 		}]
 	});
 });
@@ -57,12 +57,12 @@ test('4', t => {
 			type: 'pipeline',
 			commands: [{
 				type: 'simple_command',
-				name: {text: 'foo'}
+				name: {type: 'word', text: 'foo'}
 			}, {
 				type: 'simple_command',
-				name: {text: 'read'},
-				prefix: [{text: 'IFS='}],
-				suffix: [{text: 'var'}]
+				name: {type: 'word', text: 'read'},
+				prefix: [{type: 'assignment_word', text: 'IFS='}],
+				suffix: [{type: 'word', text: 'var'}]
 			}]
 		}]
 	});
@@ -80,16 +80,16 @@ eval "dest=foo"`
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: ''},
-			prefix: [{text: 'foo=\'hello ; rm -rf /\''}]
+			name: {type: 'word', text: ''},
+			prefix: [{type: 'assignment_word', text: 'foo=\'hello ; rm -rf /\''}]
 		}, {
 			type: 'simple_command',
-			name: {text: ''},
-			prefix: [{text: 'dest=bar'}]
+			name: {type: 'word', text: ''},
+			prefix: [{type: 'assignment_word', text: 'dest=bar'}]
 		}, {
 			type: 'simple_command',
-			name: {text: 'eval'},
-			suffix: [{text: '"dest=foo"'}]
+			name: {type: 'word', text: 'eval'},
+			suffix: [{type: 'word', text: '"dest=foo"'}]
 		}]
 	});
 });

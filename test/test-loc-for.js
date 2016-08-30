@@ -19,6 +19,7 @@ done
 			endColumn: 3
 		},
 		name: {
+			type: 'name',
 			text: 'x',
 			loc: {
 				startLine: 0,
@@ -29,6 +30,7 @@ done
 		},
 		wordlist: [
 			{
+				type: 'word',
 				text: 'a',
 				loc: {
 					startLine: 0,
@@ -38,6 +40,7 @@ done
 				}
 			},
 			{
+				type: 'word',
 				text: 'b',
 				loc: {
 					startLine: 0,
@@ -47,6 +50,7 @@ done
 				}
 			},
 			{
+				type: 'word',
 				text: 'c',
 				loc: {
 					startLine: 0,
@@ -62,6 +66,7 @@ done
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'echo',
 						loc: {
 							startLine: 1,
@@ -77,6 +82,7 @@ done
 						endColumn: 7
 					},
 					suffix: [{
+						type: 'word',
 						text: '$x',
 						expansion: [
 							{

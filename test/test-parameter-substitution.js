@@ -5,6 +5,7 @@ const bashParser = require('../src');
 test('parameter substitution in assignment', t => {
 	const result = bashParser('echoword=${other}test');
 	t.deepEqual(result.commands[0].prefix, [{
+		type: 'assignment_word',
 		text: 'echoword=${other}test',
 		expansion: [{
 			parameter: 'other',
@@ -17,6 +18,7 @@ test('parameter substitution in assignment', t => {
 test('multi-word parameter substitution', t => {
 	const result = bashParser('echoword=${other word}test');
 	t.deepEqual(result.commands[0].prefix, [{
+		type: 'assignment_word',
 		text: 'echoword=${other word}test',
 		expansion: [{
 			parameter: 'other word',
@@ -29,6 +31,7 @@ test('multi-word parameter substitution', t => {
 test('parameter substitution', t => {
 	const result = bashParser('echo word${other}test');
 	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
 		text: 'word${other}test',
 		expansion: [{
 			parameter: 'other',
@@ -41,6 +44,7 @@ test('parameter substitution', t => {
 test('multiple parameter substitution', t => {
 	const result = bashParser('echo word${other}t$est');
 	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
 		text: 'word${other}t$est',
 		expansion: [{
 			parameter: 'other',
@@ -58,6 +62,7 @@ test('multiple parameter substitution', t => {
 test('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
 	t.deepEqual(result.commands[0].name, {
+		type: 'word',
 		text: '$other',
 		expansion: [{
 			parameter: 'other',
@@ -72,6 +77,7 @@ test('invalid name paramter substitution', t => {
 	// console.log(JSON.stringify(result, null, 5))
 
 	t.deepEqual(result.commands[0].name, {
+		type: 'word',
 		text: '$(other'
 	});
 });
@@ -80,6 +86,7 @@ test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
 	// console.log(JSON.stringify(result, null, 5))
 	t.deepEqual(result.commands[0].name, {
+		type: 'word',
 		text: '${other:-default_value}',
 		expansion: [{
 			parameter: 'other',
@@ -96,6 +103,7 @@ test('parameter with use default value', t => {
 test('parameter with assign default value', t => {
 	const result = bashParser('${other:=default_value}');
 	t.deepEqual(result.commands[0].name, {
+		type: 'word',
 		text: '${other:=default_value}',
 		expansion: [{
 			parameter: 'other',
@@ -112,6 +120,7 @@ test('parameter with assign default value', t => {
 test('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
 	t.deepEqual(result.commands[0].name, {
+		type: 'word',
 		text: '${other:=default$value}',
 		expansion: [{
 			parameter: 'other',
@@ -134,6 +143,7 @@ test('parameter with indicate error if null', t => {
 	const result = bashParser('${other:?default_value}');
 	t.deepEqual(result.commands[0].name, {
 		text: '${other:?default_value}',
+		type: 'word',
 		expansion: [{
 			parameter: 'other',
 			word: {
@@ -150,6 +160,7 @@ test('parameter with use alternative value', t => {
 	const result = bashParser('${other:+default_value}');
 	t.deepEqual(result.commands[0].name, {
 		text: '${other:+default_value}',
+		type: 'word',
 		expansion: [{
 			parameter: 'other',
 			word: {

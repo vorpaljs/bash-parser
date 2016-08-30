@@ -10,8 +10,8 @@ test('command with one argument', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'echo'},
-			suffix: [{text: 'world'}]
+			name: {type: 'word', text: 'echo'},
+			suffix: [{type: 'word', text: 'world'}]
 		}]
 	});
 });
@@ -22,8 +22,8 @@ test('command with pre-assignment', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'run'},
-			prefix: [{text: 'TEST=1'}]
+			name: {type: 'word', text: 'run'},
+			prefix: [{type: 'assignment_word', text: 'TEST=1'}]
 		}]
 	});
 });
@@ -36,8 +36,8 @@ test('commands with AND', t => {
 		commands: [{
 			type: 'and_or',
 			op: 'and',
-			left: {type: 'simple_command', name: {text: 'run'}},
-			right: {type: 'simple_command', name: {text: 'stop'}}
+			left: {type: 'simple_command', name: {type: 'word', text: 'run'}},
+			right: {type: 'simple_command', name: {type: 'word', text: 'stop'}}
 		}]
 	});
 });
@@ -50,8 +50,8 @@ test('commands with AND \\n', t => {
 		commands: [{
 			type: 'and_or',
 			op: 'and',
-			left: {type: 'simple_command', name: {text: 'run'}},
-			right: {type: 'simple_command', name: {text: 'stop'}}
+			left: {type: 'simple_command', name: {type: 'word', text: 'run'}},
+			right: {type: 'simple_command', name: {type: 'word', text: 'stop'}}
 		}]
 	});
 });
@@ -63,8 +63,8 @@ test('commands with OR', t => {
 		commands: [{
 			type: 'and_or',
 			op: 'or',
-			left: {type: 'simple_command', name: {text: 'run'}},
-			right: {type: 'simple_command', name: {text: 'cry'}}
+			left: {type: 'simple_command', name: {type: 'word', text: 'run'}},
+			right: {type: 'simple_command', name: {type: 'word', text: 'cry'}}
 		}]
 	});
 });
@@ -77,8 +77,8 @@ test('pipelines', t => {
 		commands: [{
 			type: 'pipeline',
 			commands: [
-				{type: 'simple_command', name: {text: 'run'}},
-				{type: 'simple_command', name: {text: 'cry'}}
+				{type: 'simple_command', name: {type: 'word', text: 'run'}},
+				{type: 'simple_command', name: {type: 'word', text: 'cry'}}
 			]
 		}]
 	});
@@ -90,8 +90,8 @@ test('no pre-assignment on suffix', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'echo'},
-			suffix: [{text: 'TEST=1'}]
+			name: {type: 'word', text: 'echo'},
+			suffix: [{type: 'word', text: 'TEST=1'}]
 		}]
 	});
 });
@@ -102,9 +102,12 @@ test('command with multiple prefixes', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'echo'},
-			prefix: [{text: 'TEST1=1'}, {text: 'TEST2=2'}],
-			suffix: [{text: 'world'}]
+			name: {type: 'word', text: 'echo'},
+			prefix: [
+				{type: 'assignment_word', text: 'TEST1=1'},
+				{type: 'assignment_word', text: 'TEST2=2'}
+			],
+			suffix: [{type: 'word', text: 'world'}]
 		}]
 	});
 });
@@ -115,10 +118,10 @@ test('multi line commands', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'echo'}
+			name: {type: 'word', text: 'echo'}
 		}, {
 			type: 'simple_command',
-			name: {text: 'ls'}
+			name: {type: 'word', text: 'ls'}
 		}]
 	});
 });
@@ -129,11 +132,11 @@ test('command with redirection to file', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'ls'},
+			name: {type: 'word', text: 'ls'},
 			suffix: [{
 				type: 'io_redirect',
 				op: {text: '>'},
-				file: {text: 'file.txt'}
+				file: {type: 'word', text: 'file.txt'}
 			}]
 		}]
 	});
@@ -146,8 +149,8 @@ test('parse multiple suffix', t => {
 			type: 'complete_command',
 			commands: [{
 				type: 'simple_command',
-				name: {text: 'command'},
-				suffix: [{text: 'foo'}, {text: '--lol'}]
+				name: {type: 'word', text: 'command'},
+				suffix: [{type: 'word', text: 'foo'}, {type: 'word', text: '--lol'}]
 			}]
 		}
 	);
@@ -159,11 +162,11 @@ test('command with stderr redirection to file', t => {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {text: 'ls'},
+			name: {type: 'word', text: 'ls'},
 			suffix: [{
 				type: 'io_redirect',
 				op: {text: '>'},
-				file: {text: 'file.txt'},
+				file: {type: 'word', text: 'file.txt'},
 				numberIo: {text: '2'}
 			}]
 		}]
@@ -178,7 +181,7 @@ test('parse subshell', t => {
 			type: 'subshell',
 			list: {
 				type: 'compound_list',
-				commands: [{type: 'simple_command', name: {text: 'ls'}}]
+				commands: [{type: 'simple_command', name: {type: 'word', text: 'ls'}}]
 			}
 		}]
 	});

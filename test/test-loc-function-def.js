@@ -19,6 +19,7 @@ test('loc in function declaration', t => {
 			endColumn: 0
 		},
 		name: {
+			type: 'name',
 			text: 'foo',
 			loc: {
 				startLine: 0,
@@ -39,6 +40,7 @@ test('loc in function declaration', t => {
 				{
 					type: 'simple_command',
 					name: {
+						type: 'word',
 						text: 'command',
 						loc: {
 							startLine: 1,
@@ -54,6 +56,7 @@ test('loc in function declaration', t => {
 						endColumn: 17
 					},
 					suffix: [{
+						type: 'word',
 						text: 'bar',
 						loc: {
 							startLine: 1,
@@ -62,6 +65,7 @@ test('loc in function declaration', t => {
 							endColumn: 11
 						}
 					}, {
+						type: 'word',
 						text: '--lol',
 						loc: {
 							startLine: 1,

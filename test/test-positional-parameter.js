@@ -10,18 +10,15 @@ test('positional parameter with word following', t => {
 	// utils.logResults(result);
 	//
 
-	t.deepEqual(result, {
-		type: 'cmd_prefix',
-		list: [{
-			text: 'echoword=$1ciao',
-			expansion: [{
-				kind: 'positional',
-				parameter: 1,
-				start: 9,
-				end: 11
-			}]
+	t.deepEqual(result, [{
+		text: 'echoword=$1ciao',
+		expansion: [{
+			kind: 'positional',
+			parameter: 1,
+			start: 9,
+			end: 11
 		}]
-	});
+	}]);
 });
 
 test('positional parameter in braces', t => {
@@ -32,18 +29,15 @@ test('positional parameter in braces', t => {
 			{
 				type: 'simple_command',
 				name: {text: ''},
-				prefix: {
-					type: 'cmd_prefix',
-					list: [{
-						text: 'echoword=${11}test',
-						expansion: [{
-							parameter: 11,
-							kind: 'positional',
-							start: 9,
-							end: 14
-						}]
+				prefix: [{
+					text: 'echoword=${11}test',
+					expansion: [{
+						parameter: 11,
+						kind: 'positional',
+						start: 9,
+						end: 14
 					}]
-				}
+				}]
 			}
 		]
 	});
@@ -57,18 +51,15 @@ test('positional parameter without braces', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: ''},
-			prefix: {
-				type: 'cmd_prefix',
-				list: [{
-					text: 'echoword=$1',
-					expansion: [{
-						parameter: 1,
-						kind: 'positional',
-						start: 9,
-						end: 11
-					}]
+			prefix: [{
+				text: 'echoword=$1',
+				expansion: [{
+					parameter: 1,
+					kind: 'positional',
+					start: 9,
+					end: 11
 				}]
-			}
+			}]
 		}]
 	});
 });
@@ -81,18 +72,15 @@ test('positional parameter without braces allow one digit only', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: ''},
-			prefix: {
-				type: 'cmd_prefix',
-				list: [{
-					text: 'echoword=$11',
-					expansion: [{
-						parameter: 1,
-						kind: 'positional',
-						start: 9,
-						end: 11
-					}]
+			prefix: [{
+				text: 'echoword=$11',
+				expansion: [{
+					parameter: 1,
+					kind: 'positional',
+					start: 9,
+					end: 11
 				}]
-			}
+			}]
 		}]
 	});
 });

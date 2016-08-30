@@ -85,20 +85,15 @@ test('loc in while statement', t => {
 						endLine: 0,
 						endColumn: 26
 					},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
-							{
-								text: '1',
-								loc: {
-									startLine: 0,
-									startColumn: 26,
-									endLine: 0,
-									endColumn: 26
-								}
-							}
-						]
-					}
+					suffix: [{
+						text: '1',
+						loc: {
+							startLine: 0,
+							startColumn: 26,
+							endLine: 0,
+							endColumn: 26
+						}
+					}]
 				},
 				{
 					type: 'simple_command',
@@ -117,20 +112,15 @@ test('loc in while statement', t => {
 						endLine: 0,
 						endColumn: 36
 					},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
-							{
-								text: 'ciao',
-								loc: {
-									startLine: 0,
-									startColumn: 33,
-									endLine: 0,
-									endColumn: 36
-								}
-							}
-						]
-					}
+					suffix: [{
+						text: 'ciao',
+						loc: {
+							startLine: 0,
+							startColumn: 33,
+							endLine: 0,
+							endColumn: 36
+						}
+					}]
 				}
 			],
 			loc: {

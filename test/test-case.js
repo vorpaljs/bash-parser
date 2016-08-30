@@ -24,10 +24,7 @@ test('parse case', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'echo'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{text: 'bar'}]
-						}
+						suffix: [{text: 'bar'}]
 					}]
 				}
 			}]
@@ -65,10 +62,7 @@ test.skip('parse case with compound list', t => {
 									commands: [{
 										type: 'simple_command',
 										name: {text: 'echo'},
-										suffix: {
-											type: 'cmd_suffix',
-											list: [{text: 'bar'}]
-										}
+										suffix: [{text: 'bar'}]
 									}]
 								}
 							}]

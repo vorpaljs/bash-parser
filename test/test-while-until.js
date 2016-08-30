@@ -22,10 +22,7 @@ test('parse while', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'sleep'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{text: '1'}]
-						}
+						suffix: [{text: '1'}]
 					}]
 				}
 			}]
@@ -53,10 +50,7 @@ test('parse until', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'sleep'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{text: '1'}]
-						}
+						suffix: [{text: '1'}]
 					}]
 				}
 			}]

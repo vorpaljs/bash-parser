@@ -53,29 +53,23 @@ test('loc in function declaration', t => {
 						endLine: 1,
 						endColumn: 17
 					},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
-							{
-								text: 'bar',
-								loc: {
-									startLine: 1,
-									startColumn: 9,
-									endLine: 1,
-									endColumn: 11
-								}
-							},
-							{
-								text: '--lol',
-								loc: {
-									startLine: 1,
-									startColumn: 13,
-									endLine: 1,
-									endColumn: 17
-								}
-							}
-						]
-					}
+					suffix: [{
+						text: 'bar',
+						loc: {
+							startLine: 1,
+							startColumn: 9,
+							endLine: 1,
+							endColumn: 11
+						}
+					}, {
+						text: '--lol',
+						loc: {
+							startLine: 1,
+							startColumn: 13,
+							endLine: 1,
+							endColumn: 17
+						}
+					}]
 				}
 			]
 

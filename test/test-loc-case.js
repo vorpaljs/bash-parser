@@ -57,20 +57,15 @@ esac
 								endLine: 2,
 								endColumn: 9
 							},
-							suffix: {
-								type: 'cmd_suffix',
-								list: [
-									{
-										text: 'bar',
-										loc: {
-											startLine: 2,
-											startColumn: 7,
-											endLine: 2,
-											endColumn: 9
-										}
-									}
-								]
-							}
+							suffix: [{
+								text: 'bar',
+								loc: {
+									startLine: 2,
+									startColumn: 7,
+									endLine: 2,
+									endColumn: 9
+								}
+							}]
 						}
 					],
 					loc: {

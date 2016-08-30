@@ -41,8 +41,8 @@ test('3', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'read'},
-			prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
-			suffix: {type: 'cmd_suffix', list: [{text: '-r'}, {text: 'var'}]}
+			prefix: [{text: 'IFS='}],
+			suffix: [{text: '-r'}, {text: 'var'}]
 		}]
 	});
 });
@@ -61,8 +61,8 @@ test('4', t => {
 			}, {
 				type: 'simple_command',
 				name: {text: 'read'},
-				prefix: {type: 'cmd_prefix', list: [{text: 'IFS='}]},
-				suffix: {type: 'cmd_suffix', list: [{text: 'var'}]}
+				prefix: [{text: 'IFS='}],
+				suffix: [{text: 'var'}]
 			}]
 		}]
 	});
@@ -81,24 +81,15 @@ eval "dest=foo"`
 		commands: [{
 			type: 'simple_command',
 			name: {text: ''},
-			prefix: {
-				type: 'cmd_prefix',
-				list: [{text: 'foo=\'hello ; rm -rf /\''}]
-			}
+			prefix: [{text: 'foo=\'hello ; rm -rf /\''}]
 		}, {
 			type: 'simple_command',
 			name: {text: ''},
-			prefix: {
-				type: 'cmd_prefix',
-				list: [{text: 'dest=bar'}]
-			}
+			prefix: [{text: 'dest=bar'}]
 		}, {
 			type: 'simple_command',
 			name: {text: 'eval'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [{text: '"dest=foo"'}]
-			}
+			suffix: [{text: '"dest=foo"'}]
 		}]
 	});
 });

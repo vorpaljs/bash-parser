@@ -11,12 +11,7 @@ test('command with one argument', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [
-					{text: 'world'}
-				]
-			}
+			suffix: [{text: 'world'}]
 		}]
 	});
 });
@@ -28,7 +23,7 @@ test('command with pre-assignment', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'run'},
-			prefix: {type: 'cmd_prefix', list: [{text: 'TEST=1'}]}
+			prefix: [{text: 'TEST=1'}]
 		}]
 	});
 });
@@ -96,7 +91,7 @@ test('no pre-assignment on suffix', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {type: 'cmd_suffix', list: [{text: 'TEST=1'}]}
+			suffix: [{text: 'TEST=1'}]
 		}]
 	});
 });
@@ -108,8 +103,8 @@ test('command with multiple prefixes', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			prefix: {type: 'cmd_prefix', list: [{text: 'TEST1=1'}, {text: 'TEST2=2'}]},
-			suffix: {type: 'cmd_suffix', list: [{text: 'world'}]}
+			prefix: [{text: 'TEST1=1'}, {text: 'TEST2=2'}],
+			suffix: [{text: 'world'}]
 		}]
 	});
 });
@@ -135,16 +130,11 @@ test('command with redirection to file', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'ls'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [
-					{
-						type: 'io_redirect',
-						op: {text: '>'},
-						file: {text: 'file.txt'}
-					}
-				]
-			}
+			suffix: [{
+				type: 'io_redirect',
+				op: {text: '>'},
+				file: {text: 'file.txt'}
+			}]
 		}]
 	});
 });
@@ -157,10 +147,7 @@ test('parse multiple suffix', t => {
 			commands: [{
 				type: 'simple_command',
 				name: {text: 'command'},
-				suffix: {
-					type: 'cmd_suffix',
-					list: [{text: 'foo'}, {text: '--lol'}]
-				}
+				suffix: [{text: 'foo'}, {text: '--lol'}]
 			}]
 		}
 	);
@@ -173,15 +160,12 @@ test('command with stderr redirection to file', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'ls'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [{
-					type: 'io_redirect',
-					op: {text: '>'},
-					file: {text: 'file.txt'},
-					numberIo: {text: '2'}
-				}]
-			}
+			suffix: [{
+				type: 'io_redirect',
+				op: {text: '>'},
+				file: {text: 'file.txt'},
+				numberIo: {text: '2'}
+			}]
 		}]
 	});
 });

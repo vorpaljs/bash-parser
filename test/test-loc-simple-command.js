@@ -14,16 +14,13 @@ test('simple command with prefixes and name', t => {
 			loc: mkloc(0, 8, 0, 11)
 		},
 		loc: mkloc(0, 0, 0, 11),
-		prefix: {
-			type: 'cmd_prefix',
-			list: [{
-				text: 'a=1',
-				loc: mkloc(0, 0, 0, 2)
-			}, {
-				text: 'b=2',
-				loc: mkloc(0, 4, 0, 6)
-			}]
-		}
+		prefix: [{
+			text: 'a=1',
+			loc: mkloc(0, 0, 0, 2)
+		}, {
+			text: 'b=2',
+			loc: mkloc(0, 4, 0, 6)
+		}]
 	});
 });
 
@@ -72,16 +69,13 @@ test('simple command with suffixes', t => {
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 9),
-		suffix: {
-			type: 'cmd_suffix',
-			list: [{
-				text: '42',
-				loc: mkloc(0, 5, 0, 6)
-			}, {
-				text: '43',
-				loc: mkloc(0, 8, 0, 9)
-			}]
-		}
+		suffix: [{
+			text: '42',
+			loc: mkloc(0, 5, 0, 6)
+		}, {
+			text: '43',
+			loc: mkloc(0, 8, 0, 9)
+		}]
 	});
 });
 
@@ -94,23 +88,18 @@ test('simple command with IO redirection', t => {
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 8),
-		suffix: {
-			type: 'cmd_suffix',
-			list: [
-				{
-					type: 'io_redirect',
-					op: {
-						text: '>',
-						loc: mkloc(0, 5, 0, 5)
-					},
-					file: {
-						text: '43',
-						loc: mkloc(0, 7, 0, 8)
-					},
-					loc: mkloc(0, 5, 0, 8)
-				}
-			]
-		}
+		suffix: [{
+			type: 'io_redirect',
+			op: {
+				text: '>',
+				loc: mkloc(0, 5, 0, 5)
+			},
+			file: {
+				text: '43',
+				loc: mkloc(0, 7, 0, 8)
+			},
+			loc: mkloc(0, 5, 0, 8)
+		}]
 	});
 });
 
@@ -123,27 +112,22 @@ test('simple command with numbered IO redirection', t => {
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 9),
-		suffix: {
-			type: 'cmd_suffix',
-			list: [
-				{
-					type: 'io_redirect',
-					op: {
-						text: '>',
-						loc: mkloc(0, 6, 0, 6)
-					},
-					file: {
-						text: '43',
-						loc: mkloc(0, 8, 0, 9)
-					},
-					loc: mkloc(0, 5, 0, 9),
-					numberIo: {
-						text: '2',
-						loc: mkloc(0, 5, 0, 5)
-					}
-				}
-			]
-		}
+		suffix: [{
+			type: 'io_redirect',
+			op: {
+				text: '>',
+				loc: mkloc(0, 6, 0, 6)
+			},
+			file: {
+				text: '43',
+				loc: mkloc(0, 8, 0, 9)
+			},
+			loc: mkloc(0, 5, 0, 9),
+			numberIo: {
+				text: '2',
+				loc: mkloc(0, 5, 0, 5)
+			}
+		}]
 	};
 	// console.log(json.stringify(diff(result.commands[0].left.commands[0], expected), null, 4));
 
@@ -159,25 +143,19 @@ test('simple command with suffixes & prefixes', t => {
 			loc: mkloc(0, 8, 0, 11)
 		},
 		loc: mkloc(0, 0, 0, 17),
-		prefix: {
-			type: 'cmd_prefix',
-			list: [{
-				text: 'a=1',
-				loc: mkloc(0, 0, 0, 2)
-			}, {
-				text: 'b=2',
-				loc: mkloc(0, 4, 0, 6)
-			}]
-		},
-		suffix: {
-			type: 'cmd_suffix',
-			list: [{
-				text: '42',
-				loc: mkloc(0, 13, 0, 14)
-			}, {
-				text: '43',
-				loc: mkloc(0, 16, 0, 17)
-			}]
-		}
+		prefix: [{
+			text: 'a=1',
+			loc: mkloc(0, 0, 0, 2)
+		}, {
+			text: 'b=2',
+			loc: mkloc(0, 4, 0, 6)
+		}],
+		suffix: [{
+			text: '42',
+			loc: mkloc(0, 13, 0, 14)
+		}, {
+			text: '43',
+			loc: mkloc(0, 16, 0, 17)
+		}]
 	});
 });

@@ -7,6 +7,8 @@ module.exports = options => {
 	const builder = {};
 	mkListHelper(builder, 'caseList');
 	mkListHelper(builder, 'pattern');
+	mkListHelper(builder, 'prefix');
+	mkListHelper(builder, 'suffix');
 
 	builder.caseItem = (pattern, body, locStart, locEnd) => {
 		const node = {
@@ -98,6 +100,7 @@ module.exports = options => {
 		}
 		return node;
 	};
+
 	builder.pipeSequenceAppend = (pipe, command) => {
 		pipe.commands.push(command);
 		if (options.insertLOC) {
@@ -272,7 +275,7 @@ module.exports = options => {
 		if (options.insertLOC) {
 			node.loc = {};
 			if (prefix) {
-				const firstPrefix = prefix.list[0];
+				const firstPrefix = prefix[0];
 				node.loc.startLine = firstPrefix.loc.startLine;
 				node.loc.startColumn = firstPrefix.loc.startColumn;
 			} else {
@@ -281,7 +284,7 @@ module.exports = options => {
 			}
 
 			if (suffix) {
-				const lastSuffix = suffix.list[suffix.list.length - 1];
+				const lastSuffix = suffix[suffix.length - 1];
 				node.loc.endLine = lastSuffix.loc.endLine;
 				node.loc.endColumn = lastSuffix.loc.endColumn;
 			} else {
@@ -319,23 +322,6 @@ module.exports = options => {
 		}
 		return node;
 	};
-
-	builder.suffix = item => {
-		const node = {
-			type: 'cmd_suffix',
-			list: [item]
-		};
-		return node;
-	};
-
-	builder.suffixAppend = (suffix, item) => {
-		suffix.list.push(item);
-		return suffix;
-	};
-
-	builder.prefix = item => ({type: 'cmd_prefix', list: [item]});
-	builder.prefixAppend = (prefix, item) => (prefix.list.push(item), prefix);
-	builder.filename = name => name;
 
 	/*
 	for (const methodName of Object.keys(builder)) {

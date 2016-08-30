@@ -54,15 +54,10 @@ test('loc are composed by all tokens', t => {
 			loc: mkloc(0, 0, 0, 3)
 		},
 		loc: mkloc(0, 0, 0, 6),
-		suffix: {
-			type: 'cmd_suffix',
-			list: [
-				{
-					text: '42',
-					loc: mkloc(0, 5, 0, 6)
-				}
-			]
-		}
+		suffix: [{
+			text: '42',
+			loc: mkloc(0, 5, 0, 6)
+		}]
 	}
 );
 });

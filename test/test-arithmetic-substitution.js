@@ -1,14 +1,14 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-const utils = require('./_utils');
+// const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 
 test('arithmetic substitution', t => {
 	const result = bashParser('variable=$((42 + 43))');
-	delete result.commands[0].prefix.list[0].expansion[0].arithmeticAST;
-	t.deepEqual(result.commands[0].prefix.list[0], {
+	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
+	t.deepEqual(result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
 		expansion: [{
 			expression: '42 + 43',
@@ -21,9 +21,9 @@ test('arithmetic substitution', t => {
 
 test('arithmetic & parameter substitution', t => {
 	const result = bashParser('variable=$((42 + 43)) $ciao');
-	delete result.commands[0].prefix.list[0].expansion[1].arithmeticAST;
-	utils.logResults(result.commands[0].prefix.list[0]);
-	t.deepEqual(result.commands[0].prefix.list[0], {
+	delete result.commands[0].prefix[0].expansion[1].arithmeticAST;
+	// utils.logResults(result.commands[0].prefix[0]);
+	t.deepEqual(result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43)) $ciao',
 		expansion: [{
 			parameter: 'ciao',
@@ -40,8 +40,8 @@ test('arithmetic & parameter substitution', t => {
 
 test('arithmetic substitution in suffix', t => {
 	const result = bashParser('echo $((42 + 43))');
-	delete result.commands[0].suffix.list[0].expansion[0].arithmeticAST;
-	t.deepEqual(result.commands[0].suffix.list[0], {
+	delete result.commands[0].suffix[0].expansion[0].arithmeticAST;
+	t.deepEqual(result.commands[0].suffix[0], {
 		text: '$((42 + 43))',
 		expansion: [{
 			expression: '42 + 43',
@@ -66,7 +66,7 @@ test('arithmetic substitution node applied to non expressions throws', async t =
 
 test('arithmetic ast is parsed', t => {
 	const result = bashParser('variable=$((42 + 43))')
-		.commands[0].prefix.list[0].expansion[0].arithmeticAST;
+		.commands[0].prefix[0].expansion[0].arithmeticAST;
 	// utils.logResults(result)
 	t.deepEqual(result, {
 		type: 'BinaryExpression',

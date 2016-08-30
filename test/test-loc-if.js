@@ -67,20 +67,15 @@ fi
 						endLine: 1,
 						endColumn: 6
 					},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
-							{
-								text: '1',
-								loc: {
-									startLine: 1,
-									startColumn: 6,
-									endLine: 1,
-									endColumn: 6
-								}
-							}
-						]
-					}
+					suffix: [{
+						text: '1',
+						loc: {
+							startLine: 1,
+							startColumn: 6,
+							endLine: 1,
+							endColumn: 6
+						}
+					}]
 				}
 			],
 			loc: {
@@ -141,20 +136,15 @@ fi
 							endLine: 3,
 							endColumn: 6
 						},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [
-								{
-									text: '3',
-									loc: {
-										startLine: 3,
-										startColumn: 6,
-										endLine: 3,
-										endColumn: 6
-									}
-								}
-							]
-						}
+						suffix: [{
+							text: '3',
+							loc: {
+								startLine: 3,
+								startColumn: 6,
+								endLine: 3,
+								endColumn: 6
+							}
+						}]
 					}
 				],
 				loc: {
@@ -184,20 +174,15 @@ fi
 							endLine: 5,
 							endColumn: 6
 						},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [
-								{
-									text: '2',
-									loc: {
-										startLine: 5,
-										startColumn: 6,
-										endLine: 5,
-										endColumn: 6
-									}
-								}
-							]
-						}
+						suffix: [{
+							text: '2',
+							loc: {
+								startLine: 5,
+								startColumn: 6,
+								endLine: 5,
+								endColumn: 6
+							}
+						}]
 					}
 				],
 				loc: {

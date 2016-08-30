@@ -16,7 +16,7 @@ test('parse function declaration multiple lines', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'command'},
-						suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+						suffix: [{text: 'bar'}, {text: '--lol'}]
 					}]
 				}
 			}]
@@ -38,7 +38,7 @@ test('parse function declaration', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'command'},
-						suffix: {type: 'cmd_suffix', list: [{text: 'bar'}, {text: '--lol'}]}
+						suffix: [{text: 'bar'}, {text: '--lol'}]
 					}]
 				}
 			}]

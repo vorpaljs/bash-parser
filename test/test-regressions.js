@@ -10,17 +10,14 @@ test('Redirect should be allowed immediately following argument', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [
-					{text: 'foo'},
-					{
-						type: 'io_redirect',
-						op: {text: '>'},
-						file: {text: 'file.txt'}
-					}
-				]
-			}
+			suffix: [
+				{text: 'foo'},
+				{
+					type: 'io_redirect',
+					op: {text: '>'},
+					file: {text: 'file.txt'}
+				}
+			]
 		}]
 	});
 });
@@ -32,12 +29,7 @@ test('Equal sign should be allowed in arguments', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [
-					{text: 'foo=bar'}
-				]
-			}
+			suffix: [{text: 'foo=bar'}]
 		}]
 	});
 });

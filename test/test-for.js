@@ -16,17 +16,14 @@ test('parse for', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'echo'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{
-								text: '$x',
-								expansion: [{
-									parameter: 'x',
-									start: 0,
-									end: 2
-								}]
+						suffix: [{
+							text: '$x',
+							expansion: [{
+								parameter: 'x',
+								start: 0,
+								end: 2
 							}]
-						}
+						}]
 					}]
 				}
 			}]
@@ -47,17 +44,14 @@ test('parse for with default sequence', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'echo'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{
-								text: '$x',
-								expansion: [{
-									parameter: 'x',
-									start: 0,
-									end: 2
-								}]
+						suffix: [{
+							text: '$x',
+							expansion: [{
+								parameter: 'x',
+								start: 0,
+								end: 2
 							}]
-						}
+						}]
 					}]
 				}
 			}]
@@ -79,17 +73,14 @@ test('parse for with default sequence - on one line', t => {
 					commands: [{
 						type: 'simple_command',
 						name: {text: 'echo'},
-						suffix: {
-							type: 'cmd_suffix',
-							list: [{
-								text: '$x',
-								expansion: [{
-									parameter: 'x',
-									start: 0,
-									end: 2
-								}]
+						suffix: [{
+							text: '$x',
+							expansion: [{
+								parameter: 'x',
+								start: 0,
+								end: 2
 							}]
-						}
+						}]
 					}]
 				}
 			}]

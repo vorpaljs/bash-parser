@@ -76,27 +76,22 @@ done
 						endLine: 1,
 						endColumn: 7
 					},
-					suffix: {
-						type: 'cmd_suffix',
-						list: [
+					suffix: [{
+						text: '$x',
+						expansion: [
 							{
-								text: '$x',
-								expansion: [
-									{
-										parameter: 'x',
-										start: 0,
-										end: 2
-									}
-								],
-								loc: {
-									startLine: 1,
-									startColumn: 6,
-									endLine: 1,
-									endColumn: 7
-								}
+								parameter: 'x',
+								start: 0,
+								end: 2
 							}
-						]
-					}
+						],
+						loc: {
+							startLine: 1,
+							startColumn: 6,
+							endLine: 1,
+							endColumn: 7
+						}
+					}]
 				}
 			],
 			loc: {

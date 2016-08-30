@@ -10,10 +10,7 @@ test('quotes within double quotes', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [{text: '"TEST1 \'TEST2"'}]
-			}
+			suffix: [{text: '"TEST1 \'TEST2"'}]
 		}]
 	});
 });
@@ -25,10 +22,7 @@ test('escaped double quotes within double quotes', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [{text: '"TEST1 "TEST2"'}]
-			}
+			suffix: [{text: '"TEST1 "TEST2"'}]
 		}]
 	});
 });
@@ -41,10 +35,7 @@ test('double quotes within single quotes', t => {
 		commands: [{
 			type: 'simple_command',
 			name: {text: 'echo'},
-			suffix: {
-				type: 'cmd_suffix',
-				list: [{text: '\'TEST1 "TEST2\''}]
-			}
+			suffix: [{text: '\'TEST1 "TEST2\''}]
 		}]
 	});
 });

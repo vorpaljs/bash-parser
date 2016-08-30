@@ -255,9 +255,65 @@ Each AST node has a `type` property that define the type of the node.
 
 # arithmetic_expansion
 
+> Represent an arithmetic expansion operation to perform in the word.
+
+> The parsing of the arithmetic expression is done using [Babel parser](https://github.com/babel/babylon). See there for the `arithmeticAST` node specification.
+
+> The `start` property contains the index of the character in the word text where the substitution starts. The end property contains the index of the character in the word following the last one of the substitution. These two values are choosen to simplify the replacement in the string using the `slice` String method.
+
+> `word.text.slice(0, exp.start) + value +  word.text.slice(exp.end)`
+
+```js
+{
+	type: 'arithmetic_expansion',
+	expression: String,
+	arithmeticAST: Object,
+	start:Number,
+	end:Number
+}
+```
+
 # command_expansion
 
+
+> Represent a command substitution operation to perform on the word.
+
+> The parsing of the command is done recursively using `bash-parser` itself.
+
+> The `start` property contains the index of the character in the word text where the substitution starts. The end property contains the index of the character in the word following the last one of the substitution. These two values are choosen to simplify the replacement in the string using the `slice` String method.
+
+> `word.text.slice(0, exp.start) + value +  word.text.slice(exp.end)`
+
+```js
+{
+	type: 'command_expansion',
+	command: String,
+	commandAST: Object,
+	start:Number,
+	end:Number
+}
+```
+
 # parameter_expansion
+
+> Represent a parameter expansion operation to perform on the word.
+
+> The `op` and `word` properties represents, in case of special parameters, respectively the operator used and the right word of the special parameter.
+
+> The `start` property contains the index of the character in the word text where the substitution starts. The end property contains the index of the character in the word following the last one of the substitution. These two values are choosen to simplify the replacement in the string using the `slice` String method.
+
+> `word.text.slice(0, exp.start) + value +  word.text.slice(exp.end)`
+
+```js
+{
+	type: 'parameter_expansion',
+	parameter: String,
+	word: word,
+	op: String,
+	start:Number,
+	end:Number
+}
+```
 
 # io_redirect
 

@@ -17,16 +17,16 @@ const AstTypes = [
 	'subshell',
 	'case',
 	'case_item',
-	'simple_command',
-	'function'/* ,
 	'if',
-	'while',
+	'simple_command',
+	'function',
 	'until',
-	'assignment_word',
 	'arithmetic_expansion',
 	'command_expansion',
 	'parameter_expansion',
-	'io_redirect'*/
+	'assignment_word',
+	'while',
+	'io_redirect'
 ];
 
 const visitor = arg => ({

@@ -24,6 +24,27 @@ function visit(node, context, visitor) {
 let traverseNode;
 
 const DescendVisitor = {
+
+	assignment_word(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.expansion.map(traverse);
+	},
+
+	arithmetic_expansion(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.expansion.map(traverse);
+	},
+
+	command_expansion(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.expansion.map(traverse);
+	},
+
+	parameter_expansion(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.expansion.map(traverse);
+	},
+
 	complete_command(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return node.commands.map(traverse);
@@ -43,6 +64,11 @@ const DescendVisitor = {
 		}
 		const traverse = traverseNode(node, ast, visitor);
 		return node.body.map(traverse);
+	},
+
+	io_redirect(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return traverse(node.file);
 	},
 
 	and_or(node, parent, ast, visitor) {
@@ -65,6 +91,33 @@ const DescendVisitor = {
 		return node.pattern.map(traverse).concat(
 			node.body.map(traverse)
 		);
+	},
+
+	if(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.clause.map(traverse)
+			.concat(
+				node.then.map(traverse)
+			)
+			.concat(
+				node.else.map(traverse)
+			);
+	},
+
+	while(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.clause.map(traverse)
+			.concat(
+				node.do.map(traverse)
+			);
+	},
+
+	until(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.clause.map(traverse)
+			.concat(
+				node.do.map(traverse)
+			);
 	},
 
 	simple_command(node, parent, ast, visitor) {

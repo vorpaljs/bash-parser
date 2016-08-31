@@ -25,14 +25,24 @@ let traverseNode;
 
 const DescendVisitor = {
 	complete_command(node, parent, ast, visitor) {
-		return node.commands.map(traverseNode(node, ast, visitor));
+		const traverse = traverseNode(node, ast, visitor);
+		return node.commands.map(traverse);
 	},
 
 	word(node, parent, ast, visitor) {
 		if (!node.expansion) {
 			return null;
 		}
-		return node.expansion.map(traverseNode(node, ast, visitor));
+		const traverse = traverseNode(node, ast, visitor);
+		return node.expansion.map(traverse);
+	},
+
+	function(node, parent, ast, visitor) {
+		if (!node.body) {
+			return null;
+		}
+		const traverse = traverseNode(node, ast, visitor);
+		return node.body.map(traverse);
 	},
 
 	and_or(node, parent, ast, visitor) {
@@ -41,6 +51,20 @@ const DescendVisitor = {
 			traverse(node.left),
 			traverse(node.right)
 		];
+	},
+
+	case(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.cases
+			.map(traverse)
+			.concat(traverse(node.clause));
+	},
+
+	case_item(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return node.pattern.map(traverse).concat(
+			node.body.map(traverse)
+		);
 	},
 
 	simple_command(node, parent, ast, visitor) {
@@ -53,6 +77,14 @@ const DescendVisitor = {
 
 	pipeline(node, parent, ast, visitor) {
 		return node.commands.map(traverseNode(node, ast, visitor));
+	},
+
+	compound_list(node, parent, ast, visitor) {
+		return node.commands.map(traverseNode(node, ast, visitor));
+	},
+
+	subshell(node, parent, ast, visitor) {
+		return node.list.map(traverseNode(node, ast, visitor));
 	}
 };
 

@@ -10,7 +10,9 @@
  */
 function visit(node, context, visitor) {
 	if (Array.isArray(visitor)) {
-		return visitor.map(v => visit(node, context, v));
+		return visitor
+			.map(v => visit(node, context, v))
+			.filter(v => v !== null && v !== undefined);
 	}
 
 	const method = visitor[node.type];
@@ -25,13 +27,40 @@ const DescendVisitor = {
 	complete_command(node, parent, ast, visitor) {
 		return node.commands.map(traverseNode(node, ast, visitor));
 	},
+
+	word(node, parent, ast, visitor) {
+		if (!node.expansion) {
+			return null;
+		}
+		return node.expansion.map(traverseNode(node, ast, visitor));
+	},
+
+	and_or(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return [
+			traverse(node.left),
+			traverse(node.right)
+		];
+	},
+
+	simple_command(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return [
+			traverse(node.prefix),
+			traverse(node.suffix)
+		];
+	},
+
 	pipeline(node, parent, ast, visitor) {
 		return node.commands.map(traverseNode(node, ast, visitor));
 	}
 };
 
 traverseNode = (parent, ast, visitor) => node => {
-	return visit(node, [parent, ast, visitor], [DescendVisitor, visitor]);
+	// console.log('traverseNode', node);
+	const ret = visit(node, [parent, ast, visitor], [DescendVisitor, visitor]);
+	// console.log('\tresults: ', ret);
+	return ret;
 };
 
 const traverse = (ast, visitor) => traverseNode(null, ast, visitor)(ast);

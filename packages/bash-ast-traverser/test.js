@@ -5,94 +5,56 @@ import traverse from '.';
 const _node = {
 	type: 'NodeType'
 };
+
 const context = [42, 43];
+const AstTypes = [
+	'complete_command',
+	'pipeline',
+	'and_or',
+	'word',
+	'simple_command'/* ,
+	'function',
+	'name',
+	'compound_list',
+	'subshell',
+	'case',
+	'case_item',
+	'if',
+	'while',
+	'until',
+	'assignment_word',
+	'arithmetic_expansion',
+	'command_expansion',
+	'parameter_expansion',
+	'io_redirect'*/
+];
+
 const visitor = arg => ({
 	NodeType(node, first, second) {
 		return [node, first, second, arg];
 	}
 });
 
-test('traverse descend into children nodes of complete_command', t => {
-	const ast = {
-		type: 'complete_command',
-		text: 0,
-		commands: [{
-			type: 'simple_command',
-			text: 1
-		}, {
-			type: 'simple_command',
-			text: 2
-		}]
-	};
+const TestVisitor = {};
 
-	const visitor2 = {
-		complete_command(node) {
-			return 'complete_command on ' + node.text;
-		},
+function mkTestVisitor(name) {
+	return [
+		`traverse descend into node of type ${name}`,
+		t => {
+			const f = require(`${__dirname}/fixtures/${name.replace(/_/g, '-')}`);
 
-		simple_command(node) {
-			return 'simple_command on ' + node.text;
+			const results = traverse(f.ast, TestVisitor);
+			t.is(JSON.stringify(results), JSON.stringify(f.expected));
 		}
-	};
-
-	const results = traverse(ast, visitor2);
-	const expected = [
-		[
-			[
-				null,
-				'simple_command on 1'
-			],
-			[
-				null,
-				'simple_command on 2'
-			]
-		],
-		'complete_command on 0'
 	];
+}
 
-	t.is(JSON.stringify(results), JSON.stringify(expected));
-});
-
-test('traverse descend into children nodes of pipeline', t => {
-	const ast = {
-		type: 'pipeline',
-		text: 0,
-		commands: [{
-			type: 'simple_command',
-			text: 1
-		}, {
-			type: 'simple_command',
-			text: 2
-		}]
+for (const astNodeType of AstTypes) {
+	TestVisitor[astNodeType] = node => {
+		return `${astNodeType} on ${node.text}`;
 	};
-
-	const visitor2 = {
-		pipeline(node) {
-			return 'pipeline on ' + node.text;
-		},
-
-		simple_command(node) {
-			return 'simple_command on ' + node.text;
-		}
-	};
-
-	const results = traverse(ast, visitor2);
-	const expected = [
-		[
-			[
-				null,
-				'simple_command on 1'
-			],
-			[
-				null,
-				'simple_command on 2'
-			]
-		],
-		'pipeline on 0'
-	];
-
-	t.is(JSON.stringify(results), JSON.stringify(expected));
-});
+	test(...mkTestVisitor(astNodeType));
+}
 
 test('visit function work as expected', t => {
 	const [node, first, second, other] = traverse.visit(_node, context, visitor(44));

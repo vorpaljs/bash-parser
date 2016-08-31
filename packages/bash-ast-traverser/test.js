@@ -12,29 +12,29 @@ const visitor = arg => ({
 	}
 });
 
-const ast = {
-	type: 'complete_command',
-	text: 0,
-	commands: [{
-		type: 'simple_command',
-		text: 1
-	}, {
-		type: 'simple_command',
-		text: 2
-	}]
-};
+test('traverse descend into children nodes of complete_command', t => {
+	const ast = {
+		type: 'complete_command',
+		text: 0,
+		commands: [{
+			type: 'simple_command',
+			text: 1
+		}, {
+			type: 'simple_command',
+			text: 2
+		}]
+	};
 
-const visitor2 = {
-	complete_command(node) {
-		return 'complete_command on ' + node.text;
-	},
+	const visitor2 = {
+		complete_command(node) {
+			return 'complete_command on ' + node.text;
+		},
 
-	simple_command(node) {
-		return 'simple_command on ' + node.text;
-	}
-};
+		simple_command(node) {
+			return 'simple_command on ' + node.text;
+		}
+	};
 
-test('traverse descend into children nodes', t => {
 	const results = traverse(ast, visitor2);
 	const expected = [
 		[
@@ -48,6 +48,47 @@ test('traverse descend into children nodes', t => {
 			]
 		],
 		'complete_command on 0'
+	];
+
+	t.is(JSON.stringify(results), JSON.stringify(expected));
+});
+
+test('traverse descend into children nodes of pipeline', t => {
+	const ast = {
+		type: 'pipeline',
+		text: 0,
+		commands: [{
+			type: 'simple_command',
+			text: 1
+		}, {
+			type: 'simple_command',
+			text: 2
+		}]
+	};
+
+	const visitor2 = {
+		pipeline(node) {
+			return 'pipeline on ' + node.text;
+		},
+
+		simple_command(node) {
+			return 'simple_command on ' + node.text;
+		}
+	};
+
+	const results = traverse(ast, visitor2);
+	const expected = [
+		[
+			[
+				null,
+				'simple_command on 1'
+			],
+			[
+				null,
+				'simple_command on 2'
+			]
+		],
+		'pipeline on 0'
 	];
 
 	t.is(JSON.stringify(results), JSON.stringify(expected));

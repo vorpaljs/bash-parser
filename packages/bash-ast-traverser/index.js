@@ -24,6 +24,9 @@ let traverseNode;
 const DescendVisitor = {
 	complete_command(node, parent, ast, visitor) {
 		return node.commands.map(traverseNode(node, ast, visitor));
+	},
+	pipeline(node, parent, ast, visitor) {
+		return node.commands.map(traverseNode(node, ast, visitor));
 	}
 };
 

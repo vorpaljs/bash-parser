@@ -1,3 +1,4 @@
+// const walk = require('tree-walk');
 const Parser = require('../grammar.js').Parser;
 const posixShellLexer = require('./posix-shell-lexer');
 const astBuilder = require('./ast-builder');
@@ -13,8 +14,16 @@ module.exports = function parse(sourceCode, options) {
 		const parser = new Parser();
 		parser.lexer = posixShellLexer(options);
 		parser.yy = astBuilder(options);
+		const ast = parser.parse(sourceCode);
+/*
+		walk.preorder(ast, (value, key, parent) => {
+			if (value !== null && typeof value === 'object') {
 
-		return JSON.parse(JSON.stringify(parser.parse(sourceCode)));
+				console.log(Object.getPrototypeOf(value));
+			}
+		});
+*/
+		return ast;
 	} catch (err) {
 		throw new Error(err.stack || err.message);
 	}

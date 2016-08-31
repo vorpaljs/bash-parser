@@ -23,7 +23,7 @@ function setArithmeticExpansion(args) {
 	token.expansion = (token.expansion || []).concat({
 		kind: 'arithmetic',
 		expression,
-		arithmeticAST,
+		arithmeticAST: JSON.parse(JSON.stringify(arithmeticAST)),
 		start,
 		end
 	});

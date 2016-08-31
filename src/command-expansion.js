@@ -8,8 +8,6 @@ function setCommandExpansion(args) {
 	const expandingCommand = args.expandingCommand;
 
 	let command = commandText;
-	let word;
-	let op;
 
 	// skip command expansion if there
 	// is already an arithmetic expansion defined
@@ -31,8 +29,6 @@ function setCommandExpansion(args) {
 		kind: 'command',
 		command,
 		commandAST: bashParser(command),
-		word,
-		op,
 		start,
 		end
 	});

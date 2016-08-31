@@ -34,29 +34,38 @@ function setParameterExpansion(token, parameterText, start, end) {
 	let parameter = parameterText;
 	let word;
 	let op;
+	const expansions = token.expansion = (token.expansion || []);
+
+	function appendXp(xp, word, op) {
+		if (word !== undefined) {
+			xp.word = word;
+		}
+
+		if (op !== undefined) {
+			xp.op = op;
+		}
+
+		expansions.push(xp);
+	}
 
 	if (parameter.match(/^[0-9]+$/) && parameter !== '0') {
-		token.expansion = (token.expansion || []).concat({
+		appendXp({
 			kind: 'positional',
 			parameter: Number(parameter),
-			word,
-			op,
 			start,
 			end
-		});
+		}, word, op);
 
 		return;
 	}
 
 	if (isSpecialParameter(parameter)) {
-		token.expansion = (token.expansion || []).concat({
+		appendXp({
 			kind: specialParameterNames[parameter],
 			parameter: parameter,
-			word,
-			op,
 			start,
 			end
-		});
+		}, word, op);
 
 		return;
 	}
@@ -82,13 +91,11 @@ function setParameterExpansion(token, parameterText, start, end) {
 		}
 	}
 
-	token.expansion = (token.expansion || []).concat({
+	appendXp({
 		parameter,
-		word,
-		op,
 		start,
 		end
-	});
+	}, word, op);
 }
 
 function expandWord(token) {

@@ -1,7 +1,27 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
 const operators = require('./operators');
+// const values = require('object-values');
 const words = require('./reserved-words');
+
+const ioFileOperators = [
+	'LESS',
+	'DLESS',
+	'DGREAT',
+	'LESSAND',
+	'GREATAND',
+	'GREAT',
+	'LESSGREAT',
+	'CLOBBER'
+];
+
+function isOperator(tk) {
+	for (const op in ioFileOperators) {
+		if (tk[op]) {
+			return true;
+		}
+	}
+}
 
 function copyTempObject(tk, newTk) {
 	if (hasOwnProperty(tk, '_')) {
@@ -183,6 +203,37 @@ exports.assignmentWord = function * (tokens) {
 
 		canBeCommandPrefix = false;
 		yield tk;
+	}
+};
+
+exports.identifySimpleCommandNames = function * (tokens) {
+	for (const tk of tokens) {
+		if (tk._.maybeStartOfSimpleCommand) {
+			if (tk.WORD) {
+				tk._.maybeSimpleCommandName = true;
+				yield tk;
+				continue;
+			}
+
+			yield tk;
+
+			let lastToken = tk;
+			for (const scTk of tokens) {
+				if (!isOperator(lastToken) && scTk.WORD) {
+					scTk._.maybeSimpleCommandName = true;
+				}
+
+				yield scTk;
+
+				if (scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' || scTk.PIPE) {
+					break;
+				}
+
+				lastToken = scTk;
+			}
+		} else {
+			yield tk;
+		}
 	}
 };
 

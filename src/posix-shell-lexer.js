@@ -58,7 +58,7 @@ module.exports = options => ({
 			arithmeticExpansion,
 			parameterExpansion,
 			rules.reservedWords,
-
+			rules.identifySimpleCommandNames,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
 

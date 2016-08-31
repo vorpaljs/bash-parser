@@ -1,4 +1,5 @@
 // const walk = require('tree-walk');
+const traverse = require('bash-ast-traverser');
 const Parser = require('../grammar.js').Parser;
 const posixShellLexer = require('./posix-shell-lexer');
 const astBuilder = require('./ast-builder');
@@ -23,6 +24,12 @@ module.exports = function parse(sourceCode, options) {
 			}
 		});
 */
+		traverse(ast, {
+			simple_command(node) {
+				console.log('simple_command:', node);
+			}
+		});
+
 		return ast;
 	} catch (err) {
 		throw new Error(err.stack || err.message);

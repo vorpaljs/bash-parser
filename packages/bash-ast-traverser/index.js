@@ -9,6 +9,10 @@
  *  subsequently the context array exploded
  */
 function visit(node, context, visitor) {
+	if (node === null || node === undefined) {
+		return null;
+	}
+
 	if (Array.isArray(visitor)) {
 		return visitor
 			.map(v => visit(node, context, v))
@@ -26,26 +30,41 @@ let traverseNode;
 const DescendVisitor = {
 
 	assignment_word(node, parent, ast, visitor) {
+		if (!node.expansion) {
+			return null;
+		}
 		const traverse = traverseNode(node, ast, visitor);
 		return node.expansion.map(traverse);
 	},
 
 	arithmetic_expansion(node, parent, ast, visitor) {
+		if (!node.expansion) {
+			return null;
+		}
 		const traverse = traverseNode(node, ast, visitor);
 		return node.expansion.map(traverse);
 	},
 
 	command_expansion(node, parent, ast, visitor) {
+		if (!node.expansion) {
+			return null;
+		}
 		const traverse = traverseNode(node, ast, visitor);
 		return node.expansion.map(traverse);
 	},
 
 	parameter_expansion(node, parent, ast, visitor) {
+		if (!node.expansion) {
+			return null;
+		}
 		const traverse = traverseNode(node, ast, visitor);
 		return node.expansion.map(traverse);
 	},
 
 	complete_command(node, parent, ast, visitor) {
+		if (!node.commands) {
+			return null;
+		}
 		const traverse = traverseNode(node, ast, visitor);
 		return node.commands.map(traverse);
 	},
@@ -67,6 +86,9 @@ const DescendVisitor = {
 	},
 
 	io_redirect(node, parent, ast, visitor) {
+		if (!node.file) {
+			return null;
+		}
 		const traverse = traverseNode(node, ast, visitor);
 		return traverse(node.file);
 	},
@@ -74,77 +96,86 @@ const DescendVisitor = {
 	and_or(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
-			traverse(node.left),
-			traverse(node.right)
+			node.left ? traverse(node.left) : null,
+			node.right ? traverse(node.right) : null
 		];
 	},
 
 	case(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return node.cases
-			.map(traverse)
-			.concat(traverse(node.clause));
+		return (node.cases ? node.cases.map(traverse) : [])
+			.concat(
+				node.clause ? traverse(node.clause) : null
+			);
 	},
 
 	case_item(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return node.pattern.map(traverse).concat(
-			node.body.map(traverse)
-		);
+		return (node.pattern ? node.pattern.map(traverse) : [])
+			.concat(
+				node.body ? node.body.map(traverse) : null
+			);
 	},
 
 	if(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return node.clause.map(traverse)
+		return (node.clause ? node.clause.map(traverse) : [])
 			.concat(
-				node.then.map(traverse)
+				node.then ? node.then.map(traverse) : null
 			)
 			.concat(
-				node.else.map(traverse)
+				node.else ? node.else.map(traverse) : null
 			);
 	},
 
 	while(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return node.clause.map(traverse)
+		return (node.clause ? node.clause.map(traverse) : [])
 			.concat(
-				node.do.map(traverse)
+				node.do ? node.do.map(traverse) : null
 			);
 	},
 
 	until(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return node.clause.map(traverse)
+		return (node.clause ? node.clause.map(traverse) : [])
 			.concat(
-				node.do.map(traverse)
+				node.do ? node.do.map(traverse) : null
 			);
 	},
 
 	simple_command(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
-			traverse(node.prefix),
-			traverse(node.suffix)
+			node.prefix ? traverse(node.prefix) : null,
+			node.suffix ? traverse(node.suffix) : null
 		];
 	},
 
 	pipeline(node, parent, ast, visitor) {
+		if (!node.commands) {
+			return null;
+		}
 		return node.commands.map(traverseNode(node, ast, visitor));
 	},
 
 	compound_list(node, parent, ast, visitor) {
+		if (!node.commands) {
+			return null;
+		}
 		return node.commands.map(traverseNode(node, ast, visitor));
 	},
 
 	subshell(node, parent, ast, visitor) {
+		if (!node.list) {
+			return null;
+		}
 		return node.list.map(traverseNode(node, ast, visitor));
 	}
 };
 
 traverseNode = (parent, ast, visitor) => node => {
-	// console.log('traverseNode', node);
 	const ret = visit(node, [parent, ast, visitor], [DescendVisitor, visitor]);
-	// console.log('\tresults: ', ret);
 	return ret;
 };
 

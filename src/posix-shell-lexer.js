@@ -57,8 +57,9 @@ module.exports = options => ({
 			// logger('before'),
 			arithmeticExpansion,
 			parameterExpansion,
-			rules.reservedWords,
+
 			rules.identifySimpleCommandNames,
+			rules.reservedWords,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
 

@@ -57,7 +57,8 @@ exports.reservedWords = function * (tokens) {
 		} else if (defined(tk.TOKEN)) {
 			const word = {
 				WORD: tk.TOKEN,
-				loc: tk.loc
+				loc: tk.loc,
+				_: {}
 			};
 
 			if (tk.expansion) {
@@ -173,6 +174,14 @@ function isValidName(text) {
 
 exports.removeTempObject = function * (tokens) {
 	for (const tk of tokens) {
+		/*
+		if (tk._ && tk._.maybeSimpleCommandName) {
+			console.log('COMMAND: ', tk.WORD, __filename);
+		} else {
+			console.log('-------- ', tk.WORD);
+		}
+		*/
+
 		delete tk._;
 		yield tk;
 	}
@@ -245,7 +254,7 @@ exports.identifyMaybeSimpleCommands = function * (tokens) {
 
 		// evaluate if next token could start a simple command
 		maybeStartOfSimpleCommand = Boolean(
-			tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE
+			tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE || tk.Lbrace || tk.Rbrace
 		);
 
 		yield tk;

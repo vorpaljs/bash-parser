@@ -1,0 +1,28 @@
+{
+  "name": "bash-ast-traverser",
+  "version": "0.0.0",
+  "description": "Traverse an AST object created by bash-parser",
+  "repository": "vorpaljs/bash-ast-traverser",
+  "license": "MIT",
+  "author": "Andrea Parodi",
+  "scripts": {
+    "test": "ava --no-babel && xo",
+    "cover-test": "nyc ava --no-babel"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=4"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "coveralls": "^2.11.11",
+    "nyc": "^7.0.0",
+    "xo": "^0.16.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "nyc": {
+    "exclude": []
+  }
+}

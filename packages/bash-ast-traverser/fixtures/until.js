@@ -2,14 +2,14 @@ module.exports = {
 	ast: {
 		type: 'until',
 		text: '0',
-		clause: [{
+		clause: {
 			type: 'name',
 			text: '1'
-		}],
-		do: [{
+		},
+		do: {
 			type: 'name',
 			text: '2'
-		}]
+		}
 	},
 	expected: [
 		[

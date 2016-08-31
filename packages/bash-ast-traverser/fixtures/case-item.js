@@ -2,10 +2,10 @@ module.exports = {
 	ast: {
 		type: 'case_item',
 		text: '0',
-		body: [{
+		body: {
 			type: 'name',
 			text: '3'
-		}],
+		},
 		pattern: [{
 			type: 'name',
 			text: '1'
@@ -18,7 +18,7 @@ module.exports = {
 		[
 			['name on 1'],
 			['name on 2'],
-			['name on 3']
+			'name on 3'
 		],
 		'case_item on 0'
 	]

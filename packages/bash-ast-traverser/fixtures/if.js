@@ -2,18 +2,18 @@ module.exports = {
 	ast: {
 		type: 'if',
 		text: '0',
-		clause: [{
+		clause: {
 			type: 'name',
 			text: '1'
-		}],
-		then: [{
+		},
+		then: {
 			type: 'name',
 			text: '2'
-		}],
-		else: [{
+		},
+		else: {
 			type: 'name',
 			text: '3'
-		}]
+		}
 	},
 	expected: [
 		[

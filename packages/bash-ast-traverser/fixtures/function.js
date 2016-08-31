@@ -2,13 +2,13 @@ module.exports = {
 	ast: {
 		type: 'function',
 		text: 'cosine',
-		body: [{
+		body: {
 			type: 'name',
 			text: 'test'
-		}]
+		}
 	},
 	expected: [
-		[['name on test']],
+		['name on test'],
 		'function on cosine'
 	]
 };

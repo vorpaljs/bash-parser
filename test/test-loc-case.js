@@ -3,6 +3,7 @@ const test = require('ava');
 const bashParser = require('../src');
 // const utils = require('./_utils');
 /* eslint-disable camelcase */
+
 test('case statement has loc', t => {
 	const cmd =
 `case foo in

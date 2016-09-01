@@ -1,10 +1,12 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+// const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('parse while', t => {
 	const result = bashParser('while true; do sleep 1; done');
-	// console.log(inspect(result, {depth:null}))
+
 	t.deepEqual(
 		result, {
 			type: 'complete_command',

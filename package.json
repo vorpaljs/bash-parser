@@ -7,7 +7,7 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-    "test": "ava --no-babel && xo --ignore grammar.js",
+    "test": "ava --no-babel && xo --ignore grammar.js --ignore 'packages/**/*'",
     "build": "jison src/grammar.jison > grammar.js",
     "cover-test": "nyc ava --no-babel && xo --ignore grammar.js"
   },

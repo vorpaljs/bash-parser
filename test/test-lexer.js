@@ -1,6 +1,8 @@
 'use strict';
 const test = require('ava');
 const posixLexer = require('../src/posix-shell-lexer');
+// const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 function tokenize(text, rawTokens) {
 	const lexer = posixLexer({});
@@ -13,11 +15,15 @@ function tokenize(text, rawTokens) {
 		if (rawTokens) {
 			const value = JSON.parse(JSON.stringify(lexer.yytext));
 			delete value.type;
+			delete value.maybeSimpleCommandName;
+
 			results.push({token, value});
 		} else {
 			const value = lexer.yytext.text || lexer.yytext;
 			const expansion = lexer.expansion;
 			delete value.type;
+			delete value.maybeSimpleCommandName;
+
 			if (expansion) {
 				results.push({token, value, expansion});
 			} else {
@@ -77,7 +83,7 @@ test('parses unquoted parameter substitution', t => {
 
 test('unquoted parameter delimited by symbol', t => {
 	const result = tokenize('echo word$test,,', true);
-
+	// utils.logResults(result);
 	t.deepEqual(result,
 		[{token: 'WORD', value: {text: 'echo'}},
 		{

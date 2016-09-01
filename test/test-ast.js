@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
-const utils = require('./_utils');
+// const utils = require('./_utils');
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');

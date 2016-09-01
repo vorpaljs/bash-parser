@@ -1,7 +1,7 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
-const operators = require('./operators');
 const values = require('object-values');
+const operators = require('./operators');
 const words = require('./reserved-words');
 
 const ioFileOperators = [
@@ -130,6 +130,7 @@ exports.functionName = function * (tokens) {
 		) {
 			const prevTk = lastTokens[0];
 			prevTk.NAME = prevTk.WORD;
+			delete prevTk.maybeSimpleCommandName;
 			delete prevTk.WORD;
 		}
 		// TODO: refactor to own module, iterable with defined
@@ -217,7 +218,7 @@ exports.assignmentWord = function * (tokens) {
 exports.identifySimpleCommandNames = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk._.maybeStartOfSimpleCommand) {
-			if (tk.WORD) {
+			if (tk.WORD && isValidName(tk.WORD)) {
 				tk._.maybeSimpleCommandName = true;
 				tk.maybeSimpleCommandName = true;
 				yield tk;
@@ -229,7 +230,7 @@ exports.identifySimpleCommandNames = function * (tokens) {
 			let lastToken = tk;
 			let commandNameFound = false;
 			for (const scTk of tokens) {
-				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD) {
+				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD && isValidName(scTk.WORD)) {
 					scTk._.maybeSimpleCommandName = true;
 					scTk.maybeSimpleCommandName = true;
 					commandNameFound = true;
@@ -237,7 +238,7 @@ exports.identifySimpleCommandNames = function * (tokens) {
 
 				yield scTk;
 
-				if (scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' || scTk.PIPE) {
+				if (scTk.SEPARATOR_OP || scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' || scTk.PIPE || scTk.OR_IF || scTk.PIPE || scTk.AND_IF) {
 					break;
 				}
 
@@ -259,8 +260,9 @@ exports.identifyMaybeSimpleCommands = function * (tokens) {
 		// console.log('identifyMaybeSimpleCommands', tk)
 		// evaluate if next token could start a simple command
 		maybeStartOfSimpleCommand = Boolean(
-			tk.SEPARATOR_OP || tk.OPEN_PAREN || tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE ||
-			(!tk.For && values(words).some(word => hasOwnProperty(tk, word)))
+			tk.SEPARATOR_OP || tk.OPEN_PAREN || tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE ||
+			tk.OR_IF || tk.PIPE || tk.AND_IF ||
+			(!tk.For && !tk.In && !tk.Case && values(words).some(word => hasOwnProperty(tk, word)))
 		);
 
 		yield tk;

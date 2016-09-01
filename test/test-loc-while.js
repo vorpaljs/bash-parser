@@ -5,7 +5,7 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('loc in while statement', t => {
 	const result = bashParser('while true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
-	// utils.logResults(result.commands[0].commands[0]);
+	// utils.logResults(result.commands[0]);
 	const expected = {
 		type: 'while',
 		clause: {

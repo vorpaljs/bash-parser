@@ -15,7 +15,7 @@ test('reservedWords - identify reserved words or WORD', t => {
 			{TOKEN: 'while', loc: 42},
 			{TOKEN: 'otherWord', loc: 42}
 		])),
-		[{While: 'while', loc: 42}, {WORD: 'otherWord', loc: 42, _: {}}]
+		[{While: 'while', loc: 42}, {WORD: 'otherWord', loc: 42}]
 	);
 });
 

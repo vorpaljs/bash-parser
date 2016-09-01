@@ -1,7 +1,7 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
 const operators = require('./operators');
-// const values = require('object-values');
+const values = require('object-values');
 const words = require('./reserved-words');
 
 const ioFileOperators = [
@@ -55,11 +55,10 @@ exports.reservedWords = function * (tokens) {
 				loc: tk.loc
 			});
 		} else if (defined(tk.TOKEN)) {
-			const word = {
+			const word = copyTempObject(tk, {
 				WORD: tk.TOKEN,
-				loc: tk.loc,
-				_: {}
-			};
+				loc: tk.loc
+			});
 
 			if (tk.expansion) {
 				word.expansion = tk.expansion;
@@ -197,13 +196,13 @@ exports.assignmentWord = function * (tokens) {
 		}
 
 		// check if it is an assignment
-		if (canBeCommandPrefix && tk.TOKEN && tk.TOKEN.indexOf('=') > 0 && (
+		if (canBeCommandPrefix && tk.WORD && tk.WORD.indexOf('=') > 0 && (
 				// left part must be a valid name
-				isValidName(tk.TOKEN.slice(0, tk.TOKEN.indexOf('=')))
+				isValidName(tk.WORD.slice(0, tk.WORD.indexOf('=')))
 
 			)) {
 			yield copyTempObject(tk, {
-				ASSIGNMENT_WORD: tk.TOKEN,
+				ASSIGNMENT_WORD: tk.WORD,
 				expansion: tk.expansion,
 				loc: tk.loc
 			});
@@ -220,6 +219,7 @@ exports.identifySimpleCommandNames = function * (tokens) {
 		if (tk._.maybeStartOfSimpleCommand) {
 			if (tk.WORD) {
 				tk._.maybeSimpleCommandName = true;
+				tk.maybeSimpleCommandName = true;
 				yield tk;
 				continue;
 			}
@@ -227,9 +227,12 @@ exports.identifySimpleCommandNames = function * (tokens) {
 			yield tk;
 
 			let lastToken = tk;
+			let commandNameFound = false;
 			for (const scTk of tokens) {
-				if (!isOperator(lastToken) && scTk.WORD) {
+				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD) {
 					scTk._.maybeSimpleCommandName = true;
+					scTk.maybeSimpleCommandName = true;
+					commandNameFound = true;
 				}
 
 				yield scTk;
@@ -250,11 +253,14 @@ exports.identifyMaybeSimpleCommands = function * (tokens) {
 	let maybeStartOfSimpleCommand = true;
 	for (const tk of tokens) {
 		tk._ = (tk._ || {});
-		tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
-
+		if (tk.WORD) {
+			tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
+		}
+		// console.log('identifyMaybeSimpleCommands', tk)
 		// evaluate if next token could start a simple command
 		maybeStartOfSimpleCommand = Boolean(
-			tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE || tk.Lbrace || tk.Rbrace
+			tk.SEPARATOR_OP || tk.OPEN_PAREN || tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE ||
+			(!tk.For && values(words).some(word => hasOwnProperty(tk, word)))
 		);
 
 		yield tk;

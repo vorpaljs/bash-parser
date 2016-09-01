@@ -2,6 +2,7 @@
 const test = require('ava');
 const bashParser = require('../src');
 // const utils = require('./_utils');
+// const logResults = require('./_utils').logResults;
 
 /* eslint-disable camelcase */
 test('parse if', t => {
@@ -34,7 +35,7 @@ test('parse if', t => {
 
 test('parse if else', t => {
 	const result = bashParser('if true; then echo 1; else echo 2; fi');
-	// console.log(inspect(result, {depth:null}))
+	// logResults(result);
 	t.deepEqual(
 		result, {
 			type: 'complete_command',

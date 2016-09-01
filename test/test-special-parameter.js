@@ -1,6 +1,8 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+const logResults = require('./_utils').logResults;
+
 /* eslint-disable camelcase */
 test('positional list paramter', t => {
 	const result = bashParser('echoword=$@');
@@ -152,6 +154,7 @@ test('last background pid', t => {
 
 test('shell script name', t => {
 	const result = bashParser('echoword=$0');
+	logResults(result);
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{

@@ -1,8 +1,10 @@
 // const walk = require('tree-walk');
+const assert = require('assert');
 const traverse = require('bash-ast-traverser');
 const Parser = require('../grammar.js').Parser;
 const posixShellLexer = require('./posix-shell-lexer');
 const astBuilder = require('./ast-builder');
+/* eslint-disable camelcase */
 
 /*
 	## options
@@ -26,7 +28,15 @@ module.exports = function parse(sourceCode, options) {
 */
 		traverse(ast, {
 			simple_command(node) {
-				console.log('simple_command:', node);
+				if (node.name.text !== '') {
+					assert.ok(node.name.maybeSimpleCommandName, `expected simple_command name ${JSON.stringify(node,null,2)}`);
+				}
+				delete node.name.maybeSimpleCommandName;
+			},
+
+			defaultMethod(node) {
+				assert.ok(!node.maybeSimpleCommandName, `simple_command name not expected ${JSON.stringify(node,null,2)}`);
+				delete node.maybeSimpleCommandName;
 			}
 		});
 

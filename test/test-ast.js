@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
@@ -113,6 +113,7 @@ test('no pre-assignment on suffix', t => {
 
 test('command with multiple prefixes', t => {
 	const result = bashParser('TEST1=1 TEST2=2 echo world');
+	// utils.logResults(result)
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{

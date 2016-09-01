@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parse for', t => {
@@ -34,8 +34,9 @@ test('parse for', t => {
 	);
 });
 
-test('parse for with default sequence', t => {
+test.only('parse for with default sequence', t => {
 	const result = bashParser('for x\n do echo $x\n done');
+	utils.logResults(result)
 	t.deepEqual(
 		result, {
 			type: 'complete_command',

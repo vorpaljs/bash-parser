@@ -7,7 +7,7 @@ const parameterExpansion = require('./parameter-expansion');
 const commandExpansion = require('./command-expansion');
 const arithmeticExpansion = require('./arithmetic-expansion');
 const defaultNodeType = require('./default-node-type');
-// const logger = require('./logger-iterator');
+const logger = require('./logger-iterator');
 
 module.exports = options => ({
 	lex() {
@@ -29,6 +29,10 @@ module.exports = options => ({
 
 		if (tk.type) {
 			this.yytext.type = tk.type;
+		}
+
+		if (tk.maybeSimpleCommandName) {
+			this.yytext.maybeSimpleCommandName = tk.maybeSimpleCommandName;
 		}
 
 		if (options.insertLOC && tk.loc) {
@@ -58,10 +62,12 @@ module.exports = options => ({
 			arithmeticExpansion,
 			parameterExpansion,
 
+			logger('after identifySimpleCommandNames'),
+
 			rules.identifySimpleCommandNames,
-			rules.reservedWords,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
+			rules.reservedWords,
 
 			rules.separator,
 

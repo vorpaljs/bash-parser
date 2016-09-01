@@ -23,6 +23,12 @@ function visit(node, context, visitor) {
 	if (typeof method === 'function') {
 		return method(node, ...context);
 	}
+
+	const defaultMethod = visitor.defaultMethod;
+	if (typeof defaultMethod === 'function') {
+		return defaultMethod(node, ...context);
+	}
+
 }
 
 let traverseNode;
@@ -147,6 +153,14 @@ const DescendVisitor = {
 		return [
 			traverse(node.prefix),
 			traverse(node.suffix)
+		];
+	},
+
+	for(node, parent, ast, visitor) {
+		const traverse = traverseNode(node, ast, visitor);
+		return [
+			node.wordlist ? node.wordlist.map(traverse) : [],
+			traverse(node.do)
 		];
 	},
 

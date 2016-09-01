@@ -12,6 +12,7 @@ const AstTypes = [
 	'pipeline',
 	'and_or',
 	'word',
+	'for',
 	'name',
 	'compound_list',
 	'subshell',

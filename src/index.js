@@ -1,6 +1,6 @@
 // const walk = require('tree-walk');
-const assert = require('assert');
-const traverse = require('bash-ast-traverser');
+// const assert = require('assert');
+// const traverse = require('bash-ast-traverser');
 const Parser = require('../grammar.js').Parser;
 const posixShellLexer = require('./posix-shell-lexer');
 const astBuilder = require('./ast-builder');
@@ -25,7 +25,7 @@ module.exports = function parse(sourceCode, options) {
 				console.log(Object.getPrototypeOf(value));
 			}
 		});
-*/
+
 		traverse(ast, {
 			simple_command(node) {
 				if (node.name.text !== '') {
@@ -44,7 +44,7 @@ module.exports = function parse(sourceCode, options) {
 				delete node.maybeSimpleCommandName;
 			}
 		});
-
+*/
 		return ast;
 	} catch (err) {
 		throw new Error(err.stack || err.message);

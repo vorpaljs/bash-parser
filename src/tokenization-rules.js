@@ -220,7 +220,7 @@ exports.identifySimpleCommandNames = function * (tokens) {
 		if (tk._.maybeStartOfSimpleCommand) {
 			if (tk.WORD && isValidName(tk.WORD)) {
 				tk._.maybeSimpleCommandName = true;
-				tk.maybeSimpleCommandName = true;
+				// tk.maybeSimpleCommandName = true;
 				yield tk;
 				continue;
 			}
@@ -232,13 +232,14 @@ exports.identifySimpleCommandNames = function * (tokens) {
 			for (const scTk of tokens) {
 				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD && isValidName(scTk.WORD)) {
 					scTk._.maybeSimpleCommandName = true;
-					scTk.maybeSimpleCommandName = true;
+					// scTk.maybeSimpleCommandName = true;
 					commandNameFound = true;
 				}
 
 				yield scTk;
 
-				if (scTk.SEPARATOR_OP || scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' || scTk.PIPE || scTk.OR_IF || scTk.PIPE || scTk.AND_IF) {
+				if (scTk.SEPARATOR_OP || scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' ||
+					scTk.PIPE || scTk.OR_IF || scTk.PIPE || scTk.AND_IF) {
 					break;
 				}
 
@@ -260,7 +261,9 @@ exports.identifyMaybeSimpleCommands = function * (tokens) {
 		// console.log('identifyMaybeSimpleCommands', tk)
 		// evaluate if next token could start a simple command
 		maybeStartOfSimpleCommand = Boolean(
-			tk.SEPARATOR_OP || tk.OPEN_PAREN || tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST || tk.TOKEN === ';' || tk.PIPE ||
+			tk.SEPARATOR_OP || tk.OPEN_PAREN ||
+			tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST ||
+			tk.TOKEN === ';' || tk.PIPE ||
 			tk.OR_IF || tk.PIPE || tk.AND_IF ||
 			(!tk.For && !tk.In && !tk.Case && values(words).some(word => hasOwnProperty(tk, word)))
 		);

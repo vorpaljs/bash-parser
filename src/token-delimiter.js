@@ -103,6 +103,7 @@ module.exports = function * tokenDelimiter(source) {
 	}
 
 	for (const currentCharacter of source) {
+		// process.stdout.write(currentCharacter)
 		if (token.OPERATOR) {
 			// RULE 2 -If the previous character was used as part of an operator and the
 			// current character is not quoted and can be used with the current characters

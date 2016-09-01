@@ -6,10 +6,28 @@ const rules = require('./tokenization-rules');
 const parameterExpansion = require('./parameter-expansion');
 const commandExpansion = require('./command-expansion');
 const arithmeticExpansion = require('./arithmetic-expansion');
+const aliasSubstitution = require('./alias-substitution');
 const defaultNodeType = require('./default-node-type');
 // const logger = require('./logger-iterator');
 
-module.exports = options => ({
+const preAliasLexer = compose(
+	// aliasSubstitution(options, preAliasLexer(options)),
+	rules.identifySimpleCommandNames,
+	rules.assignmentWord,
+	rules.identifyMaybeSimpleCommands,
+	rules.reservedWords,
+
+	rules.separator,
+
+	rules.operatorTokens,
+	rules.replaceLineTerminationToken,
+
+	rules.newLineList,
+	rules.linebreakIn,
+	tokenDelimiter
+);
+
+const posixShellLexer = options => ({
 	lex() {
 		const item = this.tokenizer.next();
 
@@ -62,8 +80,8 @@ module.exports = options => ({
 			arithmeticExpansion,
 			parameterExpansion,
 
-			// logger('after identifySimpleCommandNames'),
-
+			// logger('after aliasSubstitution'),
+			aliasSubstitution(options, preAliasLexer),
 			rules.identifySimpleCommandNames,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
@@ -82,3 +100,5 @@ module.exports = options => ({
 		this.tokenizer = tokenize(source);
 	}
 });
+
+module.exports = posixShellLexer;

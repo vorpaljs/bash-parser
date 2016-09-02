@@ -13,7 +13,7 @@ test('arithmetic substitution', t => {
 		type: 'assignment_word',
 		expansion: [{
 			expression: '42 + 43',
-			kind: 'arithmetic',
+			type: 'arithmetic_expansion',
 			start: 9,
 			end: 21
 		}]
@@ -34,7 +34,7 @@ test('arithmetic & parameter substitution', t => {
 			end: 27
 		}, {
 			expression: '42 + 43',
-			kind: 'arithmetic',
+			type: 'arithmetic_expansion',
 			start: 9,
 			end: 21
 		}]
@@ -49,7 +49,7 @@ test('arithmetic substitution in suffix', t => {
 		text: '$((42 + 43))',
 		expansion: [{
 			expression: '42 + 43',
-			kind: 'arithmetic',
+			type: 'arithmetic_expansion',
 			start: 0,
 			end: 12
 		}]

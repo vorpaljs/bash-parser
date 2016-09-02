@@ -1,5 +1,6 @@
 'use strict';
 const babylon = require('babylon');
+const MagicString = require('magic-string');
 
 function setArithmeticExpansion(args) {
 	const token = args.token;
@@ -21,7 +22,7 @@ function setArithmeticExpansion(args) {
 	}
 
 	token.expansion = (token.expansion || []).concat({
-		kind: 'arithmetic',
+		type: 'arithmetic_expansion',
 		expression,
 		arithmeticAST: JSON.parse(JSON.stringify(arithmeticAST)),
 		start,
@@ -82,11 +83,40 @@ function expandWord(token) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-module.exports = function * arithmeticExpansion(tokens) {
+function * arithmeticExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
 			expandWord(token);
 		}
 		yield token;
 	}
+}
+
+arithmeticExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
+	for (const token of tokens) {
+		if (options.execCommand && token.expansion) {
+			const value = token.WORD || token.ASSIGNMENT_WORD;
+			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
+
+			token.magic = new MagicString(value);
+			token.originalText = token.originalText || value;
+
+			for (const xp of token.expansion) {
+				if (xp.type === 'arithmetic_expansion') {
+					const result = options.execCommand(xp);
+					token.magic.overwrite(
+						xp.start,
+						xp.end,
+						result.replace(/\n+$/, '')
+					);
+					xp.resolved = true;
+				}
+			}
+			token[resultProp] = token.magic.toString();
+			delete token.magic;
+		}
+		yield token;
+	}
 };
+
+module.exports = arithmeticExpansion;

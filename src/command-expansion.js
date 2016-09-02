@@ -15,7 +15,7 @@ function setCommandExpansion(args) {
 	// on same position
 	if (token.expansion) {
 		for (const exp of token.expansion) {
-			if (exp.start <= start && exp.end >= end && exp.kind === 'arithmetic') {
+			if (exp.start <= start && exp.end >= end && exp.type === 'arithmetic_expansion') {
 				return;
 			}
 		}

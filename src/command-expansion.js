@@ -125,7 +125,11 @@ commandExpansion.resolve = options => function * resolveParameterExpansion(token
 			for (const xp of token.expansion) {
 				if (xp.type === 'command_expansion') {
 					const result = options.execCommand(xp);
-					token.magic.overwrite(xp.start, xp.end, result);
+					token.magic.overwrite(
+						xp.start,
+						xp.end,
+						result.replace(/\n+$/, '')
+					);
 					xp.resolved = true;
 				}
 			}

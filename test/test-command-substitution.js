@@ -234,3 +234,29 @@ test('resolve double command with backticks', t => {
 		}
 	});
 });
+
+test('last newlines are removed from command output', t => {
+	const result = bashParser('"foo $(other) baz"', {
+		execCommand() {
+			return 'bar\n\n';
+		}
+	});
+	delete result.commands[0].name.expansion[0].commandAST;
+
+	// utils.logResults(result.commands[0]);
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: '"foo bar baz"',
+			originalText: '"foo $(other) baz"',
+			expansion: [{
+				command: 'other',
+				start: 5,
+				end: 13,
+				resolved: true,
+				type: 'command_expansion'
+			}],
+			type: 'word'
+		}
+	});
+});

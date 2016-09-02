@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-const utils = require('./_utils');
+// const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
@@ -220,7 +220,6 @@ test('resolve double parameter', t => {
 			return 'bar';
 		}
 	});
-	utils.logResults(result.commands[0]);
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {

@@ -1,5 +1,6 @@
 'use strict';
 const pairs = require('object-pairs');
+const MagicString = require('magic-string');
 
 const parameterOps = {
 	useDefaultValue: ':-',
@@ -218,18 +219,21 @@ function * parameterExpansion(tokens) {
 parameterExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
 	for (const token of tokens) {
 		if (options.resolveParameter && token.expansion) {
+			const value = token.WORD || token.ASSIGNMENT_WORD;
+			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
+
+			token.magic = new MagicString(value);
+			token.originalText = token.originalText || value;
+
 			for (const xp of token.expansion) {
 				if (xp.type === 'parameter_expansion') {
-					const value = token.WORD || token.ASSIGNMENT_WORD;
-					const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
-
 					const result = options.resolveParameter(xp);
-					token.originalText = token.originalText || value;
-					token[resultProp] = value.slice(0, xp.start) +
-						result + value.slice(xp.end);
+					token.magic.overwrite(xp.start, xp.end, result);
 					xp.resolved = true;
 				}
 			}
+			token[resultProp] = token.magic.toString();
+			delete token.magic;
 		}
 		yield token;
 	}

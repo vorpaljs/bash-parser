@@ -234,7 +234,7 @@ test('resolve double parameter', t => {
 				type: 'parameter_expansion'
 			}, {
 				parameter: 'one',
-				start: 4,
+				start: 14,
 				end: 20,
 				resolved: true,
 				type: 'parameter_expansion'

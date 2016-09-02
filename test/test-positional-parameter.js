@@ -14,6 +14,7 @@ test('positional parameter with word following', t => {
 		type: 'assignment_word',
 		text: 'echoword=$1ciao',
 		expansion: [{
+			type: 'parameter_expansion',
 			kind: 'positional',
 			parameter: 1,
 			start: 9,
@@ -34,6 +35,7 @@ test('positional parameter in braces', t => {
 					type: 'assignment_word',
 					text: 'echoword=${11}test',
 					expansion: [{
+						type: 'parameter_expansion',
 						parameter: 11,
 						kind: 'positional',
 						start: 9,
@@ -57,6 +59,7 @@ test('positional parameter without braces', t => {
 				type: 'assignment_word',
 				text: 'echoword=$1',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: 1,
 					kind: 'positional',
 					start: 9,
@@ -79,6 +82,7 @@ test('positional parameter without braces allow one digit only', t => {
 				type: 'assignment_word',
 				text: 'echoword=$11',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: 1,
 					kind: 'positional',
 					start: 9,

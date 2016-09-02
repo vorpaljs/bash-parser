@@ -16,6 +16,7 @@ test('positional list paramter', t => {
 				type: 'assignment_word',
 				text: 'echoword=$@',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '@',
 					kind: 'positional-list',
 					start: 9,
@@ -37,6 +38,7 @@ test('positional string paramter', t => {
 				type: 'assignment_word',
 				text: 'echoword=$*',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '*',
 					kind: 'positional-string',
 					start: 9,
@@ -58,6 +60,7 @@ test('positional count paramter', t => {
 				type: 'assignment_word',
 				text: 'echoword=$#',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '#',
 					kind: 'positional-count',
 					start: 9,
@@ -79,6 +82,7 @@ test('last exit status', t => {
 				type: 'assignment_word',
 				text: 'echoword=$?',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '?',
 					kind: 'last-exit-status',
 					start: 9,
@@ -100,6 +104,7 @@ test('current option flags', t => {
 				type: 'assignment_word',
 				text: 'echoword=$-',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '-',
 					kind: 'current-option-flags',
 					start: 9,
@@ -121,6 +126,7 @@ test('shell process id', t => {
 				type: 'assignment_word',
 				text: 'echoword=$$',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '$',
 					kind: 'shell-process-id',
 					start: 9,
@@ -142,6 +148,7 @@ test('last background pid', t => {
 				type: 'assignment_word',
 				text: 'echoword=$!',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '!',
 					kind: 'last-background-pid',
 					start: 9,
@@ -164,6 +171,7 @@ test('shell script name', t => {
 				type: 'assignment_word',
 				text: 'echoword=$0',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: '0',
 					kind: 'shell-script-name',
 					start: 9,

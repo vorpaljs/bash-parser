@@ -44,7 +44,7 @@ function setParameterExpansion(token, parameterText, start, end) {
 		if (op !== undefined) {
 			xp.op = op;
 		}
-
+		xp.type = 'parameter_expansion';
 		expansions.push(xp);
 	}
 
@@ -206,8 +206,16 @@ function expandWord(token) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
+function * parameterExpansion(tokens) {
+	for (const token of tokens) {
+		if (token.WORD || token.ASSIGNMENT_WORD) {
+			expandWord(token);
+		}
+		yield token;
+	}
+}
 
-module.exports = function * parameterExpansion(tokens) {
+parameterExpansion.perform = function * performParameterExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
 			expandWord(token);
@@ -215,3 +223,5 @@ module.exports = function * parameterExpansion(tokens) {
 		yield token;
 	}
 };
+
+module.exports = parameterExpansion;

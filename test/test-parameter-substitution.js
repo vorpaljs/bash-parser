@@ -1,6 +1,8 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+// const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
 	const result = bashParser('echoword=${other}test');
@@ -8,6 +10,7 @@ test('parameter substitution in assignment', t => {
 		type: 'assignment_word',
 		text: 'echoword=${other}test',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			start: 9,
 			end: 17
@@ -21,6 +24,7 @@ test('multi-word parameter substitution', t => {
 		type: 'assignment_word',
 		text: 'echoword=${other word}test',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other word',
 			start: 9,
 			end: 22
@@ -34,6 +38,7 @@ test('parameter substitution', t => {
 		type: 'word',
 		text: 'word${other}test',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			start: 4,
 			end: 12
@@ -47,11 +52,13 @@ test('multiple parameter substitution', t => {
 		type: 'word',
 		text: 'word${other}t$est',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			start: 4,
 			end: 12
 		},
 		{
+			type: 'parameter_expansion',
 			parameter: 'est',
 			start: 13,
 			end: 17
@@ -65,6 +72,7 @@ test('command consisting of only parameter substitution', t => {
 		type: 'word',
 		text: '$other',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			start: 0,
 			end: 6
@@ -89,6 +97,7 @@ test('parameter with use default value', t => {
 		type: 'word',
 		text: '${other:-default_value}',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'
@@ -106,6 +115,7 @@ test('parameter with assign default value', t => {
 		type: 'word',
 		text: '${other:=default_value}',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'
@@ -119,14 +129,17 @@ test('parameter with assign default value', t => {
 
 test('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
+	// utils.logResults(result);
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
 		text: '${other:=default$value}',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			word: {
 				text: 'default$value',
 				expansion: [{
+					type: 'parameter_expansion',
 					parameter: 'value',
 					start: 7,
 					end: 13
@@ -145,6 +158,7 @@ test('parameter with indicate error if null', t => {
 		text: '${other:?default_value}',
 		type: 'word',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'
@@ -162,6 +176,7 @@ test('parameter with use alternative value', t => {
 		text: '${other:+default_value}',
 		type: 'word',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'

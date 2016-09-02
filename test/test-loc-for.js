@@ -88,6 +88,7 @@ done
 						text: '$x',
 						expansion: [
 							{
+								type: 'parameter_expansion',
 								parameter: 'x',
 								start: 0,
 								end: 2
@@ -160,6 +161,7 @@ done
 							text: '$x',
 							expansion: [
 								{
+									type: 'parameter_expansion',
 									parameter: 'x',
 									start: 0,
 									end: 2

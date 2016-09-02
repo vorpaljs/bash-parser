@@ -22,6 +22,7 @@ test('parse for', t => {
 							type: 'word',
 							text: '$x',
 							expansion: [{
+								type: 'parameter_expansion',
 								parameter: 'x',
 								start: 0,
 								end: 2
@@ -52,6 +53,7 @@ test('parse for with default sequence', t => {
 							type: 'word',
 							text: '$x',
 							expansion: [{
+								type: 'parameter_expansion',
 								parameter: 'x',
 								start: 0,
 								end: 2
@@ -82,6 +84,7 @@ test('parse for with default sequence - on one line', t => {
 							type: 'word',
 							text: '$x',
 							expansion: [{
+								type: 'parameter_expansion',
 								parameter: 'x',
 								start: 0,
 								end: 2

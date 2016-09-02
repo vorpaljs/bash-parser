@@ -28,7 +28,6 @@ function visit(node, context, visitor) {
 	if (typeof defaultMethod === 'function') {
 		return defaultMethod(node, ...context);
 	}
-
 }
 
 let traverseNode;

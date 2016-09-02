@@ -28,6 +28,7 @@ test('arithmetic & parameter substitution', t => {
 		text: 'variable=$((42 + 43)) $ciao',
 		type: 'assignment_word',
 		expansion: [{
+			type: 'parameter_expansion',
 			parameter: 'ciao',
 			start: 22,
 			end: 27

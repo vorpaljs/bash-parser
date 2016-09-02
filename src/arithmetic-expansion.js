@@ -94,7 +94,7 @@ function * arithmeticExpansion(tokens) {
 
 arithmeticExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
 	for (const token of tokens) {
-		if (options.execCommand && token.expansion) {
+		if (options.runArithmeticExpression && token.expansion) {
 			const value = token.WORD || token.ASSIGNMENT_WORD;
 			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
 
@@ -103,11 +103,11 @@ arithmeticExpansion.resolve = options => function * resolveParameterExpansion(to
 
 			for (const xp of token.expansion) {
 				if (xp.type === 'arithmetic_expansion') {
-					const result = options.execCommand(xp);
+					const result = options.runArithmeticExpression(xp);
 					token.magic.overwrite(
 						xp.start,
 						xp.end,
-						result.replace(/\n+$/, '')
+						result
 					);
 					xp.resolved = true;
 				}

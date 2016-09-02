@@ -130,3 +130,28 @@ test('arithmetic ast is parsed', t => {
 	});
 });
 
+test('resolve expression', t => {
+	const result = bashParser('"foo $((42 * 42)) baz"', {
+		runArithmeticExpression() {
+			return '43';
+		}
+	});
+	delete result.commands[0].name.expansion[0].arithmeticAST;
+
+	// utils.logResults(result.commands[0]);
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: '"foo 43 baz"',
+			originalText: '"foo $((42 * 42)) baz"',
+			expansion: [{
+				expression: '42 * 42',
+				start: 5,
+				end: 17,
+				resolved: true,
+				type: 'arithmetic_expansion'
+			}],
+			type: 'word'
+		}
+	});
+});

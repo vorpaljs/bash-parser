@@ -73,6 +73,7 @@ const posixShellLexer = options => ({
 			// logger('end'),
 			rules.removeTempObject,
 			defaultNodeType,
+			arithmeticExpansion.resolve(options),
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
 			rules.functionName,

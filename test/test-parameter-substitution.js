@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
@@ -185,5 +185,61 @@ test('parameter with use alternative value', t => {
 			start: 0,
 			end: 23
 		}]
+	});
+});
+
+test('resolve parameter', t => {
+	const result = bashParser('"foo ${other} baz"', {
+		resolveParameter() {
+			return 'bar';
+		}
+	});
+	// utils.logResults(result.commands[0]);
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: '"foo bar baz"',
+			originalText: '"foo ${other} baz"',
+			expansion: [
+				{
+					parameter: 'other',
+					start: 5,
+					end: 13,
+					resolved: true,
+					type: 'parameter_expansion'
+				}
+			],
+			type: 'word'
+		}
+	});
+});
+
+test('resolve double parameter', t => {
+	const result = bashParser('"foo ${other} ${one} baz"', {
+		resolveParameter() {
+			return 'bar';
+		}
+	});
+	utils.logResults(result.commands[0]);
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: '"foo bar bar baz"',
+			originalText: '"foo ${other} ${one} baz"',
+			expansion: [{
+				parameter: 'other',
+				start: 5,
+				end: 13,
+				resolved: true,
+				type: 'parameter_expansion'
+			}, {
+				parameter: 'one',
+				start: 4,
+				end: 20,
+				resolved: true,
+				type: 'parameter_expansion'
+			}],
+			type: 'word'
+		}
 	});
 });

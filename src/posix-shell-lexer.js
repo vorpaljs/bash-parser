@@ -45,6 +45,10 @@ const posixShellLexer = options => ({
 			this.yytext.expansion = tk.expansion;
 		}
 
+		if (tk.originalText) {
+			this.yytext.originalText = tk.originalText;
+		}
+
 		if (tk.type) {
 			this.yytext.type = tk.type;
 		}
@@ -69,8 +73,7 @@ const posixShellLexer = options => ({
 			// logger('end'),
 			rules.removeTempObject,
 			defaultNodeType,
-			// logger('end'),
-			// logger('end'),
+			parameterExpansion.resolve(options),
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,

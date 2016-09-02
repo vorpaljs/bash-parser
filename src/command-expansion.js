@@ -1,4 +1,5 @@
 'use strict';
+const MagicString = require('magic-string');
 
 function setCommandExpansion(args) {
 	const token = args.token;
@@ -26,7 +27,7 @@ function setCommandExpansion(args) {
 	const bashParser = require('./index');
 
 	token.expansion = (token.expansion || []).concat({
-		kind: 'command',
+		type: 'command_expansion',
 		command,
 		commandAST: bashParser(command),
 		start,
@@ -103,11 +104,36 @@ function expandWord(token) {
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
 
-module.exports = function * commandExpansion(tokens) {
+function * commandExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
 			expandWord(token);
 		}
 		yield token;
 	}
+}
+
+commandExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
+	for (const token of tokens) {
+		if (options.execCommand && token.expansion) {
+			const value = token.WORD || token.ASSIGNMENT_WORD;
+			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
+
+			token.magic = new MagicString(value);
+			token.originalText = token.originalText || value;
+
+			for (const xp of token.expansion) {
+				if (xp.type === 'command_expansion') {
+					const result = options.execCommand(xp);
+					token.magic.overwrite(xp.start, xp.end, result);
+					xp.resolved = true;
+				}
+			}
+			token[resultProp] = token.magic.toString();
+			delete token.magic;
+		}
+		yield token;
+	}
 };
+
+module.exports = commandExpansion;

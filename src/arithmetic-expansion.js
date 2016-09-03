@@ -1,6 +1,7 @@
 'use strict';
 const babylon = require('babylon');
 const MagicString = require('magic-string');
+const fieldSplitting = require('./field-splitting');
 
 function setArithmeticExpansion(args) {
 	const token = args.token;
@@ -107,7 +108,7 @@ arithmeticExpansion.resolve = options => function * resolveParameterExpansion(to
 					token.magic.overwrite(
 						xp.start,
 						xp.end,
-						result
+						fieldSplitting.mark(result, options)
 					);
 					xp.resolved = true;
 				}

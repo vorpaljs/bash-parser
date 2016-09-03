@@ -260,3 +260,73 @@ test('last newlines are removed from command output', t => {
 		}
 	});
 });
+
+test('field splitting', t => {
+	const result = bashParser('say $(other) plz', {
+		execCommand() {
+			return 'foo\tbar baz';
+		},
+
+		resolveEnv() {
+			return '\t ';
+		}
+	});
+
+	delete result.commands[0].suffix[0].expansion[0].commandAST;
+	delete result.commands[0].suffix[1].expansion[0].commandAST;
+	delete result.commands[0].suffix[2].expansion[0].commandAST;
+
+	// utils.logResults(result)
+
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: 'say',
+			type: 'word'
+		},
+		suffix: [{
+			text: 'foo',
+			expansion: [{
+				command: 'other',
+				start: 0,
+				end: 8,
+				type: 'command_expansion',
+				resolved: true
+			}],
+			originalText: '$(other)',
+			type: 'word',
+			joined: 'foo\u0000bar\u0000baz',
+			fieldIdx: 0
+		}, {
+			text: 'bar',
+			expansion: [{
+				command: 'other',
+				start: 0,
+				end: 8,
+				type: 'command_expansion',
+				resolved: true
+			}],
+			originalText: '$(other)',
+			type: 'word',
+			joined: 'foo\u0000bar\u0000baz',
+			fieldIdx: 1
+		}, {
+			text: 'baz',
+			expansion: [{
+				command: 'other',
+				start: 0,
+				end: 8,
+				type: 'command_expansion',
+				resolved: true
+			}],
+			originalText: '$(other)',
+			type: 'word',
+			joined: 'foo\u0000bar\u0000baz',
+			fieldIdx: 2
+		}, {
+			text: 'plz',
+			type: 'word'
+		}]
+	});
+});
+

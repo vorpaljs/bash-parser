@@ -58,6 +58,14 @@ const posixShellLexer = options => ({
 			this.yytext.maybeSimpleCommandName = tk.maybeSimpleCommandName;
 		}
 
+		if (tk.joined) {
+			this.yytext.joined = tk.joined;
+		}
+
+		if (tk.fieldIdx !== undefined) {
+			this.yytext.fieldIdx = tk.fieldIdx;
+		}
+
 		if (options.insertLOC && tk.loc) {
 			this.yytext.loc = tk.loc;
 		}

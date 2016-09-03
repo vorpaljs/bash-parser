@@ -1,5 +1,6 @@
 'use strict';
 const MagicString = require('magic-string');
+const fieldSplitting = require('./field-splitting');
 
 function setCommandExpansion(args) {
 	const token = args.token;
@@ -128,7 +129,7 @@ commandExpansion.resolve = options => function * resolveParameterExpansion(token
 					token.magic.overwrite(
 						xp.start,
 						xp.end,
-						result.replace(/\n+$/, '')
+						fieldSplitting.mark(result.replace(/\n+$/, ''), options)
 					);
 					xp.resolved = true;
 				}

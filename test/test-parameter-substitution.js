@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-const utils = require('./_utils');
+// const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
@@ -270,7 +270,7 @@ test('resolve double parameter', t => {
 		}
 	});
 });
-/*
+
 test('field splitting', t => {
 	const result = bashParser('say ${other} plz', {
 		resolveParameter() {
@@ -281,7 +281,7 @@ test('field splitting', t => {
 			return '\t ';
 		}
 	});
-	utils.logResults(result)
+	// utils.logResults(result)
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
@@ -289,19 +289,47 @@ test('field splitting', t => {
 			type: 'word'
 		},
 		suffix: [{
+			text: 'foo',
+			expansion: [{
+				parameter: 'other',
+				start: 0,
+				end: 8,
+				type: 'parameter_expansion',
+				resolved: true
+			}],
+			originalText: '${other}',
 			type: 'word',
-			text: 'foo'
+			joined: 'foo\u0000bar\u0000baz',
+			fieldIdx: 0
 		}, {
+			text: 'bar',
+			expansion: [{
+				parameter: 'other',
+				start: 0,
+				end: 8,
+				type: 'parameter_expansion',
+				resolved: true
+			}],
+			originalText: '${other}',
 			type: 'word',
-			text: 'bar'
+			joined: 'foo\u0000bar\u0000baz',
+			fieldIdx: 1
 		}, {
+			text: 'baz',
+			expansion: [{
+				parameter: 'other',
+				start: 0,
+				end: 8,
+				type: 'parameter_expansion',
+				resolved: true
+			}],
+			originalText: '${other}',
 			type: 'word',
-			text: 'baz'
+			joined: 'foo\u0000bar\u0000baz',
+			fieldIdx: 2
 		}, {
-			type: 'word',
-			text: 'plz'
+			text: 'plz',
+			type: 'word'
 		}]
 	});
 });
-
-*/

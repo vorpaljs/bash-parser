@@ -2,6 +2,8 @@
 const test = require('ava');
 const tokenDelimiter = require('../src/token-delimiter');
 const mkloc = require('./_utils').mkloc;
+// const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text));
@@ -215,23 +217,22 @@ test('character escaping is resetted on each char', t => {
 	);
 });
 test('support quoting with single', t => {
-	t.deepEqual(
-		tokenize('echo \'< world >\' other'), [
-			{
-				TOKEN: 'echo',
-				loc: mkloc(0, 0, 0, 3)
-			}, {
-				TOKEN: '\'< world >\'',
-				loc: mkloc(0, 5, 0, 15)
-			}, {
-				TOKEN: 'other',
-				loc: mkloc(0, 17, 0, 21)
-			}, {
-				EOF: true,
-				loc: mkloc(0, 22, 0, 22)
-			}
-		]
-	);
+	const result = tokenize('echo \'< world >\' other');
+	// utils.logResults(result);
+
+	t.deepEqual(result, [{
+		TOKEN: 'echo',
+		loc: mkloc(0, 0, 0, 3)
+	}, {
+		TOKEN: '\'< world >\'',
+		loc: mkloc(0, 5, 0, 15)
+	}, {
+		TOKEN: 'other',
+		loc: mkloc(0, 17, 0, 21)
+	}, {
+		EOF: true,
+		loc: mkloc(0, 22, 0, 22)
+	}]);
 });
 
 test('support quoting with double', t => {

@@ -1,6 +1,7 @@
 'use strict';
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
+const fieldSplitting = require('./field-splitting');
 
 const parameterOps = {
 	useDefaultValue: ':-',
@@ -224,12 +225,15 @@ parameterExpansion.resolve = options => function * resolveParameterExpansion(tok
 
 			token.magic = new MagicString(value);
 			token.originalText = token.originalText || value;
-
 			for (const xp of token.expansion) {
 				if (xp.type === 'parameter_expansion') {
 					const result = options.resolveParameter(xp);
-					token.magic.overwrite(xp.start, xp.end, result);
 					xp.resolved = true;
+					token.magic.overwrite(
+						xp.start,
+						xp.end,
+						fieldSplitting.mark(result, options)
+					);
 				}
 			}
 			token[resultProp] = token.magic.toString();

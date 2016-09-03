@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
@@ -16,6 +16,34 @@ test('parameter substitution in assignment', t => {
 			end: 17
 		}]
 	}]);
+});
+
+test('parameter substitution and other words', t => {
+	const result = bashParser('foo ${other} bar baz');
+	// utils.logResults(result);
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: 'foo',
+			type: 'word'
+		},
+		suffix: [{
+			text: '${other}',
+			expansion: [{
+				parameter: 'other',
+				start: 0,
+				end: 8,
+				type: 'parameter_expansion'
+			}],
+			type: 'word'
+		}, {
+			text: 'bar',
+			type: 'word'
+		}, {
+			text: 'baz',
+			type: 'word'
+		}]
+	});
 });
 
 test('multi-word parameter substitution', t => {
@@ -242,3 +270,38 @@ test('resolve double parameter', t => {
 		}
 	});
 });
+/*
+test('field splitting', t => {
+	const result = bashParser('say ${other} plz', {
+		resolveParameter() {
+			return 'foo\tbar baz';
+		},
+
+		resolveEnv() {
+			return '\t ';
+		}
+	});
+	utils.logResults(result)
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: 'say',
+			type: 'word'
+		},
+		suffix: [{
+			type: 'word',
+			text: 'foo'
+		}, {
+			type: 'word',
+			text: 'bar'
+		}, {
+			type: 'word',
+			text: 'baz'
+		}, {
+			type: 'word',
+			text: 'plz'
+		}]
+	});
+});
+
+*/

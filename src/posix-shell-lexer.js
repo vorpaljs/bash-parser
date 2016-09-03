@@ -8,6 +8,7 @@ const commandExpansion = require('./command-expansion');
 const arithmeticExpansion = require('./arithmetic-expansion');
 const aliasSubstitution = require('./alias-substitution');
 const defaultNodeType = require('./default-node-type');
+const fieldSplitting = require('./field-splitting');
 // const logger = require('./logger-iterator');
 
 const preAliasLexer = compose(
@@ -70,9 +71,10 @@ const posixShellLexer = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
-			// logger('end'),
+
 			rules.removeTempObject,
 			defaultNodeType,
+			fieldSplitting.split,
 			arithmeticExpansion.resolve(options),
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
@@ -99,7 +101,7 @@ const posixShellLexer = options => ({
 
 			rules.newLineList,
 			rules.linebreakIn,
-			// logger('before'),
+// logger('end'),
 			tokenDelimiter
 		);
 		this.tokenizer = tokenize(source);

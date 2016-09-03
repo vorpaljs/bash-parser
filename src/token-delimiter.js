@@ -4,14 +4,14 @@ const hasOwnProperty = require('has-own-property');
 const operators = require('./operators');
 
 const QUOTING = {
-	NO: {},
-	ESCAPE: {},
-	SINGLE: {},
-	DOUBLE: {},
-	PARAMETER: {},
-	BACKTICK_COMMAND: {},
-	COMMAND: {},
-	ARITHMETIC: {}
+	NO: {value: 'NO'},
+	ESCAPE: {value: 'ESCAPE'},
+	SINGLE: {close: '\'', value: 'SINGLE'},
+	DOUBLE: {close: '"', value: 'DOUBLE'},
+	PARAMETER: {close: '}', value: 'PARAMETER'},
+	BACKTICK_COMMAND: {close: '`', value: 'BACKTICK_COMMAND'},
+	COMMAND: {close: ')', value: 'COMMAND'},
+	ARITHMETIC: {close: '))', value: 'ARITHMETIC'}
 };
 
 const QUOTING_DELIM = {
@@ -67,9 +67,13 @@ const mkToken = (tk, lineNumber, columnNumber) => ({
 });
 
 const quotingCharacter = (ch, lastCh, penultCh) =>
-	QUOTING_DELIM[ch] ||
+	QUOTING_DELIM[penultCh + lastCh + ch] ||
 	QUOTING_DELIM[lastCh + ch] ||
-	QUOTING_DELIM[penultCh + lastCh + ch];
+	QUOTING_DELIM[ch];
+
+const closingQuotingCharacter = (quoting, ch, lastCh, penultCh) =>
+	(quoting.close === ch && lastCh !== '\\') ||
+	(quoting.close === lastCh + ch && penultCh !== '\\');
 
 /*
 	delimit tokens on source according to rules defined
@@ -113,6 +117,7 @@ module.exports = function * tokenDelimiter(source) {
 				token.OPERATOR += currentCharacter;
 
 				// skip to next character
+				penultCharacter = lastCharacter;
 				lastCharacter = currentCharacter;
 				advanceLoc(currentCharacter);
 				continue;
@@ -138,9 +143,11 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		if (quotingCharacter(currentCharacter, lastCharacter, penultCharacter) &&
-			quoting === QUOTING.NO) {
-			quoting = quotingCharacter(currentCharacter, lastCharacter, penultCharacter);
+		const currentCharacterQuoting = quotingCharacter(currentCharacter, lastCharacter, penultCharacter);
+		// console.log(currentCharacter, quoting, penultCharacter + lastCharacter + currentCharacter + '-> ' + JSON.stringify(currentCharacterQuoting))
+
+		if (currentCharacterQuoting && quoting === QUOTING.NO) {
+			quoting = currentCharacterQuoting;
 
 			// TODO: test this, why a quoting character should e appended
 			// to TOKEN?
@@ -153,9 +160,14 @@ module.exports = function * tokenDelimiter(source) {
 			}
 
 			// skip to next character
+			penultCharacter = lastCharacter;
 			lastCharacter = currentCharacter;
 			advanceLoc(currentCharacter);
 			continue;
+		}
+
+		if (quoting === QUOTING.COMMAND && currentCharacterQuoting === QUOTING.ARITHMETIC) {
+			quoting = currentCharacterQuoting;
 		}
 
 		// <backslash> quoting should work within double quotes
@@ -165,18 +177,10 @@ module.exports = function * tokenDelimiter(source) {
 
 			prevQuoting = QUOTING.DOUBLE;
 			// skip to next character
+			penultCharacter = lastCharacter;
 			lastCharacter = currentCharacter;
 			advanceLoc(currentCharacter);
 			continue;
-		}
-
-		// Reset single or double quoting on close
-		if (quoting === QUOTING_DELIM[currentCharacter] &&
-			(quoting === QUOTING.SINGLE || quoting === QUOTING.DOUBLE)) {
-			quoting = QUOTING.NO;
-
-			// skip to next character
-			// continue;
 		}
 
 		// RULE 6 - If the current character is not quoted and can be used as the
@@ -193,6 +197,7 @@ module.exports = function * tokenDelimiter(source) {
 			token = operator(currentCharacter, lineNumber, columnNumber);
 
 			// skip to next character
+			penultCharacter = lastCharacter;
 			lastCharacter = currentCharacter;
 			advanceLoc(currentCharacter);
 			continue;
@@ -200,7 +205,7 @@ module.exports = function * tokenDelimiter(source) {
 
 		// RULE 7 - If the current character is an unquoted <newline>, the current
 		// token shall be delimited.
-		if (quoting === QUOTING.NO &&
+		if (quoting !== QUOTING.ESCAPE &&
 				currentCharacter === '\n') {
 			// emit current token if not empty
 			if (!token.EMPTY) {
@@ -208,10 +213,11 @@ module.exports = function * tokenDelimiter(source) {
 			}
 
 			token = empty(lineNumber, columnNumber);
-
+			quoting = QUOTING.NO;
 			yield finalizeLoc(newLine(lineNumber, columnNumber), lineNumber, columnNumber);
 
 			// skip to next character
+			penultCharacter = lastCharacter;
 			lastCharacter = currentCharacter;
 			advanceLoc(currentCharacter);
 			continue;
@@ -220,6 +226,7 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 8 - If the current character is an unquoted <blank>, any token
 		// containing the previous character is delimited and the current
 		// character shall be discarded.
+		// console.log(currentCharacter.match(/\s/), quoting)
 		if (
 			quoting === QUOTING.NO &&
 			currentCharacter.match(/\s/)) {
@@ -231,6 +238,7 @@ module.exports = function * tokenDelimiter(source) {
 			token = empty(lineNumber, columnNumber);
 
 			// skip to next character
+			penultCharacter = lastCharacter;
 			lastCharacter = currentCharacter;
 			advanceLoc(currentCharacter);
 			continue;
@@ -242,12 +250,21 @@ module.exports = function * tokenDelimiter(source) {
 			prevQuoting = null;
 		}
 
+		// Reset single or double quoting on close
+		if (closingQuotingCharacter(quoting, currentCharacter, lastCharacter, penultCharacter)) {
+			quoting = QUOTING.NO;
+
+			// skip to next character
+			// continue;
+		}
+
 		// RULE 9 - If the previous character was part of a word, the current
 		// character shall be appended to that word.
 		if (token.TOKEN !== undefined) {
 			token.TOKEN += currentCharacter;
 
 			// skip to next character
+			penultCharacter = lastCharacter;
 			lastCharacter = currentCharacter;
 			advanceLoc(currentCharacter);
 			continue;

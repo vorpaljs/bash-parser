@@ -74,7 +74,6 @@ test('5', t => {
 dest=bar
 eval "dest=foo"`
 );
-	// console.log(JSON.stringify(result, null, 5))
 
 	t.deepEqual(result, {
 		type: 'complete_command',

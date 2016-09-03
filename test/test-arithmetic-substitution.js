@@ -22,21 +22,27 @@ test('arithmetic substitution', t => {
 
 test('arithmetic & parameter substitution', t => {
 	const result = bashParser('variable=$((42 + 43)) $ciao');
-	delete result.commands[0].prefix[0].expansion[1].arithmeticAST;
-	// utils.logResults(result.commands[0].prefix[0]);
+	// utils.logResults(result.commands[0]);
+	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
 	t.deepEqual(result.commands[0].prefix[0], {
-		text: 'variable=$((42 + 43)) $ciao',
+		text: 'variable=$((42 + 43))',
 		type: 'assignment_word',
 		expansion: [{
-			type: 'parameter_expansion',
-			parameter: 'ciao',
-			start: 22,
-			end: 27
-		}, {
 			expression: '42 + 43',
 			type: 'arithmetic_expansion',
 			start: 9,
 			end: 21
+		}]
+	});
+
+	t.deepEqual(result.commands[0].name, {
+		text: '$ciao',
+		type: 'word',
+		expansion: [{
+			type: 'parameter_expansion',
+			parameter: 'ciao',
+			start: 0,
+			end: 5
 		}]
 	});
 });

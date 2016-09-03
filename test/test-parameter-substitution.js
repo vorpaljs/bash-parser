@@ -333,3 +333,35 @@ test('field splitting', t => {
 		}]
 	});
 });
+
+test('field splitting not occurring within quoted words', t => {
+	const result = bashParser('say "${other} plz"', {
+		resolveParameter() {
+			return 'foo\tbar baz';
+		},
+
+		resolveEnv() {
+			return '\t ';
+		}
+	});
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			text: 'say',
+			type: 'word'
+		},
+		suffix: [{
+			text: '"foo\tbar baz plz"',
+			expansion: [{
+				parameter: 'other',
+				start: 1,
+				end: 9,
+				type: 'parameter_expansion',
+				resolved: true
+			}],
+			originalText: '"${other} plz"',
+			type: 'word'
+		}]
+	});
+});

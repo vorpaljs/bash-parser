@@ -229,7 +229,11 @@ exports.identifySimpleCommandNames = function * (tokens) {
 
 			let lastToken = tk;
 			let commandNameFound = false;
-			for (const scTk of tokens) {
+			let item = tokens.next();
+			let cont = true;
+
+			while (cont && !item.done) {
+				const scTk = item.value;
 				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD && isValidName(scTk.WORD)) {
 					scTk._.maybeSimpleCommandName = true;
 					// scTk.maybeSimpleCommandName = true;
@@ -240,9 +244,11 @@ exports.identifySimpleCommandNames = function * (tokens) {
 
 				if (scTk.SEPARATOR_OP || scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' ||
 					scTk.PIPE || scTk.OR_IF || scTk.PIPE || scTk.AND_IF) {
-					break;
+					cont = false;
+					continue;
 				}
 
+				item = tokens.next();
 				lastToken = scTk;
 			}
 		} else {

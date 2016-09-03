@@ -232,7 +232,7 @@ parameterExpansion.resolve = options => function * resolveParameterExpansion(tok
 					token.magic.overwrite(
 						xp.start,
 						xp.end,
-						fieldSplitting.mark(result, options)
+						fieldSplitting.mark(result, value, options)
 					);
 				}
 			}

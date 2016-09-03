@@ -129,7 +129,7 @@ commandExpansion.resolve = options => function * resolveParameterExpansion(token
 					token.magic.overwrite(
 						xp.start,
 						xp.end,
-						fieldSplitting.mark(result.replace(/\n+$/, ''), options)
+						fieldSplitting.mark(result.replace(/\n+$/, ''), value, options)
 					);
 					xp.resolved = true;
 				}

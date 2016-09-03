@@ -31,9 +31,7 @@ const preAliasLexer = compose(
 const posixShellLexer = options => ({
 	lex() {
 		const item = this.tokenizer.next();
-
 		const tk = item.value;
-
 		const tkType = Object.keys(tk).filter(k =>
 			k !== 'loc' && k !== 'expansion'
 		)[0];
@@ -79,13 +77,16 @@ const posixShellLexer = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
+			// logger('--->'),
 
 			rules.removeTempObject,
 			defaultNodeType,
 			fieldSplitting.split,
+
 			arithmeticExpansion.resolve(options),
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
+
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,
@@ -96,20 +97,23 @@ const posixShellLexer = options => ({
 			parameterExpansion,
 
 			// logger('after aliasSubstitution'),
+
 			aliasSubstitution(options, preAliasLexer),
 			rules.identifySimpleCommandNames,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
+
 			rules.reservedWords,
 
+//			logger('after'),
 			rules.separator,
+//			logger('before'),
 
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
 
 			rules.newLineList,
 			rules.linebreakIn,
-// logger('end'),
 			tokenDelimiter
 		);
 		this.tokenizer = tokenize(source);

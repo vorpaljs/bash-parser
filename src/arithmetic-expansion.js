@@ -108,7 +108,7 @@ arithmeticExpansion.resolve = options => function * resolveParameterExpansion(to
 					token.magic.overwrite(
 						xp.start,
 						xp.end,
-						fieldSplitting.mark(result, options)
+						fieldSplitting.mark(result, value, options)
 					);
 					xp.resolved = true;
 				}

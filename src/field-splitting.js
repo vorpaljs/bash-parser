@@ -1,7 +1,9 @@
 'use strict';
 
-exports.mark = function markFieldSplitting(result, options) {
-	if (typeof options.resolveEnv === 'function') {
+exports.mark = function markFieldSplitting(result, text, options) {
+	if (typeof options.resolveEnv === 'function' &&
+			text[0] !== '\'' && text[0] !== '"'
+		) {
 		const ifs = options.resolveEnv('IFS');
 
 		if (ifs !== null) {

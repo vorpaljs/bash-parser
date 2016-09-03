@@ -20,6 +20,9 @@
 
 - `resolveEnv: (name: String) => String` - a callback to resolve environment variables. If specified, the parser call it whenever it need to resolve an environment variable. It should return the value if the variable is defined, otherwise `null`. If the option is not specified, the parser won't try to resolve any environment variable.
 
+- `resolveHomeUser: (username: String) => String` - a callback to resolve users home directories. If specified, the parser call it whenever it need to resolve a tilde expansion. If the option is not specified, the parser won't try to resolve any tilde expansion. When the callback is called with a null value for `username`, the callbackshould return the current user home directory.
+
+
 - `resolveParameter: (parameterAST: Object) => String` - a callback to resolve parameter expansion. If specified, the parser call it whenever it need to resolve a parameter expansion. It should return the result of the expansion. If the option is not specified, the parser won't try to resolve any parameter expansion.
 
 - `execCommand: (cmdAST: Object) => String` - a callback to execute a [simple_command](https://github.com/vorpaljs/bash-parser/blob/master/docs/ast.md#simple_command). If specified, the parser call it whenever it need to resolve a command substitution. It receive as argument the AST of a [simple_command node](https://github.com/vorpaljs/bash-parser/blob/master/docs/ast.md#simple_command), and shall return the output of the command. If the option is not specified, the parser won't try to resolve any command substitution.

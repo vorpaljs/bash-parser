@@ -9,6 +9,7 @@ const arithmeticExpansion = require('./arithmetic-expansion');
 const aliasSubstitution = require('./alias-substitution');
 const defaultNodeType = require('./default-node-type');
 const fieldSplitting = require('./field-splitting');
+const tildeExpanding = require('./tilde-expanding');
 // const logger = require('./logger-iterator');
 
 const preAliasLexer = compose(
@@ -86,6 +87,7 @@ const posixShellLexer = options => ({
 			arithmeticExpansion.resolve(options),
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
+			tildeExpanding(options),
 
 			rules.functionName,
 			rules.ioNumber,

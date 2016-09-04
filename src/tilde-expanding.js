@@ -1,13 +1,15 @@
+'use strict';
+
 const replace = (text, resolveHomeUser) => {
 	let replaced = false;
-	let result = text.replace(/^~[^\/]*\//, (...args) => {
+	let result = text.replace(/^~[^\/]*\//, (match, p1) => {
 		replaced = true;
-		return resolveHomeUser(args[1] || null) + '/';
+		return resolveHomeUser(p1 || null) + '/';
 	});
 	// console.log({result, replaced})
 	if (!replaced) {
-		result = text.replace(/^~.*$/, (...args) => {
-			return resolveHomeUser(args[1] || null);
+		result = text.replace(/^~.*$/, (match, p1) => {
+			return resolveHomeUser(p1 || null);
 		});
 	}
 
@@ -20,9 +22,11 @@ module.exports = options => function * resolveTilde(tokens) {
 			token.WORD = replace(token.WORD, options.resolveHomeUser);
 		}
 		if (token.ASSIGNMENT_WORD && typeof options.resolveHomeUser === 'function') {
-			const [target, ...sourceParts] = token.ASSIGNMENT_WORD.split('=');
+			const parts = token.ASSIGNMENT_WORD.split('=', 2);
+			const target = parts[0];
+			const sourceParts = parts[1];
+
 			const source = sourceParts
-				.join('=')
 				.split(':')
 				.map(text => replace(text, options.resolveHomeUser))
 				.join(':');

@@ -1,0 +1,17 @@
+'use strict';
+const test = require('ava');
+const bashParser = require('../src');
+// const utils = require('./_utils');
+
+/* eslint-disable camelcase */
+test('parameter substitution in assignment', t => {
+	const result = bashParser('echo', {
+		resolvePath() {
+			return 'ciao';
+		}
+	});
+	t.deepEqual(result.commands[0].name, {
+		type: 'word',
+		text: 'ciao'
+	});
+});

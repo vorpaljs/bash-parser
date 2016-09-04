@@ -10,6 +10,7 @@ const aliasSubstitution = require('./alias-substitution');
 const defaultNodeType = require('./default-node-type');
 const fieldSplitting = require('./field-splitting');
 const tildeExpanding = require('./tilde-expanding');
+const pathExpansion = require('./path-expansion');
 // const logger = require('./logger-iterator');
 
 const preAliasLexer = compose(
@@ -82,6 +83,9 @@ const posixShellLexer = options => ({
 
 			rules.removeTempObject,
 			defaultNodeType,
+
+			pathExpansion(options),
+
 			fieldSplitting.split,
 
 			arithmeticExpansion.resolve(options),

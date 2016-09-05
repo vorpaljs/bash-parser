@@ -276,7 +276,12 @@ module.exports = function * tokenDelimiter(source) {
 		// of the comment.
 		// TODO
 		// RULE 11 - The current character is used as the start of a new word.
-		token = mkToken(currentCharacter, lineNumber, columnNumber);
+		if (currentCharacter === '\n') {
+			token = empty(lineNumber, columnNumber);
+		} else {
+			token = mkToken(currentCharacter, lineNumber, columnNumber);
+		}
+
 		penultCharacter = lastCharacter;
 		lastCharacter = currentCharacter;
 

@@ -93,6 +93,7 @@ module.exports = function * tokenDelimiter(source) {
 	let columnNumber = 0;
 	let prevLineNumber = 0;
 	let prevColumnNumber = 0;
+	let isComment = false;
 
 	function advanceLoc(currentCharacter) {
 		prevLineNumber = lineNumber;
@@ -107,7 +108,18 @@ module.exports = function * tokenDelimiter(source) {
 	}
 
 	for (const currentCharacter of source) {
-		// process.stdout.write(currentCharacter)
+		if (isComment) {
+			if (currentCharacter === '\n') {
+				isComment = false;
+			} else {
+				penultCharacter = lastCharacter;
+				lastCharacter = currentCharacter;
+
+				advanceLoc(currentCharacter);
+				continue;
+			}
+		}
+
 		if (token.OPERATOR) {
 			// RULE 2 -If the previous character was used as part of an operator and the
 			// current character is not quoted and can be used with the current characters
@@ -274,11 +286,12 @@ module.exports = function * tokenDelimiter(source) {
 		// characters up to, but excluding, the next <newline> shall be discarded
 		// as a comment. The <newline> that ends the line is not considered part
 		// of the comment.
-		// TODO
-		// RULE 11 - The current character is used as the start of a new word.
-		if (currentCharacter === '\n') {
+		if (currentCharacter === '#') {
+			isComment = true;
+		} else if (currentCharacter === '\n') {
 			token = empty(lineNumber, columnNumber);
 		} else {
+			// RULE 11 - The current character is used as the start of a new word.
 			token = mkToken(currentCharacter, lineNumber, columnNumber);
 		}
 

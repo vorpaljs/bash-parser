@@ -1,0 +1,29 @@
+{
+  "name": "iterable-lookahead",
+  "version": "0.0.0",
+  "description": "Wrap an iterable with methods to read ahead or behind current item.",
+  "repository": "vorpaljs/bash-ast-traverser",
+  "license": "MIT",
+  "author": "Andrea Parodi",
+  "scripts": {
+    "test": "ava --no-babel && xo",
+    "cover-test": "nyc ava --no-babel"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=4"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "coveralls": "^2.11.11",
+    "is-iterable": "^1.1.0",
+    "nyc": "^7.0.0",
+    "xo": "^0.16.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "nyc": {
+    "exclude": []
+  }
+}

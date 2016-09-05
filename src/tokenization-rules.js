@@ -229,8 +229,9 @@ exports.identifySimpleCommandNames = function * (tokens) {
 
 			let lastToken = tk;
 			let commandNameFound = false;
-
-			for (const scTk of tokens) {
+			let item = tokens.next();
+			while (!item.done) {
+				const scTk = item.value;
 				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD && isValidName(scTk.WORD)) {
 					scTk._.maybeSimpleCommandName = true;
 					// scTk.maybeSimpleCommandName = true;
@@ -245,6 +246,7 @@ exports.identifySimpleCommandNames = function * (tokens) {
 				}
 
 				lastToken = scTk;
+				item = tokens.next();
 			}
 		} else {
 			yield tk;

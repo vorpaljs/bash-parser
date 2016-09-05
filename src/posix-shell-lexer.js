@@ -34,6 +34,7 @@ const preAliasLexer = compose(
 const posixShellLexer = options => ({
 	lex() {
 		const item = this.tokenizer.next();
+		// console.log(item)
 		const tk = item.value;
 
 		const tkType = Object.keys(tk).filter(k =>
@@ -81,6 +82,7 @@ const posixShellLexer = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
+			// logger('---+'),
 			rules.removeTempObject,
 			defaultNodeType,
 

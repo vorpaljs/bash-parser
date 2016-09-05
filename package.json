@@ -40,6 +40,7 @@
     "babylon": "^6.9.1",
     "compose-function": "^3.0.3",
     "has-own-property": "^0.1.0",
+    "iterable-lookahead": "file:packages/iterable-lookahead",
     "magic-string": "^0.16.0",
     "object-pairs": "^0.1.0",
     "object-values": "^1.0.0"

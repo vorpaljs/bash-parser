@@ -1,6 +1,6 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
-// const values = require('object-values');
+const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
 
 const QUOTING = {
@@ -86,8 +86,6 @@ module.exports = function * tokenDelimiter(source) {
 	let token = empty();
 	let quoting = QUOTING.NO;
 	let prevQuoting = null;
-	let lastCharacter = null;
-	let penultCharacter = null;
 
 	let lineNumber = 0;
 	let columnNumber = 0;
@@ -107,14 +105,12 @@ module.exports = function * tokenDelimiter(source) {
 		}
 	}
 
-	for (const currentCharacter of source) {
+	const charIterator = lookahead(source, 2);
+	for (const currentCharacter of charIterator) {
 		if (isComment) {
 			if (currentCharacter === '\n') {
 				isComment = false;
 			} else {
-				penultCharacter = lastCharacter;
-				lastCharacter = currentCharacter;
-
 				advanceLoc(currentCharacter);
 				continue;
 			}
@@ -129,8 +125,7 @@ module.exports = function * tokenDelimiter(source) {
 				token.OPERATOR += currentCharacter;
 
 				// skip to next character
-				penultCharacter = lastCharacter;
-				lastCharacter = currentCharacter;
+
 				advanceLoc(currentCharacter);
 				continue;
 			}
@@ -157,7 +152,8 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		const currentCharacterQuoting = quotingCharacter(currentCharacter, lastCharacter, penultCharacter);
+		const currentCharacterQuoting = quotingCharacter(currentCharacter, charIterator.behind(1), charIterator.behind(2));
+
 		// console.log(currentCharacter, quoting, penultCharacter + lastCharacter + currentCharacter + '-> ' + JSON.stringify(currentCharacterQuoting))
 
 		if (currentCharacterQuoting && quoting === QUOTING.NO) {
@@ -172,8 +168,7 @@ module.exports = function * tokenDelimiter(source) {
 			}
 
 			// skip to next character
-			penultCharacter = lastCharacter;
-			lastCharacter = currentCharacter;
+
 			advanceLoc(currentCharacter);
 			continue;
 		}
@@ -189,8 +184,7 @@ module.exports = function * tokenDelimiter(source) {
 
 			prevQuoting = QUOTING.DOUBLE;
 			// skip to next character
-			penultCharacter = lastCharacter;
-			lastCharacter = currentCharacter;
+
 			advanceLoc(currentCharacter);
 			continue;
 		}
@@ -199,7 +193,7 @@ module.exports = function * tokenDelimiter(source) {
 		// first character of a new operator, the current token (if any) shall be
 		// delimited. The current character shall be used as the beginning of the
 		// next (operator) token.
-		if (isOperatorStart(currentCharacter, lastCharacter) &&
+		if (isOperatorStart(currentCharacter, charIterator.behind(1)) &&
 			quoting === QUOTING.NO) {
 			// emit current token if not empty
 
@@ -209,8 +203,7 @@ module.exports = function * tokenDelimiter(source) {
 			token = operator(currentCharacter, lineNumber, columnNumber);
 
 			// skip to next character
-			penultCharacter = lastCharacter;
-			lastCharacter = currentCharacter;
+
 			advanceLoc(currentCharacter);
 			continue;
 		}
@@ -229,8 +222,7 @@ module.exports = function * tokenDelimiter(source) {
 			yield finalizeLoc(newLine(lineNumber, columnNumber), lineNumber, columnNumber);
 
 			// skip to next character
-			penultCharacter = lastCharacter;
-			lastCharacter = currentCharacter;
+
 			advanceLoc(currentCharacter);
 			continue;
 		}
@@ -250,8 +242,7 @@ module.exports = function * tokenDelimiter(source) {
 			token = empty(lineNumber, columnNumber);
 
 			// skip to next character
-			penultCharacter = lastCharacter;
-			lastCharacter = currentCharacter;
+
 			advanceLoc(currentCharacter);
 			continue;
 		}
@@ -263,7 +254,7 @@ module.exports = function * tokenDelimiter(source) {
 		}
 
 		// Reset single or double quoting on close
-		if (closingQuotingCharacter(quoting, currentCharacter, lastCharacter, penultCharacter)) {
+		if (closingQuotingCharacter(quoting, currentCharacter, charIterator.behind(1), charIterator.behind(2))) {
 			quoting = QUOTING.NO;
 
 			// skip to next character
@@ -276,8 +267,7 @@ module.exports = function * tokenDelimiter(source) {
 			token.TOKEN += currentCharacter;
 
 			// skip to next character
-			penultCharacter = lastCharacter;
-			lastCharacter = currentCharacter;
+
 			advanceLoc(currentCharacter);
 			continue;
 		}
@@ -294,9 +284,6 @@ module.exports = function * tokenDelimiter(source) {
 			// RULE 11 - The current character is used as the start of a new word.
 			token = mkToken(currentCharacter, lineNumber, columnNumber);
 		}
-
-		penultCharacter = lastCharacter;
-		lastCharacter = currentCharacter;
 
 		advanceLoc(currentCharacter);
 	}

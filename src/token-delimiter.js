@@ -140,7 +140,9 @@ module.exports = function * tokenDelimiter(source) {
 			if (isOperator(token.OPERATOR)) {
 				yield finalizeLoc(token, prevLineNumber, prevColumnNumber);
 			} else {
-				// TODO: test this, this should be emitted as an operator, not a token?
+				// The current token cannot form an OPERATOR by itself,
+				// even if it could start one,
+				// so it is emitted as a normal token.
 				const alteredTk = mkToken(
 					token.OPERATOR,
 					token.loc.startLine,
@@ -161,8 +163,6 @@ module.exports = function * tokenDelimiter(source) {
 		if (currentCharacterQuoting && quoting === QUOTING.NO) {
 			quoting = currentCharacterQuoting;
 
-			// TODO: test this, why a quoting character should e appended
-			// to TOKEN?
 			if (currentCharacter !== '\\') {
 				if (token.TOKEN === undefined) {
 					token = mkToken(currentCharacter, lineNumber, columnNumber);

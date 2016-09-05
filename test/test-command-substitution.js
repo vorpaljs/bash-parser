@@ -131,7 +131,7 @@ test('quoted backtick are removed within command substitution with backticks', t
 				name: {type: 'word', text: ''},
 				prefix: [{
 					type: 'assignment_word',
-					text: 'variable=`echo \\`echo ciao\\``',
+					text: 'variable=`echo `echo ciao``',
 					expansion: [{
 						command: 'echo `echo ciao`',
 						type: 'command_expansion',
@@ -156,7 +156,7 @@ test('quoted backtick are not removed within command substitution with parenthes
 				name: {type: 'word', text: ''},
 				prefix: [{
 					type: 'assignment_word',
-					text: 'variable=$(echo \\`echo ciao\\`)',
+					text: 'variable=$(echo `echo ciao`)',
 					expansion: [{
 						command: 'echo \\`echo ciao\\`',
 						type: 'command_expansion',
@@ -182,7 +182,7 @@ test('resolve double command', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
-			text: '"foo bar bar baz"',
+			text: 'foo bar bar baz',
 			originalText: '"foo $(other) $(one) baz"',
 			expansion: [{
 				command: 'other',
@@ -215,7 +215,7 @@ test('resolve double command with backticks', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
-			text: '"foo bar bar baz"',
+			text: 'foo bar bar baz',
 			originalText: '"foo `other` `one` baz"',
 			expansion: [{
 				command: 'other',
@@ -247,7 +247,7 @@ test('last newlines are removed from command output', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
-			text: '"foo bar baz"',
+			text: 'foo bar baz',
 			originalText: '"foo $(other) baz"',
 			expansion: [{
 				command: 'other',

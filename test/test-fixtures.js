@@ -80,7 +80,8 @@ eval "dest=foo"`
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
-			prefix: [{type: 'assignment_word', text: 'foo=\'hello ; rm -rf /\''}]
+			/* TODO: quote removal should word differently with assignment_word? */
+			prefix: [{type: 'assignment_word', text: 'foo=\'hello ; rm -rf /'}]
 		}, {
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -88,7 +89,7 @@ eval "dest=foo"`
 		}, {
 			type: 'simple_command',
 			name: {type: 'word', text: 'eval'},
-			suffix: [{type: 'word', text: '"dest=foo"'}]
+			suffix: [{type: 'word', text: 'dest=foo'}]
 		}]
 	});
 });

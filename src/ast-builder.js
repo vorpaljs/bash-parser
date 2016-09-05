@@ -1,3 +1,4 @@
+'use strict';
 /* eslint-disable max-lines */
 /* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */

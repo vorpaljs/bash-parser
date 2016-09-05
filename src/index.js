@@ -1,3 +1,4 @@
+'use strict';
 // const walk = require('tree-walk');
 // const assert = require('assert');
 // const traverse = require('bash-ast-traverser');

@@ -148,7 +148,7 @@ test('resolve expression', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
-			text: '"foo 43 baz"',
+			text: 'foo 43 baz',
 			originalText: '"foo $((42 * 42)) baz"',
 			expansion: [{
 				expression: '42 * 42',

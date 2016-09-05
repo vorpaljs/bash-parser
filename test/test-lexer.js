@@ -166,7 +166,7 @@ test('support single quotes', t => {
 	t.deepEqual(
 		tokenize('echo \'CIAO 42\''),
 		[{token: 'WORD', value: 'echo'},
-		{token: 'WORD', value: '\'CIAO 42\''}]
+		{token: 'WORD', value: 'CIAO 42'}]
 	);
 });
 
@@ -218,7 +218,7 @@ test('support double quotes', t => {
 	t.deepEqual(
 		tokenize('echo "CIAO 42"'),
 		[{token: 'WORD', value: 'echo'},
-		{token: 'WORD', value: '"CIAO 42"'}]
+		{token: 'WORD', value: 'CIAO 42'}]
 	);
 });
 test('support multiple commands', t => {

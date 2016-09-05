@@ -11,6 +11,7 @@ const defaultNodeType = require('./default-node-type');
 const fieldSplitting = require('./field-splitting');
 const tildeExpanding = require('./tilde-expanding');
 const pathExpansion = require('./path-expansion');
+const quoteRemoval = require('./quote-removal');
 // const logger = require('./logger-iterator');
 
 const preAliasLexer = compose(
@@ -34,6 +35,7 @@ const posixShellLexer = options => ({
 	lex() {
 		const item = this.tokenizer.next();
 		const tk = item.value;
+
 		const tkType = Object.keys(tk).filter(k =>
 			k !== 'loc' && k !== 'expansion'
 		)[0];
@@ -79,13 +81,14 @@ const posixShellLexer = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
-			// logger('--->'),
-
 			rules.removeTempObject,
 			defaultNodeType,
 
+			// logger('---*'),
+			quoteRemoval,
+			// logger('---+'),
 			pathExpansion(options),
-
+			// logger('--->'),
 			fieldSplitting.split,
 
 			arithmeticExpansion.resolve(options),
@@ -96,7 +99,6 @@ const posixShellLexer = options => ({
 			rules.functionName,
 			rules.ioNumber,
 			rules.forNameVariable,
-			// logger('after'),
 			commandExpansion,
 			// logger('before'),
 			arithmeticExpansion,

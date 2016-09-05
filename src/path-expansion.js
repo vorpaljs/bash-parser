@@ -1,3 +1,4 @@
+'use strict';
 module.exports = options => function * pathExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD && typeof options.resolvePath === 'function') {

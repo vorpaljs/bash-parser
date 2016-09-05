@@ -226,7 +226,7 @@ test('resolve parameter', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
-			text: '"foo bar baz"',
+			text: 'foo bar baz',
 			originalText: '"foo ${other} baz"',
 			expansion: [
 				{
@@ -251,7 +251,7 @@ test('resolve double parameter', t => {
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {
-			text: '"foo bar bar baz"',
+			text: 'foo bar bar baz',
 			originalText: '"foo ${other} ${one} baz"',
 			expansion: [{
 				parameter: 'other',
@@ -352,7 +352,7 @@ test('field splitting not occurring within quoted words', t => {
 			type: 'word'
 		},
 		suffix: [{
-			text: '"foo\tbar baz plz"',
+			text: 'foo\tbar baz plz',
 			expansion: [{
 				parameter: 'other',
 				start: 1,

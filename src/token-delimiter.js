@@ -33,16 +33,11 @@ const mkLoc = (lineNumber, columnNumber) => ({
 	startColumn: columnNumber
 });
 
-const quotingCharacter = (ch, lastCh, penultCh) =>
-	QUOTING_DELIM[penultCh + lastCh + ch] ||
-	QUOTING_DELIM[lastCh + ch] ||
-	QUOTING_DELIM[ch];
-
 const closingQuotingCharacter = (quoting, ch, lastCh, penultCh) =>
 	(quoting.close === ch && lastCh !== '\\') ||
 	(quoting.close === lastCh + ch && penultCh !== '\\');
 
-const mkStartState = () => ({
+const mkStartState = charIterator => ({
 	token: {
 		EMPTY: true,
 		loc: mkLoc(0, 0)
@@ -54,6 +49,7 @@ const mkStartState = () => ({
 	prevLineNumber: 0,
 	prevColumnNumber: 0,
 	isComment: false,
+	charIterator,
 
 	setOperatorToken(text) {
 		this.token = {
@@ -102,13 +98,40 @@ const mkStartState = () => ({
 		}
 	},
 
+	canAppendToOperator(currentCharacter) {
+		return this.quoting === QUOTING.NO &&
+				isOperator(this.token.OPERATOR + currentCharacter);
+	},
+
 	finalizeCurrentToken() {
 		Object.assign(this.token.loc, {
 			endLine: this.prevLineNumber,
 			endColumn: this.prevColumnNumber
 		});
 		return this.token;
+	},
+
+	currentTokenIsOperatorPart() {
+		return this.token.OPERATOR;
+	},
+
+	currentTokenIsCompleteOperator() {
+		return isOperator(this.token.OPERATOR);
+	},
+
+	appendToOperator(currentCharacter) {
+		this.token.OPERATOR += currentCharacter;
+	},
+
+	quotingCharacter(ch) {
+		const lastCh = this.charIterator.behind(1);
+		const penultCh = this.charIterator.behind(2);
+
+		return QUOTING_DELIM[penultCh + lastCh + ch] ||
+		QUOTING_DELIM[lastCh + ch] ||
+		QUOTING_DELIM[ch];
 	}
+
 });
 
 /*
@@ -119,9 +142,9 @@ const mkStartState = () => ({
 /* eslint-disable complexity */
 /* eslint-disable max-depth */
 module.exports = function * tokenDelimiter(source) {
-	const state = mkStartState();
-
 	const charIterator = lookahead(source, 2);
+	const state = mkStartState(charIterator);
+
 	for (const currentCharacter of charIterator) {
 		if (state.isComment) {
 			if (currentCharacter === '\n') {
@@ -132,23 +155,21 @@ module.exports = function * tokenDelimiter(source) {
 			}
 		}
 
-		if (state.token.OPERATOR) {
+		if (state.currentTokenIsOperatorPart()) {
 			// RULE 2 -If the previous character was used as part of an operator and the
 			// current character is not quoted and can be used with the current characters
 			// to form an operator, it shall be used as part of that (operator) token.
-			if (state.quoting === QUOTING.NO &&
-				isOperator(state.token.OPERATOR + currentCharacter)) {
-				state.token.OPERATOR += currentCharacter;
-
-				// skip to next character
-
+			if (state.canAppendToOperator(currentCharacter)) {
+				state.appendToOperator(currentCharacter);
 				state.advanceLoc(currentCharacter);
+
 				continue;
 			}
+
 			// RULE 3 - If the previous character was used as part of an operator and the
 			// current character cannot be used with the current characters to form an operator,
 			// the operator containing the previous character shall be delimited.
-			if (isOperator(state.token.OPERATOR)) {
+			if (state.currentTokenIsCompleteOperator()) {
 				yield state.finalizeCurrentToken();
 			} else {
 				// The current token cannot form an OPERATOR by itself,
@@ -164,12 +185,9 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		const currentCharacterQuoting = quotingCharacter(currentCharacter, charIterator.behind(1), charIterator.behind(2));
 
-		// console.log(currentCharacter, quoting, penultCharacter + lastCharacter + currentCharacter + '-> ' + JSON.stringify(currentCharacterQuoting))
-
-		if (currentCharacterQuoting && state.quoting === QUOTING.NO) {
-			state.quoting = currentCharacterQuoting;
+		if (state.quotingCharacter(currentCharacter) && state.quoting === QUOTING.NO) {
+			state.quoting = state.quotingCharacter(currentCharacter);
 
 			if (currentCharacter !== '\\') {
 				if (state.token.TOKEN === undefined) {
@@ -185,13 +203,12 @@ module.exports = function * tokenDelimiter(source) {
 			continue;
 		}
 
-		if (state.quoting === QUOTING.COMMAND && currentCharacterQuoting === QUOTING.ARITHMETIC) {
-			state.quoting = currentCharacterQuoting;
+		if (state.quoting === QUOTING.COMMAND && state.quotingCharacter(currentCharacter) === QUOTING.ARITHMETIC) {
+			state.quoting = state.quotingCharacter(currentCharacter);
 		}
 
 		// <backslash> quoting should work within double quotes
-		if (currentCharacter === '\\' &&
-			state.quoting === QUOTING.DOUBLE) {
+		if (currentCharacter === '\\' && state.quoting === QUOTING.DOUBLE) {
 			state.quoting = QUOTING.ESCAPE;
 
 			state.prevQuoting = QUOTING.DOUBLE;
@@ -245,9 +262,7 @@ module.exports = function * tokenDelimiter(source) {
 		// containing the previous character is delimited and the current
 		// character shall be discarded.
 		// console.log(currentCharacter.match(/\s/), quoting)
-		if (
-			state.quoting === QUOTING.NO &&
-			currentCharacter.match(/\s/)) {
+		if (state.quoting === QUOTING.NO && currentCharacter.match(/\s/)) {
 			// emit current token if not empty
 			if (!state.token.EMPTY) {
 				yield state.finalizeCurrentToken();

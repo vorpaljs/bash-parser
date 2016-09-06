@@ -4,25 +4,29 @@ const values = require('object-values');
 const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
 const words = require('./reserved-words');
+const identifySimpleCommandNames = require('./identify-simplecommand-names');
 
-const ioFileOperators = [
-	'LESS',
-	'DLESS',
-	'DGREAT',
-	'LESSAND',
-	'GREATAND',
-	'GREAT',
-	'LESSGREAT',
-	'CLOBBER'
-];
+exports.identifySimpleCommandNames = identifySimpleCommandNames;
 
-function isOperator(tk) {
-	for (const op in ioFileOperators) {
-		if (tk[op]) {
-			return true;
+exports.identifyMaybeSimpleCommands = function * (tokens) {
+	let maybeStartOfSimpleCommand = true;
+	for (const tk of tokens) {
+		tk._ = (tk._ || {});
+		if (tk.WORD) {
+			tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
 		}
+		// evaluate if next token could start a simple command
+		maybeStartOfSimpleCommand = Boolean(
+			tk.SEPARATOR_OP || tk.OPEN_PAREN ||
+			tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST ||
+			tk.TOKEN === ';' || tk.PIPE ||
+			tk.OR_IF || tk.PIPE || tk.AND_IF ||
+			(!tk.For && !tk.In && !tk.Case && values(words).some(word => hasOwnProperty(tk, word)))
+		);
+
+		yield tk;
 	}
-}
+};
 
 function copyTempObject(tk, newTk) {
 	if (hasOwnProperty(tk, '_')) {
@@ -158,24 +162,16 @@ exports.ioNumber = function * (tokens) {
 	}
 };
 
-function isValidName(text) {
-	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
-}
-
 exports.removeTempObject = function * (tokens) {
 	for (const tk of tokens) {
-		/*
-		if (tk._ && tk._.maybeSimpleCommandName) {
-			console.log('COMMAND: ', tk.WORD, __filename);
-		} else {
-			console.log('-------- ', tk.WORD);
-		}
-		*/
-
 		delete tk._;
 		yield tk;
 	}
 };
+
+function isValidName(text) {
+	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
+}
 
 exports.assignmentWord = function * (tokens) {
 	let canBeCommandPrefix = true;
@@ -205,70 +201,8 @@ exports.assignmentWord = function * (tokens) {
 	}
 };
 
-exports.identifySimpleCommandNames = function * (tokens) {
-	for (const tk of tokens) {
-		if (tk._.maybeStartOfSimpleCommand) {
-			if (tk.WORD && isValidName(tk.WORD)) {
-				tk._.maybeSimpleCommandName = true;
-				// tk.maybeSimpleCommandName = true;
-				yield tk;
-				continue;
-			}
-
-			yield tk;
-
-			let lastToken = tk;
-			let commandNameFound = false;
-			let item = tokens.next();
-			while (!item.done) {
-				const scTk = item.value;
-				if (!commandNameFound && !isOperator(lastToken) && scTk.WORD && isValidName(scTk.WORD)) {
-					scTk._.maybeSimpleCommandName = true;
-					// scTk.maybeSimpleCommandName = true;
-					commandNameFound = true;
-				}
-
-				yield scTk;
-
-				if (scTk.SEPARATOR_OP || scTk.NEWLINE || scTk.NEWLINE_LIST || scTk.TOKEN === ';' ||
-					scTk.PIPE || scTk.OR_IF || scTk.PIPE || scTk.AND_IF) {
-					break;
-				}
-
-				lastToken = scTk;
-				item = tokens.next();
-			}
-		} else {
-			yield tk;
-		}
-	}
-};
-
-exports.identifyMaybeSimpleCommands = function * (tokens) {
-	let maybeStartOfSimpleCommand = true;
-	for (const tk of tokens) {
-		tk._ = (tk._ || {});
-		if (tk.WORD) {
-			tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
-		}
-		// console.log('identifyMaybeSimpleCommands', tk)
-		// evaluate if next token could start a simple command
-		maybeStartOfSimpleCommand = Boolean(
-			tk.SEPARATOR_OP || tk.OPEN_PAREN ||
-			tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST ||
-			tk.TOKEN === ';' || tk.PIPE ||
-			tk.OR_IF || tk.PIPE || tk.AND_IF ||
-			(!tk.For && !tk.In && !tk.Case && values(words).some(word => hasOwnProperty(tk, word)))
-		);
-
-		yield tk;
-	}
-};
-
-/* resolve a conflict in grammar by
-tokenize multiple NEWLINEs as a
-newline_list token (it was a rule in POSIX grammar)
-*/
+/* resolve a conflict in grammar by tokenize multiple NEWLINEs as a
+newline_list token (it was a rule in POSIX grammar) */
 exports.newLineList = function * (tokens) {
 	let lastToken = {EMPTY: true};
 	for (const tk of tokens) {
@@ -293,9 +227,8 @@ exports.newLineList = function * (tokens) {
 	}
 };
 
-/* resolve a conflict in grammar by
-tokenize linebreak+in tokens as a new  linebreak_in
-*/
+/* resolve a conflict in grammar by tokenize linebreak+in
+tokens as a new  linebreak_in */
 exports.linebreakIn = function * (tokens) {
 	let lastToken;
 
@@ -333,7 +266,6 @@ with a new separator_op token, the rule became:
 
 separator : separator_op
 				 | NEWLINE_LIST
-
 */
 exports.separator = function * (tokens) {
 	let lastToken = {EMPTY: true};

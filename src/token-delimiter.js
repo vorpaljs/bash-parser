@@ -24,7 +24,6 @@ const QUOTING_DELIM = {
 	'$((': QUOTING.ARITHMETIC
 };
 
-
 const isOperator = op => hasOwnProperty(operators, op);
 
 const mkLoc = (lineNumber, columnNumber) => ({
@@ -49,6 +48,20 @@ const mkStartState = charIterator => ({
 	prevColumnNumber: 0,
 	isComment: false,
 	charIterator,
+
+	setEscaping() {
+		this.quoting = QUOTING.ESCAPE;
+		this.prevQuoting = QUOTING.DOUBLE;
+	},
+
+	resetEscaping() {
+		this.quoting = this.prevQuoting || QUOTING.NO;
+		this.prevQuoting = null;
+	},
+
+	isEscaping() {
+		return this.quoting === QUOTING.ESCAPE;
+	},
 
 	setOperatorToken(text) {
 		this.token = {
@@ -112,6 +125,10 @@ const mkStartState = charIterator => ({
 
 	currentTokenIsOperatorPart() {
 		return this.token.OPERATOR;
+	},
+
+	currentTokenIsEmpty() {
+		return Boolean(this.token.EMPTY);
 	},
 
 	currentTokenIsCompleteOperator() {
@@ -211,11 +228,7 @@ module.exports = function * tokenDelimiter(source) {
 
 		// <backslash> quoting should work within double quotes
 		if (currentCharacter === '\\' && state.quoting === QUOTING.DOUBLE) {
-			state.quoting = QUOTING.ESCAPE;
-
-			state.prevQuoting = QUOTING.DOUBLE;
-			// skip to next character
-
+			state.setEscaping();
 			state.advanceLoc(currentCharacter);
 			continue;
 		}
@@ -225,14 +238,10 @@ module.exports = function * tokenDelimiter(source) {
 		// delimited. The current character shall be used as the beginning of the
 		// next (operator) token.
 		if (state.isOperatorStart(currentCharacter) && state.quoting === QUOTING.NO) {
-			// emit current token if not empty
-
-			if (!state.token.EMPTY) {
+			if (!state.currentTokenIsEmpty()) {
 				yield state.finalizeCurrentToken();
 			}
 			state.setOperatorToken(currentCharacter);
-
-			// skip to next character
 
 			state.advanceLoc(currentCharacter);
 			continue;
@@ -240,10 +249,9 @@ module.exports = function * tokenDelimiter(source) {
 
 		// RULE 7 - If the current character is an unquoted <newline>, the current
 		// token shall be delimited.
-		if (state.quoting !== QUOTING.ESCAPE &&
-				currentCharacter === '\n') {
+		if (!state.isEscaping() && currentCharacter === '\n') {
 			// emit current token if not empty
-			if (!state.token.EMPTY) {
+			if (!state.currentTokenIsEmpty()) {
 				yield state.finalizeCurrentToken();
 			}
 
@@ -265,22 +273,18 @@ module.exports = function * tokenDelimiter(source) {
 		// console.log(currentCharacter.match(/\s/), quoting)
 		if (state.quoting === QUOTING.NO && currentCharacter.match(/\s/)) {
 			// emit current token if not empty
-			if (!state.token.EMPTY) {
+			if (!state.currentTokenIsEmpty()) {
 				yield state.finalizeCurrentToken();
 			}
 
 			state.setEmptyToken();
-
-			// skip to next character
-
 			state.advanceLoc(currentCharacter);
 			continue;
 		}
 
 		// reset character escaping if setted.
-		if (state.quoting === QUOTING.ESCAPE) {
-			state.quoting = state.prevQuoting || QUOTING.NO;
-			state.prevQuoting = null;
+		if (state.isEscaping()) {
+			state.resetEscaping();
 		}
 
 		// Reset single or double quoting on close
@@ -321,7 +325,7 @@ module.exports = function * tokenDelimiter(source) {
 	// RULE 1 - If the end of input is recognized, the current token shall
 	// be delimited. If there is no current token, the end-of-input indicator
 	// shall be returned as the token.
-	if (!state.token.EMPTY) {
+	if (!state.currentTokenIsEmpty()) {
 		yield state.finalizeCurrentToken();
 	}
 

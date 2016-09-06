@@ -51,6 +51,34 @@ class TokenDelimiterState {
 		return this.quoting === QUOTING.COMMAND;
 	}
 
+	canStartComment(currentCharacter) {
+		return currentCharacter === '#';
+	}
+
+	canEndComment(currentCharacter) {
+		return this.isComment && currentCharacter === '\n';
+	}
+
+	canContinueComment(currentCharacter) {
+		return this.isComment && currentCharacter !== '\n';
+	}
+
+	startComment() {
+		this.isComment = true;
+	}
+
+	endComment() {
+		this.isComment = false;
+	}
+
+	canStartQuoting(currentCharacter) {
+		return this.quotingCharacter(currentCharacter) && !this.isQuoting();
+	}
+
+	setCurrentQuoting(currentCharacter) {
+		this.quoting = this.quotingCharacter(currentCharacter);
+	}
+
 	canCloseCurrentQuoting(ch) {
 		const lastCh = this.charIterator.behind(1);
 		const penultCh = this.charIterator.behind(2);

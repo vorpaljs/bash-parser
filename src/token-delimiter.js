@@ -6,19 +6,16 @@ const TokenDelimiterState = require('./token-delimiter-state');
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
 */
-/* eslint-disable complexity */
 module.exports = function * tokenDelimiter(source) {
 	const charIterator = lookahead(source, 2);
 	const state = new TokenDelimiterState(charIterator);
 
 	for (const currentCharacter of charIterator) {
-		if (state.isComment) {
-			if (currentCharacter === '\n') {
-				state.isComment = false;
-			} else {
-				state.advanceLoc(currentCharacter);
-				continue;
-			}
+		if (state.canEndComment(currentCharacter)) {
+			state.endComment();
+		} else if (state.canContinueComment(currentCharacter)) {
+			state.advanceLoc(currentCharacter);
+			continue;
 		}
 
 		if (state.currentTokenIsOperatorPart()) {
@@ -51,8 +48,8 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		if (state.quotingCharacter(currentCharacter) && !state.isQuoting()) {
-			state.quoting = state.quotingCharacter(currentCharacter);
+		if (state.canStartQuoting(currentCharacter)) {
+			state.setCurrentQuoting(currentCharacter);
 
 			if (currentCharacter !== '\\') {
 				if (state.currentTokenIsGeneric()) {
@@ -147,8 +144,8 @@ module.exports = function * tokenDelimiter(source) {
 		// characters up to, but excluding, the next <newline> shall be discarded
 		// as a comment. The <newline> that ends the line is not considered part
 		// of the comment.
-		if (currentCharacter === '#') {
-			state.isComment = true;
+		if (state.canStartComment(currentCharacter)) {
+			state.startComment();
 		} else if (currentCharacter === '\n') {
 			state.setEmptyToken();
 		} else {

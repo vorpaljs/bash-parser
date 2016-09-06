@@ -12,11 +12,8 @@ module.exports = options => {
 	mkListHelper(builder, 'suffix');
 
 	builder.caseItem = (pattern, body, locStart, locEnd) => {
-		const node = {
-			type: 'case_item',
-			pattern,
-			body
-		};
+		const type = 'case_item';
+		const node = {type, pattern, body};
 
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, locStart), locEnd);
@@ -26,10 +23,8 @@ module.exports = options => {
 	};
 
 	builder.caseClause = (clause, cases, locStart, locEnd) => {
-		const node = {
-			type: 'case',
-			clause
-		};
+		const type = 'case';
+		const node = {type, clause};
 
 		if (cases) {
 			Object.assign(node, {cases});
@@ -72,10 +67,7 @@ module.exports = options => {
 	};
 
 	builder.term = and_or => {
-		const node = {
-			type: 'compound_list',
-			commands: [and_or]
-		};
+		const node = {type: 'compound_list', commands: [and_or]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
 		}
@@ -92,11 +84,7 @@ module.exports = options => {
 	builder.subshell = list => ({type: 'subshell', list});
 
 	builder.pipeSequence = command => {
-		const node = {
-			type: 'pipeline',
-			commands: [command]
-		};
-
+		const node = {type: 'pipeline', commands: [command]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, command.loc), command.loc);
 		}
@@ -127,75 +115,42 @@ module.exports = options => {
 	};
 
 	builder.andAndOr = (left, right) => {
-		const node = {
-			type: 'and_or',
-			op: 'and',
-			left,
-			right
-		};
-
+		const node = {type: 'and_or', op: 'and', left, right};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, left.loc), right.loc);
 		}
-
 		return node;
 	};
 
 	builder.orAndOr = (left, right) => {
-		const node = {
-			type: 'and_or',
-			op: 'or',
-			left,
-			right
-		};
-
+		const node = {type: 'and_or', op: 'or', left, right};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, left.loc), right.loc);
 		}
-
 		return node;
 	};
 
 	builder.forClause = (name, wordlist, doGroup, locStart) => {
-		const node = {
-			type: 'for',
-			name,
-			wordlist,
-			do: doGroup
-		};
-
+		const node = {type: 'for', name, wordlist, do: doGroup};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, locStart), doGroup.loc);
 		}
-
 		return node;
 	};
 
 	builder.forClauseDefault = (name, doGroup, locStart) => {
-		const node = {
-			type: 'for',
-			name,
-			do: doGroup
-		};
-
+		const node = {type: 'for', name, do: doGroup};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, locStart), doGroup.loc);
 		}
-
 		return node;
 	};
 
 	builder.functionDefinition = (name, body) => {
-		const node = {
-			type: 'function',
-			name,
-			body
-		};
-
+		const node = {type: 'function', name, body};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, name.loc), body.loc);
 		}
-
 		return node;
 	};
 
@@ -209,11 +164,7 @@ module.exports = options => {
 
 	// eslint-disable-next-line max-params
 	builder.ifClause = (clause, then, elseBranch, locStart, locEnd) => {
-		const node = {
-			type: 'if',
-			clause,
-			then
-		};
+		const node = {type: 'if', clause, then};
 
 		if (elseBranch) {
 			node.else = elseBranch;
@@ -227,25 +178,15 @@ module.exports = options => {
 	};
 
 	builder.while = (clause, body, whileWord) => {
-		const node = {
-			type: 'while',
-			clause,
-			do: body
-		};
-
+		const node = {type: 'while', clause, do: body};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, whileWord.loc), body.loc);
 		}
-
 		return node;
 	};
 
 	builder.until = (clause, body, whileWord) => {
-		const node = {
-			type: 'until',
-			clause,
-			do: body
-		};
+		const node = {type: 'until', clause, do: body};
 
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, whileWord.loc), body.loc);
@@ -257,10 +198,7 @@ module.exports = options => {
 	builder.commandName = name => name;
 
 	builder.command = function command(prefix, command, suffix) {
-		const node = {
-			type: 'simple_command',
-			name: command
-		};
+		const node = {type: 'simple_command', name: command};
 
 		if (options.insertLOC) {
 			node.loc = {};
@@ -293,15 +231,10 @@ module.exports = options => {
 	};
 
 	builder.ioRedirect = (op, file) => {
-		const node = {
-			type: 'io_redirect',
-			op: op,
-			file: file
-		};
+		const node = {type: 'io_redirect', op: op, file: file};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, op.loc), file.loc);
 		}
-
 		return node;
 	};
 
@@ -312,16 +245,6 @@ module.exports = options => {
 		}
 		return node;
 	};
-
-	/*
-	for (const methodName of Object.keys(builder)) {
-		const method = builder[methodName];
-		builder[methodName] = (...args) => {
-			console.log(methodName);
-			method(...args);
-		};
-	}
-	*/
 
 	return builder;
 };

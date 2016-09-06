@@ -35,85 +35,107 @@ const closingQuotingCharacter = (quoting, ch, lastCh, penultCh) =>
 	(quoting.close === ch && lastCh !== '\\') ||
 	(quoting.close === lastCh + ch && penultCh !== '\\');
 
-const mkStartState = charIterator => ({
-	token: {
-		EMPTY: true,
-		loc: mkLoc(0, 0)
-	},
-	quoting: QUOTING.NO,
-	prevQuoting: null,
-	lineNumber: 0,
-	columnNumber: 0,
-	prevLineNumber: 0,
-	prevColumnNumber: 0,
-	isComment: false,
-	charIterator,
+class TokenDelimiterState {
+	constructor(charIterator) {
+		this.charIterator = charIterator;
+		this.lineNumber = 0;
+		this.columnNumber = 0;
+		this.prevLineNumber = 0;
+		this.prevColumnNumber = 0;
+		this.isComment = false;
+		this.quoting = QUOTING.NO;
+		this.prevQuoting = null;
+		this.setEmptyToken();
+	}
+
+	isArithmeticExpansionStart(char) {
+		return this.quotingCharacter(char) === QUOTING.ARITHMETIC;
+	}
+
+	isExpandingCommand() {
+		return this.quoting === QUOTING.COMMAND;
+	}
+
+	isQuoting() {
+		return this.quoting !== QUOTING.NO;
+	}
+
+	resetQuoting() {
+		this.quoting = QUOTING.NO;
+	}
+
+	setArithmeticQuoting() {
+		this.quoting = QUOTING.ARITHMETIC;
+	}
 
 	setEscaping() {
 		this.quoting = QUOTING.ESCAPE;
 		this.prevQuoting = QUOTING.DOUBLE;
-	},
+	}
 
 	resetEscaping() {
 		this.quoting = this.prevQuoting || QUOTING.NO;
 		this.prevQuoting = null;
-	},
+	}
 
 	isEscaping() {
 		return this.quoting === QUOTING.ESCAPE;
-	},
+	}
 
 	setOperatorToken(text) {
 		this.token = {
 			OPERATOR: text,
 			loc: mkLoc(this.lineNumber, this.columnNumber)
 		};
-	},
+	}
 
 	setNewLineToken() {
 		this.token = {
 			NEWLINE: '\n',
 			loc: mkLoc(this.lineNumber, this.columnNumber)
 		};
-	},
+	}
 
 	setGenericToken(text) {
 		this.token = {
 			TOKEN: text,
 			loc: mkLoc(this.lineNumber, this.columnNumber)
 		};
-	},
+	}
 
 	setEmptyToken() {
 		this.token = {
 			EMPTY: true,
 			loc: mkLoc(this.lineNumber, this.columnNumber)
 		};
-	},
+	}
 
 	setEOFToken() {
 		this.token = {
 			EOF: true,
 			loc: mkLoc(this.prevLineNumber, this.prevColumnNumber)
 		};
-	},
+	}
 
-	advanceLoc(currentCharacter) {
+	savePreviousLoc() {
 		this.prevLineNumber = this.lineNumber;
 		this.prevColumnNumber = this.columnNumber;
+	}
 
+	advanceLoc(currentCharacter) {
+		this.savePreviousLoc();
 		if (currentCharacter === '\n') {
 			this.lineNumber++;
 			this.columnNumber = 0;
 		} else {
 			this.columnNumber++;
 		}
-	},
+	}
 
 	canAppendToOperator(currentCharacter) {
 		return this.quoting === QUOTING.NO &&
 				isOperator(this.token.OPERATOR + currentCharacter);
-	},
+	}
 
 	finalizeCurrentToken() {
 		Object.assign(this.token.loc, {
@@ -121,23 +143,31 @@ const mkStartState = charIterator => ({
 			endColumn: this.prevColumnNumber
 		});
 		return this.token;
-	},
+	}
 
 	currentTokenIsOperatorPart() {
 		return this.token.OPERATOR;
-	},
+	}
 
 	currentTokenIsEmpty() {
 		return Boolean(this.token.EMPTY);
-	},
+	}
+
+	currentTokenIsGeneric() {
+		return Boolean(this.token.TOKEN);
+	}
 
 	currentTokenIsCompleteOperator() {
 		return isOperator(this.token.OPERATOR);
-	},
+	}
 
 	appendToOperator(currentCharacter) {
 		this.token.OPERATOR += currentCharacter;
-	},
+	}
+
+	appendToGenericToken(currentCharacter) {
+		this.token.TOKEN += currentCharacter;
+	}
 
 	quotingCharacter(ch) {
 		const lastCh = this.charIterator.behind(1);
@@ -146,13 +176,13 @@ const mkStartState = charIterator => ({
 		return QUOTING_DELIM[penultCh + lastCh + ch] ||
 		QUOTING_DELIM[lastCh + ch] ||
 		QUOTING_DELIM[ch];
-	},
+	}
 
 	isOperatorStart(ch) {
 		const lastCh = this.charIterator.behind(1);
 		return lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
 	}
-});
+}
 
 /*
 	delimit tokens on source according to rules defined
@@ -163,7 +193,7 @@ const mkStartState = charIterator => ({
 /* eslint-disable max-depth */
 module.exports = function * tokenDelimiter(source) {
 	const charIterator = lookahead(source, 2);
-	const state = mkStartState(charIterator);
+	const state = new TokenDelimiterState(charIterator);
 
 	for (const currentCharacter of charIterator) {
 		if (state.isComment) {
@@ -205,25 +235,23 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-		if (state.quotingCharacter(currentCharacter) && state.quoting === QUOTING.NO) {
+		if (state.quotingCharacter(currentCharacter) && !state.isQuoting()) {
 			state.quoting = state.quotingCharacter(currentCharacter);
 
 			if (currentCharacter !== '\\') {
-				if (state.token.TOKEN === undefined) {
-					state.setGenericToken(currentCharacter);
+				if (state.currentTokenIsGeneric()) {
+					state.appendToGenericToken(currentCharacter);
 				} else {
-					state.token.TOKEN += currentCharacter;
+					state.setGenericToken(currentCharacter);
 				}
 			}
-
-			// skip to next character
 
 			state.advanceLoc(currentCharacter);
 			continue;
 		}
 
-		if (state.quoting === QUOTING.COMMAND && state.quotingCharacter(currentCharacter) === QUOTING.ARITHMETIC) {
-			state.quoting = state.quotingCharacter(currentCharacter);
+		if (state.isExpandingCommand() && state.isArithmeticExpansionStart(currentCharacter)) {
+			state.setArithmeticQuoting();
 		}
 
 		// <backslash> quoting should work within double quotes
@@ -237,7 +265,7 @@ module.exports = function * tokenDelimiter(source) {
 		// first character of a new operator, the current token (if any) shall be
 		// delimited. The current character shall be used as the beginning of the
 		// next (operator) token.
-		if (state.isOperatorStart(currentCharacter) && state.quoting === QUOTING.NO) {
+		if (state.isOperatorStart(currentCharacter) && !state.isQuoting()) {
 			if (!state.currentTokenIsEmpty()) {
 				yield state.finalizeCurrentToken();
 			}
@@ -255,14 +283,12 @@ module.exports = function * tokenDelimiter(source) {
 				yield state.finalizeCurrentToken();
 			}
 
-			state.quoting = QUOTING.NO;
+			state.resetQuoting();
 			state.setNewLineToken();
-			state.prevLineNumber = state.lineNumber;
-			state.prevColumnNumber = state.columnNumber;
+			state.savePreviousLoc();
 			yield state.finalizeCurrentToken();
-			state.setEmptyToken();
-			// skip to next character
 
+			state.setEmptyToken();
 			state.advanceLoc(currentCharacter);
 			continue;
 		}
@@ -271,7 +297,7 @@ module.exports = function * tokenDelimiter(source) {
 		// containing the previous character is delimited and the current
 		// character shall be discarded.
 		// console.log(currentCharacter.match(/\s/), quoting)
-		if (state.quoting === QUOTING.NO && currentCharacter.match(/\s/)) {
+		if (!state.isQuoting() && currentCharacter.match(/\s/)) {
 			// emit current token if not empty
 			if (!state.currentTokenIsEmpty()) {
 				yield state.finalizeCurrentToken();
@@ -289,18 +315,13 @@ module.exports = function * tokenDelimiter(source) {
 
 		// Reset single or double quoting on close
 		if (closingQuotingCharacter(state.quoting, currentCharacter, charIterator.behind(1), charIterator.behind(2))) {
-			state.quoting = QUOTING.NO;
-
-			// skip to next character
-			// continue;
+			state.resetQuoting();
 		}
 
 		// RULE 9 - If the previous character was part of a word, the current
 		// character shall be appended to that word.
-		if (state.token.TOKEN !== undefined) {
-			state.token.TOKEN += currentCharacter;
-
-			// skip to next character
+		if (state.currentTokenIsGeneric()) {
+			state.appendToGenericToken(currentCharacter);
 
 			state.advanceLoc(currentCharacter);
 			continue;

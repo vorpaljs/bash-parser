@@ -97,7 +97,7 @@ const posixShellLexer = options => ({
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
 			tildeExpanding(options),
-			// logger('after functionName'),
+			rules.identifySimpleCommandNames,
 			rules.functionName,
 			// logger('before functionName'),
 			rules.ioNumber,
@@ -110,9 +110,9 @@ const posixShellLexer = options => ({
 			// logger('after aliasSubstitution'),
 
 			aliasSubstitution(options, preAliasLexer),
-			rules.identifySimpleCommandNames,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
+
 
 			rules.reservedWords,
 

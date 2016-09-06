@@ -18,6 +18,16 @@ test('alias with no argument', t => {
 	});
 });
 
+test('alias with prefixes', t => {
+	const result = bashParser('2>&1 world', {
+		resolveAlias: name => name === 'world' ? 'test-value' : null
+	});
+	t.deepEqual(
+		result.commands[0].name,
+		{type: 'word', text: 'test-value'}
+	);
+});
+
 test('alias with arguments', t => {
 	const result = bashParser('thisIsAlias world', {
 		resolveAlias: name => name === 'thisIsAlias' ? 'test-value earth' : undefined

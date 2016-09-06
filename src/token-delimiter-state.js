@@ -51,6 +51,13 @@ class TokenDelimiterState {
 		return this.quoting === QUOTING.COMMAND;
 	}
 
+	canCloseCurrentQuoting(ch) {
+		const lastCh = this.charIterator.behind(1);
+		const penultCh = this.charIterator.behind(2);
+		return (this.quoting.close === ch && lastCh !== '\\') ||
+			(this.quoting.close === lastCh + ch && penultCh !== '\\');
+	}
+
 	isQuoting() {
 		return this.quoting !== QUOTING.NO;
 	}

@@ -2,17 +2,11 @@
 const lookahead = require('iterable-lookahead');
 const TokenDelimiterState = require('./token-delimiter-state');
 
-const closingQuotingCharacter = (quoting, ch, lastCh, penultCh) =>
-	(quoting.close === ch && lastCh !== '\\') ||
-	(quoting.close === lastCh + ch && penultCh !== '\\');
-
 /*
 	delimit tokens on source according to rules defined
 	in http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_03
 */
-/* TODO: simplify */
 /* eslint-disable complexity */
-/* eslint-disable max-depth */
 module.exports = function * tokenDelimiter(source) {
 	const charIterator = lookahead(source, 2);
 	const state = new TokenDelimiterState(charIterator);
@@ -136,7 +130,7 @@ module.exports = function * tokenDelimiter(source) {
 		}
 
 		// Reset single or double quoting on close
-		if (closingQuotingCharacter(state.quoting, currentCharacter, charIterator.behind(1), charIterator.behind(2))) {
+		if (state.canCloseCurrentQuoting(currentCharacter)) {
 			state.resetQuoting();
 		}
 

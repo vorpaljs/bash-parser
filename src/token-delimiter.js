@@ -24,7 +24,6 @@ const QUOTING_DELIM = {
 	'$((': QUOTING.ARITHMETIC
 };
 
-const isOperatorStart = (ch, lastCh) => lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
 
 const isOperator = op => hasOwnProperty(operators, op);
 
@@ -130,8 +129,12 @@ const mkStartState = charIterator => ({
 		return QUOTING_DELIM[penultCh + lastCh + ch] ||
 		QUOTING_DELIM[lastCh + ch] ||
 		QUOTING_DELIM[ch];
-	}
+	},
 
+	isOperatorStart(ch) {
+		const lastCh = this.charIterator.behind(1);
+		return lastCh !== '$' && '()|&!;<>'.indexOf(ch) !== -1;
+	}
 });
 
 /*
@@ -185,7 +188,6 @@ module.exports = function * tokenDelimiter(source) {
 		// RULE 4 - If the current character is <backslash>, single-quote, or
 		// double-quote and it is not quoted, it shall affect quoting for subsequent
 		// characters up to the end of the quoted text.
-
 		if (state.quotingCharacter(currentCharacter) && state.quoting === QUOTING.NO) {
 			state.quoting = state.quotingCharacter(currentCharacter);
 
@@ -222,8 +224,7 @@ module.exports = function * tokenDelimiter(source) {
 		// first character of a new operator, the current token (if any) shall be
 		// delimited. The current character shall be used as the beginning of the
 		// next (operator) token.
-		if (isOperatorStart(currentCharacter, charIterator.behind(1)) &&
-			state.quoting === QUOTING.NO) {
+		if (state.isOperatorStart(currentCharacter) && state.quoting === QUOTING.NO) {
 			// emit current token if not empty
 
 			if (!state.token.EMPTY) {

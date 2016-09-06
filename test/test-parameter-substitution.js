@@ -21,29 +21,22 @@ test('parameter substitution in assignment', t => {
 test('parameter substitution and other words', t => {
 	const result = bashParser('foo ${other} bar baz');
 	// utils.logResults(result);
-	t.deepEqual(result.commands[0], {
-		type: 'simple_command',
-		name: {
-			text: 'foo',
-			type: 'word'
-		},
-		suffix: [{
-			text: '${other}',
-			expansion: [{
-				parameter: 'other',
-				start: 0,
-				end: 8,
-				type: 'parameter_expansion'
-			}],
-			type: 'word'
-		}, {
-			text: 'bar',
-			type: 'word'
-		}, {
-			text: 'baz',
-			type: 'word'
-		}]
-	});
+	t.deepEqual(result.commands[0].suffix, [{
+		text: '${other}',
+		expansion: [{
+			parameter: 'other',
+			start: 0,
+			end: 8,
+			type: 'parameter_expansion'
+		}],
+		type: 'word'
+	}, {
+		text: 'bar',
+		type: 'word'
+	}, {
+		text: 'baz',
+		type: 'word'
+	}]);
 });
 
 test('multi-word parameter substitution', t => {
@@ -110,109 +103,9 @@ test('command consisting of only parameter substitution', t => {
 
 test('invalid name paramter substitution', t => {
 	const result = bashParser('$(other');
-	// console.log(JSON.stringify(result, null, 5))
-
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
 		text: '$(other'
-	});
-});
-
-test('parameter with use default value', t => {
-	const result = bashParser('${other:-default_value}');
-	// console.log(JSON.stringify(result, null, 5))
-	t.deepEqual(result.commands[0].name, {
-		type: 'word',
-		text: '${other:-default_value}',
-		expansion: [{
-			type: 'parameter_expansion',
-			parameter: 'other',
-			word: {
-				text: 'default_value'
-			},
-			op: 'useDefaultValue',
-			start: 0,
-			end: 23
-		}]
-	});
-});
-
-test('parameter with assign default value', t => {
-	const result = bashParser('${other:=default_value}');
-	t.deepEqual(result.commands[0].name, {
-		type: 'word',
-		text: '${other:=default_value}',
-		expansion: [{
-			type: 'parameter_expansion',
-			parameter: 'other',
-			word: {
-				text: 'default_value'
-			},
-			op: 'assignDefaultValue',
-			start: 0,
-			end: 23
-		}]
-	});
-});
-
-test('parameter with other parameter in word', t => {
-	const result = bashParser('${other:=default$value}');
-	// utils.logResults(result);
-	t.deepEqual(result.commands[0].name, {
-		type: 'word',
-		text: '${other:=default$value}',
-		expansion: [{
-			type: 'parameter_expansion',
-			parameter: 'other',
-			word: {
-				text: 'default$value',
-				expansion: [{
-					type: 'parameter_expansion',
-					parameter: 'value',
-					start: 7,
-					end: 13
-				}]
-			},
-			op: 'assignDefaultValue',
-			start: 0,
-			end: 23
-		}]
-	});
-});
-
-test('parameter with indicate error if null', t => {
-	const result = bashParser('${other:?default_value}');
-	t.deepEqual(result.commands[0].name, {
-		text: '${other:?default_value}',
-		type: 'word',
-		expansion: [{
-			type: 'parameter_expansion',
-			parameter: 'other',
-			word: {
-				text: 'default_value'
-			},
-			op: 'indicateErrorIfNull',
-			start: 0,
-			end: 23
-		}]
-	});
-});
-
-test('parameter with use alternative value', t => {
-	const result = bashParser('${other:+default_value}');
-	t.deepEqual(result.commands[0].name, {
-		text: '${other:+default_value}',
-		type: 'word',
-		expansion: [{
-			type: 'parameter_expansion',
-			parameter: 'other',
-			word: {
-				text: 'default_value'
-			},
-			op: 'useAlternativeValue',
-			start: 0,
-			end: 23
-		}]
 	});
 });
 

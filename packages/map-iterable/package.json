@@ -1,0 +1,34 @@
+{
+  "name": "map-iterable",
+  "version": "0.0.0",
+  "description": "Array.prototype.map analog for iterables.",
+  "repository": "parro-it/map-iterable",
+  "license": "MIT",
+  "author": "Andrea Parodi <andrea@parro.it>",
+  "scripts": {
+    "test": "ava --no-babel && xo",
+    "cover-test": "nyc ava --no-babel"
+  },
+  "keywords": [
+    "iterable",
+    "generator",
+    "map",
+    "functional"
+  ],
+  "engines": {
+    "node": ">=4"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "coveralls": "^2.11.11",
+    "nyc": "^7.0.0",
+    "xo": "^0.16.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "is-iterable": "^1.1.0",
+    "curry": "^1.2.0"
+  }
+}

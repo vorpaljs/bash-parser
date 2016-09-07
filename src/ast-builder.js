@@ -1,8 +1,4 @@
 'use strict';
-/* eslint-disable max-lines */
-/* eslint-disable no-sequences */
-/* eslint-disable no-return-assign */
-/* eslint-disable camelcase */
 
 module.exports = options => {
 	const builder = {};
@@ -51,32 +47,32 @@ module.exports = options => {
 		return group;
 	};
 
-	builder.list = and_or => {
-		const node = {type: 'complete_command', commands: [and_or]};
+	builder.list = logicalExpression => {
+		const node = {type: 'complete_command', commands: [logicalExpression]};
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
+			node.loc = setLocEnd(setLocStart({}, logicalExpression.loc), logicalExpression.loc);
 		}
 		return node;
 	};
-	builder.listAppend = (list, and_or) => {
-		list.commands.push(and_or);
+	builder.listAppend = (list, logicalExpression) => {
+		list.commands.push(logicalExpression);
 		if (options.insertLOC) {
-			setLocEnd(list.loc, and_or.loc);
+			setLocEnd(list.loc, logicalExpression.loc);
 		}
 		return list;
 	};
 
-	builder.term = and_or => {
-		const node = {type: 'compound_list', commands: [and_or]};
+	builder.term = logicalExpression => {
+		const node = {type: 'compound_list', commands: [logicalExpression]};
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, and_or.loc), and_or.loc);
+			node.loc = setLocEnd(setLocStart({}, logicalExpression.loc), logicalExpression.loc);
 		}
 		return node;
 	};
 
-	builder.termAppend = (term, and_or) => {
-		term.commands.push(and_or);
-		setLocEnd(term.loc, and_or.loc);
+	builder.termAppend = (term, logicalExpression) => {
+		term.commands.push(logicalExpression);
+		setLocEnd(term.loc, logicalExpression.loc);
 		return term;
 	};
 

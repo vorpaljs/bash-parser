@@ -82,44 +82,27 @@ const posixShellLexer = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
-			// logger('---+'),
 			rules.removeTempObject,
 			defaultNodeType,
-
-			// logger('---*'),
 			quoteRemoval,
-			// logger('---+'),
 			pathExpansion(options),
-			// logger('--->'),
 			fieldSplitting.split,
-
 			arithmeticExpansion.resolve(options),
 			commandExpansion.resolve(options),
 			parameterExpansion.resolve(options),
 			tildeExpanding(options),
-			// logger('after functionName'),
-			rules.functionName,
-			// logger('before functionName'),
-			rules.ioNumber,
-			rules.forNameVariable,
-			commandExpansion,
-			// logger('before'),
-			arithmeticExpansion,
-			parameterExpansion,
-
-			// logger('after aliasSubstitution'),
-
 			aliasSubstitution(options, preAliasLexer),
 			rules.identifySimpleCommandNames,
+			rules.functionName,
+			rules.forNameVariable,
+			commandExpansion,
+			arithmeticExpansion,
+			parameterExpansion,
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
-
+			rules.ioNumber,
 			rules.reservedWords,
-
-//			logger('after'),
 			rules.separator,
-//			logger('before'),
-
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
 

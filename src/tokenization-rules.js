@@ -5,6 +5,7 @@ const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
 const words = require('./reserved-words');
 const identifySimpleCommandNames = require('./identify-simplecommand-names');
+const isOperator = require('./io-file-operators').isOperator;
 
 exports.identifySimpleCommandNames = identifySimpleCommandNames;
 
@@ -12,7 +13,7 @@ exports.identifyMaybeSimpleCommands = function * (tokens) {
 	let maybeStartOfSimpleCommand = true;
 	for (const tk of tokens) {
 		tk._ = (tk._ || {});
-		if (tk.WORD) {
+		if (tk.WORD || tk.IO_NUMBER) {
 			tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
 		}
 		// evaluate if next token could start a simple command
@@ -145,12 +146,13 @@ exports.functionName = function * (tokens) {
 exports.ioNumber = function * (tokens) {
 	let lastToken = {EMPTY: true};
 	for (const tk of tokens) {
+		// console.log(lastToken, isOperator(lastToken));
 		if (lastToken.WORD && lastToken.WORD.match(/^[0-9]+$/) &&
-			(tk.GREAT || tk.LESS)) {
-			lastToken = {
+			isOperator(tk)) {
+			lastToken = copyTempObject(lastToken, {
 				IO_NUMBER: lastToken.WORD,
 				loc: lastToken.loc
-			};
+			});
 		}
 		if (!lastToken.EMPTY) {
 			yield lastToken;

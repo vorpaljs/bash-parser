@@ -59,6 +59,10 @@ complete_command : list separator EOF
 					  { return $list }
 				 | list EOF
 					  { return $list }
+				 | separator list EOF
+					  { return $list }
+				 | separator list separator EOF
+					  { return $list }
 				 ;
 list             : list separator and_or
 					  -> yy.listAppend($list, $and_or)

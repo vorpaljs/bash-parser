@@ -16,6 +16,18 @@ test('command with one argument', t => {
 	});
 });
 
+test('command with multiple new lines', t => {
+	const result = bashParser('\n\n\necho world');
+	t.deepEqual(result, {
+		type: 'complete_command',
+		commands: [{
+			type: 'simple_command',
+			name: {type: 'word', text: 'echo'},
+			suffix: [{type: 'word', text: 'world'}]
+		}]
+	});
+});
+
 test('command with pre-assignment', t => {
 	const result = bashParser('TEST=1 run');
 	t.deepEqual(result, {

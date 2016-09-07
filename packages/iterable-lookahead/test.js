@@ -72,6 +72,20 @@ test('behind and ahead indexes defaults to 1', t => {
 	t.deepEqual(result, expected1);
 });
 
+test('spread syntax', t => {
+	const result = [];
+
+	for (const [item, look] of iterableLookahead.spread([1, 2, 3, 4])) {
+		result.push({
+			item,
+			ahead: look.ahead(1),
+			behind: look.behind(1)
+		});
+	}
+
+	t.deepEqual(result, expected1);
+});
+
 test('behind and ahead works with indexes smaller than size', t => {
 	const it = iterableLookahead([1, 2, 3, 4], 2);
 	const result = [];

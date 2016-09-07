@@ -1,6 +1,6 @@
 'use strict';
 
-function iterableLookahead(iterable, size) {
+function lookahead(iterable, size) {
 	if (size === undefined) {
 		size = 1;
 	}
@@ -71,4 +71,19 @@ function iterableLookahead(iterable, size) {
 	};
 }
 
-module.exports = iterableLookahead;
+lookahead.spread = function lookaheadSpread(iterable, size) {
+	const it = lookahead(iterable, size);
+
+	it._next = it.next;
+	it.next = function () {
+		let item = this._next();
+		if (!item.done) {
+			item.value = [item.value, it];
+		}
+		return item;
+	};
+
+	return it;
+};
+
+module.exports = lookahead;

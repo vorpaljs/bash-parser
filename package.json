@@ -9,7 +9,8 @@
   "scripts": {
     "test": "ava --no-babel && xo --ignore grammar.js --ignore 'packages/**/*'",
     "build": "jison src/grammar.jison > grammar.js",
-    "cover-test": "nyc ava --no-babel && xo --ignore grammar.js --ignore 'packages/**/*'"
+    "cover-test": "nyc ava --no-babel && xo --ignore grammar.js --ignore 'packages/**/*'",
+    "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"
   },
   "keywords": [],
   "engines": {
@@ -17,13 +18,18 @@
   },
   "devDependencies": {
     "ava": "^0.15.2",
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babelify": "^7.3.0",
     "bash-ast-traverser": "file:packages/bash-ast-traverser",
+    "browserify": "^13.1.0",
     "coveralls": "^2.11.11",
     "jison": "^0.4.17",
     "json5": "^0.5.0",
     "nyc": "^7.0.0",
     "rus-diff": "^1.1.0",
     "tree-walk": "^0.4.0",
+    "uglifyify": "^3.0.2",
     "xo": "^0.16.0"
   },
   "files": [

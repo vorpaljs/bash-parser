@@ -18,10 +18,11 @@ test('alias with no argument', t => {
 	});
 });
 
-test('alias with prefixes', t => {
+test('alias with duplicating stream redirection', t => {
 	const result = bashParser('2>&1 world', {
 		resolveAlias: name => name === 'world' ? 'test-value' : null
 	});
+	// utils.logResults(result);
 	t.deepEqual(
 		result.commands[0].name,
 		{type: 'word', text: 'test-value'}

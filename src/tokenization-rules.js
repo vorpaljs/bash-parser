@@ -110,21 +110,12 @@ exports.forNameVariable = function * (tokens) {
 };
 
 exports.functionName = function * (tokens) {
-	let canBeFunctionName = true;
 	const tokensIterator = lookahead(tokens, 2);
-	let tk;
-	for (tk of tokensIterator) {
+	for (const tk of tokensIterator) {
 		// apply only on valid positions
 		// (start of simple commands)
-		if (!canBeFunctionName) {
-			// evaluate if this token could
-			// end a statement.
-			if (tk.NEWLINE || tk.TOKEN === ';') {
-				canBeFunctionName = true;
-			}
-		} else if (!tk.WORD && !tk.OPEN_PAREN && !tk.CLOSE_PAREN) {
-			canBeFunctionName = false;
-		} else if (
+		if (
+			tk._.maybeStartOfSimpleCommand &&
 			tk.WORD &&
 			tokensIterator.ahead(2) &&
 			tokensIterator.ahead(1).OPEN_PAREN &&

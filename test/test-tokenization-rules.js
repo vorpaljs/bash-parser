@@ -20,28 +20,28 @@ test('reservedWords - identify reserved words or WORD', t => {
 });
 
 test('functionName - replace function name token as NAME', t => {
-	t.deepEqual(
-		Array.from(rules.functionName([
-			{WORD: 'test', loc: 42},
-			{OPEN_PAREN: '(', loc: 42},
-			{CLOSE_PAREN: ')', loc: 42},
-			{Lbrace: '{', loc: 42},
-			{WORD: 'body', loc: 42},
-			{WORD: 'foo', loc: 42},
-			{WORD: '--lol', loc: 42},
-			{';': ';', 'loc': 42},
-			{Lbrace: '}', loc: 42}
-		])),
+	const result = Array.from(rules.functionName([
+		{WORD: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
+		{OPEN_PAREN: '(', loc: 42, _: {}},
+		{CLOSE_PAREN: ')', loc: 42, _: {}},
+		{Lbrace: '{', loc: 42, _: {}},
+		{WORD: 'body', loc: 42, _: {}},
+		{WORD: 'foo', loc: 42, _: {}},
+		{WORD: '--lol', loc: 42, _: {}},
+		{';': ';', 'loc': 42, '_': {}},
+		{Lbrace: '}', loc: 42, _: {}}
+	]));
+	t.deepEqual(result,
 		[
-			{NAME: 'test', loc: 42},
-			{OPEN_PAREN: '(', loc: 42},
-			{CLOSE_PAREN: ')', loc: 42},
-			{Lbrace: '{', loc: 42},
-			{WORD: 'body', loc: 42},
-			{WORD: 'foo', loc: 42},
-			{WORD: '--lol', loc: 42},
-			{';': ';', 'loc': 42},
-			{Lbrace: '}', loc: 42}
+			{NAME: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
+			{OPEN_PAREN: '(', loc: 42, _: {}},
+			{CLOSE_PAREN: ')', loc: 42, _: {}},
+			{Lbrace: '{', loc: 42, _: {}},
+			{WORD: 'body', loc: 42, _: {}},
+			{WORD: 'foo', loc: 42, _: {}},
+			{WORD: '--lol', loc: 42, _: {}},
+			{';': ';', 'loc': 42, '_': {}},
+			{Lbrace: '}', loc: 42, _: {}}
 		]
 	);
 });

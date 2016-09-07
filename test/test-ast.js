@@ -172,7 +172,7 @@ test('parse multiple suffix', t => {
 	);
 });
 
-test.only('command with stderr redirection to file', t => {
+test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
 	t.deepEqual(result, {
 		type: 'complete_command',

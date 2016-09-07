@@ -7,7 +7,6 @@ function isValidName(text) {
 
 module.exports = function * identifySimpleCommandNames(tokens) {
 	for (const tk of tokens) {
-		//console.log(tk)
 		if (tk._.maybeStartOfSimpleCommand) {
 			if (tk.WORD && isValidName(tk.WORD)) {
 				tk._.maybeSimpleCommandName = true;

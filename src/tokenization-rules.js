@@ -66,10 +66,6 @@ exports.reservedWords = function * (tokens) {
 				loc: tk.loc
 			});
 
-			if (tk.expansion) {
-				word.expansion = tk.expansion;
-			}
-
 			yield word;
 		} else {
 			yield tk;

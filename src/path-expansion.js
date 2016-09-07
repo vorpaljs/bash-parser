@@ -5,7 +5,8 @@ module.exports = options => function * pathExpansion(tokens) {
 			token.WORD = options.resolvePath(token.WORD);
 		}
 		if (token.ASSIGNMENT_WORD && typeof options.resolvePath === 'function') {
-			token.ASSIGNMENT_WORD = options.resolvePath(token.ASSIGNMENT_WORD);
+			const parts = token.ASSIGNMENT_WORD.split('=');
+			token.ASSIGNMENT_WORD = parts[0] + '=' + options.resolvePath(parts[1]);
 		}
 		yield token;
 	}

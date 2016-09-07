@@ -20,11 +20,24 @@
 				>
 	</head>
 	<body>
-		<h1>bash-parser</h1>
 
-		Ast of <code>echo hello world</code>
-
-		<pre id="ast"></pre>
+		<div class="container-fluid">
+			<h1>bash-parser</h1>
+			<div class="row">
+				<div class="col-md-6">
+					<p>Type the source code and click `parse`</p>
+					<textarea id="source" class="form-control" rows="20">echo hello world</textarea>
+					<div id="error" class="alert alert-danger" role="alert"></div>
+					<button id="parse" type="button" class="btn btn-primary btn-lg">
+						Parse
+					</button>
+				</div>
+				<div class="col-md-6">
+					<p>Results:</p>
+					<pre id="ast"></pre>
+				</div>
+			</div>
+		</div>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 

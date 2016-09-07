@@ -12,9 +12,10 @@ const ioFileOperators = module.exports = [
 ];
 
 ioFileOperators.isOperator = function isOperator(tk) {
-	for (const op in ioFileOperators) {
+	for (const op of ioFileOperators) {
 		if (tk[op]) {
 			return true;
 		}
 	}
+	return false;
 };

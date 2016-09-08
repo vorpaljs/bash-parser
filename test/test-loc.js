@@ -63,6 +63,24 @@ test('loc are composed by all tokens', t => {
 			text: '42',
 			loc: mkloc(0, 5, 0, 6)
 		}]
-	}
-);
+	});
 });
+
+test('loc works with multiple newlines', t => {
+	const result = bashParser('\n\n\necho 42', {insertLOC: true});
+	t.deepEqual(result.commands[0], {
+		type: 'simple_command',
+		name: {
+			type: 'word',
+			text: 'echo',
+			loc: mkloc(3, 0, 3, 3)
+		},
+		loc: mkloc(3, 0, 3, 6),
+		suffix: [{
+			type: 'word',
+			text: '42',
+			loc: mkloc(3, 5, 3, 6)
+		}]
+	});
+});
+

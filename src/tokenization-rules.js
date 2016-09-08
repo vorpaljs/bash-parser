@@ -185,7 +185,9 @@ exports.newLineList = function * (tokens) {
 		if (tk.NEWLINE) {
 			if (lastToken.NEWLINE_LIST) {
 				lastToken.NEWLINE_LIST += '\n';
-				// TODO: alter loc
+				if (lastToken.loc) {
+					lastToken.loc.endLine++;
+				}
 				continue;
 			} else {
 				tk.NEWLINE_LIST = '\n';

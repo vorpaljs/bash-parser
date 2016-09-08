@@ -94,20 +94,21 @@ exports.replaceLineTerminationToken = function * (tokens) {
 	}
 };
 
-exports.forNameVariable = function * (tokens) {
-	let lastToken = {};
-	for (const tk of tokens) {
-		if (lastToken.For && tk.WORD && tk.WORD.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
-			yield copyTempObject(tk, {
-				NAME: tk.WORD,
-				loc: tk.loc
-			});
-		} else {
-			yield tk;
-		}
-		lastToken = tk;
+exports.forNameVariable = compose(map((tk, idx, iterable) => {
+	let lastToken = iterable.behind(1) || {};
+
+	// if last token is For and current token form a valid name
+	// type of token is changed from WORD to NAME
+
+	if (lastToken.For && tk.WORD && tk.WORD.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
+		return copyTempObject(tk, {
+			NAME: tk.WORD,
+			loc: tk.loc
+		});
 	}
-};
+
+	return tk;
+}), lookahead);
 
 exports.functionName = function * (tokens) {
 	const tokensIterator = lookahead(tokens, 2);

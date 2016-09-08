@@ -4,7 +4,7 @@ const values = require('object-values');
 const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
-const words = require('./reserved-words');
+const reservedWords = require('./reserved-words');
 const identifySimpleCommandNames = require('./identify-simplecommand-names');
 const isOperator = require('./io-file-operators').isOperator;
 
@@ -26,7 +26,7 @@ exports.identifyMaybeSimpleCommands = map({
 			tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST ||
 			tk.TOKEN === ';' || tk.PIPE ||
 			tk.OR_IF || tk.PIPE || tk.AND_IF ||
-			(!tk.For && !tk.In && !tk.Case && values(words).some(word => hasOwnProperty(tk, word)))
+			(!tk.For && !tk.In && !tk.Case && values(reservedWords).some(word => hasOwnProperty(tk, word)))
 		);
 
 		return tk;
@@ -40,42 +40,43 @@ function copyTempObject(tk, newTk) {
 	return newTk;
 }
 
-exports.operatorTokens = function * (tokens) {
-	for (const tk of tokens) {
-		if (hasOwnProperty(operators, tk.OPERATOR)) {
-			yield copyTempObject(tk, {
-				[operators[tk.OPERATOR]]: tk.OPERATOR,
-				loc: tk.loc
-			});
-		} else {
-			yield tk;
-		}
+exports.operatorTokens = map(tk => {
+	if (hasOwnProperty(operators, tk.OPERATOR)) {
+		return copyTempObject(tk, {
+			[operators[tk.OPERATOR]]: tk.OPERATOR,
+			loc: tk.loc
+		});
 	}
-};
+
+	return tk;
+});
 
 function defined(v) {
 	return v !== undefined;
 }
 
-exports.reservedWords = function * (tokens) {
-	for (const tk of tokens) {
-		if (hasOwnProperty(words, tk.TOKEN)) {
-			yield copyTempObject(tk, {
-				[words[tk.TOKEN]]: tk.TOKEN,
-				loc: tk.loc
-			});
-		} else if (defined(tk.TOKEN)) {
-			const word = copyTempObject(tk, {
-				WORD: tk.TOKEN,
-				loc: tk.loc
-			});
-
-			yield word;
-		} else {
-			yield tk;
-		}
+exports.reservedWords = map(tk => {
+	// TOKEN tokens consisting of a reserved word
+	// are converted to their own token types
+	if (hasOwnProperty(reservedWords, tk.TOKEN)) {
+		return copyTempObject(tk, {
+			[reservedWords[tk.TOKEN]]: tk.TOKEN,
+			loc: tk.loc
+		});
 	}
-};
+
+	// otherwise, TOKEN tokens are converted to
+	// WORD tokens
+	if (defined(tk.TOKEN)) {
+		return copyTempObject(tk, {
+			WORD: tk.TOKEN,
+			loc: tk.loc
+		});
+	}
+
+	// othet tokens are amitted as-is
+	return tk;
+});
 
 // TODO: is this really necessary?
 exports.replaceLineTerminationToken = function * (tokens) {

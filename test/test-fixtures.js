@@ -2,37 +2,55 @@
 const test = require('ava');
 const bashParser = require('../src');
 /* eslint-disable camelcase */
-// const inspect = require('util').inspect;
+// const utils = require('./_utils');
 
 // various example taken from http://www.etalabs.net/sh_tricks.html
 
-/* TODO: make these pass
-test.skip('1', t => {
-	const result = bashParser(
-`echo () (
-fmt=%s end=\\n IFS=" "
-
-while [ $# -gt 1 ] ; do
-case "$1" in
-[!-]*|-*[!ne]*) break ;;
-*ne*|*en*) fmt=%b end= ;;
-*n*) end= ;;
-*e*) fmt=%b ;;
-esac
-shift
-done
-
-printf "$fmt$end" "$*"
-)`
-);
-	t.deepEqual(result, {});
-});
-
-test.skip('2', t => {
+test('2', t => {
 	const result = bashParser('echo () { printf %s\\n "$*" ; }');
-	t.deepEqual(result, {});
+	t.deepEqual(result, {
+		type: 'complete_command',
+		commands: [
+			{
+				type: 'function',
+				name: {
+					text: 'echo',
+					type: 'name'
+				},
+				body: {
+					type: 'compound_list',
+					commands: [
+						{
+							type: 'simple_command',
+							name: {
+								text: 'printf',
+								type: 'word'
+							},
+							suffix: [
+								{
+									text: '%sn',
+									type: 'word'
+								},
+								{
+									text: '$*',
+									expansion: [
+										{
+											kind: 'positional-string',
+											parameter: '*',
+											start: 1,
+											end: 3,
+											type: 'parameter_expansion'
+										}
+									],
+									type: 'word'
+								}
+							]
+						}
+					]
+				}
+			}
+		]});
 });
-*/
 
 test('3', t => {
 	const result = bashParser('IFS= read -r var');
@@ -80,7 +98,6 @@ eval "dest=foo"`
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
-			/* TODO: quote removal should word differently with assignment_word? */
 			prefix: [{type: 'assignment_word', text: 'foo=\'hello ; rm -rf /'}]
 		}, {
 			type: 'simple_command',

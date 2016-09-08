@@ -71,6 +71,8 @@ function lookahead(iterable, size) {
 	};
 }
 
+lookahead.depth = size => iterable => lookahead(iterable, size);
+
 lookahead.spread = function lookaheadSpread(iterable, size) {
 	const it = lookahead(iterable, size);
 

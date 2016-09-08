@@ -110,26 +110,23 @@ exports.forNameVariable = compose(map((tk, idx, iterable) => {
 	return tk;
 }), lookahead);
 
-exports.functionName = function * (tokens) {
-	const tokensIterator = lookahead(tokens, 2);
-	for (const tk of tokensIterator) {
-		// apply only on valid positions
-		// (start of simple commands)
-		if (
-			tk._.maybeStartOfSimpleCommand &&
-			tk.WORD &&
-			tokensIterator.ahead(2) &&
-			tokensIterator.ahead(1).OPEN_PAREN &&
-			tokensIterator.ahead(2).CLOSE_PAREN
-		) {
-			tk.NAME = tk.WORD;
-			delete tk.maybeSimpleCommandName;
-			delete tk.WORD;
-		}
-
-		yield tk;
+exports.functionName = compose(map((tk, idx, iterable) => {
+	// apply only on valid positions
+	// (start of simple commands)
+	if (
+		tk._.maybeStartOfSimpleCommand &&
+		tk.WORD &&
+		iterable.ahead(2) &&
+		iterable.ahead(1).OPEN_PAREN &&
+		iterable.ahead(2).CLOSE_PAREN
+	) {
+		tk.NAME = tk.WORD;
+		delete tk.maybeSimpleCommandName;
+		delete tk.WORD;
 	}
-};
+
+	return tk;
+}), lookahead.depth(2));
 
 exports.ioNumber = function * (tokens) {
 	let lastToken = {EMPTY: true};

@@ -1,6 +1,7 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
 const values = require('object-values');
+const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
 const words = require('./reserved-words');
@@ -9,15 +10,18 @@ const isOperator = require('./io-file-operators').isOperator;
 
 exports.identifySimpleCommandNames = identifySimpleCommandNames;
 
-exports.identifyMaybeSimpleCommands = function * (tokens) {
-	let maybeStartOfSimpleCommand = true;
-	for (const tk of tokens) {
+exports.identifyMaybeSimpleCommands = map({
+	init() {
+		return {maybeStartOfSimpleCommand: true};
+	},
+	callback(tk, idx, ctx) {
 		tk._ = (tk._ || {});
 		if (tk.WORD || tk.IO_NUMBER) {
-			tk._.maybeStartOfSimpleCommand = maybeStartOfSimpleCommand;
+			tk._.maybeStartOfSimpleCommand = ctx.maybeStartOfSimpleCommand;
 		}
+
 		// evaluate if next token could start a simple command
-		maybeStartOfSimpleCommand = Boolean(
+		ctx.maybeStartOfSimpleCommand = Boolean(
 			tk.SEPARATOR_OP || tk.OPEN_PAREN ||
 			tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST ||
 			tk.TOKEN === ';' || tk.PIPE ||
@@ -25,9 +29,9 @@ exports.identifyMaybeSimpleCommands = function * (tokens) {
 			(!tk.For && !tk.In && !tk.Case && values(words).some(word => hasOwnProperty(tk, word)))
 		);
 
-		yield tk;
+		return tk;
 	}
-};
+});
 
 function copyTempObject(tk, newTk) {
 	if (hasOwnProperty(tk, '_')) {

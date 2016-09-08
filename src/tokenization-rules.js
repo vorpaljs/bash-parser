@@ -130,26 +130,18 @@ exports.functionName = compose(map((tk, idx, iterable) => {
 	return tk;
 }), lookahead.depth(2));
 
-exports.ioNumber = function * (tokens) {
-	let lastToken = {EMPTY: true};
-	for (const tk of tokens) {
-		// console.log(lastToken, isOperator(lastToken));
-		if (lastToken.WORD && lastToken.WORD.match(/^[0-9]+$/) &&
-			isOperator(tk)) {
-			lastToken = copyTempObject(lastToken, {
-				IO_NUMBER: lastToken.WORD,
-				loc: lastToken.loc
-			});
-		}
-		if (!lastToken.EMPTY) {
-			yield lastToken;
-		}
-		lastToken = tk;
+exports.ioNumber = compose(map((tk, idx, iterable) => {
+	const next = iterable.ahead(1);
+
+	if (tk && tk.WORD && tk.WORD.match(/^[0-9]+$/) && isOperator(next)) {
+		return copyTempObject(tk, {
+			IO_NUMBER: tk.WORD,
+			loc: tk.loc
+		});
 	}
-	if (!lastToken.EMPTY) {
-		yield lastToken;
-	}
-};
+
+	return tk;
+}), lookahead);
 
 exports.removeTempObject = function * (tokens) {
 	for (const tk of tokens) {

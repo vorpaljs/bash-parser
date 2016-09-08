@@ -211,10 +211,9 @@ exports.linebreakIn = function * (tokens) {
 	let lastToken;
 
 	for (const tk of tokens) {
-		if (tk.In && lastToken.NEWLINE) {
+		if (tk.In && lastToken.NEWLINE_LIST) {
 			lastToken.LINEBREAK_IN = '\nin';
-			// TODO: alter loc
-			delete lastToken.NEWLINE;
+			delete lastToken.NEWLINE_LIST;
 			continue;
 		}
 

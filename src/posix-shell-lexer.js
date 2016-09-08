@@ -101,13 +101,12 @@ const posixShellLexer = options => ({
 			rules.assignmentWord,
 			rules.identifyMaybeSimpleCommands,
 			rules.ioNumber,
+			rules.linebreakIn,
 			rules.reservedWords,
 			rules.separator,
 			rules.operatorTokens,
 			rules.replaceLineTerminationToken,
-
 			rules.newLineList,
-			rules.linebreakIn,
 			tokenDelimiter
 		);
 		this.tokenizer = tokenize(source);

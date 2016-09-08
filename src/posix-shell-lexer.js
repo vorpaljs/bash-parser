@@ -106,7 +106,6 @@ const posixShellLexer = options => ({
 			rules.reservedWords,
 			rules.separator,
 			rules.operatorTokens,
-			rules.replaceLineTerminationToken,
 			rules.newLineList,
 			tokenDelimiter
 		);

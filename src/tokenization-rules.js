@@ -73,27 +73,6 @@ exports.reservedWords = map(tk => {
 	return tk;
 });
 
-// TODO: is this really necessary?
-exports.replaceLineTerminationToken = function * (tokens) {
-	for (const tk of tokens) {
-		if (tk.TOKEN === ';') {
-			yield {
-				'_': tk._,
-				';': tk.TOKEN,
-				'loc': tk.loc
-			};
-		} else if (tk.OPERATOR === ';') {
-			yield {
-				'_': tk._,
-				';': tk.OPERATOR,
-				'loc': tk.loc
-			};
-		} else {
-			yield tk;
-		}
-	}
-};
-
 exports.forNameVariable = compose(map((tk, idx, iterable) => {
 	let lastToken = iterable.behind(1) || {};
 
@@ -257,11 +236,12 @@ exports.separator = function * (tokens) {
 			continue;
 		}
 
-		if (tk[';'] || tk.OPERATOR === '&') {
-			tk.SEPARATOR_OP = (tk[';'] || '') + (tk.OPERATOR || '');
+		if (tk[';'] || tk.OPERATOR === '&' || tk.OPERATOR === ';' || tk.TOKEN === ';' || tk.WORD === ';') {
+			tk.SEPARATOR_OP = (tk[';'] || '') + (tk.OPERATOR || '') + (tk.TOKEN || '');
 
 			delete tk[';'];
 			delete tk.OPERATOR;
+			delete tk.TOKEN;
 		}
 
 		if (!lastToken.EMPTY) {

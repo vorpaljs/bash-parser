@@ -154,33 +154,28 @@ function isValidName(text) {
 	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
 }
 
-exports.assignmentWord = function * (tokens) {
-	let canBeCommandPrefix = true;
-	for (const tk of tokens) {
-		// apply only on valid positions
-		// (start of simple commands)
-		if (tk._.maybeStartOfSimpleCommand) {
-			canBeCommandPrefix = true;
-		}
-
-		// check if it is an assignment
-		if (canBeCommandPrefix && tk.WORD && tk.WORD.indexOf('=') > 0 && (
-				// left part must be a valid name
-				isValidName(tk.WORD.slice(0, tk.WORD.indexOf('=')))
-
-			)) {
-			yield copyTempObject(tk, {
-				ASSIGNMENT_WORD: tk.WORD,
-				expansion: tk.expansion,
-				loc: tk.loc
-			});
-			continue;
-		}
-
-		canBeCommandPrefix = false;
-		yield tk;
+exports.assignmentWord = map((tk, idx, ctx) => {
+	// apply only on valid positions
+	// (start of simple commands)
+	if (tk._.maybeStartOfSimpleCommand) {
+		ctx.commandPrefixNotAllowed = false;
 	}
-};
+
+	// check if it is an assignment
+	if (!ctx.commandPrefixNotAllowed && tk.WORD && tk.WORD.indexOf('=') > 0 && (
+			// left part must be a valid name
+			isValidName(tk.WORD.slice(0, tk.WORD.indexOf('=')))
+		)) {
+		return copyTempObject(tk, {
+			ASSIGNMENT_WORD: tk.WORD,
+			expansion: tk.expansion,
+			loc: tk.loc
+		});
+	}
+
+	ctx.commandPrefixNotAllowed = true;
+	return tk;
+});
 
 /* resolve a conflict in grammar by tokenize multiple NEWLINEs as a
 newline_list token (it was a rule in POSIX grammar) */

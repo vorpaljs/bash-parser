@@ -19,6 +19,61 @@ test('AST can include loc', t => {
 	});
 });
 
+test('subshell can include loc', t => {
+	const result = bashParser('(echo)', {insertLOC: true});
+	// utils.logResults(result);
+	t.deepEqual(result, {
+		type: 'complete_command',
+		commands: [
+			{
+				type: 'subshell',
+				list: {
+					type: 'compound_list',
+					commands: [
+						{
+							type: 'simple_command',
+							name: {
+								text: 'echo',
+								type: 'word',
+								loc: {
+									startLine: 0,
+									startColumn: 1,
+									endLine: 0,
+									endColumn: 4
+								}
+							},
+							loc: {
+								startLine: 0,
+								startColumn: 1,
+								endLine: 0,
+								endColumn: 4
+							}
+						}
+					],
+					loc: {
+						startLine: 0,
+						startColumn: 1,
+						endLine: 0,
+						endColumn: 4
+					}
+				},
+				loc: {
+					startLine: 0,
+					startColumn: 0,
+					endLine: 0,
+					endColumn: 5
+				}
+			}
+		],
+		loc: {
+			startLine: 0,
+			startColumn: 0,
+			endLine: 0,
+			endColumn: 5
+		}
+	});
+});
+
 test('double command with only name', t => {
 	const result = bashParser('echo; ciao;', {insertLOC: true});
 	// logResults(result);

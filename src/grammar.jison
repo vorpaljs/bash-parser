@@ -100,7 +100,7 @@ compound_command : brace_group
 				 | until_clause
 				 ;
 subshell         : OPEN_PAREN compound_list CLOSE_PAREN
-					-> yy.subshell($compound_list)
+					-> yy.subshell($compound_list, $OPEN_PAREN.loc, $CLOSE_PAREN.loc)
 				 ;
 compound_list   : term -> $term
 				 | NEWLINE_LIST term -> $term

@@ -76,8 +76,13 @@ module.exports = options => {
 		return term;
 	};
 
-	// TODO: implement loc
-	builder.subshell = list => ({type: 'subshell', list});
+	builder.subshell = (list, locStart, locEnd) => {
+		const node = {type: 'subshell', list};
+		if (options.insertLOC) {
+			node.loc = setLocEnd(setLocStart({}, locStart), locEnd);
+		}
+		return node;
+	};
 
 	builder.pipeSequence = command => {
 		const node = {type: 'pipeline', commands: [command]};

@@ -100,7 +100,7 @@ exports.forNameVariable = compose(map((tk, idx, iterable) => {
 	// if last token is For and current token form a valid name
 	// type of token is changed from WORD to NAME
 
-	if (lastToken.For && tk.WORD && tk.WORD.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
+	if (lastToken.For && tk.WORD && isValidName(tk.WORD)) {
 		return copyTempObject(tk, {
 			NAME: tk.WORD,
 			loc: tk.loc
@@ -113,6 +113,8 @@ exports.forNameVariable = compose(map((tk, idx, iterable) => {
 exports.functionName = compose(map((tk, idx, iterable) => {
 	// apply only on valid positions
 	// (start of simple commands)
+	// if token can form the name of a function,
+	// type of token is changed from WORD to NAME
 	if (
 		tk._.maybeStartOfSimpleCommand &&
 		tk.WORD &&

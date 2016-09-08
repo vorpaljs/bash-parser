@@ -39,6 +39,29 @@ test('pass context object to the callback', t => {
 	);
 });
 
+test('accept an option object with init function for context', t => {
+	const opt = {
+		callback: contextCb,
+		init() {
+			return {tot: 1};
+		}
+	};
+	t.deepEqual(
+		Array.from(map(opt, fixture)),
+		fixture
+	);
+});
+
+test('context set to default if init function is not provided', t => {
+	const opt = {
+		callback: contextCb
+	};
+	t.deepEqual(
+		Array.from(map(opt, fixture)),
+		expectedIdx
+	);
+});
+
 test('can be curried', t => {
 	const mapDouble = map(double);
 
@@ -54,8 +77,8 @@ test('throws if data is not iterable', t => {
 	t.true(err instanceof TypeError);
 });
 
-test('throws if callback is not a function', t => {
+test('throws if callback is not a function nor an object', t => {
 	const err = t.throws(() => map(42, []));
-	t.is(err.message, 'Callback argument must be a function');
+	t.is(err.message, 'Callback argument must be a function or option object');
 	t.true(err instanceof TypeError);
 });

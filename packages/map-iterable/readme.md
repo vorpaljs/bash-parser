@@ -49,20 +49,28 @@ npm install --save map-iterable
 
 **Parameters**
 
-* callback
+* callback: Function | Object
 
-Function that produces an element of the new Iterable, taking three arguments:
+If a function is provided, it shall be the callback that produces an element of the new Iterable, taking three arguments:
 	- currentValue - The current element being processed in the iterable.
 	- index - The index of the current element being processed in the iterable.
-	- ctx - an object shared between all calls to the function.
+	- context - an object shared between all calls to the function.
+
+If an object is provided, it is interpreted as on option object with following properties:
+
+	* callback: Function - see above
+	* init: Function - optional init function that must return the initial value for `context`. If it's not provided, a value of {} will be used as `context` initial value.
+
+
+* data: Iterable
+
+The source iterable to iterate over.
 
 **Return value**
 
 A new array with each element being the result of the callback function.
 
-* data
 
-The source iterable to iterate over.
 
 
 # License

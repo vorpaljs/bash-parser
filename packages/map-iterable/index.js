@@ -3,9 +3,13 @@
 const curry = require('curry');
 const isIterable = require('is-iterable');
 
-function map(callback, data) {
-	if (typeof callback !== 'function') {
-		throw new TypeError('Callback argument must be a function');
+function initDefault() {
+	return {};
+}
+
+function map(options, data) {
+	if (typeof options !== 'function' && (typeof options !== 'object' || options === null)) {
+		throw new TypeError('Callback argument must be a function or option object');
 	}
 
 	if (!isIterable(data)) {
@@ -13,8 +17,13 @@ function map(callback, data) {
 	}
 
 	let idx = 0;
-	const ctx = {};
+
+	const init = options.init || initDefault;
+	const callback = options.callback || options;
+
+	const ctx = init();
 	const dataIterator = data[Symbol.iterator]();
+
 	return {
 		[Symbol.iterator]() {
 			return this;

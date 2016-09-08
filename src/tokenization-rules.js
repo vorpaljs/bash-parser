@@ -1,6 +1,7 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
 const values = require('object-values');
+const compose = require('compose-function');
 const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
 const operators = require('./operators');
@@ -10,28 +11,22 @@ const isOperator = require('./io-file-operators').isOperator;
 
 exports.identifySimpleCommandNames = identifySimpleCommandNames;
 
-exports.identifyMaybeSimpleCommands = map({
-	init() {
-		return {maybeStartOfSimpleCommand: true};
-	},
-	callback(tk, idx, ctx) {
-		tk._ = (tk._ || {});
-		if (tk.WORD || tk.IO_NUMBER) {
-			tk._.maybeStartOfSimpleCommand = ctx.maybeStartOfSimpleCommand;
-		}
+exports.identifyMaybeSimpleCommands = compose(map((tk, idx, iterable) => {
+	const last = iterable.behind(1) || {EMPTY: true};
 
-		// evaluate if next token could start a simple command
-		ctx.maybeStartOfSimpleCommand = Boolean(
-			tk.SEPARATOR_OP || tk.OPEN_PAREN ||
-			tk.CLOSE_PAREN || tk.NEWLINE || tk.NEWLINE_LIST ||
-			tk.TOKEN === ';' || tk.PIPE ||
-			tk.OR_IF || tk.PIPE || tk.AND_IF ||
-			(!tk.For && !tk.In && !tk.Case && values(reservedWords).some(word => hasOwnProperty(tk, word)))
-		);
+	// evaluate based on last token
+	tk._ = {
+		maybeStartOfSimpleCommand: Boolean(
+			last.EMPTY || last.SEPARATOR_OP || last.OPEN_PAREN ||
+			last.CLOSE_PAREN || last.NEWLINE || last.NEWLINE_LIST ||
+			last.TOKEN === ';' || last.PIPE ||
+			last.OR_IF || last.PIPE || last.AND_IF ||
+			(!last.For && !last.In && !last.Case && values(reservedWords).some(word => hasOwnProperty(last, word)))
+		)
+	};
 
-		return tk;
-	}
-});
+	return tk;
+}), lookahead);
 
 function copyTempObject(tk, newTk) {
 	if (hasOwnProperty(tk, '_')) {

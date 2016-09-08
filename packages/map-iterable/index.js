@@ -3,8 +3,8 @@
 const curry = require('curry');
 const isIterable = require('is-iterable');
 
-function initDefault() {
-	return {};
+function initDefault(data) {
+	return data;
 }
 
 function map(options, data) {
@@ -21,7 +21,7 @@ function map(options, data) {
 	const init = options.init || initDefault;
 	const callback = options.callback || options;
 
-	const ctx = init();
+	const ctx = init(data);
 	const dataIterator = data[Symbol.iterator]();
 
 	return {

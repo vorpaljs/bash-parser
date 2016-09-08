@@ -59,7 +59,7 @@ If a function is provided, it shall be the callback that produces an element of 
 If an object is provided, it is interpreted as on option object with following properties:
 
 	* callback: Function - see above
-	* init: Function - optional init function that must return the initial value for `context`. If it's not provided, a value of {} will be used as `context` initial value.
+	* init: Function - optional init function that must return the initial value for `context`. If it's not provided, the iterable itself will be used as `context` initial value.
 
 
 * data: Iterable

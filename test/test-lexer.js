@@ -152,15 +152,12 @@ test('support character escaping', t => {
 	);
 });
 
-/* TODO: implement line continuation */
-/*
-test.skip('support line continuations', t => { // not yet implemented
+test('support line continuations', t => { // not yet implemented
 	t.deepEqual(
 		tokenize('echo\\\n23'),
-		[{token: 'WORD', value: 'echo23'}]
+		[{token: 'WORD', value: 'echo\n23'}]
 	);
 });
-*/
 
 test('support single quotes', t => {
 	t.deepEqual(

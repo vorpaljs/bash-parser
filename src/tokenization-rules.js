@@ -250,13 +250,16 @@ exports.separator = function * (tokens) {
 	for (const tk of tokens) {
 		if (tk.NEWLINE_LIST && lastToken.SEPARATOR_OP) {
 			lastToken.SEPARATOR_OP += tk.NEWLINE_LIST;
-			// TODO: alter loc
+			if (lastToken.loc) {
+				lastToken.loc.endLine++;
+				lastToken.loc.endColumn = 0;
+			}
 			continue;
 		}
 
 		if (tk[';'] || tk.OPERATOR === '&') {
 			tk.SEPARATOR_OP = (tk[';'] || '') + (tk.OPERATOR || '');
-			// TODO: alter loc
+
 			delete tk[';'];
 			delete tk.OPERATOR;
 		}

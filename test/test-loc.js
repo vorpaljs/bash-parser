@@ -164,3 +164,21 @@ done
 
 	t.deepEqual(result.commands[0], expected);
 });
+
+test('loc in multi line commands', t => {
+	const result = bashParser('echo;\nls;\n', {insertLOC: true});
+	// utils.logResults(result);
+	t.deepEqual(result, {
+		loc: mkloc(0, 0, 1, 1),
+		type: 'complete_command',
+		commands: [{
+			type: 'simple_command',
+			name: {type: 'word', text: 'echo', loc: mkloc(0, 0, 0, 3)},
+			loc: mkloc(0, 0, 0, 3)
+		}, {
+			type: 'simple_command',
+			name: {type: 'word', text: 'ls', loc: mkloc(1, 0, 1, 1)},
+			loc: mkloc(1, 0, 1, 1)
+		}]
+	});
+});

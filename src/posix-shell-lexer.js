@@ -82,6 +82,7 @@ const posixShellLexer = options => ({
 
 	setInput(source) {
 		const tokenize = compose(
+			// logger(' * '),
 			rules.removeTempObject,
 			defaultNodeType,
 			quoteRemoval,

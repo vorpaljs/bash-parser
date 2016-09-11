@@ -3,7 +3,6 @@ const test = require('ava');
 const bashParser = require('../src');
 // const utils = require('./_utils');
 
-/* eslint-disable camelcase */
 test('remove double quote from string', t => {
 	const result = bashParser('"echo"');
 	t.deepEqual(result.commands[0].name, {
@@ -43,5 +42,14 @@ test('remove quotes from middle of string', t => {
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
 		text: 'echo'
+	});
+});
+
+test('remove quotes on assignment', t => {
+	const result = bashParser('echo="ciao mondo"');
+
+	t.deepEqual(result.commands[0].prefix[0], {
+		text: 'echo=ciao mondo',
+		type: 'assignment_word'
 	});
 });

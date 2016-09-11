@@ -46,10 +46,9 @@ test('accept an option object with init function for context', t => {
 			return {tot: 1};
 		}
 	};
-	t.deepEqual(
-		Array.from(map(opt, fixture)),
-		fixture
-	);
+	const results = Array.from(map(opt, fixture));
+	delete fixture.tot;
+	t.deepEqual(results, fixture);
 });
 
 test('context set to default if init function is not provided', t => {

@@ -155,7 +155,7 @@ test('support character escaping', t => {
 test('support line continuations', t => { // not yet implemented
 	t.deepEqual(
 		tokenize('echo\\\n23'),
-		[{token: 'WORD', value: 'echo\n23'}]
+		[{token: 'WORD', value: 'echo23'}]
 	);
 });
 

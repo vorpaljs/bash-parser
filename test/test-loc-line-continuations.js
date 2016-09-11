@@ -6,21 +6,21 @@ const bashParser = require('../src');
 test('loc take into account line continuations', t => {
 	const cmd = 'echo \\\nworld';
 	const result = bashParser(cmd, {insertLOC: true});
-
+	// utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
 		loc: {
 			startLine: 0,
 			startColumn: 0,
 			endLine: 1,
-			endColumn: 4
+			endColumn: 5
 		},
 		commands: [{
 			loc: {
 				startLine: 0,
 				startColumn: 0,
 				endLine: 1,
-				endColumn: 4
+				endColumn: 5
 			},
 			type: 'simple_command',
 			name: {
@@ -35,10 +35,10 @@ test('loc take into account line continuations', t => {
 			suffix: [{
 				type: 'word', text: 'world',
 				loc: {
-					startLine: 1,
-					startColumn: 0,
+					startLine: 0,
+					startColumn: 5,
 					endLine: 1,
-					endColumn: 4
+					endColumn: 5
 				}
 			}]
 		}]

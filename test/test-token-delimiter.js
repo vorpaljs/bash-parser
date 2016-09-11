@@ -190,7 +190,7 @@ test('support escaping chars', t => {
 	t.deepEqual(
 		tokenize('echo\\<'), [
 			{
-				TOKEN: 'echo<',
+				TOKEN: 'echo\\<',
 				loc: mkloc(0, 0, 0, 5)
 			}, {
 				EOF: true,
@@ -204,7 +204,7 @@ test('character escaping is resetted on each char', t => {
 	t.deepEqual(
 		tokenize('echo\\<<'), [
 			{
-				TOKEN: 'echo<',
+				TOKEN: 'echo\\<',
 				loc: mkloc(0, 0, 0, 5)
 			}, {
 				OPERATOR: '<',
@@ -263,7 +263,7 @@ test('escaped double quotes within double quotes', t => {
 				TOKEN: 'echo',
 				loc: mkloc(0, 0, 0, 3)
 			}, {
-				TOKEN: '"TEST1 "TEST2"',
+				TOKEN: '"TEST1 \\"TEST2"',
 				loc: mkloc(0, 5, 0, 19)
 			}, {
 				TOKEN: 'ucci',

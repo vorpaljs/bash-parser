@@ -1,18 +1,37 @@
 'use strict';
 
 function unquote(text) {
-	if (text[0] === '"' || text[0] === '\'') {
-		text = text.slice(1);
-	}
+	// console.log(text)
+	let lastChar = null;
+	let result = '';
+	let quoting = '';
+	for (const ch of text) {
+		if (ch === '\\' && lastChar === '\\') {
+			result += ch;
+		} else if (ch === '"' || ch === '\'') {
+			if (lastChar === '\\' || (quoting !== '' && quoting !== ch)) {
+				result += ch;
+			}
+		} else if (ch !== '\\') {
+			result += ch;
+		}
 
-	if (text.slice(-1)[0] === '"' || text.slice(-1)[0] === '\'') {
-		text = text.slice(0, -1);
-	}
+		if (ch === '"' || ch === '\'') {
+			if (lastChar !== '\\' && quoting === ch) {
+				quoting = '';
+			}
 
-	text = text.replace(/([^\\])\\/g, '$1');
-	return text;
+			if (lastChar !== '\\' && quoting === '') {
+				quoting = ch;
+			}
+		}
+
+		lastChar = ch;
+	}
+	// console.log(result)
+	return result;
 }
-
+// console.log(unquote('"TEST1 \\"TEST2"'))
 module.exports = function * quoteRemoval(tokens) {
 	for (const token of tokens) {
 		if (token.WORD) {

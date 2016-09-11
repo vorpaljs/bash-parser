@@ -46,13 +46,13 @@ function * emitCurrentTokenIfNotEmpty(currentCharacter, state) {
 function tryStartQuoting(currentCharacter, state) {
 	state.setCurrentQuoting(currentCharacter);
 
-	if (currentCharacter !== '\\') {
-		if (state.currentTokenIsGeneric()) {
-			state.appendToGenericToken(currentCharacter);
-		} else {
-			state.setGenericToken(currentCharacter);
-		}
+	// if (currentCharacter !== '\\') {
+	if (state.currentTokenIsGeneric()) {
+		state.appendToGenericToken(currentCharacter);
+	} else {
+		state.setGenericToken(currentCharacter);
 	}
+	// }
 
 	state.advanceLoc(currentCharacter);
 }
@@ -88,6 +88,7 @@ function * addCharacter(currentCharacter, state) {
 	// <backslash> quoting should work within double quotes
 	if (currentCharacter === '\\' && state.isQuotingDouble()) {
 		state.setEscaping();
+		state.appendToGenericToken(currentCharacter);
 		state.advanceLoc(currentCharacter);
 		return;
 	}
@@ -130,6 +131,11 @@ function * addCharacter(currentCharacter, state) {
 		return;
 	}
 
+	if (state.isEscaping() && currentCharacter === '\n') {
+		state.advanceLoc(currentCharacter);
+		currentCharacter = '';
+	}
+
 	if (state.isEscaping()) {
 		// reset character escaping if setted.
 		state.resetEscaping();
@@ -143,7 +149,6 @@ function * addCharacter(currentCharacter, state) {
 	if (state.currentTokenIsGeneric()) {
 		// RULE 9 - If the previous character was part of a word, the current
 		// character shall be appended to that word.
-
 		state.appendToGenericToken(currentCharacter);
 		state.advanceLoc(currentCharacter);
 		return;

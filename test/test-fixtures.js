@@ -98,7 +98,7 @@ eval "dest=foo"`
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
-			prefix: [{type: 'assignment_word', text: 'foo=\'hello ; rm -rf /'}]
+			prefix: [{type: 'assignment_word', text: 'foo=hello ; rm -rf /'}]
 		}, {
 			type: 'simple_command',
 			name: {type: 'word', text: ''},

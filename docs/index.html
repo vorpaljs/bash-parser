@@ -12,12 +12,17 @@
 			crossorigin="anonymous"
 			>
 
-			<link
-				rel="stylesheet"
-				href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-				integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
-				crossorigin="anonymous"
-				>
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+			integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+			crossorigin="anonymous"
+			>
+		<style>
+			.alert-danger {
+				display: none;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -25,12 +30,9 @@
 			<h1>bash-parser</h1>
 			<div class="row">
 				<div class="col-md-6">
-					<p>Type the source code and click `parse`</p>
+					<p>Type in some bash code and see its AST to the right &#x27A1;</p>
 					<textarea id="source" class="form-control" rows="20">echo hello world</textarea>
 					<div id="error" class="alert alert-danger" role="alert"></div>
-					<button id="parse" type="button" class="btn btn-primary btn-lg">
-						Parse
-					</button>
 				</div>
 				<div class="col-md-6">
 					<p>Results:</p>

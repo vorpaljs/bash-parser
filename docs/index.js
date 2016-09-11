@@ -15,5 +15,6 @@ function parseSource() {
 	}
 }
 
-$('#parse').click(parseSource);
+$('#source').change(parseSource);
+$('#source').keyup(parseSource);
 parseSource();

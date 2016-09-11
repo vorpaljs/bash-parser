@@ -6,6 +6,7 @@ Parses bash source code to produce an AST
 [![Coveralls](https://img.shields.io/coveralls/vorpaljs/bash-parser.svg?maxAge=2592000)](https://coveralls.io/github/vorpaljs/bash-parser)
 [![NPM module](https://img.shields.io/npm/v/bash-parser.svg)](https://npmjs.org/package/bash-parser)
 [![NPM downloads](https://img.shields.io/npm/dt/bash-parser.svg)](https://npmjs.org/package/bash-parser)
+[![Try online](https://img.shields.io/badge/try_it-online!-yellow.svg)](https://vorpaljs.github.io/bash-parser/)
 
 # Installation
 

@@ -19,9 +19,7 @@ function unquote(text) {
 		if (ch === '"' || ch === '\'') {
 			if (lastChar !== '\\' && quoting === ch) {
 				quoting = '';
-			}
-
-			if (lastChar !== '\\' && quoting === '') {
+			} else if (lastChar !== '\\' && quoting === '') {
 				quoting = ch;
 			}
 		}
@@ -31,7 +29,7 @@ function unquote(text) {
 	// console.log(result)
 	return result;
 }
-// console.log(unquote('"TEST1 \\"TEST2"'))
+// console.log(unquote('a"b"\'c\''))
 module.exports = function * quoteRemoval(tokens) {
 	for (const token of tokens) {
 		if (token.WORD) {

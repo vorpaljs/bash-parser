@@ -53,3 +53,21 @@ test('remove quotes on assignment', t => {
 		type: 'assignment_word'
 	});
 });
+
+test('remove quotes followed by single quotes', t => {
+	const result = bashParser('echo"ciao"\'mondo\'');
+
+	t.deepEqual(result.commands[0].name, {
+		text: 'echociaomondo',
+		type: 'word'
+	});
+});
+
+test('remove single quotes followed by quotes', t => {
+	const result = bashParser('echo\'ciao\'"mondo"');
+
+	t.deepEqual(result.commands[0].name, {
+		text: 'echociaomondo',
+		type: 'word'
+	});
+});

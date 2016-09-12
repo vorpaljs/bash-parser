@@ -3,6 +3,21 @@ const test = require('ava');
 const bashParser = require('../src');
 // const utils = require('./_utils');
 
+function testUnclosed(cmd) {
+	return t => {
+		const err = t.throws(() => bashParser(cmd));
+		t.truthy(err instanceof SyntaxError);
+		t.is(err.message, 'Parse error on line 0: Unexpected \'EOF\'');
+	};
+}
+
+test('throws on unclosed double quotes', testUnclosed('echo "TEST1'));
+test('throws on unclosed single quotes', testUnclosed('echo \'TEST1'));
+test('throws on unclosed command subst', testUnclosed('echo $(TEST1'));
+test('throws on unclosed backtick command subst', testUnclosed('echo `TEST1'));
+test('throws on unclosed arhit subst', testUnclosed('echo $((TEST1'));
+test('throws on unclosed param subst', testUnclosed('echo ${TEST1'));
+
 test('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// utils.logResults(result)

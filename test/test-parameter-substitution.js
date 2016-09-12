@@ -101,14 +101,6 @@ test('command consisting of only parameter substitution', t => {
 	});
 });
 
-test('invalid name paramter substitution', t => {
-	const result = bashParser('$(other');
-	t.deepEqual(result.commands[0].name, {
-		type: 'word',
-		text: '$(other'
-	});
-});
-
 test('resolve parameter', t => {
 	const result = bashParser('"foo ${other} baz"', {
 		resolveParameter() {

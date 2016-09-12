@@ -177,6 +177,9 @@ module.exports = function * tokenDelimiter(source) {
 		yield * addCharacter(currentCharacter, state);
 	}
 
+	if (state.isQuoting()) {
+		throw new SyntaxError(`Parse error on line ${state.lineNumber}: Unexpected 'EOF'`);
+	}
 	// RULE 1 - If the end of input is recognized, the current token shall
 	// be delimited. If there is no current token, the end-of-input indicator
 	// shall be returned as the token.

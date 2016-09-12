@@ -48,6 +48,9 @@ module.exports = function parse(sourceCode, options) {
 */
 		return ast;
 	} catch (err) {
+		if (err instanceof SyntaxError) {
+			throw err;
+		}
 		throw new Error(err.stack || err.message);
 	}
 };

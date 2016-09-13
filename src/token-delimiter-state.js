@@ -51,6 +51,10 @@ class TokenDelimiterState {
 		if (this.token.TOKEN) {
 			// remove slash from token
 			this.token.TOKEN = this.token.TOKEN.slice(0, -1);
+			if (this.token.TOKEN === '') {
+				delete this.token.TOKEN;
+				this.setEmptyToken();
+			}
 		}
 	}
 
@@ -195,7 +199,7 @@ class TokenDelimiterState {
 	}
 
 	currentTokenIsEmpty() {
-		return Boolean(this.token.EMPTY);
+		return Boolean(this.token.EMPTY) || this.token.TOKEN === '';
 	}
 
 	currentTokenIsGeneric() {

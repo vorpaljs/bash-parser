@@ -3,6 +3,38 @@ const test = require('ava');
 const bashParser = require('../src');
 // const utils = require('./_utils');
 
+test('empty line after line continuation', t => {
+	const cmd = `echo \\\n\n\necho there`;
+	const result = bashParser(cmd);
+	// utils.logResults(result);
+	const expected = {
+		type: 'complete_command',
+		commands: [
+			{
+				type: 'simple_command',
+				name: {
+					text: 'echo',
+					type: 'word'
+				}
+			},
+			{
+				type: 'simple_command',
+				name: {
+					text: 'echo',
+					type: 'word'
+				},
+				suffix: [
+					{
+						text: 'there',
+						type: 'word'
+					}
+				]
+			}
+		]
+	};
+	t.deepEqual(result, expected);
+});
+
 test('loc take into account line continuations', t => {
 	const cmd = 'echo \\\nworld';
 	const result = bashParser(cmd, {insertLOC: true});

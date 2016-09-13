@@ -1,13 +1,13 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-/* eslint-disable camelcase */
 // const utils = require('./_utils');
 
 // various example taken from http://www.etalabs.net/sh_tricks.html
 
 test('2', t => {
 	const result = bashParser('echo () { printf %s\\n "$*" ; }');
+	// utils.logResults(result);
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [
@@ -32,7 +32,7 @@ test('2', t => {
 									type: 'word'
 								},
 								{
-									text: '$*',
+									text: '"$*"',
 									expansion: [
 										{
 											kind: 'positional-string',

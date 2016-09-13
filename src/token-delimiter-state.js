@@ -94,6 +94,10 @@ class TokenDelimiterState {
 		return this.quoting === QUOTING.DOUBLE;
 	}
 
+	isQuotingWord() {
+		return this.quoting === QUOTING.SINGLE || this.quoting === QUOTING.DOUBLE;
+	}
+
 	resetQuoting() {
 		this.quoting = QUOTING.NO;
 	}

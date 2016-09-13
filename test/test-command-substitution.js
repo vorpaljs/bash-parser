@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-const utils = require('./_utils');
+// const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('command substitution', t => {
@@ -102,10 +102,11 @@ test('command substitution with backticks', t => {
 test('quoted backtick are removed within command substitution with backticks', t => {
 	const result = bashParser('variable=`echo \\`echo ciao\\``');
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
+	// utils.logResults(result);
 
 	t.deepEqual(result.commands[0].prefix, [{
 		type: 'assignment_word',
-		text: 'variable=`echo `echo ciao``',
+		text: 'variable=`echo \\`echo ciao\\``',
 		expansion: [{
 			command: 'echo `echo ciao`',
 			type: 'command_expansion',
@@ -118,10 +119,9 @@ test('quoted backtick are removed within command substitution with backticks', t
 test('quoted backtick are not removed within command substitution with parenthesis', t => {
 	const result = bashParser('variable=$(echo \\`echo ciao\\`)');
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
-	// utils.logResults(result);
 	t.deepEqual(result.commands[0].prefix, [{
 		type: 'assignment_word',
-		text: 'variable=$(echo `echo ciao`)',
+		text: 'variable=$(echo \\`echo ciao\\`)',
 		expansion: [{
 			command: 'echo \\`echo ciao\\`',
 			type: 'command_expansion',
@@ -204,6 +204,7 @@ test('last newlines are removed from command output', t => {
 		}
 	});
 	delete result.commands[0].name.expansion[0].commandAST;
+	// utils.logResults(result)
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {

@@ -19,11 +19,11 @@ test('remove single quotes from string', t => {
 	});
 });
 
-test('not remove slashes from string', t => {
+test('remove unnecessary slashes from string', t => {
 	const result = bashParser('ec\\%ho');
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
-		text: 'ec\\%ho'
+		text: 'ec%ho'
 	});
 });
 

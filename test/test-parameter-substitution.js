@@ -98,6 +98,7 @@ test('multiple parameter substitution', t => {
 
 test('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
+	// utils.logResults(result)
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
 		text: '$other',

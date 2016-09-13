@@ -107,6 +107,13 @@ function * addCharacter(currentCharacter, state) {
 		return;
 	}
 
+	// new lines inside quoting are conveted to \n
+	if (state.isQuotingWord() && currentCharacter === '\n') {
+		state.appendToGenericToken('\n');
+		state.advanceLoc('\n');
+		return;
+	}
+
 	// RULE 7 - If the current character is an unquoted <newline>, the current
 	// token shall be delimited.
 	if (!state.isEscaping() && currentCharacter === '\n') {

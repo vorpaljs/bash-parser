@@ -67,7 +67,7 @@ test('parse for with default sequence', t => {
 });
 
 test('parse for with default sequence - on one line', t => {
-	const result = bashParser('for x in; do echo $x done');
+	const result = bashParser('for x in; do echo $x; done');
 	// utils.logResults(result)
 	t.deepEqual(
 		result, {

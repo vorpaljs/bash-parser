@@ -20,7 +20,7 @@ exports.identifyMaybeSimpleCommands = compose(map((tk, idx, iterable) => {
 			last.EMPTY || last.SEPARATOR_OP || last.OPEN_PAREN ||
 			last.CLOSE_PAREN || last.NEWLINE || last.NEWLINE_LIST ||
 			last.TOKEN === ';' || last.PIPE ||
-			last.OR_IF || last.PIPE || last.AND_IF ||
+			last.DSEMI || last.OR_IF || last.PIPE || last.AND_IF ||
 			(!last.For && !last.In && !last.Case && values(reservedWords).some(word => hasOwnProperty(last, word)))
 		)
 	};
@@ -50,10 +50,33 @@ function defined(v) {
 	return v !== undefined;
 }
 
-exports.reservedWords = map(tk => {
+function isValidReservedWordPosition(tk, iterable) {
+	const last = iterable.behind(1) || {EMPTY: true};
+	const twoAgo = iterable.behind(2) || {EMPTY: true};
+
+	// evaluate based on last token
+	const startOfCommand = Boolean(
+		last.EMPTY || last.SEPARATOR_OP || last.OPEN_PAREN ||
+		last.CLOSE_PAREN || last.NEWLINE || last.NEWLINE_LIST ||
+		last.DSEMI || last.TOKEN === ';' || last.PIPE ||
+		last.OR_IF || last.PIPE || last.AND_IF
+	);
+
+	const lastIsReservedWord = (!last.For && !last.In && !last.Case && values(reservedWords).some(word => hasOwnProperty(last, word)));
+
+	const thirdInCase = Boolean(twoAgo.Case) && tk.TOKEN && tk.TOKEN.toLowerCase() === 'in';
+	const thirdInFor = Boolean(twoAgo.For) && tk.TOKEN &&
+		(tk.TOKEN.toLowerCase() === 'in' || tk.TOKEN.toLowerCase() === 'do');
+
+	// console.log({tk, startOfCommand, lastIsReservedWord, thirdInFor, thirdInCase, twoAgo})
+	return startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
+}
+
+exports.reservedWords = compose(map((tk, idx, iterable) => {
 	// TOKEN tokens consisting of a reserved word
 	// are converted to their own token types
-	if (hasOwnProperty(reservedWords, tk.TOKEN)) {
+	if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(reservedWords, tk.TOKEN)) {
+		tk[reservedWords[tk.TOKEN]] = tk.TOKEN;
 		return copyTempObject(tk, {
 			[reservedWords[tk.TOKEN]]: tk.TOKEN,
 			loc: tk.loc
@@ -69,9 +92,9 @@ exports.reservedWords = map(tk => {
 		});
 	}
 
-	// othet tokens are amitted as-is
+	// other tokens are amitted as-is
 	return tk;
-});
+}), lookahead.depth(2));
 
 exports.forNameVariable = compose(map((tk, idx, iterable) => {
 	let lastToken = iterable.behind(1) || {};

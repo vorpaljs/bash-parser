@@ -4,37 +4,7 @@ const unescape = require('unescape-js');
 
 function unquote(text) {
 	return unescape(parse(text, (...args) => console.log(args))[0]);
-/*
-	let lastChar = null;
-	let result = '';
-	let quoting = '';
-	for (const ch of text) {
-		if (ch === '\\' && lastChar === '\\') {
-			result += ch;
-		} else if (ch === '"' || ch === '\'') {
-			if (lastChar === '\\' || (quoting !== '' && quoting !== ch)) {
-				result += ch;
-			}
-		} else if (ch !== '\\') {
-			result += ch;
-		}
-
-		if (ch === '"' || ch === '\'') {
-			if (lastChar !== '\\' && quoting === ch) {
-				quoting = '';
-			} else if (lastChar !== '\\' && quoting === '') {
-				quoting = ch;
-			}
-		}
-
-		lastChar = ch;
-	}
-	// console.log(result)
-	return result;
-	*/
 }
-
-// console.log(unquote('a"b"\'c\''))
 
 function unresolvedExpansions(token) {
 	if (!token.expansion) {

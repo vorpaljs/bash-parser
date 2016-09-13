@@ -10,7 +10,7 @@ for (var i = 0; i < 4; i++) {
 	TOKEN += (Math.pow(16, 8) * Math.random()).toString(16);
 }
 
-module.exports = function parse(s, env, opts) {
+module.exports = function parse(s) {
 	var chunker = new RegExp([
 		'(' + BAREWORD + '|' + SINGLE_QUOTE + '|' + DOUBLE_QUOTE + ')*'
 	].join('|'), 'g');
@@ -19,12 +19,6 @@ module.exports = function parse(s, env, opts) {
 
 	if (!match) {
 		return [];
-	}
-	if (!env) {
-		env = {};
-	}
-	if (!opts) {
-		opts = {};
 	}
 
 	return match.map((s, j) => {
@@ -45,7 +39,7 @@ module.exports = function parse(s, env, opts) {
 		//	 "allonetoken")
 		var SQ = '\'';
 		var DQ = '"';
-		var BS = opts.escape || '\\';
+		var BS = '\\';
 		var quote = false;
 		var esc = false;
 		var out = '';

@@ -18,6 +18,16 @@ test('parameter substitution in assignment', t => {
 	}]);
 });
 
+test('parameter substitution skip escaped dollar', t => {
+	const result = bashParser('echo "\\$ciao"');
+	t.deepEqual(result.commands[0].suffix, [{type: 'word', text: '\\$ciao'}]);
+});
+
+test('parameter substitution skip escaped dollar with braces', t => {
+	const result = bashParser('echo "\\${ciao}"');
+	t.deepEqual(result.commands[0].suffix, [{type: 'word', text: '\\${ciao}'}]);
+});
+
 test('parameter substitution skip single quoted words', t => {
 	const result = bashParser('echo \'${echo } $ciao\'');
 	// utils.logResults(result)

@@ -3,8 +3,6 @@ const test = require('ava');
 const bashParser = require('../src');
 // const utils = require('./_utils');
 
-/* eslint-disable camelcase */
-
 test('arithmetic substitution', t => {
 	const result = bashParser('variable=$((42 + 43))');
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
@@ -26,6 +24,15 @@ test('arithmetic substitution skip single quoted words', t => {
 	t.deepEqual(result.commands[0].suffix, [{
 		type: 'word',
 		text: '$((42 * 42))'
+	}]);
+});
+
+test('arithmetic substitution skip escaped dollar', t => {
+	const result = bashParser('echo "\\$(\\(42 * 42))"');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '\\$(\\(42 * 42))'
 	}]);
 });
 

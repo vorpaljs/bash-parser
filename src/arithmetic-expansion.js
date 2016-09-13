@@ -9,7 +9,6 @@ function setArithmeticExpansion(args) {
 	const start = args.start;
 	const end = args.end;
 	let AST;
-
 	try {
 		AST = babylon.parse(expression);
 	} catch (err) {
@@ -43,7 +42,7 @@ function expandWord(token) {
 	let quoting = '';
 
 	for (const currentCharacter of text) {
-		if (!escaping && !expandingArithmetic) {			// when no espanding is in progress
+		if ((!escaping) && (!expandingArithmetic)) {			// when no espanding is in progress
 			if (expression === '' && currentCharacter === '$' && quoting !== '\'') {
 				// start of expansion candidate
 				expression = '$';
@@ -59,10 +58,10 @@ function expandWord(token) {
 			} else if (expression === '$(' && currentCharacter === '(') {
 				// start of arithmetic expansion
 				expandingArithmetic = true;
-				expression = '';
+				expression = '+';
 			}
-		} else if (!escaping && currentCharacter === ')' && lastCharacter === ')') {
-			expression = expression.slice(0, -1);
+		} else if ((!escaping) && currentCharacter === ')' && lastCharacter === ')') {
+			expression = expression.slice(1, -1);
 			// end of command expansion
 			setArithmeticExpansion({
 				token,
@@ -73,7 +72,7 @@ function expandWord(token) {
 			startOfExpansion = 0;
 			expandingArithmetic = false;
 			expression = '';
-		} else {
+		} else if (expression !== '') {
 			// accumulation
 			expression += currentCharacter;
 		}

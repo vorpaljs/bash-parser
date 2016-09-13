@@ -109,6 +109,7 @@ function expandWord(token) {
 	let candidateParameterName = '';
 	let currentCharIdx = 0;
 	let quoting = '';
+	let escaping = false;
 
 	function charCouldBePartOfName(currentCharacter) {
 		if (candidateParameterName === '' && currentCharacter.match(/^[a-zA-z_]$/)) {
@@ -161,7 +162,7 @@ function expandWord(token) {
 	}
 
 	for (const currentCharacter of text) {
-		if (expanding === EXPANDING.NO) {			// when no espanding is in progress
+		if (!escaping && expanding === EXPANDING.NO) {			// when no espanding is in progress
 			if (currentCharacter === '$' && expansion === null && quoting !== '\'') {
 				// start of expansion candidate
 				expansion = '$';
@@ -176,7 +177,7 @@ function expandWord(token) {
 				expansionCandidateInProgress(currentCharacter);
 			}
 		} else if (expanding === EXPANDING.PARAMETER) {
-			if (currentCharacter === '}') {
+			if (!escaping && currentCharacter === '}') {
 				// end of parameter expansion
 				setParameterExpansion(
 					token,
@@ -194,6 +195,7 @@ function expandWord(token) {
 			}
 		}
 
+		escaping = currentCharacter === '\\';
 		currentCharIdx++;
 	}
 

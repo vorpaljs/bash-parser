@@ -20,6 +20,24 @@ test('command substitution', t => {
 	}]);
 });
 
+test('command substitution skip escaped dollar', t => {
+	const result = bashParser('echo "\\$\\(echo ciao)"');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '\\$\\(echo ciao)'
+	}]);
+});
+
+test('command substitution skip escaped backtick', t => {
+	const result = bashParser('echo "\\`echo ciao`"');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '\\`echo ciao`'
+	}]);
+});
+
 test('command substitution skip single quoted words', t => {
 	const result = bashParser('echo \'$(echo ciao)\'');
 	// utils.logResults(result)
@@ -32,10 +50,7 @@ test('command substitution skip single quoted words', t => {
 test('command substitution with backticks skip single quoted words', t => {
 	const result = bashParser('echo \'`echo ciao`\'');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
-		type: 'word',
-		text: '`echo ciao`'
-	}]);
+	t.deepEqual(result.commands[0].suffix, [{type: 'word', text: '`echo ciao`'}]);
 });
 
 test('command substitution in suffix', t => {
@@ -148,14 +163,12 @@ test('resolve double command', t => {
 			originalText: '"foo $(other) $(one) baz"',
 			expansion: [{
 				command: 'other',
-				start: 5,
-				end: 13,
+				start: 5, end: 13,
 				resolved: true,
 				type: 'command_expansion'
 			}, {
 				command: 'one',
-				start: 14,
-				end: 20,
+				start: 14, end: 20,
 				resolved: true,
 				type: 'command_expansion'
 			}],
@@ -181,14 +194,12 @@ test('resolve double command with backticks', t => {
 			originalText: '"foo `other` `one` baz"',
 			expansion: [{
 				command: 'other',
-				start: 5,
-				end: 12,
+				start: 5, end: 12,
 				resolved: true,
 				type: 'command_expansion'
 			}, {
 				command: 'one',
-				start: 13,
-				end: 18,
+				start: 13, end: 18,
 				resolved: true,
 				type: 'command_expansion'
 			}],
@@ -212,8 +223,7 @@ test('last newlines are removed from command output', t => {
 			originalText: '"foo $(other) baz"',
 			expansion: [{
 				command: 'other',
-				start: 5,
-				end: 13,
+				start: 5, end: 13,
 				resolved: true,
 				type: 'command_expansion'
 			}],
@@ -247,8 +257,7 @@ test('field splitting', t => {
 			text: 'foo',
 			expansion: [{
 				command: 'other',
-				start: 0,
-				end: 8,
+				start: 0, end: 8,
 				type: 'command_expansion',
 				resolved: true
 			}],
@@ -260,8 +269,7 @@ test('field splitting', t => {
 			text: 'bar',
 			expansion: [{
 				command: 'other',
-				start: 0,
-				end: 8,
+				start: 0, end: 8,
 				type: 'command_expansion',
 				resolved: true
 			}],
@@ -273,8 +281,7 @@ test('field splitting', t => {
 			text: 'baz',
 			expansion: [{
 				command: 'other',
-				start: 0,
-				end: 8,
+				start: 0, end: 8,
 				type: 'command_expansion',
 				resolved: true
 			}],
@@ -288,4 +295,3 @@ test('field splitting', t => {
 		}]
 	});
 });
-

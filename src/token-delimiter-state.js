@@ -47,6 +47,13 @@ class TokenDelimiterState {
 		return this.quotingCharacter(char) === QUOTING.ARITHMETIC;
 	}
 
+	removingLastChar() {
+		if (this.token.TOKEN) {
+			// remove slash from token
+			this.token.TOKEN = this.token.TOKEN.slice(0, -1);
+		}
+	}
+
 	isExpandingCommand() {
 		return this.quoting === QUOTING.COMMAND;
 	}

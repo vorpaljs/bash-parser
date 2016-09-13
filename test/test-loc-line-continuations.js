@@ -35,8 +35,8 @@ test('loc take into account line continuations', t => {
 			suffix: [{
 				type: 'word', text: 'world',
 				loc: {
-					startLine: 0,
-					startColumn: 5,
+					startLine: 1,
+					startColumn: 1,
 					endLine: 1,
 					endColumn: 5
 				}

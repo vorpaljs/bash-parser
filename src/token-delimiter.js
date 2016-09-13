@@ -139,6 +139,7 @@ function * addCharacter(currentCharacter, state) {
 	}
 
 	if (state.isEscaping() && currentCharacter === '\n') {
+		state.removingLastChar();
 		state.advanceLoc(currentCharacter);
 		currentCharacter = '';
 	}

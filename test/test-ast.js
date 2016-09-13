@@ -28,6 +28,14 @@ test('command with multiple new lines', t => {
 	});
 });
 
+test('command with multiple lines continuation', t => {
+	const result = bashParser('echo \\\n\\\n\\\n\\\nthere');
+	t.deepEqual(result.commands[0].suffix[0], {
+		text: 'there',
+		type: 'word'
+	});
+});
+
 test('command with pre-assignment', t => {
 	const result = bashParser('TEST=1 run');
 	t.deepEqual(result, {

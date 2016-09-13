@@ -40,37 +40,42 @@ function expandWord(token) {
 	let currentCharIdx = 0;
 	let escaping = false;
 	let lastCharacter = null;
+	let quoting = '';
 
 	for (const currentCharacter of text) {
-		if (!escaping) {
-			if (!expandingArithmetic) {			// when no espanding is in progress
-				if (expression === '' && currentCharacter === '$') {
-					// start of expansion candidate
-					expression = '$';
-					startOfExpansion = currentCharIdx;
-				} else if (expression === '$' && currentCharacter === '(') {
-					expression = '$(';
-				} else if (expression === '$(' && currentCharacter === '(') {
-					// start of arithmetic expansion
-					expandingArithmetic = true;
-					expression = '';
+		if (!escaping && !expandingArithmetic) {			// when no espanding is in progress
+			if (expression === '' && currentCharacter === '$' && quoting !== '\'') {
+				// start of expansion candidate
+				expression = '$';
+				startOfExpansion = currentCharIdx;
+			} else if (currentCharacter === '\'' || currentCharacter === '"') {
+				if (quoting === currentCharacter) {
+					quoting = '';
+				} else if (quoting === '') {
+					quoting = currentCharacter;
 				}
-			} else if (currentCharacter === ')' && lastCharacter === ')') {
-				expression = expression.slice(0, -1);
-				// end of command expansion
-				setArithmeticExpansion({
-					token,
-					expression: expression,
-					start: startOfExpansion,
-					end: startOfExpansion + expression.length + 5  // add 3 to take in account $(())
-				});
-				startOfExpansion = 0;
-				expandingArithmetic = false;
+			} else if (expression === '$' && currentCharacter === '(') {
+				expression = '$(';
+			} else if (expression === '$(' && currentCharacter === '(') {
+				// start of arithmetic expansion
+				expandingArithmetic = true;
 				expression = '';
-			} else {
-				// accumulation
-				expression += currentCharacter;
 			}
+		} else if (!escaping && currentCharacter === ')' && lastCharacter === ')') {
+			expression = expression.slice(0, -1);
+			// end of command expansion
+			setArithmeticExpansion({
+				token,
+				expression: expression,
+				start: startOfExpansion,
+				end: startOfExpansion + expression.length + 5  // add 3 to take in account $(())
+			});
+			startOfExpansion = 0;
+			expandingArithmetic = false;
+			expression = '';
+		} else {
+			// accumulation
+			expression += currentCharacter;
 		}
 
 		escaping = currentCharacter === '\\';

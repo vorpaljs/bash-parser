@@ -18,6 +18,15 @@ test('parameter substitution in assignment', t => {
 	}]);
 });
 
+test('parameter substitution skip single quoted words', t => {
+	const result = bashParser('echo \'${echo } $ciao\'');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '${echo } $ciao'
+	}]);
+});
+
 test('parameter substitution and other words', t => {
 	const result = bashParser('foo ${other} bar baz');
 	// utils.logResults(result);

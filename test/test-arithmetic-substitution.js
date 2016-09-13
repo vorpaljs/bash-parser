@@ -20,6 +20,15 @@ test('arithmetic substitution', t => {
 	});
 });
 
+test('arithmetic substitution skip single quoted words', t => {
+	const result = bashParser('echo \'$((42 * 42))\'');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '$((42 * 42))'
+	}]);
+});
+
 test('arithmetic & parameter substitution', t => {
 	const result = bashParser('variable=$((42 + 43)) $ciao');
 	// utils.logResults(result.commands[0]);

@@ -44,14 +44,21 @@ function expandWord(token) {
 	let startOfExpansion = 0;
 	let currentCharIdx = 0;
 	let escaping = false;
+	let quoting = '';
 
 	for (const currentCharacter of text) {
 		if (!expandingCommand) {			// when no espanding is in progress
-			if (!escaping && currentCharacter === '$' && expansion === null) {
+			if (!escaping && currentCharacter === '$' && expansion === null && quoting !== '\'') {
 				// start of expansion candidate
 				expansion = '$';
 				startOfExpansion = currentCharIdx;
-			} else if (!escaping && currentCharacter === '`' && expansion === null) {
+			} else if (!escaping && (currentCharacter === '\'' || currentCharacter === '"')) {
+				if (quoting === currentCharacter) {
+					quoting = '';
+				} else if (quoting === '') {
+					quoting = currentCharacter;
+				}
+			} else if (!escaping && currentCharacter === '`' && expansion === null && quoting !== '\'') {
 				// start of expansion candidate
 				expandingCommand = '`';
 				expansion = '';

@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('command substitution', t => {
@@ -17,6 +17,24 @@ test('command substitution', t => {
 			start: 9,
 			end: 21
 		}]
+	}]);
+});
+
+test('command substitution skip single quoted words', t => {
+	const result = bashParser('echo \'$(echo ciao)\'');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '$(echo ciao)'
+	}]);
+});
+
+test('command substitution with backticks skip single quoted words', t => {
+	const result = bashParser('echo \'`echo ciao`\'');
+	// utils.logResults(result)
+	t.deepEqual(result.commands[0].suffix, [{
+		type: 'word',
+		text: '`echo ciao`'
 	}]);
 });
 

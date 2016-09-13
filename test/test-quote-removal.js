@@ -19,11 +19,11 @@ test('remove single quotes from string', t => {
 	});
 });
 
-test('remove slashes from string', t => {
+test('not remove slashes from string', t => {
 	const result = bashParser('ec\\%ho');
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
-		text: 'ec%ho'
+		text: 'ec\\%ho'
 	});
 });
 
@@ -33,6 +33,24 @@ test('not remove quotes from middle of string if escaped', t => {
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
 		text: 'ec\'"ho'
+	});
+});
+
+test('transform escaped characters', t => {
+	const result = bashParser('"ec\\t\\nho"');
+
+	t.deepEqual(result.commands[0].name, {
+		type: 'word',
+		text: 'ec\t\nho'
+	});
+});
+
+test('not remove special characters', t => {
+	const result = bashParser('"ec\tho"');
+
+	t.deepEqual(result.commands[0].name, {
+		type: 'word',
+		text: 'ec\tho'
 	});
 });
 

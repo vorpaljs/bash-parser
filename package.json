@@ -46,12 +46,12 @@
     "babylon": "^6.9.1",
     "compose-function": "^3.0.3",
     "has-own-property": "^0.1.0",
-    "iterable-lookahead": "file:packages/iterable-lookahead",
+    "iterable-lookahead": "^1.0.0",
     "magic-string": "^0.16.0",
-    "map-iterable": "file:packages/map-iterable",
+    "map-iterable": "^1.0.1",
     "object-pairs": "^0.1.0",
     "object-values": "^1.0.0",
-    "shell-quote-word": "file:packages/shell-quote-word",
+    "shell-quote-word": "^1.0.1",
     "unescape-js": "^1.0.5"
   }
 }

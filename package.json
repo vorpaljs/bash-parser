@@ -1,6 +1,6 @@
 {
   "name": "bash-parser",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "src/index.js",
   "description": "Standard compliant bash parser",
   "repository": "vorpaljs/bash-parser",

@@ -1,11 +1,11 @@
 'use strict';
 // @flow
-/* flow-include import type {Token} from './modes/plugin'; */
+/* flow-include import type {Token} from '../../plugin'; */
 /* eslint-disable camelcase */
 /* eslint-disable babel/arrow-parens */
 
 const compose = require('compose-function');
-const tokenDelimiter = require('./token-delimiter');
+const tokenDelimiter = require('../token-delimiter');
 const rules = require('./tokenization-rules');
 
 const buildPreAliasLexer = (options) => compose(

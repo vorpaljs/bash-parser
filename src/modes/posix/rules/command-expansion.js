@@ -25,7 +25,7 @@ function setCommandExpansion(args) {
 	if (expandingCommand === '`') {
 		command = command.replace(/\\`/g, '`');
 	}
-	const bashParser = require('./index');
+	const bashParser = require('../../../index');
 
 	token.expansion = (token.expansion || []).concat({
 		type: 'command_expansion',

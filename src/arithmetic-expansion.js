@@ -1,4 +1,6 @@
 'use strict';
+/* eslint-disable camelcase */
+
 const babylon = require('babylon');
 const MagicString = require('magic-string');
 const fieldSplitting = require('./field-splitting');
@@ -88,14 +90,14 @@ function expandWord(token) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-function * arithmeticExpansion(tokens) {
+const arithmeticExpansion = () => function * arithmeticExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
 			expandWord(token);
 		}
 		yield token;
 	}
-}
+};
 
 arithmeticExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
 	for (const token of tokens) {

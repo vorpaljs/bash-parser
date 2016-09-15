@@ -5,7 +5,7 @@ function isValidName(text) {
 	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
 }
 
-module.exports = function * identifySimpleCommandNames(tokens) {
+module.exports = () => function * identifySimpleCommandNames(tokens) {
 	for (const tk of tokens) {
 		if (tk._.maybeStartOfSimpleCommand) {
 			if (tk.WORD && isValidName(tk.WORD)) {

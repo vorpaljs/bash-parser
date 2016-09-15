@@ -1,0 +1,7 @@
+[ignore]
+.*/test/.*
+.*/fixtures/.*
+
+[include]
+./src
+./packages

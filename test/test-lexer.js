@@ -1,11 +1,11 @@
 'use strict';
 const test = require('ava');
 const posixLexer = require('../src/posix-shell-lexer');
-// const utils = require('./_utils');
+const posixMode = require('../src/modes/posix');
 
 /* eslint-disable camelcase */
 function tokenize(text, rawTokens) {
-	const lexer = posixLexer({});
+	const lexer = posixLexer(posixMode, {});
 	lexer.setInput(text);
 	const results = [];
 	let token = lexer.lex();

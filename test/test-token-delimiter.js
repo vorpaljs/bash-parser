@@ -1,6 +1,6 @@
 'use strict';
 const test = require('ava');
-const tokenDelimiter = require('../src/token-delimiter');
+const tokenDelimiter = require('../src/token-delimiter')();
 const mkloc = require('./_utils').mkloc;
 // const utils = require('./_utils');
 

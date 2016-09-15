@@ -112,14 +112,14 @@ function expandWord(token) {
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
 
-function * commandExpansion(tokens) {
+const commandExpansion = () => function * commandExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
 			expandWord(token);
 		}
 		yield token;
 	}
-}
+};
 
 commandExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
 	for (const token of tokens) {

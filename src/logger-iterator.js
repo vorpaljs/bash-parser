@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = name => function * (tokens) {
+const logger = name => () => function * (tokens) {
 	for (const tk of tokens) {
 		if (!tk) {
 			console.log(`In ${name} token null.`);

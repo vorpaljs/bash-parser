@@ -11,7 +11,7 @@ const isOperator = require('./io-file-operators').isOperator;
 
 exports.identifySimpleCommandNames = identifySimpleCommandNames;
 
-exports.identifyMaybeSimpleCommands = compose(map((tk, idx, iterable) => {
+exports.identifyMaybeSimpleCommands = () => compose(map((tk, idx, iterable) => {
 	const last = iterable.behind(1) || {EMPTY: true};
 
 	// evaluate based on last token
@@ -35,7 +35,7 @@ function copyTempObject(tk, newTk) {
 	return newTk;
 }
 
-exports.operatorTokens = map(tk => {
+exports.operatorTokens = () => map(tk => {
 	if (hasOwnProperty(operators, tk.OPERATOR)) {
 		return copyTempObject(tk, {
 			[operators[tk.OPERATOR]]: tk.OPERATOR,
@@ -72,7 +72,7 @@ function isValidReservedWordPosition(tk, iterable) {
 	return startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
 }
 
-exports.reservedWords = compose(map((tk, idx, iterable) => {
+exports.reservedWords = () => compose(map((tk, idx, iterable) => {
 	// TOKEN tokens consisting of a reserved word
 	// are converted to their own token types
 	if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(reservedWords, tk.TOKEN)) {
@@ -96,7 +96,7 @@ exports.reservedWords = compose(map((tk, idx, iterable) => {
 	return tk;
 }), lookahead.depth(2));
 
-exports.forNameVariable = compose(map((tk, idx, iterable) => {
+exports.forNameVariable = () => compose(map((tk, idx, iterable) => {
 	let lastToken = iterable.behind(1) || {};
 
 	// if last token is For and current token form a valid name
@@ -112,7 +112,7 @@ exports.forNameVariable = compose(map((tk, idx, iterable) => {
 	return tk;
 }), lookahead);
 
-exports.functionName = compose(map((tk, idx, iterable) => {
+exports.functionName = () => compose(map((tk, idx, iterable) => {
 	// apply only on valid positions
 	// (start of simple commands)
 	// if token can form the name of a function,
@@ -132,7 +132,7 @@ exports.functionName = compose(map((tk, idx, iterable) => {
 	return tk;
 }), lookahead.depth(2));
 
-exports.ioNumber = compose(map((tk, idx, iterable) => {
+exports.ioNumber = () => compose(map((tk, idx, iterable) => {
 	const next = iterable.ahead(1);
 
 	if (tk && tk.WORD && tk.WORD.match(/^[0-9]+$/) && isOperator(next)) {
@@ -145,7 +145,7 @@ exports.ioNumber = compose(map((tk, idx, iterable) => {
 	return tk;
 }), lookahead);
 
-exports.removeTempObject = function * (tokens) {
+exports.removeTempObject = () => function * (tokens) {
 	for (const tk of tokens) {
 		delete tk._;
 		yield tk;
@@ -156,7 +156,7 @@ function isValidName(text) {
 	return /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(text);
 }
 
-exports.assignmentWord = map((tk, idx, ctx) => {
+exports.assignmentWord = () => map((tk, idx, ctx) => {
 	// apply only on valid positions
 	// (start of simple commands)
 	if (tk._.maybeStartOfSimpleCommand) {
@@ -181,7 +181,7 @@ exports.assignmentWord = map((tk, idx, ctx) => {
 
 /* resolve a conflict in grammar by tokenize multiple NEWLINEs as a
 newline_list token (it was a rule in POSIX grammar) */
-exports.newLineList = function * (tokens) {
+exports.newLineList = () => function * (tokens) {
 	let lastToken = {EMPTY: true};
 	for (const tk of tokens) {
 		if (tk.NEWLINE) {
@@ -209,7 +209,7 @@ exports.newLineList = function * (tokens) {
 
 /* resolve a conflict in grammar by tokenize linebreak+in
 tokens as a new  linebreak_in */
-exports.linebreakIn = function * (tokens) {
+exports.linebreakIn = () => function * (tokens) {
 	let lastToken;
 
 	for (const tk of tokens) {
@@ -246,7 +246,7 @@ with a new separator_op token, the rule became:
 separator : separator_op
 				 | NEWLINE_LIST
 */
-exports.separator = function * (tokens) {
+exports.separator = () => function * (tokens) {
 	let lastToken = {EMPTY: true};
 
 	for (const tk of tokens) {

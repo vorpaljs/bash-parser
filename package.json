@@ -7,9 +7,10 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-    "test": "ava --no-babel && xo --ignore grammar.js --ignore 'packages/**/*'",
+    "test": "ava --no-babel && flow check && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
+    "flow": "flow check",
     "build": "jison src/grammar.jison > grammar.js",
-    "cover-test": "nyc ava --no-babel && xo --ignore grammar.js --ignore 'packages/**/*'",
+    "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"
   },
   "keywords": [],
@@ -24,6 +25,8 @@
     "bash-ast-traverser": "file:packages/bash-ast-traverser",
     "browserify": "^13.1.0",
     "coveralls": "^2.11.11",
+    "eslint-plugin-flowtype": "^2.17.1",
+    "flow-bin": "^0.32.0",
     "jison": "^0.4.17",
     "json5": "^0.5.0",
     "nyc": "^7.0.0",
@@ -33,13 +36,20 @@
     "xo": "^0.16.0"
   },
   "files": [
-    "src",
-    "./grammar.js"
+    "src"
   ],
   "nyc": {
     "exclude": [
-      "grammar.js",
+      "src/modes/posix/built-grammar.js",
       "test/_utils.js"
+    ]
+  },
+  "xo": {
+  	"rules": {
+	    "flowtype/define-flow-type": "warn"
+  	},
+    "plugins": [
+			"flowtype"
     ]
   },
   "dependencies": {

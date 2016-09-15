@@ -1,37 +1,8 @@
 /* eslint-disable camelcase */
 'use strict';
 const compose = require('compose-function');
-const tokenDelimiter = require('./token-delimiter');
-const rules = require('./tokenization-rules');
-const parameterExpansion = require('./parameter-expansion');
-const commandExpansion = require('./command-expansion');
-const arithmeticExpansion = require('./arithmetic-expansion');
-const aliasSubstitution = require('./alias-substitution');
-const defaultNodeType = require('./default-node-type');
-const fieldSplitting = require('./field-splitting');
-const tildeExpanding = require('./tilde-expanding');
-const pathExpansion = require('./path-expansion');
-const quoteRemoval = require('./quote-removal');
-// const logger = require('./logger-iterator');
 
-const preAliasLexer = compose(
-	// aliasSubstitution(options, preAliasLexer(options)),
-	rules.identifySimpleCommandNames,
-	rules.assignmentWord,
-	rules.identifyMaybeSimpleCommands,
-	rules.reservedWords,
-
-	rules.separator,
-
-	rules.operatorTokens,
-	rules.replaceLineTerminationToken,
-
-	rules.newLineList,
-	rules.linebreakIn,
-	tokenDelimiter
-);
-
-const posixShellLexer = options => ({
+const posixShellLexer = (mode, options) => ({
 	lex() {
 		const item = this.tokenizer.next();
 		// console.log(item)
@@ -81,34 +52,11 @@ const posixShellLexer = options => ({
 	},
 
 	setInput(source) {
-		const tokenize = compose(
-			// logger(' * '),
-			rules.removeTempObject,
-			defaultNodeType,
-			quoteRemoval,
-			pathExpansion(options),
-			fieldSplitting.split,
-			arithmeticExpansion.resolve(options),
-			commandExpansion.resolve(options),
-			parameterExpansion.resolve(options),
-			tildeExpanding(options),
-			aliasSubstitution(options, preAliasLexer),
-			rules.identifySimpleCommandNames,
-			rules.functionName,
-			rules.forNameVariable,
-			commandExpansion,
-			arithmeticExpansion,
-			parameterExpansion,
-			rules.assignmentWord,
-			rules.identifyMaybeSimpleCommands,
-			rules.ioNumber,
-			rules.linebreakIn,
-			rules.reservedWords,
-			rules.separator,
-			rules.operatorTokens,
-			rules.newLineList,
-			tokenDelimiter
-		);
+		const phases = mode.lexerPhases
+			.map(phase => phase(options))
+			.concat(mode.tokenizer(options));
+
+		const tokenize = compose(...phases);
 		this.tokenizer = tokenize(source);
 	}
 });

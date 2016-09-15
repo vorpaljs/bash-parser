@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function * defaultNodeType(tokens) {
+module.exports = () => function * defaultNodeType(tokens) {
 	for (const token of tokens) {
 		if (token.WORD) {
 			token.type = 'word';

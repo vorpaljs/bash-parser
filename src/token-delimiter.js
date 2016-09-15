@@ -177,7 +177,7 @@ function * addCharacter(currentCharacter, state) {
 	state.advanceLoc(currentCharacter);
 }
 
-module.exports = function * tokenDelimiter(source) {
+module.exports = () => function * tokenDelimiter(source) {
 	const charIterator = lookahead(source, 2);
 	const state = new TokenDelimiterState(charIterator);
 

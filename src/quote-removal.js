@@ -14,7 +14,7 @@ function unresolvedExpansions(token) {
 	return unresolved.length > 0;
 }
 
-module.exports = function * quoteRemoval(tokens) {
+module.exports = () => function * quoteRemoval(tokens) {
 	for (const token of tokens) {
 		if (token.WORD && !unresolvedExpansions(token)) {
 			token.WORD = unquote(token.WORD);

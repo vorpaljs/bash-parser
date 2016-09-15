@@ -4,14 +4,14 @@ const rules = require('../src/tokenization-rules');
 /* eslint-disable camelcase */
 test('operatorTokens - identify operator with their tokens', t => {
 	t.deepEqual(
-		Array.from(rules.operatorTokens([{OPERATOR: '<<', loc: 42}])),
+		Array.from(rules.operatorTokens()([{OPERATOR: '<<', loc: 42}])),
 		[{DLESS: '<<', loc: 42}]
 	);
 });
 
 test('reservedWords - identify reserved words or WORD', t => {
 	t.deepEqual(
-		Array.from(rules.reservedWords([
+		Array.from(rules.reservedWords()([
 			{TOKEN: 'while', loc: 42},
 			{TOKEN: 'otherWord', loc: 42}
 		])),
@@ -20,7 +20,7 @@ test('reservedWords - identify reserved words or WORD', t => {
 });
 
 test('functionName - replace function name token as NAME', t => {
-	const result = Array.from(rules.functionName([
+	const result = Array.from(rules.functionName()([
 		{WORD: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
 		{OPEN_PAREN: '(', loc: 42, _: {}},
 		{CLOSE_PAREN: ')', loc: 42, _: {}},

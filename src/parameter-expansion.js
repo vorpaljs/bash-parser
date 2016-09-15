@@ -217,14 +217,14 @@ function expandWord(token) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-function * parameterExpansion(tokens) {
+const parameterExpansion = () => function * parameterExpansion(tokens) {
 	for (const token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
 			expandWord(token);
 		}
 		yield token;
 	}
-}
+};
 
 parameterExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
 	for (const token of tokens) {

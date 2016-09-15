@@ -34,7 +34,7 @@
   },
   "files": [
     "src",
-    "./grammar.js"
+    "grammar.js"
   ],
   "nyc": {
     "exclude": [

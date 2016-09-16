@@ -1,6 +1,6 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
-const operators = require('./rules/operators');
+const operators = require('./enums/operators');
 
 const QUOTING = {
 	NO: {value: 'NO'},

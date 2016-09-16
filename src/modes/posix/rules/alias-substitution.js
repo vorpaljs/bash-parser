@@ -6,7 +6,7 @@
 
 const compose = require('compose-function');
 const tokenDelimiter = require('../token-delimiter');
-const rules = require('./tokenization-rules');
+const rules = require('.');
 
 const buildPreAliasLexer = (options) => compose(
 	rules.identifySimpleCommandNames(options),

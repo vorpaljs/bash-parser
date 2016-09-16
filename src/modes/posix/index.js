@@ -5,14 +5,11 @@
 const astBuilder = require('./ast-builder');
 const tokenizer = require('./token-delimiter');
 const posixRules = require('./rules');
-
-const rules = posixRules.rules;
-
 const grammarSource = require('./grammar');
 const grammar = require('./built-grammar');
 
 const lexerPhases = [
-	rules.removeTempObject,
+	posixRules.removeTempObject,
 	posixRules.defaultNodeType,
 	posixRules.quoteRemoval,
 	posixRules.pathExpansion,
@@ -22,20 +19,20 @@ const lexerPhases = [
 	posixRules.parameterExpansion.resolve,
 	posixRules.tildeExpanding,
 	posixRules.aliasSubstitution,
-	rules.identifySimpleCommandNames,
-	rules.functionName,
-	rules.forNameVariable,
+	posixRules.identifySimpleCommandNames,
+	posixRules.functionName,
+	posixRules.forNameVariable,
 	posixRules.commandExpansion,
 	posixRules.arithmeticExpansion,
 	posixRules.parameterExpansion,
-	rules.assignmentWord,
-	rules.identifyMaybeSimpleCommands,
-	rules.ioNumber,
-	rules.linebreakIn,
-	rules.reservedWords,
-	rules.separator,
-	rules.operatorTokens,
-	rules.newLineList
+	posixRules.assignmentWord,
+	posixRules.identifyMaybeSimpleCommands,
+	posixRules.ioNumber,
+	posixRules.linebreakIn,
+	posixRules.reservedWords,
+	posixRules.separator,
+	posixRules.operatorTokens,
+	posixRules.newLineList
 ];
 
 const plugin/* : ModePlugin*/ = {

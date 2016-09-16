@@ -1,6 +1,6 @@
 'use strict';
 const test = require('ava');
-const rules = require('../src/modes/posix/rules/tokenization-rules');
+const rules = require('../src/modes/posix/rules');
 /* eslint-disable camelcase */
 test('operatorTokens - identify operator with their tokens', t => {
 	t.deepEqual(

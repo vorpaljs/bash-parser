@@ -7,11 +7,12 @@ module.exports = function parse(sourceCode, options) {
 		options = options || {};
 		options.mode = options.mode || 'posix';
 
-		const mode = require(`./modes/${options.mode}`);
+		const modePlugin = require(`./modes/${options.mode}`);
+		const mode = modePlugin.init(null);
+
 		const Parser = mode.grammar.Parser;
 		const astBuilder = mode.astBuilder;
 		const parser = new Parser();
-
 		parser.lexer = posixShellLexer(mode, options);
 		parser.yy = astBuilder(options);
 

@@ -35,12 +35,13 @@ const lexerPhases = [
 	posixRules.newLineList
 ];
 
-const plugin/* : ModePlugin*/ = {
-	lexerPhases,
-	tokenizer,
-	grammarSource,
-	grammar,
-	astBuilder
+module.exports = {
+	inherits: null,
+	init: () => ({
+		lexerPhases: lexerPhases,
+		tokenizer: tokenizer,
+		grammarSource: grammarSource,
+		grammar: grammar,
+		astBuilder: astBuilder
+	})
 };
-
-module.exports = plugin;

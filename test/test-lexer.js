@@ -5,7 +5,7 @@ const posixMode = require('../src/modes/posix');
 
 /* eslint-disable camelcase */
 function tokenize(text, rawTokens) {
-	const lexer = posixLexer(posixMode, {});
+	const lexer = posixLexer(posixMode.init(), {});
 	lexer.setInput(text);
 	const results = [];
 	let token = lexer.lex();

@@ -4,44 +4,45 @@
 
 const astBuilder = require('./ast-builder');
 const tokenizer = require('./token-delimiter');
-const posixRules = require('./rules');
+const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 const grammar = require('./built-grammar');
 
 const lexerPhases = [
-	posixRules.removeTempObject,
-	posixRules.defaultNodeType,
-	posixRules.quoteRemoval,
-	posixRules.pathExpansion,
-	posixRules.fieldSplitting.split,
-	posixRules.arithmeticExpansion.resolve,
-	posixRules.commandExpansion.resolve,
-	posixRules.parameterExpansion.resolve,
-	posixRules.tildeExpanding,
-	posixRules.aliasSubstitution,
-	posixRules.identifySimpleCommandNames,
-	posixRules.functionName,
-	posixRules.forNameVariable,
-	posixRules.commandExpansion,
-	posixRules.arithmeticExpansion,
-	posixRules.parameterExpansion,
-	posixRules.assignmentWord,
-	posixRules.identifyMaybeSimpleCommands,
-	posixRules.ioNumber,
-	posixRules.linebreakIn,
-	posixRules.reservedWords,
-	posixRules.separator,
-	posixRules.operatorTokens,
-	posixRules.newLineList
+	phaseCatalog.removeTempObject,
+	phaseCatalog.defaultNodeType,
+	phaseCatalog.quoteRemoval,
+	phaseCatalog.pathExpansion,
+	phaseCatalog.fieldSplitting.split,
+	phaseCatalog.arithmeticExpansion.resolve,
+	phaseCatalog.commandExpansion.resolve,
+	phaseCatalog.parameterExpansion.resolve,
+	phaseCatalog.tildeExpanding,
+	phaseCatalog.aliasSubstitution,
+	phaseCatalog.identifySimpleCommandNames,
+	phaseCatalog.functionName,
+	phaseCatalog.forNameVariable,
+	phaseCatalog.commandExpansion,
+	phaseCatalog.arithmeticExpansion,
+	phaseCatalog.parameterExpansion,
+	phaseCatalog.assignmentWord,
+	phaseCatalog.identifyMaybeSimpleCommands,
+	phaseCatalog.ioNumber,
+	phaseCatalog.linebreakIn,
+	phaseCatalog.reservedWords,
+	phaseCatalog.separator,
+	phaseCatalog.operatorTokens,
+	phaseCatalog.newLineList
 ];
 
 module.exports = {
 	inherits: null,
 	init: () => ({
-		lexerPhases: lexerPhases,
-		tokenizer: tokenizer,
-		grammarSource: grammarSource,
-		grammar: grammar,
-		astBuilder: astBuilder
+		phaseCatalog,
+		lexerPhases,
+		tokenizer,
+		grammarSource,
+		grammar,
+		astBuilder
 	})
 };

@@ -2,14 +2,21 @@
 
 const posixShellLexer = require('./posix-shell-lexer');
 
+function loadPlugin(name) {
+	const modePlugin = require(`./modes/${name}`);
+
+	if (modePlugin.inherits) {
+		return modePlugin.init(loadPlugin(modePlugin.inherits));
+	}
+	return modePlugin.init(null);
+}
+
 module.exports = function parse(sourceCode, options) {
 	try {
 		options = options || {};
 		options.mode = options.mode || 'posix';
 
-		const modePlugin = require(`./modes/${options.mode}`);
-		const mode = modePlugin.init(null);
-
+		const mode = loadPlugin(options.mode);
 		const Parser = mode.grammar.Parser;
 		const astBuilder = mode.astBuilder;
 		const parser = new Parser();

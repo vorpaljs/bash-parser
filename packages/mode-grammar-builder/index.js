@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const {writeFile} = require('fs');
-const {resolve} = require('path');
+const writeFile = require('fs').writeFile;
+const resolve = require('path').resolve;
 const minimist = require('minimist');
 const chalk = require('chalk');
 const ora = require('ora');
-const {Parser} = require('jison');
+const Parser = require('jison').Parser;
 
 const argv = minimist(process.argv.slice(2));
 
@@ -15,13 +15,23 @@ if (argv._.length === 2) {
 	process.exit(1);
 }
 
+function loadPlugin(modesFolder, modeName) {
+	const modePath = resolve(modesFolder, modeName);
+	const modePlugin = require(modePath);
+
+	if (modePlugin.inherits) {
+		return modePlugin.init(loadPlugin(modesFolder, modePlugin.inherits));
+	}
+	return modePlugin.init(null);
+}
+
 function build(modesFolder, modeName) {
 	const modeModule = resolve(modesFolder, modeName, 'index.js');
 	const builtGrammarPath = resolve(modesFolder, modeName, 'built-grammar.js');
 
 	const spinner = ora(`Building grammar from ${modeModule}...`).start();
 
-	const mode = require(modeModule);
+	const mode = loadPlugin(modesFolder, modeName);
 	spinner.text = 'Mode module loaded.';
 	let parserSource;
 	try {

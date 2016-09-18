@@ -1,14 +1,15 @@
 'use strict';
 
 const shellLexer = require('./shell-lexer');
+const utils = require('./utils');
 
 function loadPlugin(name) {
 	const modePlugin = require(`./modes/${name}`);
 
 	if (modePlugin.inherits) {
-		return modePlugin.init(loadPlugin(modePlugin.inherits));
+		return modePlugin.init(loadPlugin(modePlugin.inherits), utils);
 	}
-	return modePlugin.init(null);
+	return modePlugin.init(null, utils);
 }
 
 module.exports = function parse(sourceCode, options) {

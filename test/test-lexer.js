@@ -1,6 +1,6 @@
 'use strict';
 const test = require('ava');
-const posixLexer = require('../src/posix-shell-lexer');
+const posixLexer = require('../src/shell-lexer');
 const posixMode = require('../src/modes/posix');
 
 /* eslint-disable camelcase */

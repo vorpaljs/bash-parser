@@ -1,6 +1,6 @@
 'use strict';
 
-const posixShellLexer = require('./posix-shell-lexer');
+const shellLexer = require('./shell-lexer');
 
 function loadPlugin(name) {
 	const modePlugin = require(`./modes/${name}`);
@@ -20,7 +20,7 @@ module.exports = function parse(sourceCode, options) {
 		const Parser = mode.grammar.Parser;
 		const astBuilder = mode.astBuilder;
 		const parser = new Parser();
-		parser.lexer = posixShellLexer(mode, options);
+		parser.lexer = shellLexer(mode, options);
 		parser.yy = astBuilder(options);
 
 		const ast = parser.parse(sourceCode);

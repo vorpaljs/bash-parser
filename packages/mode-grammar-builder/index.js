@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 const writeFile = require('fs').writeFile;
 const resolve = require('path').resolve;
 const minimist = require('minimist');

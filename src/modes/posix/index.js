@@ -36,12 +36,18 @@ const lexerPhases = [
 
 module.exports = {
 	inherits: null,
-	init: () => ({
-		phaseCatalog,
-		lexerPhases,
-		tokenizer,
-		grammarSource,
-		grammar: require('./built-grammar'),
-		astBuilder
-	})
+	init: () => {
+		let grammar = null;
+		try {
+			grammar = require('./built-grammar');
+		} catch (err) {}
+		return {
+			phaseCatalog,
+			lexerPhases,
+			tokenizer,
+			grammarSource,
+			grammar,
+			astBuilder
+		};
+	}
 };

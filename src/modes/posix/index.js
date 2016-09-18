@@ -6,7 +6,6 @@ const astBuilder = require('./ast-builder');
 const tokenizer = require('./token-delimiter');
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
-const grammar = require('./built-grammar');
 
 const lexerPhases = [
 	phaseCatalog.removeTempObject,
@@ -42,7 +41,7 @@ module.exports = {
 		lexerPhases,
 		tokenizer,
 		grammarSource,
-		grammar,
+		grammar: require('./built-grammar'),
 		astBuilder
 	})
 };

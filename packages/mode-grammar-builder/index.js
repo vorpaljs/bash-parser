@@ -9,7 +9,7 @@ const Parser = require('jison').Parser;
 const argv = minimist(process.argv.slice(2));
 
 if (argv._.length === 2) {
-	build(...argv._);
+	build(argv._[0], argv._[1]);
 } else {
 	console.log(chalk.red(`Usage: mgb <modes folder> <mode name>`));
 	process.exit(1);

@@ -1,4 +1,4 @@
-// @flow
+```typescript
 
 export type Token = Object;
 
@@ -16,3 +16,4 @@ export type ModePlugin = {
 	inherits?: string,
 	init: (parentMode: ModePlugin) => Mode
 };
+```

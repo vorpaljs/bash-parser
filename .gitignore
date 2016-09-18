@@ -84,7 +84,6 @@ Temporary Items
 
 .old
 private
-grammar.js
 built-grammar.js
 
 .nyc_output

@@ -8,8 +8,7 @@
   "author": "vorpal-js",
   "scripts": {
     "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
-    "flow": "flow check",
-    "build": "jison src/grammar.jison > grammar.js",
+    "build": "mgb ./src/modes posix && mgb ./src/modes bash",
     "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"
   },
@@ -27,6 +26,7 @@
     "coveralls": "^2.11.11",
     "jison": "^0.4.17",
     "json5": "^0.5.0",
+    "mode-grammar-builder": "file:packages/mode-grammar-builder",
     "nyc": "^7.0.0",
     "rus-diff": "^1.1.0",
     "tree-walk": "^0.4.0",

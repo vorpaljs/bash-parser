@@ -9,6 +9,9 @@ function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text)).map(t => {
 		const r = Object.assign({}, t);
 		delete r._;
+		delete r.type;
+		delete r.value;
+
 		return r;
 	});
 	return results;
@@ -112,29 +115,30 @@ test('parse two tokens on two lines', t => {
 });
 
 test('keep multiple newlines', t => {
-	t.deepEqual(
-		tokenize('echo\n\n\n42'), [
-			{
-				TOKEN: 'echo',
-				loc: mkloc(0, 0, 0, 3)
-			}, {
-				NEWLINE: '\n',
-				loc: mkloc(0, 4, 0, 4)
-			}, {
-				NEWLINE: '\n',
-				loc: mkloc(1, 0, 1, 0)
-			}, {
-				NEWLINE: '\n',
-				loc: mkloc(2, 0, 2, 0)
-			}, {
-				TOKEN: '42',
-				loc: mkloc(3, 0, 3, 1)
-			}, {
-				EOF: true,
-				loc: mkloc(3, 2, 3, 2)
-			}
-		]
-	);
+	const result = tokenize('echo\n\n\n42');
+	// utils.logResults(result);
+
+	t.deepEqual(result, [
+		{
+			TOKEN: 'echo',
+			loc: mkloc(0, 0, 0, 3)
+		}, {
+			NEWLINE: '\n',
+			loc: mkloc(0, 4, 0, 4)
+		}, {
+			NEWLINE: '\n',
+			loc: mkloc(1, 0, 1, 0)
+		}, {
+			NEWLINE: '\n',
+			loc: mkloc(2, 0, 2, 0)
+		}, {
+			TOKEN: '42',
+			loc: mkloc(3, 0, 3, 1)
+		}, {
+			EOF: true,
+			loc: mkloc(3, 2, 3, 2)
+		}
+	]);
 });
 
 test('operator breaks words', t => {

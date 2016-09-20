@@ -1,5 +1,6 @@
 'use strict';
 const hasOwnProperty = require('has-own-property');
+const tokens = require('../../utils/tokens');
 const operators = require('./enums/operators');
 
 const QUOTING = {
@@ -132,17 +133,19 @@ class TokenDelimiterState {
 	}
 
 	setOperatorToken(text) {
-		this.token = {
-			OPERATOR: text,
-			loc: mkLoc(this.lineNumber, this.columnNumber)
-		};
+		this.token = tokens.mkToken(
+			'OPERATOR',
+			text,
+			mkLoc(this.lineNumber, this.columnNumber)
+		);
 	}
 
 	setNewLineToken() {
-		this.token = {
-			NEWLINE: '\n',
-			loc: mkLoc(this.lineNumber, this.columnNumber)
-		};
+		this.token = tokens.mkToken(
+			'NEWLINE',
+			'\n',
+			mkLoc(this.lineNumber, this.columnNumber)
+		);
 	}
 
 	setGenericToken(text) {
@@ -191,8 +194,11 @@ class TokenDelimiterState {
 			endLine: this.prevLineNumber,
 			endColumn: this.prevColumnNumber
 		});
-		this.token._ = {};
-		Object.freeze(this.token);
+		if (!Object.isFrozen(this.token)) {
+			this.token._ = {};
+			Object.freeze(this.token);
+		}
+
 		return this.token;
 	}
 
@@ -213,7 +219,7 @@ class TokenDelimiterState {
 	}
 
 	appendToOperator(currentCharacter) {
-		this.token.OPERATOR += currentCharacter;
+		this.token = tokens.appendTo(this.token, currentCharacter);
 	}
 
 	appendToGenericToken(currentCharacter) {

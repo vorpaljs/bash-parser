@@ -1,16 +1,20 @@
 'use strict';
 
-exports.mkToken = function mkToken(type, value) {
+exports.mkToken = function mkToken(type, value, loc) {
 	const tk = {type, value, _: {}};
+	if (loc) {
+		tk.loc = loc;
+	}
 	Object.defineProperty(tk, type, {value, enumerable: true});
 	Object.freeze(tk);
 	return tk;
 };
 
-exports.appendTo = function appendTo(tk, value) {
+exports.appendTo = function appendTo(tk, chunk) {
 	const newTk = Object.assign({}, tk);
+	const value = tk.value + chunk;
 	Object.defineProperty(newTk, newTk.type, {value, enumerable: true});
-	newTk.value += value;
+
 	Object.freeze(newTk);
 	return newTk;
 };

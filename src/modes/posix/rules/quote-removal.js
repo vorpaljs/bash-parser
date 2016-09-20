@@ -3,7 +3,8 @@ const parse = require('shell-quote-word');
 const unescape = require('unescape-js');
 
 function unquote(text) {
-	return unescape(parse(text)[0]);
+	const unquoted = parse(text);
+	return unescape(unquoted[0]);
 }
 
 function unresolvedExpansions(token) {

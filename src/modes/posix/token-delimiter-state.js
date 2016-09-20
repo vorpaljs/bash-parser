@@ -156,10 +156,11 @@ class TokenDelimiterState {
 	}
 
 	setEmptyToken() {
-		this.token = {
-			EMPTY: true,
-			loc: mkLoc(this.lineNumber, this.columnNumber)
-		};
+		this.token = tokens.mkToken(
+			'EMPTY',
+			true,
+			mkLoc(this.lineNumber, this.columnNumber)
+		);
 	}
 
 	setEOFToken() {

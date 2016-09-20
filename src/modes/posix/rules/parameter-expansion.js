@@ -32,11 +32,14 @@ function isSpecialParameter(currentCharacter) {
 	return currentCharacter.match(/^[0-9\-!@#\?\*\$]$/);
 }
 
-function setParameterExpansion(token, parameterText, start, end) {
+function setParameterExpansion(token, parameterText, start, end, utils) {
 	let parameter = parameterText;
 	let word;
 	let op;
-	const expansions = token.expansion = (token.expansion || []);
+	if (!token.expansion) {
+		token = utils.tokens.addExpansions(token);
+	}
+	const expansions = token.expansion;
 
 	function appendXp(xp, word, op) {
 		if (word !== undefined) {
@@ -58,9 +61,8 @@ function setParameterExpansion(token, parameterText, start, end) {
 			end
 		}, word, op);
 
-		return;
+		return token;
 	}
-
 	if (isSpecialParameter(parameter)) {
 		appendXp({
 			kind: specialParameterNames[parameter],
@@ -69,7 +71,7 @@ function setParameterExpansion(token, parameterText, start, end) {
 			end
 		}, word, op);
 
-		return;
+		return token;
 	}
 
 	for (const pair of pairs(parameterOps)) {
@@ -82,8 +84,8 @@ function setParameterExpansion(token, parameterText, start, end) {
 			parameter = parameterText.slice(0, pos);
 
 			// recursive expansion of operator argument
-			word = {WORD: parameterText.slice(pos + 2)};
-			expandWord(word);
+			word = expandWord({WORD: parameterText.slice(pos + 2)}, utils);
+			word = Object.assign({}, word);
 			word.text = word.WORD;
 			delete word.WORD;
 
@@ -98,9 +100,11 @@ function setParameterExpansion(token, parameterText, start, end) {
 		start,
 		end
 	}, word, op);
+
+	return token;
 }
 
-function expandWord(token) {
+function expandWord(token, utils) {
 	const text = token.WORD || token.ASSIGNMENT_WORD;
 
 	let expanding = EXPANDING.NO;
@@ -147,11 +151,12 @@ function expandWord(token) {
 			if (candidateParameterName !== '') {
 				// we have already accumulated a valid name, use it
 				// end of parameter expansion
-				setParameterExpansion(
+				token = setParameterExpansion(
 					token,
 					candidateParameterName,
 					startOfExpansion,
-					startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+					startOfExpansion + candidateParameterName.length + 1,  // add 1 to take in account $
+					utils
 				);
 				expansion = null;
 				candidateParameterName = '';
@@ -179,11 +184,12 @@ function expandWord(token) {
 		} else if (expanding === EXPANDING.PARAMETER) {
 			if (!escaping && currentCharacter === '}') {
 				// end of parameter expansion
-				setParameterExpansion(
+				token = setParameterExpansion(
 					token,
 					expansion,
 					startOfExpansion,
-					startOfExpansion + expansion.length + 3  // add 3 to take in account ${}
+					startOfExpansion + expansion.length + 3,  // add 3 to take in account ${}
+					utils
 				);
 
 				startOfExpansion = 0;
@@ -201,15 +207,18 @@ function expandWord(token) {
 
 	if (candidateParameterName !== '') {
 		// we have already accumulated a valid name for parameter expansion, use it
-		setParameterExpansion(
+		token = setParameterExpansion(
 			token,
 			candidateParameterName,
 			startOfExpansion,
-			startOfExpansion + candidateParameterName.length + 1  // add 1 to take in account $
+			startOfExpansion + candidateParameterName.length + 1,  // add 1 to take in account $
+			utils
 		);
 
 		expansion = null;
 	}
+
+	return token;
 }
 
 // RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
@@ -217,36 +226,33 @@ function expandWord(token) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-const parameterExpansion = () => function * parameterExpansion(tokens) {
-	for (const token of tokens) {
+const parameterExpansion = (options, utils) => function * parameterExpansion(tokens) {
+	for (let token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
-			expandWord(token);
+			token = expandWord(token, utils);
 		}
 		yield token;
 	}
 };
 
-parameterExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
-	for (const token of tokens) {
+parameterExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
+	for (let token of tokens) {
 		if (options.resolveParameter && token.expansion) {
 			const value = token.WORD || token.ASSIGNMENT_WORD;
-			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
 
-			token.magic = new MagicString(value);
-			token.originalText = token.originalText || value;
+			const magic = new MagicString(value);
 			for (const xp of token.expansion) {
 				if (xp.type === 'parameter_expansion') {
 					const result = options.resolveParameter(xp);
 					xp.resolved = true;
-					token.magic.overwrite(
+					magic.overwrite(
 						xp.start,
 						xp.end,
 						fieldSplitting.mark(result, value, options)
 					);
 				}
 			}
-			token[resultProp] = token.magic.toString();
-			delete token.magic;
+			token = utils.tokens.alterValue(token, magic.toString());
 		}
 		yield token;
 	}

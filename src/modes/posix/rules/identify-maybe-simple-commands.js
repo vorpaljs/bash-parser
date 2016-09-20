@@ -11,15 +11,13 @@ module.exports = function identifyMaybeSimpleCommands() {
 		const last = iterable.behind(1) || {EMPTY: true};
 
 		// evaluate based on last token
-		tk._ = {
-			maybeStartOfSimpleCommand: Boolean(
-				last.EMPTY || last.SEPARATOR_OP || last.OPEN_PAREN ||
-				last.CLOSE_PAREN || last.NEWLINE || last.NEWLINE_LIST ||
-				last.TOKEN === ';' || last.PIPE ||
-				last.DSEMI || last.OR_IF || last.PIPE || last.AND_IF ||
-				(!last.For && !last.In && !last.Case && values(reservedWords).some(word => hasOwnProperty(last, word)))
-			)
-		};
+		tk._.maybeStartOfSimpleCommand = Boolean(
+			last.EMPTY || last.SEPARATOR_OP || last.OPEN_PAREN ||
+			last.CLOSE_PAREN || last.NEWLINE || last.NEWLINE_LIST ||
+			last.TOKEN === ';' || last.PIPE ||
+			last.DSEMI || last.OR_IF || last.PIPE || last.AND_IF ||
+			(!last.For && !last.In && !last.Case && values(reservedWords).some(word => hasOwnProperty(last, word)))
+		);
 
 		return tk;
 	}), lookahead);

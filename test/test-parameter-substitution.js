@@ -153,6 +153,7 @@ test('resolve double parameter', t => {
 			return 'bar';
 		}
 	});
+	// utils.logResults(result);
 	t.deepEqual(result.commands[0], {
 		type: 'simple_command',
 		name: {

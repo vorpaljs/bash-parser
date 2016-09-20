@@ -1,6 +1,5 @@
 'use strict';
 const map = require('map-iterable');
-const copyTempObject = require('../copy-temp-object');
 
 module.exports = function assignmentWord(options, utils) {
 	return map((tk, idx, ctx) => {
@@ -15,11 +14,7 @@ module.exports = function assignmentWord(options, utils) {
 				// left part must be a valid name
 				utils.isValidName(tk.WORD.slice(0, tk.WORD.indexOf('=')))
 			)) {
-			return copyTempObject(tk, {
-				ASSIGNMENT_WORD: tk.WORD,
-				expansion: tk.expansion,
-				loc: tk.loc
-			});
+			return utils.tokens.changeTokenType(tk, 'ASSIGNMENT_WORD', tk.WORD);
 		}
 
 		ctx.commandPrefixNotAllowed = true;

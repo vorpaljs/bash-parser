@@ -2,20 +2,23 @@
 
 /* resolve a conflict in grammar by tokenize multiple NEWLINEs as a
 newline_list token (it was a rule in POSIX grammar) */
-module.exports = function newLineList() {
+module.exports = function newLineList(options, utils) {
+	const mkToken = utils.tokens.mkToken;
+	const appendTo = utils.tokens.appendTo;
+	const changeTokenType = utils.tokens.changeTokenType;
+
 	return function * (tokens) {
-		let lastToken = {EMPTY: true};
-		for (const tk of tokens) {
+		let lastToken = mkToken('EMPTY', true);
+		for (let tk of tokens) {
 			if (tk.NEWLINE) {
 				if (lastToken.NEWLINE_LIST) {
-					lastToken.NEWLINE_LIST += '\n';
+					lastToken = appendTo(lastToken, '\n');
 					if (lastToken.loc) {
 						lastToken.loc.endLine++;
 					}
 					continue;
 				} else {
-					tk.NEWLINE_LIST = '\n';
-					delete tk.NEWLINE;
+					tk = changeTokenType(tk, 'NEWLINE_LIST', '\n');
 				}
 			}
 			if (!lastToken.EMPTY) {

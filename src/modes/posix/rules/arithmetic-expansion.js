@@ -6,7 +6,7 @@ const MagicString = require('magic-string');
 const fieldSplitting = require('./field-splitting');
 
 function setArithmeticExpansion(args) {
-	const token = args.token;
+	let token = args.token;
 	const expression = args.expression;
 	const start = args.start;
 	const end = args.end;
@@ -23,16 +23,22 @@ function setArithmeticExpansion(args) {
 		throw new SyntaxError(`Cannot parse arithmetic expression "${expression}": Not an expression`);
 	}
 
-	token.expansion = (token.expansion || []).concat({
+	if (!token.expansions) {
+		token = args.addExpansions(token);
+	}
+
+	token.expansion.push({
 		type: 'arithmetic_expansion',
 		expression,
 		arithmeticAST: JSON.parse(JSON.stringify(arithmeticAST)),
 		start,
 		end
 	});
+
+	return token;
 }
 
-function expandWord(token) {
+function expandWord(token, addExpansions) {
 	const text = token.WORD || token.ASSIGNMENT_WORD;
 
 	let expandingArithmetic = false;
@@ -65,11 +71,12 @@ function expandWord(token) {
 		} else if ((!escaping) && currentCharacter === ')' && lastCharacter === ')') {
 			expression = expression.slice(1, -1);
 			// end of command expansion
-			setArithmeticExpansion({
+			token = setArithmeticExpansion({
 				token,
 				expression: expression,
 				start: startOfExpansion,
-				end: startOfExpansion + expression.length + 5  // add 3 to take in account $(())
+				end: startOfExpansion + expression.length + 5,  // add 3 to take in account $(())
+				addExpansions
 			});
 			startOfExpansion = 0;
 			expandingArithmetic = false;
@@ -83,6 +90,8 @@ function expandWord(token) {
 		lastCharacter = currentCharacter;
 		currentCharIdx++;
 	}
+
+	return token;
 }
 
 // RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
@@ -90,28 +99,26 @@ function expandWord(token) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-const arithmeticExpansion = () => function * arithmeticExpansion(tokens) {
-	for (const token of tokens) {
+const arithmeticExpansion = (options, utils) => function * arithmeticExpansion(tokens) {
+	for (let token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
-			expandWord(token);
+			token = expandWord(token, utils.tokens.addExpansions);
 		}
 		yield token;
 	}
 };
 
-arithmeticExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
-	for (const token of tokens) {
+arithmeticExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
+	for (let token of tokens) {
 		if (options.runArithmeticExpression && token.expansion) {
 			const value = token.WORD || token.ASSIGNMENT_WORD;
-			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
 
-			token.magic = new MagicString(value);
-			token.originalText = token.originalText || value;
+			const magic = new MagicString(value);
 
 			for (const xp of token.expansion) {
 				if (xp.type === 'arithmetic_expansion') {
 					const result = options.runArithmeticExpression(xp);
-					token.magic.overwrite(
+					magic.overwrite(
 						xp.start,
 						xp.end,
 						fieldSplitting.mark(result, value, options)
@@ -119,8 +126,7 @@ arithmeticExpansion.resolve = options => function * resolveParameterExpansion(to
 					xp.resolved = true;
 				}
 			}
-			token[resultProp] = token.magic.toString();
-			delete token.magic;
+			token = utils.tokens.alterValue(token, magic.toString());
 		}
 		yield token;
 	}

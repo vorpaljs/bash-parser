@@ -10,8 +10,9 @@ const posixShellLexer = (mode, options) => ({
 		const tk = item.value;
 
 		const tkType = Object.keys(tk).filter(k =>
-			k !== 'loc' && k !== 'expansion'
+			k !== 'loc' && k !== 'expansion' && k !== 'type' && k !== 'value'
 		)[0];
+		// console.log({tk, tkType})
 
 		const text = tk[tkType];
 

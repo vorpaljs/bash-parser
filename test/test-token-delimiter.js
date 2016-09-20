@@ -6,7 +6,11 @@ const mkloc = require('./_utils').mkloc;
 
 /* eslint-disable camelcase */
 function tokenize(text) {
-	const results = Array.from(tokenDelimiter(text));
+	const results = Array.from(tokenDelimiter(text)).map(t => {
+		const r = Object.assign({}, t);
+		delete r._;
+		return r;
+	});
 	return results;
 }
 

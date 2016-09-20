@@ -152,6 +152,7 @@ test('resolve double command', t => {
 			return 'bar';
 		}
 	});
+	// utils.logResults(result.commands[0]);
 	delete result.commands[0].name.expansion[0].commandAST;
 	delete result.commands[0].name.expansion[1].commandAST;
 

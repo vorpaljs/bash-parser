@@ -5,7 +5,6 @@ const compose = require('compose-function');
 const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
 const words = require('../enums/reserved-words');
-const copyTempObject = require('../copy-temp-object');
 
 function defined(v) {
 	return v !== undefined;
@@ -23,35 +22,30 @@ function isValidReservedWordPosition(tk, iterable) {
 		last.OR_IF || last.PIPE || last.AND_IF
 	);
 
-	const lastIsReservedWord = (!last.For && !last.In && !last.Case && values(words).some(word => hasOwnProperty(last, word)));
+	const lastIsReservedWord = (!last.TOKEN === 'for' && !last.TOKEN === 'in' && !last.TOKEN === 'case' && values(words).some(word => hasOwnProperty(last, word)));
 
-	const thirdInCase = Boolean(twoAgo.Case) && tk.TOKEN && tk.TOKEN.toLowerCase() === 'in';
-	const thirdInFor = Boolean(twoAgo.For) && tk.TOKEN &&
+	const thirdInCase = Boolean(twoAgo.TOKEN === 'case') && tk.TOKEN && tk.TOKEN.toLowerCase() === 'in';
+	const thirdInFor = Boolean(twoAgo.TOKEN === 'for') && tk.TOKEN &&
 		(tk.TOKEN.toLowerCase() === 'in' || tk.TOKEN.toLowerCase() === 'do');
 
 	// console.log({tk, startOfCommand, lastIsReservedWord, thirdInFor, thirdInCase, twoAgo})
 	return startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
 }
 
-module.exports = function reservedWords() {
+module.exports = function reservedWords(options, utils) {
+	const changeTokenType = utils.tokens.changeTokenType;
+
 	return compose(map((tk, idx, iterable) => {
 		// TOKEN tokens consisting of a reserved word
 		// are converted to their own token types
 		if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(words, tk.TOKEN)) {
-			tk[words[tk.TOKEN]] = tk.TOKEN;
-			return copyTempObject(tk, {
-				[words[tk.TOKEN]]: tk.TOKEN,
-				loc: tk.loc
-			});
+			return changeTokenType(tk, words[tk.TOKEN], tk.TOKEN);
 		}
 
 		// otherwise, TOKEN tokens are converted to
 		// WORD tokens
 		if (defined(tk.TOKEN)) {
-			return copyTempObject(tk, {
-				WORD: tk.TOKEN,
-				loc: tk.loc
-			});
+			return changeTokenType(tk, 'WORD', tk.TOKEN);
 		}
 
 		// other tokens are amitted as-is

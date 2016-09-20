@@ -3,7 +3,7 @@ const MagicString = require('magic-string');
 const fieldSplitting = require('./field-splitting');
 
 function setCommandExpansion(args) {
-	const token = args.token;
+	let token = args.token;
 	const commandText = args.commandText;
 	const start = args.start;
 	const end = args.end;
@@ -17,7 +17,7 @@ function setCommandExpansion(args) {
 	if (token.expansion) {
 		for (const exp of token.expansion) {
 			if (exp.start <= start && exp.end >= end && exp.type === 'arithmetic_expansion') {
-				return;
+				return token;
 			}
 		}
 	}
@@ -27,16 +27,22 @@ function setCommandExpansion(args) {
 	}
 	const bashParser = require('../../../index');
 
-	token.expansion = (token.expansion || []).concat({
+	if (!token.expansion) {
+		token = args.addExpansions(token);
+	}
+
+	token.expansion.push({
 		type: 'command_expansion',
 		command,
 		commandAST: bashParser(command),
 		start,
 		end
 	});
+
+	return token;
 }
 
-function expandWord(token) {
+function expandWord(token, addExpansions) {
 	const text = token.WORD || token.ASSIGNMENT_WORD;
 
 	let expandingCommand = null;
@@ -71,12 +77,13 @@ function expandWord(token) {
 		} else if (expandingCommand) {
 			if (!escaping && currentCharacter === ')' && expandingCommand === '$') {
 				// end of command expansion
-				setCommandExpansion({
+				token = setCommandExpansion({
 					token,
 					commandText: expansion,
 					start: startOfExpansion,
 					end: startOfExpansion + expansion.length + 3,  // add 3 to take in account $()
-					expandingCommand
+					expandingCommand,
+					addExpansions
 				});
 
 				startOfExpansion = 0;
@@ -84,12 +91,13 @@ function expandWord(token) {
 				expansion = null;
 			} else if (!escaping && currentCharacter === '`' && expandingCommand === '`') {
 				// end of command expansion
-				setCommandExpansion({
+				token = setCommandExpansion({
 					token,
 					commandText: expansion,
 					start: startOfExpansion,
 					end: startOfExpansion + expansion.length + 2,  // add 2 to take in account ``
-					expandingCommand
+					expandingCommand,
+					addExpansions
 				});
 
 				startOfExpansion = 0;
@@ -104,6 +112,8 @@ function expandWord(token) {
 
 		currentCharIdx++;
 	}
+
+	return token;
 }
 
 // RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
@@ -112,28 +122,27 @@ function expandWord(token) {
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
 
-const commandExpansion = () => function * commandExpansion(tokens) {
-	for (const token of tokens) {
+const commandExpansion = (options, utils) => function * commandExpansion(tokens) {
+	for (let token of tokens) {
 		if (token.WORD || token.ASSIGNMENT_WORD) {
-			expandWord(token);
+			token = expandWord(token, utils.tokens.addExpansions);
 		}
 		yield token;
 	}
 };
 
-commandExpansion.resolve = options => function * resolveParameterExpansion(tokens) {
-	for (const token of tokens) {
+commandExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
+	for (let token of tokens) {
 		if (options.execCommand && token.expansion) {
 			const value = token.WORD || token.ASSIGNMENT_WORD;
-			const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
+			// const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
 
-			token.magic = new MagicString(value);
-			token.originalText = token.originalText || value;
+			const magic = new MagicString(value);
 
 			for (const xp of token.expansion) {
 				if (xp.type === 'command_expansion') {
 					const result = options.execCommand(xp);
-					token.magic.overwrite(
+					magic.overwrite(
 						xp.start,
 						xp.end,
 						fieldSplitting.mark(result.replace(/\n+$/, ''), value, options)
@@ -141,8 +150,7 @@ commandExpansion.resolve = options => function * resolveParameterExpansion(token
 					xp.resolved = true;
 				}
 			}
-			token[resultProp] = token.magic.toString();
-			delete token.magic;
+			token = utils.tokens.alterValue(token, magic.toString());
 		}
 		yield token;
 	}

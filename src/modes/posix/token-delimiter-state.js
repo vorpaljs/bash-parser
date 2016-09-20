@@ -191,6 +191,8 @@ class TokenDelimiterState {
 			endLine: this.prevLineNumber,
 			endColumn: this.prevColumnNumber
 		});
+		this.token._ = {};
+		Object.freeze(this.token);
 		return this.token;
 	}
 

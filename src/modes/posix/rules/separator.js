@@ -16,13 +16,20 @@ with a new separator_op token, the rule became:
 separator : separator_op
 				 | NEWLINE_LIST
 */
-module.exports = function separator() {
+module.exports = function separator(options, utils) {
+	// const appendTo = utils.tokens.appendTo;
+	const changeTokenType = utils.tokens.changeTokenType;
+
 	return function * (tokens) {
 		let lastToken = {EMPTY: true};
 
-		for (const tk of tokens) {
+		for (let tk of tokens) {
 			if (tk.NEWLINE_LIST && lastToken.SEPARATOR_OP) {
-				lastToken.SEPARATOR_OP += tk.NEWLINE_LIST;
+				lastToken = changeTokenType(
+					lastToken,
+					'SEPARATOR_OP',
+					lastToken.SEPARATOR_OP + tk.NEWLINE_LIST
+				);
 				if (lastToken.loc) {
 					lastToken.loc.endLine++;
 					lastToken.loc.endColumn = 0;
@@ -31,11 +38,11 @@ module.exports = function separator() {
 			}
 
 			if (tk[';'] || tk.OPERATOR === '&' || tk.OPERATOR === ';' || tk.TOKEN === ';' || tk.WORD === ';') {
-				tk.SEPARATOR_OP = (tk[';'] || '') + (tk.OPERATOR || '') + (tk.TOKEN || '');
-
-				delete tk[';'];
-				delete tk.OPERATOR;
-				delete tk.TOKEN;
+				tk = changeTokenType(
+					tk,
+					'SEPARATOR_OP',
+					(tk[';'] || '') + (tk.OPERATOR || '') + (tk.TOKEN || '')
+				);
 			}
 
 			if (!lastToken.EMPTY) {

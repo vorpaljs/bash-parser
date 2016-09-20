@@ -6,6 +6,7 @@ const bashParser = require('../src');
 /* eslint-disable camelcase */
 test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
+	// utils.logResults(result.commands[0].name)
 	t.deepEqual(result.commands[0].name, {
 		type: 'word',
 		text: '${other:-default_value}',
@@ -42,7 +43,7 @@ test('parameter with assign default value', t => {
 
 test('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
-	t.deepEqual(result.commands[0].name, {
+	t.deepEqual(JSON.parse(JSON.stringify(result.commands[0].name)), {
 		type: 'word',
 		text: '${other:=default$value}',
 		expansion: [{

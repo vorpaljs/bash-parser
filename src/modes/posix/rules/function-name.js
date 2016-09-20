@@ -3,7 +3,8 @@ const compose = require('compose-function');
 const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
 
-module.exports = function functionName() {
+module.exports = function functionName(options, utils) {
+	const changeTokenType = utils.tokens.changeTokenType;
 	return compose(map((tk, idx, iterable) => {
 		// apply only on valid positions
 		// (start of simple commands)
@@ -16,9 +17,7 @@ module.exports = function functionName() {
 			iterable.ahead(1).OPEN_PAREN &&
 			iterable.ahead(2).CLOSE_PAREN
 		) {
-			tk.NAME = tk.WORD;
-			delete tk.maybeSimpleCommandName;
-			delete tk.WORD;
+			tk = changeTokenType(tk, 'NAME', tk.WORD);
 		}
 
 		return tk;

@@ -2,6 +2,7 @@
 const test = require('ava');
 const posixLexer = require('../src/shell-lexer');
 const posixMode = require('../src/modes/posix');
+// const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 function tokenize(text, rawTokens) {
@@ -219,6 +220,8 @@ test('support double quotes', t => {
 	);
 });
 test('support multiple commands', t => {
+	// utils.logResults(tokenize('echo; \nls;'));
+
 	t.deepEqual(
 		tokenize('echo; \nls;'),
 		[{token: 'WORD', value: 'echo'}, {token: 'SEPARATOR_OP', value: ';\n'},

@@ -12,10 +12,13 @@ exports.mkToken = function mkToken(type, value, loc) {
 
 exports.appendTo = function appendTo(tk, chunk) {
 	const newTk = Object.assign({}, tk);
-	const value = tk.value + chunk;
+	const value = newTk.value = tk.value + chunk;
+	// console.log(tk.value, chunk, value)
+
 	Object.defineProperty(newTk, newTk.type, {value, enumerable: true});
 
 	Object.freeze(newTk);
+	// console.log(newTk)
 	return newTk;
 };
 

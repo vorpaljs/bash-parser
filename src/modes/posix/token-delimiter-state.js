@@ -51,9 +51,9 @@ class TokenDelimiterState {
 	removingLastChar() {
 		if (this.token.TOKEN) {
 			// remove slash from token
-			this.token.TOKEN = this.token.TOKEN.slice(0, -1);
+			this.token = tokens.setValue(this.token, this.token.TOKEN.slice(0, -1));
+
 			if (this.token.TOKEN === '') {
-				delete this.token.TOKEN;
 				this.setEmptyToken();
 			}
 		}
@@ -149,10 +149,11 @@ class TokenDelimiterState {
 	}
 
 	setGenericToken(text) {
-		this.token = {
-			TOKEN: text,
-			loc: mkLoc(this.lineNumber, this.columnNumber)
-		};
+		this.token = tokens.mkToken(
+			'TOKEN',
+			text,
+			mkLoc(this.lineNumber, this.columnNumber)
+		);
 	}
 
 	setEmptyToken() {
@@ -225,7 +226,7 @@ class TokenDelimiterState {
 	}
 
 	appendToGenericToken(currentCharacter) {
-		this.token.TOKEN += currentCharacter;
+		this.token = tokens.appendTo(this.token, currentCharacter);
 	}
 
 	quotingCharacter(ch) {

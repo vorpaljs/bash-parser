@@ -164,10 +164,11 @@ class TokenDelimiterState {
 	}
 
 	setEOFToken() {
-		this.token = {
-			EOF: true,
-			loc: mkLoc(this.prevLineNumber, this.prevColumnNumber)
-		};
+		this.token = tokens.mkToken(
+			'EOF',
+			true,
+			mkLoc(this.prevLineNumber, this.prevColumnNumber)
+		);
 	}
 
 	savePreviousLoc() {

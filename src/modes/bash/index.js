@@ -1,5 +1,6 @@
 'use strict';
 
+const replaceRule = require('../../../packages/array-replace-item');
 const bashAliasSubstitution = require('./rules/alias-substitution');
 
 module.exports = {
@@ -11,12 +12,11 @@ module.exports = {
 			{bashAliasSubstitution}
 		);
 
-		const lexerPhases = posixMode.lexerPhases.map(phase => {
-			if (phase === phaseCatalog.aliasSubstitution) {
-				return bashAliasSubstitution;
-			}
-			return phase;
-		});
+		const lexerPhases = replaceRule(
+			phaseCatalog.aliasSubstitution,
+			bashAliasSubstitution,
+			posixMode.lexerPhases
+		);
 
 		return {
 			phaseCatalog,

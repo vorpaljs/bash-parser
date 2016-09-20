@@ -16,23 +16,24 @@ if (argv._.length === 2) {
 	process.exit(1);
 }
 
-function loadPlugin(modesFolder, modeName) {
+function loadPlugin(modesFolder, modeName, utils) {
 	const modePath = resolve(modesFolder, modeName);
 	const modePlugin = require(modePath);
 
 	if (modePlugin.inherits) {
-		return modePlugin.init(loadPlugin(modesFolder, modePlugin.inherits));
+		return modePlugin.init(loadPlugin(modesFolder, modePlugin.inherits, utils), utils);
 	}
-	return modePlugin.init(null);
+	return modePlugin.init(null, utils);
 }
 
 function build(modesFolder, modeName) {
 	const modeModule = resolve(modesFolder, modeName, 'index.js');
 	const builtGrammarPath = resolve(modesFolder, modeName, 'built-grammar.js');
-
+	const utilsPath = resolve(modesFolder, '..', 'utils');
+	const utils = require(utilsPath);
 	const spinner = ora(`Building grammar from ${modeModule}...`).start();
 
-	const mode = loadPlugin(modesFolder, modeName);
+	const mode = loadPlugin(modesFolder, modeName, utils);
 	spinner.text = 'Mode module loaded.';
 	let parserSource;
 	try {

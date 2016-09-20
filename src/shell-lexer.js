@@ -57,7 +57,7 @@ const posixShellLexer = (mode, options) => ({
 		let previousPhases = [tokenizer];
 		const phases = [tokenizer]
 			.concat(mode.lexerPhases.map(phase => {
-				const ph = phase(options, previousPhases);
+				const ph = phase(options, utils, previousPhases);
 				previousPhases = previousPhases.concat(ph);
 				return ph;
 			}));

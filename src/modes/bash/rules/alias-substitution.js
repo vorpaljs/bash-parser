@@ -6,7 +6,7 @@ const compose = require('compose-function');
 const values = require('object-values');
 const reservedWords = values(require('../../posix/enums/reserved-words'));
 
-module.exports = (options, previousPhases) => {
+module.exports = (options, utils, previousPhases) => {
 	const preAliasLexer = compose.apply(null, previousPhases.reverse());
 
 	return function * aliasSubstitution(tokens) {

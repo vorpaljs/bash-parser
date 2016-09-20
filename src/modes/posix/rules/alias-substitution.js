@@ -4,7 +4,7 @@
 
 const compose = require('compose-function');
 
-module.exports = (options, previousPhases) => {
+module.exports = (options, utils, previousPhases) => {
 	const preAliasLexer = compose.apply(null, previousPhases.reverse());
 	return function * aliasSubstitution(tokens) {
 		function * tryExpandToken(token, expandingAliases) {

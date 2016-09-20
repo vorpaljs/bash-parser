@@ -53,11 +53,16 @@ const posixShellLexer = (mode, options) => ({
 	},
 
 	setInput(source) {
-		const phases = mode.lexerPhases
-			.map(phase => phase(options))
-			.concat(mode.tokenizer(options, utils));
+		const tokenizer = mode.tokenizer(options, utils);
+		let previousPhases = [tokenizer];
+		const phases = [tokenizer]
+			.concat(mode.lexerPhases.map(phase => {
+				const ph = phase(options, previousPhases);
+				previousPhases = previousPhases.concat(ph);
+				return ph;
+			}));
 
-		const tokenize = compose.apply(null, phases);
+		const tokenize = compose.apply(null, phases.reverse());
 		this.tokenizer = tokenize(source);
 	}
 });

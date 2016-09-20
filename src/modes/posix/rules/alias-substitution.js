@@ -1,31 +1,12 @@
 'use strict';
-// @flow
-/* flow-include import type {Token} from '../../plugin'; */
 /* eslint-disable camelcase */
 /* eslint-disable babel/arrow-parens */
 
 const compose = require('compose-function');
-const tokenDelimiter = require('../token-delimiter');
-const rules = require('.');
 
-const buildPreAliasLexer = (options) => compose(
-	rules.identifySimpleCommandNames(options),
-	rules.functionName(options),
-	rules.forNameVariable(options),
-	rules.assignmentWord(options),
-	rules.identifyMaybeSimpleCommands(options),
-	rules.ioNumber(options),
-	rules.linebreakIn(options),
-	rules.reservedWords(options),
-	rules.separator(options),
-	rules.operatorTokens(options),
-	rules.newLineList(options),
-	tokenDelimiter(options)
-);
-
-module.exports = (options/* : Object*/) => {
-	const preAliasLexer = buildPreAliasLexer(options);
-	return function * aliasSubstitution(tokens/* : Iterable<Token>*/)/* : Generator<Token, void, void>*/ {
+module.exports = (options, previousPhases) => {
+	const preAliasLexer = compose.apply(null, previousPhases.reverse());
+	return function * aliasSubstitution(tokens) {
 		function * tryExpandToken(token, expandingAliases) {
 			if (expandingAliases.indexOf(token.WORD) === -1 && token._.maybeSimpleCommandName) {
 				const result = options.resolveAlias(token.WORD);

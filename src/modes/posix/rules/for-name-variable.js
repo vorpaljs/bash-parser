@@ -2,7 +2,6 @@
 const compose = require('compose-function');
 const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
-const copyTempObject = require('../copy-temp-object');
 
 module.exports = function forNameVariable(options, utils) {
 	return compose(map((tk, idx, iterable) => {
@@ -12,10 +11,7 @@ module.exports = function forNameVariable(options, utils) {
 		// type of token is changed from WORD to NAME
 
 		if (lastToken.For && tk.WORD && utils.isValidName(tk.WORD)) {
-			return copyTempObject(tk, {
-				NAME: tk.WORD,
-				loc: tk.loc
-			});
+			return utils.tokens.changeTokenType(tk, 'NAME', tk.WORD);
 		}
 
 		return tk;

@@ -171,7 +171,7 @@ test('command with redirection to file', t => {
 			name: {type: 'word', text: 'ls'},
 			suffix: [{
 				type: 'io_redirect',
-				op: {text: '>'},
+				op: {type: 'great', text: '>'},
 				file: {type: 'word', text: 'file.txt'}
 			}]
 		}]
@@ -194,6 +194,7 @@ test('parse multiple suffix', t => {
 
 test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
+	// utils.logResults(result);
 	t.deepEqual(result, {
 		type: 'complete_command',
 		commands: [{
@@ -201,9 +202,9 @@ test('command with stderr redirection to file', t => {
 			name: {type: 'word', text: 'ls'},
 			suffix: [{
 				type: 'io_redirect',
-				op: {text: '>'},
+				op: {type: 'great', text: '>'},
 				file: {type: 'word', text: 'file.txt'},
-				numberIo: {text: '2'}
+				numberIo: {type: 'io_number', text: '2'}
 			}]
 		}]
 	});

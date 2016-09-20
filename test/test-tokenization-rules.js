@@ -16,7 +16,7 @@ function transform(result) {
 test('operatorTokens - identify operator with their tokens', t => {
 	t.deepEqual(
 		transform(rules.operatorTokens({}, utils)([{OPERATOR: '<<', loc: 42}])),
-		[{DLESS: '<<', loc: 42}]
+		[{DLESS: '<<', loc: 42, _: undefined}]
 	);
 });
 

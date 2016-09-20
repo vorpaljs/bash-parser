@@ -4,6 +4,8 @@
 const test = require('ava');
 const bashParser = require('../src');
 const mkloc = require('./_utils').mkloc;
+// const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('simple command with prefixes and name', t => {
 	const result = bashParser('a=1 b=2 echo', {insertLOC: true});
@@ -101,6 +103,7 @@ test('simple command with IO redirection', t => {
 		suffix: [{
 			type: 'io_redirect',
 			op: {
+				type: 'great',
 				text: '>',
 				loc: mkloc(0, 5, 0, 5)
 			},
@@ -116,6 +119,7 @@ test('simple command with IO redirection', t => {
 
 test('simple command with numbered IO redirection', t => {
 	const result = bashParser('echo 2> 43', {insertLOC: true});
+	// utils.logResults(result);
 	const expected = {
 		type: 'simple_command',
 		name: {
@@ -127,6 +131,7 @@ test('simple command with numbered IO redirection', t => {
 		suffix: [{
 			type: 'io_redirect',
 			op: {
+				type: 'great',
 				text: '>',
 				loc: mkloc(0, 6, 0, 6)
 			},
@@ -138,6 +143,7 @@ test('simple command with numbered IO redirection', t => {
 			loc: mkloc(0, 5, 0, 9),
 			numberIo: {
 				text: '2',
+				type: 'io_number',
 				loc: mkloc(0, 5, 0, 5)
 			}
 		}]

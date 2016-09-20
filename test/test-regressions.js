@@ -14,7 +14,7 @@ test('Redirect should be allowed immediately following argument', t => {
 				{type: 'word', text: 'foo'},
 				{
 					type: 'io_redirect',
-					op: {text: '>'},
+					op: {type: 'great', text: '>'},
 					file: {type: 'word', text: 'file.txt'}
 				}
 			]

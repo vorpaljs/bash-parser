@@ -1,4 +1,6 @@
 'use strict';
+
+const map = require('map-iterable');
 const MagicString = require('magic-string');
 const fieldSplitting = require('./field-splitting');
 
@@ -122,37 +124,33 @@ function expandWord(token, addExpansions) {
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
 
-const commandExpansion = (options, utils) => function * commandExpansion(tokens) {
-	for (let token of tokens) {
-		if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
-			token = expandWord(token, utils.tokens.addExpansions);
-		}
-		yield token;
+const commandExpansion = (options, utils) => map(token => {
+	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
+		return expandWord(token, utils.tokens.addExpansions);
 	}
-};
+	return token;
+});
 
-commandExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
-	for (let token of tokens) {
-		if (options.execCommand && token.expansion) {
-			const value = token.value;
+commandExpansion.resolve = (options, utils) => map(token => {
+	if (options.execCommand && token.expansion) {
+		const value = token.value;
 
-			const magic = new MagicString(value);
+		const magic = new MagicString(value);
 
-			for (const xp of token.expansion) {
-				if (xp.type === 'command_expansion') {
-					const result = options.execCommand(xp);
-					magic.overwrite(
-						xp.start,
-						xp.end,
-						fieldSplitting.mark(result.replace(/\n+$/, ''), value, options)
-					);
-					xp.resolved = true;
-				}
+		for (const xp of token.expansion) {
+			if (xp.type === 'command_expansion') {
+				const result = options.execCommand(xp);
+				magic.overwrite(
+					xp.start,
+					xp.end,
+					fieldSplitting.mark(result.replace(/\n+$/, ''), value, options)
+				);
+				xp.resolved = true;
 			}
-			token = utils.tokens.alterValue(token, magic.toString());
 		}
-		yield token;
+		return utils.tokens.alterValue(token, magic.toString());
 	}
-};
+	return token;
+});
 
 module.exports = commandExpansion;

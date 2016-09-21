@@ -188,7 +188,6 @@ test('field splitting', t => {
 			return '\t ';
 		}
 	});
-
 	delete result.commands[0].suffix[0].expansion[0].arithmeticAST;
 	delete result.commands[0].suffix[1].expansion[0].arithmeticAST;
 	delete result.commands[0].suffix[2].expansion[0].arithmeticAST;

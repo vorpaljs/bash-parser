@@ -10,6 +10,28 @@ exports.mkToken = function mkToken(type, value, loc) {
 	return tk;
 };
 
+exports.mkFieldSplitToken = function mkFieldSplitToken(joinedTk, value, fieldIdx) {
+	const tk = {
+		type: joinedTk.type,
+		value,
+		_: {},
+		joined: joinedTk.value,
+		fieldIdx
+	};
+	if (joinedTk.loc) {
+		tk.loc = joinedTk.loc;
+	}
+	if (joinedTk.expansion) {
+		tk.expansion = joinedTk.expansion;
+	}
+	if (joinedTk.originalText) {
+		tk.originalText = joinedTk.originalText;
+	}
+	Object.defineProperty(tk, joinedTk.type, {value, enumerable: true});
+	Object.freeze(tk);
+	return tk;
+};
+
 exports.appendTo = function appendTo(tk, chunk) {
 	const newTk = Object.assign({}, tk);
 	const value = newTk.value = tk.value + chunk;

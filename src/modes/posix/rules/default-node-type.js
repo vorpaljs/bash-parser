@@ -18,6 +18,7 @@ module.exports = () => function * defaultNodeType(tokens) {
 				tk.type = 'name';
 			}
 		}
+		Object.freeze(tk);
 		yield tk;
 	}
 };

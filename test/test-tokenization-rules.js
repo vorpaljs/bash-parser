@@ -8,6 +8,7 @@ const _utils = require('./_utils');
 function transform(result) {
 	return Array.from(result).map(t => {
 		const r = Object.assign({}, t);
+		r[r.type] = r.value;
 		delete r.type;
 		delete r.value;
 		return r;

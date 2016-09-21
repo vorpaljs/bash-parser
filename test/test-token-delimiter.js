@@ -8,6 +8,7 @@ const utils = require('./_utils');
 function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text)).map(t => {
 		const r = Object.assign({}, t);
+		r[r.type] = r.value;
 		delete r._;
 		delete r.type;
 		delete r.value;

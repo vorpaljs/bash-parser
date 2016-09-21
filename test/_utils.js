@@ -1,8 +1,6 @@
 const json = require('json5');
 const diff = require('rus-diff').diff;
-const tokens = require('../src/utils/tokens');
-
-
+// const tokens = require('../src/utils/tokens');
 
 exports.mkloc = function mkloc(startLine, startColumn, endLine, endColumn) {
 	return {startLine, startColumn, endLine, endColumn};
@@ -37,5 +35,6 @@ exports.checkResults = function check(t, actual, expected) {
 
 		}
 	}*/
+	// exports.logResults(actual);
 	t.deepEqual(actual, expected);
 };

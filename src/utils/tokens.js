@@ -1,8 +1,6 @@
 'use strict';
 const filter = require('filter-obj');
-// const stack = require('callsite');
 
-// let count = 0;
 class Token {
 	constructor(fields) {
 		const definedFields = filter(fields, (key, value) => value !== undefined);
@@ -11,13 +9,6 @@ class Token {
 		if (this._ === undefined) {
 			this._ = {};
 		}
-
-		Object.defineProperty(this, this.type, {
-			enumerable: true,
-			get() {
-				return this.value;
-			}
-		});
 	}
 
 	is(type) {

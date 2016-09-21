@@ -5,11 +5,11 @@ const compose = require('compose-function');
 const map = require('map-iterable');
 const lookahead = require('iterable-lookahead');
 const words = require('../enums/reserved-words');
-
+/*
 function defined(v) {
 	return v !== undefined;
 }
-
+*/
 function isValidReservedWordPosition(tk, iterable) {
 	const last = iterable.behind(1) || {EMPTY: true, is: type => type === 'EMPTY'};
 	const twoAgo = iterable.behind(2) || {EMPTY: true, is: type => type === 'EMPTY'};

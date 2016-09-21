@@ -11,17 +11,14 @@ module.exports = (options, utils, previousPhases) => {
 
 	return function * aliasSubstitution(tokens) {
 		function * tryExpandToken(token, expandingAliases) {
-			const name = token.WORD || reservedWords.reduce((result, word) => {
-				if (token[word]) {
-					return token[word];
-				}
-				return result;
-			}, null);
+			const isName = token.is('WORD') || reservedWords.some(word => token.is(word));
+			const name = isName ? token.value : '';
+
 			if (name && expandingAliases.indexOf(name) === -1 && token._.maybeStartOfSimpleCommand) {
 				const result = options.resolveAlias(name);
 				if (result !== undefined) {
 					for (const newToken of preAliasLexer(result)) {
-						if (!newToken.EOF) {
+						if (!newToken.is('EOF')) {
 							yield * tryExpandToken(
 								newToken,
 								expandingAliases.concat(name)

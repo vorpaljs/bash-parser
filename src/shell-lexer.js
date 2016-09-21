@@ -8,8 +8,8 @@ const posixShellLexer = (mode, options) => ({
 		const item = this.tokenizer.next();
 		// console.log(item)
 		const tk = item.value;
-		const tkType = tk.originalType
-		const text = tk[tkType];
+		const tkType = tk.originalType;
+		const text = tk.value;
 
 		this.yytext = {text};
 

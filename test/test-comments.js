@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('loc take into account line continuations', t => {
 	const cmd = 'echo world #this is a comment\necho ciao';
@@ -30,5 +30,5 @@ test('loc take into account line continuations', t => {
 
 	// utils.logResults(result);
 
-	t.deepEqual(result, expected);
+	utils.checkResults(t, result, expected);
 });

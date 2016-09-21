@@ -8,14 +8,14 @@ module.exports = (options, utils, previousPhases) => {
 	const preAliasLexer = compose.apply(null, previousPhases.reverse());
 	return function * aliasSubstitution(tokens) {
 		function * tryExpandToken(token, expandingAliases) {
-			if (expandingAliases.indexOf(token.WORD) === -1 && token._.maybeSimpleCommandName) {
-				const result = options.resolveAlias(token.WORD);
+			if (expandingAliases.indexOf(token.value) === -1 && token._.maybeSimpleCommandName) {
+				const result = options.resolveAlias(token.value);
 				if (result !== undefined) {
 					for (const newToken of preAliasLexer(result)) {
-						if (!newToken.EOF) {
+						if (!newToken.is('EOF')) {
 							yield * tryExpandToken(
 								newToken,
-								expandingAliases.concat(token.WORD)
+								expandingAliases.concat(token.value)
 							);
 						}
 					}

@@ -5,13 +5,13 @@ const lookahead = require('iterable-lookahead');
 
 module.exports = function forNameVariable(options, utils) {
 	return compose(map((tk, idx, iterable) => {
-		let lastToken = iterable.behind(1) || {};
+		let lastToken = iterable.behind(1) || {is: () => false};
 
 		// if last token is For and current token form a valid name
 		// type of token is changed from WORD to NAME
 
-		if (lastToken.For && tk.WORD && utils.isValidName(tk.WORD)) {
-			return utils.tokens.changeTokenType(tk, 'NAME', tk.WORD);
+		if (lastToken.is('For') && tk.is('WORD') && utils.isValidName(tk.value)) {
+			return utils.tokens.changeTokenType(tk, 'NAME', tk.value);
 		}
 
 		return tk;

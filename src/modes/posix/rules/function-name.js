@@ -10,14 +10,15 @@ module.exports = function functionName(options, utils) {
 		// (start of simple commands)
 		// if token can form the name of a function,
 		// type of token is changed from WORD to NAME
+
 		if (
 			tk._.maybeStartOfSimpleCommand &&
-			tk.WORD &&
+			tk.is('WORD') &&
 			iterable.ahead(2) &&
-			iterable.ahead(1).OPEN_PAREN &&
-			iterable.ahead(2).CLOSE_PAREN
+			iterable.ahead(1).is('OPEN_PAREN') &&
+			iterable.ahead(2).is('CLOSE_PAREN')
 		) {
-			tk = changeTokenType(tk, 'NAME', tk.WORD);
+			tk = changeTokenType(tk, 'NAME', tk.value);
 		}
 
 		return tk;

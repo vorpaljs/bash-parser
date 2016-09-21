@@ -49,11 +49,11 @@ class TokenDelimiterState {
 	}
 
 	removingLastChar() {
-		if (this.token.TOKEN) {
+		if (this.token.value) {
 			// remove slash from token
-			this.token = tokens.setValue(this.token, this.token.TOKEN.slice(0, -1));
+			this.token = tokens.setValue(this.token, this.token.value.slice(0, -1));
 
-			if (this.token.TOKEN === '') {
+			if (this.token.value === '') {
 				this.setEmptyToken();
 			}
 		}
@@ -189,7 +189,7 @@ class TokenDelimiterState {
 
 	canAppendToOperator(currentCharacter) {
 		return this.quoting === QUOTING.NO &&
-				isOperator(this.token.OPERATOR + currentCharacter);
+				isOperator(this.token.value + currentCharacter);
 	}
 
 	finalizeCurrentToken() {
@@ -206,19 +206,19 @@ class TokenDelimiterState {
 	}
 
 	currentTokenIsOperatorPart() {
-		return this.token.OPERATOR;
+		return this.token.is('OPERATOR');
 	}
 
 	currentTokenIsEmpty() {
-		return Boolean(this.token.EMPTY) || this.token.TOKEN === '';
+		return this.token.is('EMPTY') || this.token.value === '';
 	}
 
 	currentTokenIsGeneric() {
-		return Boolean(this.token.TOKEN);
+		return this.token.is('TOKEN');
 	}
 
 	currentTokenIsCompleteOperator() {
-		return isOperator(this.token.OPERATOR);
+		return isOperator(this.token.value);
 	}
 
 	appendToOperator(currentCharacter) {

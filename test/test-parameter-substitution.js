@@ -1,12 +1,12 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
 	const result = bashParser('echoword=${other}test');
-	t.deepEqual(result.commands[0].prefix, [{
+	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'echoword=${other}test',
 		expansion: [{
@@ -20,18 +20,18 @@ test('parameter substitution in assignment', t => {
 
 test('parameter substitution skip escaped dollar', t => {
 	const result = bashParser('echo "\\$ciao"');
-	t.deepEqual(result.commands[0].suffix, [{type: 'word', text: '\\$ciao'}]);
+	utils.checkResults(t, result.commands[0].suffix, [{type: 'word', text: '\\$ciao'}]);
 });
 
 test('parameter substitution skip escaped dollar with braces', t => {
 	const result = bashParser('echo "\\${ciao}"');
-	t.deepEqual(result.commands[0].suffix, [{type: 'word', text: '\\${ciao}'}]);
+	utils.checkResults(t, result.commands[0].suffix, [{type: 'word', text: '\\${ciao}'}]);
 });
 
 test('parameter substitution skip single quoted words', t => {
 	const result = bashParser('echo \'${echo } $ciao\'');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '${echo } $ciao'
 	}]);
@@ -40,7 +40,7 @@ test('parameter substitution skip single quoted words', t => {
 test('parameter substitution and other words', t => {
 	const result = bashParser('foo ${other} bar baz');
 	// utils.logResults(result);
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		text: '${other}',
 		expansion: [{
 			parameter: 'other',
@@ -60,7 +60,7 @@ test('parameter substitution and other words', t => {
 
 test('multi-word parameter substitution', t => {
 	const result = bashParser('echoword=${other word}test');
-	t.deepEqual(result.commands[0].prefix, [{
+	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'echoword=${other word}test',
 		expansion: [{
@@ -74,7 +74,7 @@ test('multi-word parameter substitution', t => {
 
 test('parameter substitution', t => {
 	const result = bashParser('echo word${other}test');
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: 'word${other}test',
 		expansion: [{
@@ -88,7 +88,7 @@ test('parameter substitution', t => {
 
 test('multiple parameter substitution', t => {
 	const result = bashParser('echo word${other}t$est');
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: 'word${other}t$est',
 		expansion: [{
@@ -109,7 +109,7 @@ test('multiple parameter substitution', t => {
 test('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: '$other',
 		expansion: [{
@@ -128,7 +128,7 @@ test('resolve parameter', t => {
 		}
 	});
 	// utils.logResults(result.commands[0]);
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'foo bar baz',
@@ -154,7 +154,7 @@ test('resolve double parameter', t => {
 		}
 	});
 	// utils.logResults(result);
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'foo bar bar baz',
@@ -188,7 +188,7 @@ test('field splitting', t => {
 		}
 	});
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'say',
@@ -251,7 +251,7 @@ test('field splitting not occurring within quoted words', t => {
 		}
 	});
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'say',

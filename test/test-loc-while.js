@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 /* eslint-disable camelcase */
 test('loc in while statement', t => {
 	const result = bashParser('while true && 1; do sleep 1;echo ciao; done', {insertLOC: true});
@@ -144,5 +144,5 @@ test('loc in while statement', t => {
 		}
 	};
 	// utils.logDiff(result.commands[0].commands[0], expected)
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });

@@ -20,11 +20,10 @@ module.exports = function (options, utils) {
 
 	return function * quoteRemoval(tokens) {
 		for (let token of tokens) {
-			if (token.WORD && !unresolvedExpansions(token)) {
-				token = setValue(token, unquote(token.WORD));
-			}
-			if (token.ASSIGNMENT_WORD && !unresolvedExpansions(token)) {
-				token = setValue(token, unquote(token.ASSIGNMENT_WORD));
+			if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
+				if (!unresolvedExpansions(token)) {
+					token = setValue(token, unquote(token.value));
+				}
 			}
 			yield token;
 		}

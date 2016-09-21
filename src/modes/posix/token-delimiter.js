@@ -27,7 +27,7 @@ function * tryAddCharacterToOperator(currentCharacter, state, result) {
 		// The current token cannot form an OPERATOR by itself,
 		// even if it could start one,
 		// so it is emitted as a normal token.
-		state.setGenericToken(state.token.OPERATOR);
+		state.setGenericToken(state.token.value);
 		yield state.finalizeCurrentToken();
 	}
 

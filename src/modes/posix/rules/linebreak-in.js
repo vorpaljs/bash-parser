@@ -7,7 +7,7 @@ module.exports = function linebreakIn(options, utils) {
 		let lastToken;
 
 		for (const tk of tokens) {
-			if (tk.In && lastToken.NEWLINE_LIST) {
+			if (tk.is('In') && lastToken.is('NEWLINE_LIST')) {
 				lastToken = utils.tokens.changeTokenType(
 					lastToken,
 					'LINEBREAK_IN',

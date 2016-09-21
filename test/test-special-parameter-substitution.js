@@ -1,13 +1,13 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
 	// utils.logResults(result.commands[0].name)
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: '${other:-default_value}',
 		expansion: [{
@@ -25,7 +25,7 @@ test('parameter with use default value', t => {
 
 test('parameter with assign default value', t => {
 	const result = bashParser('${other:=default_value}');
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: '${other:=default_value}',
 		expansion: [{
@@ -43,7 +43,8 @@ test('parameter with assign default value', t => {
 
 test('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
-	t.deepEqual(JSON.parse(JSON.stringify(result.commands[0].name)), {
+	// utils.logResults(result)
+	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
 		type: 'word',
 		text: '${other:=default$value}',
 		expansion: [{
@@ -67,7 +68,7 @@ test('parameter with other parameter in word', t => {
 
 test('parameter with indicate error if null', t => {
 	const result = bashParser('${other:?default_value}');
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		text: '${other:?default_value}',
 		type: 'word',
 		expansion: [{
@@ -85,7 +86,7 @@ test('parameter with indicate error if null', t => {
 
 test('parameter with use alternative value', t => {
 	const result = bashParser('${other:+default_value}');
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		text: '${other:+default_value}',
 		type: 'word',
 		expansion: [{

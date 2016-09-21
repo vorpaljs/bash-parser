@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 /* eslint-disable camelcase */
 
 test('case statement has loc', t => {
@@ -97,5 +97,5 @@ esac
 	};
 	// utils.logResults(result.commands[0].commands[0]);
 
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });

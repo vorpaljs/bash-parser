@@ -10,11 +10,11 @@ module.exports = function assignmentWord(options, utils) {
 		}
 
 		// check if it is an assignment
-		if (!ctx.commandPrefixNotAllowed && tk.WORD && tk.WORD.indexOf('=') > 0 && (
+		if (!ctx.commandPrefixNotAllowed && tk.is('WORD') && tk.value.indexOf('=') > 0 && (
 				// left part must be a valid name
-				utils.isValidName(tk.WORD.slice(0, tk.WORD.indexOf('=')))
+				utils.isValidName(tk.value.slice(0, tk.value.indexOf('=')))
 			)) {
-			return utils.tokens.changeTokenType(tk, 'ASSIGNMENT_WORD', tk.WORD);
+			return utils.tokens.changeTokenType(tk, 'ASSIGNMENT_WORD', tk.value);
 		}
 
 		ctx.commandPrefixNotAllowed = true;

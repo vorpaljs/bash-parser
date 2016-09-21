@@ -1,14 +1,14 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 // various example taken from http://www.etalabs.net/sh_tricks.html
 
 test('2', t => {
 	const result = bashParser('echo () { printf %s\\n "$*" ; }');
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -54,7 +54,7 @@ test('2', t => {
 
 test('3', t => {
 	const result = bashParser('IFS= read -r var');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -69,7 +69,7 @@ test('4', t => {
 	const result = bashParser('foo | IFS= read var');
 	// console.log(inspect(result, {depth: null}));
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'pipeline',
@@ -93,7 +93,7 @@ dest=bar
 eval "dest=foo"`
 );
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',

@@ -13,7 +13,7 @@ const ioFileOperators = module.exports = [
 
 ioFileOperators.isOperator = function isOperator(tk) {
 	for (const op of ioFileOperators) {
-		if (tk[op]) {
+		if (tk.type === op) {
 			return true;
 		}
 	}

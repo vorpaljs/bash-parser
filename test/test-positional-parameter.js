@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('positional parameter with word following', t => {
@@ -10,7 +10,7 @@ test('positional parameter with word following', t => {
 	// utils.logResults(result);
 	//
 
-	t.deepEqual(result, [{
+	utils.checkResults(t, result, [{
 		type: 'assignment_word',
 		text: 'echoword=$1ciao',
 		expansion: [{
@@ -25,7 +25,7 @@ test('positional parameter with word following', t => {
 
 test('positional parameter in braces', t => {
 	const result = bashParser('echoword=${11}test');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -50,7 +50,7 @@ test('positional parameter in braces', t => {
 test('positional parameter without braces', t => {
 	const result = bashParser('echoword=$1');
 	// console.log(JSON.stringify(result, null, 5))
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -73,7 +73,7 @@ test('positional parameter without braces', t => {
 test('positional parameter without braces allow one digit only', t => {
 	const result = bashParser('echoword=$11');
 	// console.log(JSON.stringify(result, null, 5))
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',

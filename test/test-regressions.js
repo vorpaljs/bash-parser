@@ -1,11 +1,13 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('Redirect should be allowed immediately following argument', t => {
 	const result = bashParser('echo foo>file.txt');
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -24,7 +26,7 @@ test('Redirect should be allowed immediately following argument', t => {
 
 test('Equal sign should be allowed in arguments', t => {
 	const result = bashParser('echo foo=bar');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',

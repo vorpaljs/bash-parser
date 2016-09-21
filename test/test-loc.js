@@ -2,7 +2,7 @@
 const test = require('ava');
 const bashParser = require('../src');
 const mkloc = require('./_utils').mkloc;
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('syntax error contains line number', async t => {
@@ -12,7 +12,7 @@ test('syntax error contains line number', async t => {
 
 test('AST can include loc', t => {
 	const result = bashParser('echo', {insertLOC: true});
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'echo',
 		loc: mkloc(0, 0, 0, 3)
@@ -22,7 +22,7 @@ test('AST can include loc', t => {
 test('subshell can include loc', t => {
 	const result = bashParser('(echo)', {insertLOC: true});
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -77,7 +77,7 @@ test('subshell can include loc', t => {
 test('double command with only name', t => {
 	const result = bashParser('echo; ciao;', {insertLOC: true});
 	// logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		loc: mkloc(0, 0, 0, 9),
 		commands: [
@@ -106,7 +106,7 @@ test('double command with only name', t => {
 test('loc are composed by all tokens', t => {
 	const result = bashParser('echo 42', {insertLOC: true});
 	// console.log(JSON.stringify(result, null, 4));
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			type: 'word',
@@ -124,7 +124,7 @@ test('loc are composed by all tokens', t => {
 
 test('loc works with multiple newlines', t => {
 	const result = bashParser('\n\n\necho 42', {insertLOC: true});
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			type: 'word',
@@ -217,13 +217,13 @@ done
 		}
 	};
 
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });
 
 test('loc in multi line commands', t => {
 	const result = bashParser('echo;\nls;\n', {insertLOC: true});
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		loc: mkloc(0, 0, 1, 1),
 		type: 'complete_command',
 		commands: [{

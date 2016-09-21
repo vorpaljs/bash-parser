@@ -11,22 +11,22 @@ function defined(v) {
 }
 
 function isValidReservedWordPosition(tk, iterable) {
-	const last = iterable.behind(1) || {EMPTY: true};
-	const twoAgo = iterable.behind(2) || {EMPTY: true};
+	const last = iterable.behind(1) || {EMPTY: true, is: type => type === 'EMPTY'};
+	const twoAgo = iterable.behind(2) || {EMPTY: true, is: type => type === 'EMPTY'};
 
 	// evaluate based on last token
-	const startOfCommand = Boolean(
-		last.EMPTY || last.SEPARATOR_OP || last.OPEN_PAREN ||
-		last.CLOSE_PAREN || last.NEWLINE || last.NEWLINE_LIST ||
-		last.DSEMI || last.TOKEN === ';' || last.PIPE ||
-		last.OR_IF || last.PIPE || last.AND_IF
+	const startOfCommand = (
+		last.is('EMPTY') || last.is('SEPARATOR_OP') || last.is('OPEN_PAREN') ||
+		last.is('CLOSE_PAREN') || last.is('NEWLINE') || last.is('NEWLINE_LIST') ||
+		last.is('DSEMI') || last.value === ';' || last.is('PIPE') ||
+		last.is('OR_IF') || last.is('PIPE') || last.is('AND_IF')
 	);
 
-	const lastIsReservedWord = (!last.TOKEN === 'for' && !last.TOKEN === 'in' && !last.TOKEN === 'case' && values(words).some(word => hasOwnProperty(last, word)));
+	const lastIsReservedWord = (!last.value === 'for' && !last.value === 'in' && !last.value === 'case' && values(words).some(word => last.is(word)));
 
-	const thirdInCase = Boolean(twoAgo.TOKEN === 'case') && tk.TOKEN && tk.TOKEN.toLowerCase() === 'in';
-	const thirdInFor = Boolean(twoAgo.TOKEN === 'for') && tk.TOKEN &&
-		(tk.TOKEN.toLowerCase() === 'in' || tk.TOKEN.toLowerCase() === 'do');
+	const thirdInCase = twoAgo.value === 'case' && tk.is('TOKEN') && tk.value.toLowerCase() === 'in';
+	const thirdInFor = twoAgo.value === 'for' && tk.is('TOKEN') &&
+		(tk.value.toLowerCase() === 'in' || tk.value.toLowerCase() === 'do');
 
 	// console.log({tk, startOfCommand, lastIsReservedWord, thirdInFor, thirdInCase, twoAgo})
 	return startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
@@ -36,16 +36,17 @@ module.exports = function reservedWords(options, utils) {
 	const changeTokenType = utils.tokens.changeTokenType;
 
 	return compose(map((tk, idx, iterable) => {
+		// console.log(tk, isValidReservedWordPosition(tk, iterable), hasOwnProperty(words, tk.value))
 		// TOKEN tokens consisting of a reserved word
 		// are converted to their own token types
-		if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(words, tk.TOKEN)) {
-			return changeTokenType(tk, words[tk.TOKEN], tk.TOKEN);
+		if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(words, tk.value)) {
+			return changeTokenType(tk, words[tk.value], tk.value);
 		}
 
 		// otherwise, TOKEN tokens are converted to
 		// WORD tokens
-		if (defined(tk.TOKEN)) {
-			return changeTokenType(tk, 'WORD', tk.TOKEN);
+		if (tk.is('TOKEN')) {
+			return changeTokenType(tk, 'WORD', tk.value);
 		}
 
 		// other tokens are amitted as-is

@@ -1,14 +1,14 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 
 test('parse function declaration multiple lines', t => {
 	const result = bashParser('foo () \n{\n command bar --lol;\n}');
 	// utils.logResults(result);
-	t.deepEqual(
+	utils.checkResults(t,
 		result, {
 			type: 'complete_command',
 			commands: [{
@@ -30,7 +30,7 @@ test('parse function declaration multiple lines', t => {
 test('parse function declaration', t => {
 	const result = bashParser('foo	(){ command bar --lol;}');
 
-	t.deepEqual(
+	utils.checkResults(t,
 		result, {
 			type: 'complete_command',
 			commands: [{

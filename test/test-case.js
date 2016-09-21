@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
@@ -32,7 +32,7 @@ test('parse case', t => {
 			}]
 		}]
 	};
-	t.deepEqual(result, expected);
+	utils.checkResults(t, result, expected);
 });
 /*
 test.skip('parse case with compound list', t => {

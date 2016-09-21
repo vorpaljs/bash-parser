@@ -1,6 +1,8 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
+const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('loc in function declaration', t => {
 	const cmd =
@@ -80,5 +82,5 @@ test('loc in function declaration', t => {
 		}
 	};
 
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });

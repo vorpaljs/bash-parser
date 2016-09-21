@@ -3,6 +3,8 @@ const test = require('ava');
 // const json = require('json5');
 // const {diff} = require('rus-diff');
 const bashParser = require('../src');
+const utils = require('./_utils');
+
 /* eslint-disable camelcase */
 test('parse if elif else', t => {
 	const cmd = `if true; then
@@ -216,5 +218,5 @@ fi
 	};
 	// console.log(diff(result.commands[0].left.commands[0], expected));
 
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });

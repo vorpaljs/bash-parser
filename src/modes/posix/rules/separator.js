@@ -21,14 +21,14 @@ module.exports = function separator(options, utils) {
 	const changeTokenType = utils.tokens.changeTokenType;
 
 	return function * (tokens) {
-		let lastToken = {EMPTY: true};
+		let lastToken = {EMPTY: true, is: type => type === 'EMPTY'};
 
 		for (let tk of tokens) {
-			if (tk.NEWLINE_LIST && lastToken.SEPARATOR_OP) {
+			if (tk.is('NEWLINE_LIST') && lastToken.is('SEPARATOR_OP')) {
 				lastToken = changeTokenType(
 					lastToken,
 					'SEPARATOR_OP',
-					lastToken.SEPARATOR_OP + tk.NEWLINE_LIST
+					lastToken.value + tk.value
 				);
 				if (lastToken.loc) {
 					lastToken.loc.endLine++;
@@ -37,21 +37,21 @@ module.exports = function separator(options, utils) {
 				continue;
 			}
 
-			if (tk[';'] || tk.OPERATOR === '&' || tk.OPERATOR === ';' || tk.TOKEN === ';' || tk.WORD === ';') {
+			if (tk.value === ';' || (tk.is('OPERATOR') && tk.value === '&') || (tk.is('OPERATOR') && tk.value === ';')) {
 				tk = changeTokenType(
 					tk,
 					'SEPARATOR_OP',
-					(tk[';'] || '') + (tk.OPERATOR || '') + (tk.TOKEN || '')
+					tk.value
 				);
 			}
 
-			if (!lastToken.EMPTY) {
+			if (!lastToken.is('EMPTY')) {
 				yield lastToken;
 			}
 			lastToken = tk;
 		}
 
-		if (!lastToken.EMPTY) {
+		if (!lastToken.is('EMPTY')) {
 			yield lastToken;
 		}
 	};

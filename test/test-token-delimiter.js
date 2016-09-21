@@ -2,7 +2,7 @@
 const test = require('ava');
 const tokenDelimiter = require('../src/modes/posix/token-delimiter')();
 const mkloc = require('./_utils').mkloc;
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 function tokenize(text) {
@@ -18,7 +18,7 @@ function tokenize(text) {
 }
 
 test('emit EOF at end', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize(''),
 		[{
 			EOF: true,
@@ -28,8 +28,9 @@ test('emit EOF at end', t => {
 });
 
 test('parse single operator', t => {
-	t.deepEqual(
-		tokenize('<<'),
+	const result = tokenize('<<');
+	utils.checkResults(t,
+		result,
 		[{
 			OPERATOR: '<<',
 			loc: mkloc(0, 0, 0, 1)
@@ -41,7 +42,7 @@ test('parse single operator', t => {
 });
 
 test('parse two operators on two lines', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('<<\n>>'), [
 			{
 				OPERATOR: '<<',
@@ -61,7 +62,7 @@ test('parse two operators on two lines', t => {
 });
 
 test('parse two operators on one line', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('<< >>'), [
 			{
 				OPERATOR: '<<',
@@ -78,7 +79,7 @@ test('parse two operators on one line', t => {
 });
 
 test('parse two tokens', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('echo 42'), [
 			{
 				TOKEN: 'echo',
@@ -95,7 +96,7 @@ test('parse two tokens', t => {
 });
 
 test('parse two tokens on two lines', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('echo\n42'), [
 			{
 				TOKEN: 'echo',
@@ -118,7 +119,7 @@ test('keep multiple newlines', t => {
 	const result = tokenize('echo\n\n\n42');
 	// utils.logResults(result);
 
-	t.deepEqual(result, [
+	utils.checkResults(t, result, [
 		{
 			TOKEN: 'echo',
 			loc: mkloc(0, 0, 0, 3)
@@ -142,7 +143,7 @@ test('keep multiple newlines', t => {
 });
 
 test('operator breaks words', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('e<'), [
 			{
 				TOKEN: 'e',
@@ -159,7 +160,7 @@ test('operator breaks words', t => {
 });
 
 test('double breaks', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('echo>ciao'), [
 			{
 				TOKEN: 'echo',
@@ -179,7 +180,7 @@ test('double breaks', t => {
 });
 
 test('word breaks operators', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('<e'), [
 			{
 				OPERATOR: '<',
@@ -195,7 +196,7 @@ test('word breaks operators', t => {
 	);
 });
 test('support escaping chars', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('echo\\<'), [
 			{
 				TOKEN: 'echo\\<',
@@ -209,7 +210,7 @@ test('support escaping chars', t => {
 });
 
 test('character escaping is resetted on each char', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('echo\\<<'), [
 			{
 				TOKEN: 'echo\\<',
@@ -228,7 +229,7 @@ test('support quoting with single', t => {
 	const result = tokenize('echo \'< world >\' other');
 	// utils.logResults(result);
 
-	t.deepEqual(result, [{
+	utils.checkResults(t, result, [{
 		TOKEN: 'echo',
 		loc: mkloc(0, 0, 0, 3)
 	}, {
@@ -244,7 +245,7 @@ test('support quoting with single', t => {
 });
 
 test('support quoting with double', t => {
-	t.deepEqual(
+	utils.checkResults(t,
 		tokenize('echo "< world >" other'), [
 			{
 				TOKEN: 'echo',
@@ -265,7 +266,7 @@ test('support quoting with double', t => {
 
 test('escaped double quotes within double quotes', t => {
 	const result = tokenize('echo "TEST1 \\"TEST2" ucci ucci');
-	t.deepEqual(
+	utils.checkResults(t,
 		result, [
 			{
 				TOKEN: 'echo',

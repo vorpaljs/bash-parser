@@ -1,14 +1,14 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('command substitution', t => {
 	const result = bashParser('variable=$(echo ciao)');
 	// utils.logResults(result)
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
-	t.deepEqual(result.commands[0].prefix, [{
+	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'variable=$(echo ciao)',
 		expansion: [{
@@ -23,7 +23,7 @@ test('command substitution', t => {
 test('command substitution skip escaped dollar', t => {
 	const result = bashParser('echo "\\$\\(echo ciao)"');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '\\$\\(echo ciao)'
 	}]);
@@ -32,7 +32,7 @@ test('command substitution skip escaped dollar', t => {
 test('command substitution skip escaped backtick', t => {
 	const result = bashParser('echo "\\`echo ciao`"');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '\\`echo ciao`'
 	}]);
@@ -41,7 +41,7 @@ test('command substitution skip escaped backtick', t => {
 test('command substitution skip single quoted words', t => {
 	const result = bashParser('echo \'$(echo ciao)\'');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '$(echo ciao)'
 	}]);
@@ -50,13 +50,13 @@ test('command substitution skip single quoted words', t => {
 test('command substitution with backticks skip single quoted words', t => {
 	const result = bashParser('echo \'`echo ciao`\'');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{type: 'word', text: '`echo ciao`'}]);
+	utils.checkResults(t, result.commands[0].suffix, [{type: 'word', text: '`echo ciao`'}]);
 });
 
 test('command substitution in suffix', t => {
 	const result = bashParser('echo $(ciao)');
 	delete result.commands[0].suffix[0].expansion[0].commandAST;
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '$(ciao)',
 		expansion: [{
@@ -72,7 +72,7 @@ test('command substitution in suffix with backticks', t => {
 	const result = bashParser('echo `ciao`');
 	delete result.commands[0].suffix[0].expansion[0].commandAST;
 
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '`ciao`',
 		expansion: [{
@@ -88,7 +88,7 @@ test('command ast is recursively parsed', t => {
 	const result = bashParser('variable=$(echo ciao)')
 		.commands[0].prefix[0].expansion[0].commandAST;
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -102,7 +102,7 @@ test('command substitution with backticks', t => {
 	const result = bashParser('variable=`echo ciao`');
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
 
-	t.deepEqual(result.commands[0].prefix, [{
+	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'variable=`echo ciao`',
 		expansion: [{
@@ -119,7 +119,7 @@ test('quoted backtick are removed within command substitution with backticks', t
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
 	// utils.logResults(result);
 
-	t.deepEqual(result.commands[0].prefix, [{
+	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'variable=`echo \\`echo ciao\\``',
 		expansion: [{
@@ -134,7 +134,7 @@ test('quoted backtick are removed within command substitution with backticks', t
 test('quoted backtick are not removed within command substitution with parenthesis', t => {
 	const result = bashParser('variable=$(echo \\`echo ciao\\`)');
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
-	t.deepEqual(result.commands[0].prefix, [{
+	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'variable=$(echo \\`echo ciao\\`)',
 		expansion: [{
@@ -157,7 +157,7 @@ test('resolve double command', t => {
 	delete result.commands[0].name.expansion[1].commandAST;
 
 	// utils.logResults(result.commands[0]);
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'foo bar bar baz',
@@ -188,7 +188,7 @@ test('resolve double command with backticks', t => {
 	delete result.commands[0].name.expansion[1].commandAST;
 
 	// utils.logResults(result.commands[0]);
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'foo bar bar baz',
@@ -217,7 +217,7 @@ test('last newlines are removed from command output', t => {
 	});
 	delete result.commands[0].name.expansion[0].commandAST;
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'foo bar baz',
@@ -248,7 +248,7 @@ test('field splitting', t => {
 	delete result.commands[0].suffix[1].expansion[0].commandAST;
 	delete result.commands[0].suffix[2].expansion[0].commandAST;
 
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'say',

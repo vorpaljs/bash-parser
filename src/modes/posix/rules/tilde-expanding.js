@@ -18,10 +18,10 @@ const replace = (text, resolveHomeUser) => {
 
 module.exports = (options, utils) => function * resolveTilde(tokens) {
 	for (const token of tokens) {
-		if (token.WORD && typeof options.resolveHomeUser === 'function') {
-			yield utils.tokens.setValue(token, replace(token.WORD, options.resolveHomeUser));
-		} else if (token.ASSIGNMENT_WORD && typeof options.resolveHomeUser === 'function') {
-			const parts = token.ASSIGNMENT_WORD.split('=', 2);
+		if (token.is('WORD') && typeof options.resolveHomeUser === 'function') {
+			yield utils.tokens.setValue(token, replace(token.value, options.resolveHomeUser));
+		} else if (token.is('ASSIGNMENT_WORD') && typeof options.resolveHomeUser === 'function') {
+			const parts = token.value.split('=', 2);
 			const target = parts[0];
 			const sourceParts = parts[1];
 

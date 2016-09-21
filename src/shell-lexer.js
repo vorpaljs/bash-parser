@@ -8,12 +8,7 @@ const posixShellLexer = (mode, options) => ({
 		const item = this.tokenizer.next();
 		// console.log(item)
 		const tk = item.value;
-
-		const tkType = Object.keys(tk).filter(k =>
-			k !== 'originalText' && k !== 'loc' && k !== 'expansion' && k !== 'type' && k !== 'value' && k !== 'joined' && k !== 'fieldIdx'
-		)[0];
-		// console.log({tk, tkType})
-
+		const tkType = tk.originalType
 		const text = tk[tkType];
 
 		this.yytext = {text};

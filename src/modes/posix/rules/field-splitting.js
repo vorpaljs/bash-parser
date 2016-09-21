@@ -16,8 +16,8 @@ exports.mark = function markFieldSplitting(result, text, options) {
 
 exports.split = (options, utils) => function * resolveParameterExpansion(tokens) {
 	for (const token of tokens) {
-		if (token.WORD) {
-			const fields = token.WORD.split('\0');
+		if (token.is('WORD')) {
+			const fields = token.value.split('\0');
 			if (fields.length > 1) {
 				let idx = 0;
 				for (const field of fields) {

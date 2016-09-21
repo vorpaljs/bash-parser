@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('empty line after line continuation', t => {
 	const cmd = `echo \\\n\n\necho there`;
@@ -32,13 +32,13 @@ test('empty line after line continuation', t => {
 			}
 		]
 	};
-	t.deepEqual(result, expected);
+	utils.checkResults(t, result, expected);
 });
 
 test('loc take into account line continuations', t => {
 	const cmd = 'echo \\\nworld';
 	const result = bashParser(cmd, {insertLOC: true});
-	// utils.logResults(result);
+	//  utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
 		loc: {
@@ -68,7 +68,7 @@ test('loc take into account line continuations', t => {
 				type: 'word', text: 'world',
 				loc: {
 					startLine: 1,
-					startColumn: 1,
+					startColumn: 0,
 					endLine: 1,
 					endColumn: 5
 				}
@@ -78,5 +78,5 @@ test('loc take into account line continuations', t => {
 
 	// utils.logResults(result);
 
-	t.deepEqual(result, expected);
+	utils.checkResults(t, result, expected);
 });

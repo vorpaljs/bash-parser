@@ -39,7 +39,7 @@ function setArithmeticExpansion(args) {
 }
 
 function expandWord(token, addExpansions) {
-	const text = token.WORD || token.ASSIGNMENT_WORD;
+	const text = token.value;
 
 	let expandingArithmetic = false;
 	let expression = '';
@@ -101,7 +101,7 @@ function expandWord(token, addExpansions) {
 // or '`', and "$((", respectively.
 const arithmeticExpansion = (options, utils) => function * arithmeticExpansion(tokens) {
 	for (let token of tokens) {
-		if (token.WORD || token.ASSIGNMENT_WORD) {
+		if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
 			token = expandWord(token, utils.tokens.addExpansions);
 		}
 		yield token;
@@ -111,7 +111,7 @@ const arithmeticExpansion = (options, utils) => function * arithmeticExpansion(t
 arithmeticExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
 	for (let token of tokens) {
 		if (options.runArithmeticExpression && token.expansion) {
-			const value = token.WORD || token.ASSIGNMENT_WORD;
+			const value = token.value;
 
 			const magic = new MagicString(value);
 

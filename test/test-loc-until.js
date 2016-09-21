@@ -2,7 +2,7 @@
 
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('loc in until statement', t => {
@@ -146,5 +146,5 @@ test('loc in until statement', t => {
 		}
 	};
 
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });

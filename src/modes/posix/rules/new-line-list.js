@@ -10,8 +10,8 @@ module.exports = function newLineList(options, utils) {
 	return function * (tokens) {
 		let lastToken = mkToken('EMPTY', true);
 		for (let tk of tokens) {
-			if (tk.NEWLINE) {
-				if (lastToken.NEWLINE_LIST) {
+			if (tk.is('NEWLINE')) {
+				if (lastToken.is('NEWLINE_LIST')) {
 					lastToken = appendTo(lastToken, '\n');
 					if (lastToken.loc) {
 						lastToken.loc.endLine++;
@@ -21,13 +21,13 @@ module.exports = function newLineList(options, utils) {
 					tk = changeTokenType(tk, 'NEWLINE_LIST', '\n');
 				}
 			}
-			if (!lastToken.EMPTY) {
+			if (!lastToken.is('EMPTY')) {
 				yield lastToken;
 			}
 			lastToken = tk;
 		}
 
-		if (!lastToken.EMPTY) {
+		if (!lastToken.is('EMPTY')) {
 			yield lastToken;
 		}
 	};

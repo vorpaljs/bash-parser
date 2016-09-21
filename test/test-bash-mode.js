@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('alias on reserved word', t => {
 	const result = bashParser('if world', {
@@ -11,7 +11,7 @@ test('alias on reserved word', t => {
 			return name === 'if' ? 'echo' : undefined;
 		}
 	});
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',

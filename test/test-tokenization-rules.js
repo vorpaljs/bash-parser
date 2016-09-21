@@ -2,6 +2,7 @@
 const test = require('ava');
 const rules = require('../src/modes/posix/rules');
 const utils = require('../src/utils');
+const _utils = require('./_utils');
 /* eslint-disable camelcase */
 
 function transform(result) {
@@ -14,35 +15,44 @@ function transform(result) {
 }
 
 test('operatorTokens - identify operator with their tokens', t => {
-	t.deepEqual(
-		transform(rules.operatorTokens({}, utils)([{OPERATOR: '<<', loc: 42}])),
-		[{DLESS: '<<', loc: 42, _: undefined}]
+	const is = type => type === 'OPERATOR';
+	_utils.checkResults(t,
+		transform(rules.operatorTokens({}, utils)([{OPERATOR: '<<', value: '<<', type: 'OPERATOR', loc: 42, is}])),
+		[{DLESS: '<<', loc: 42, _: {}}]
 	);
 });
 
 test('reservedWords - identify reserved words or WORD', t => {
-	t.deepEqual(
-		transform(rules.reservedWords({}, utils)([
-			{TOKEN: 'while', loc: 42},
-			{TOKEN: 'otherWord', loc: 42}
-		])),
-		[{While: 'while', loc: 42, _: undefined}, {WORD: 'otherWord', loc: 42, _: undefined}]
+	const is = type => type === 'TOKEN';
+	const result = transform(rules.reservedWords({}, utils)([
+		{TOKEN: 'while', value: 'while', loc: 42, is},
+		{TOKEN: 'otherWord', value: 'otherWord', loc: 42, is}
+	]));
+	// console.log(result)
+	_utils.checkResults(t,
+		result,
+		[{While: 'while', loc: 42, _: {}}, {WORD: 'otherWord', loc: 42, _: {}}]
 	);
 });
 
 test('functionName - replace function name token as NAME', t => {
+	function is(type) {
+		return Boolean(this[type]);
+	}
 	const result = transform(rules.functionName({}, utils)([
-		{WORD: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
-		{OPEN_PAREN: '(', loc: 42, _: {}},
-		{CLOSE_PAREN: ')', loc: 42, _: {}},
-		{Lbrace: '{', loc: 42, _: {}},
-		{WORD: 'body', loc: 42, _: {}},
-		{WORD: 'foo', loc: 42, _: {}},
-		{WORD: '--lol', loc: 42, _: {}},
-		{';': ';', 'loc': 42, '_': {}},
-		{Lbrace: '}', loc: 42, _: {}}
+		{WORD: 'test', value: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}, is},
+		{OPEN_PAREN: '(', loc: 42, _: {}, is},
+		{CLOSE_PAREN: ')', loc: 42, _: {}, is},
+		{Lbrace: '{', loc: 42, _: {}, is},
+		{WORD: 'body', loc: 42, _: {}, is},
+		{WORD: 'foo', loc: 42, _: {}, is},
+		{WORD: '--lol', loc: 42, _: {}, is},
+		{';': ';', 'loc': 42, '_': {}, is},
+		{Lbrace: '}', loc: 42, _: {}, is}
 	]));
-	t.deepEqual(result,
+	// _utils.logResults(result);
+
+	_utils.checkResults(t, JSON.parse(JSON.stringify(result)),
 		[
 			{NAME: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
 			{OPEN_PAREN: '(', loc: 42, _: {}},

@@ -84,10 +84,13 @@ function setParameterExpansion(token, parameterText, start, end, utils) {
 			parameter = parameterText.slice(0, pos);
 
 			// recursive expansion of operator argument
-			word = expandWord({WORD: parameterText.slice(pos + 2)}, utils);
+			word = expandWord({value: parameterText.slice(pos + 2), WORD: parameterText.slice(pos + 2)}, utils);
 			word = Object.assign({}, word);
 			word.text = word.WORD;
+			delete word._;
 			delete word.WORD;
+			delete word.value;
+			delete word.undefined;
 
 			op = opName;
 			// only one operators is allowed
@@ -105,7 +108,7 @@ function setParameterExpansion(token, parameterText, start, end, utils) {
 }
 
 function expandWord(token, utils) {
-	const text = token.WORD || token.ASSIGNMENT_WORD;
+	const text = token.value;
 
 	let expanding = EXPANDING.NO;
 	let expansion = null;
@@ -228,7 +231,7 @@ function expandWord(token, utils) {
 // or '`', and "$((", respectively.
 const parameterExpansion = (options, utils) => function * parameterExpansion(tokens) {
 	for (let token of tokens) {
-		if (token.WORD || token.ASSIGNMENT_WORD) {
+		if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
 			token = expandWord(token, utils);
 		}
 		yield token;
@@ -238,7 +241,7 @@ const parameterExpansion = (options, utils) => function * parameterExpansion(tok
 parameterExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
 	for (let token of tokens) {
 		if (options.resolveParameter && token.expansion) {
-			const value = token.WORD || token.ASSIGNMENT_WORD;
+			const value = token.value;
 
 			const magic = new MagicString(value);
 			for (const xp of token.expansion) {

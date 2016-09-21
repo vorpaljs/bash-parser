@@ -43,7 +43,7 @@ function setCommandExpansion(args) {
 }
 
 function expandWord(token, addExpansions) {
-	const text = token.WORD || token.ASSIGNMENT_WORD;
+	const text = token.value;
 
 	let expandingCommand = null;
 	let expansion = null;
@@ -124,7 +124,7 @@ function expandWord(token, addExpansions) {
 
 const commandExpansion = (options, utils) => function * commandExpansion(tokens) {
 	for (let token of tokens) {
-		if (token.WORD || token.ASSIGNMENT_WORD) {
+		if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
 			token = expandWord(token, utils.tokens.addExpansions);
 		}
 		yield token;
@@ -134,8 +134,7 @@ const commandExpansion = (options, utils) => function * commandExpansion(tokens)
 commandExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
 	for (let token of tokens) {
 		if (options.execCommand && token.expansion) {
-			const value = token.WORD || token.ASSIGNMENT_WORD;
-			// const resultProp = token.WORD ? 'WORD' : 'ASSIGNMENT_WORD';
+			const value = token.value;
 
 			const magic = new MagicString(value);
 

@@ -1,7 +1,7 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parameter substitution in commands', t => {
@@ -10,7 +10,7 @@ test('parameter substitution in commands', t => {
 			return 'ciao';
 		}
 	});
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'ciao'
 	});
@@ -22,7 +22,7 @@ test('parameter substitution in assignment', t => {
 			return 'ciao';
 		}
 	});
-	t.deepEqual(result.commands[0].prefix[0], {
+	utils.checkResults(t, result.commands[0].prefix[0], {
 		type: 'assignment_word',
 		text: 'a=ciao'
 	});

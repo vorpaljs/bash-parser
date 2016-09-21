@@ -1,12 +1,12 @@
 'use strict';
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('arithmetic substitution', t => {
 	const result = bashParser('variable=$((42 + 43))');
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
-	t.deepEqual(result.commands[0].prefix[0], {
+	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
 		type: 'assignment_word',
 		expansion: [{
@@ -21,7 +21,7 @@ test('arithmetic substitution', t => {
 test('arithmetic substitution skip single quoted words', t => {
 	const result = bashParser('echo \'$((42 * 42))\'');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '$((42 * 42))'
 	}]);
@@ -30,7 +30,7 @@ test('arithmetic substitution skip single quoted words', t => {
 test('arithmetic substitution skip escaped dollar', t => {
 	const result = bashParser('echo "\\$(\\(42 * 42))"');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].suffix, [{
+	utils.checkResults(t, result.commands[0].suffix, [{
 		type: 'word',
 		text: '\\$(\\(42 * 42))'
 	}]);
@@ -40,7 +40,7 @@ test('arithmetic & parameter substitution', t => {
 	const result = bashParser('variable=$((42 + 43)) $ciao');
 	// utils.logResults(result.commands[0]);
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
-	t.deepEqual(result.commands[0].prefix[0], {
+	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
 		type: 'assignment_word',
 		expansion: [{
@@ -51,7 +51,7 @@ test('arithmetic & parameter substitution', t => {
 		}]
 	});
 
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		text: '$ciao',
 		type: 'word',
 		expansion: [{
@@ -66,7 +66,7 @@ test('arithmetic & parameter substitution', t => {
 test('arithmetic substitution in suffix', t => {
 	const result = bashParser('echo $((42 + 43))');
 	delete result.commands[0].suffix[0].expansion[0].arithmeticAST;
-	t.deepEqual(result.commands[0].suffix[0], {
+	utils.checkResults(t, result.commands[0].suffix[0], {
 		type: 'word',
 		text: '$((42 + 43))',
 		expansion: [{
@@ -94,7 +94,7 @@ test('arithmetic ast is parsed', t => {
 	const result = bashParser('variable=$((42 + 43))')
 		.commands[0].prefix[0].expansion[0].arithmeticAST;
 	// utils.logResults(result)
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'BinaryExpression',
 		start: 0,
 		end: 7,
@@ -161,7 +161,7 @@ test('resolve expression', t => {
 	delete result.commands[0].name.expansion[0].arithmeticAST;
 
 	// utils.logResults(result.commands[0]);
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'foo 43 baz',
@@ -194,7 +194,7 @@ test('field splitting', t => {
 
 //	utils.logResults(result)
 
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			text: 'say',

@@ -3,9 +3,15 @@
 /* eslint-disable babel/arrow-parens */
 
 const compose = require('compose-function');
+const identity = require('identity-function');
 
 module.exports = (options, utils, previousPhases) => {
+	if (typeof options.resolveAlias !== 'function') {
+		return identity;
+	}
+
 	const preAliasLexer = compose.apply(null, previousPhases.reverse());
+
 	return function * aliasSubstitution(tokens) {
 		function * tryExpandToken(token, expandingAliases) {
 			if (expandingAliases.indexOf(token.value) === -1 && token._.maybeSimpleCommandName) {
@@ -26,14 +32,8 @@ module.exports = (options, utils, previousPhases) => {
 			yield token;
 		}
 
-		if (typeof options.resolveAlias === 'function') {
-			for (const token of tokens) {
-				yield * tryExpandToken(token, []);
-			}
-		} else {
-			for (const token of tokens) {
-				yield token;
-			}
+		for (const token of tokens) {
+			yield * tryExpandToken(token, []);
 		}
 	};
 };

@@ -7,6 +7,7 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
+  	"t": "ava test/test-tokenizer.js",
     "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build": "mgb ./src/modes posix && mgb ./src/modes bash",
     "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",

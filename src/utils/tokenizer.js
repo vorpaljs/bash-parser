@@ -110,6 +110,14 @@ function start(data, char) {
 		return expansionStart;
 	}
 
+	if (!data.escaping && char === '`') {
+		data.current += '`';
+		data.expansion = (data.expansion || []).concat({
+			loc: {start: Object.assign({}, data.loc.current)}
+		});
+		return expansionCommandTick;
+	}
+
 	if (data.escaping) {
 		data.escaping = false;
 	}
@@ -142,6 +150,10 @@ function expansionStart(data, char) {
 		return expansionSpecialParameter(data, char);
 	}
 
+	if (data.doubleQuoting) {
+		return doubleQuoting(data, char);
+	}
+
 	return start(data, char);
 }
 
@@ -151,6 +163,10 @@ function expansionSpecialParameter(data, char) {
 	xp.type = 'SPECIAL-PARAMETER';
 	xp.loc.end = Object.assign({}, data.loc.current);
 	data.current += char;
+
+	if (data.doubleQuoting) {
+		return doubleQuoting;
+	}
 	return start;
 }
 
@@ -161,6 +177,10 @@ function expansionParameterExtended(data, char) {
 		xp.type = 'PARAMETER';
 		xp.loc.end = Object.assign({}, data.loc.current);
 		data.current += char;
+		if (data.doubleQuoting) {
+			return doubleQuoting;
+		}
+
 		return start;
 	}
 
@@ -177,6 +197,9 @@ function expansionParameter(data, char) {
 	}
 
 	data.expansion[data.expansion.length - 1].loc.end = Object.assign({}, data.loc.previous);
+	if (data.doubleQuoting) {
+		return doubleQuoting(data, char);
+	}
 	return start(data, char);
 }
 
@@ -191,12 +214,32 @@ function expansionCommandOrArithmetic(data, char) {
 		data.current += char;
 		xp.type = 'COMMAND';
 		xp.loc.end = Object.assign({}, data.loc.current);
+		if (data.doubleQuoting) {
+			return doubleQuoting;
+		}
 		return start;
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
 	return expansionCommandOrArithmetic;
+}
+
+function expansionCommandTick(data, char) {
+	const xp = data.expansion[data.expansion.length - 1];
+	if (!data.escaping && char === '`') {
+		data.current += char;
+		xp.type = 'COMMAND';
+		xp.loc.end = Object.assign({}, data.loc.current);
+		if (data.doubleQuoting) {
+			return doubleQuoting;
+		}
+		return start;
+	}
+
+	data.current += char;
+	xp.value = (xp.value || '') + char;
+	return expansionCommandTick;
 }
 
 function expansionArithmetic(data, char) {
@@ -207,6 +250,9 @@ function expansionArithmetic(data, char) {
 		xp.type = 'ARITHMETIC';
 		xp.value = xp.value.slice(0, -1);
 		xp.loc.end = Object.assign({}, data.loc.current);
+		if (data.doubleQuoting) {
+			return doubleQuoting;
+		}
 		return start;
 	}
 
@@ -235,12 +281,14 @@ function singleQuoting(data, char) {
 }
 
 function doubleQuoting(data, char) {
+	data.doubleQuoting = true;
 	if (char === undefined) {
 		addTokenIfNotEmpty(data);
 		data.results.push({
 			type: 'CONTINUE',
 			value: ''
 		});
+		data.doubleQuoting = false;
 		return null;
 	}
 
@@ -252,7 +300,24 @@ function doubleQuoting(data, char) {
 
 	if (!data.escaping && char === '"') {
 		data.current += char;
+		data.doubleQuoting = false;
 		return start;
+	}
+
+	if (!data.escaping && char === '$') {
+		data.current += '$';
+		data.expansion = (data.expansion || []).concat({
+			loc: {start: Object.assign({}, data.loc.current)}
+		});
+		return expansionStart;
+	}
+
+	if (!data.escaping && char === '`') {
+		data.current += '`';
+		data.expansion = (data.expansion || []).concat({
+			loc: {start: Object.assign({}, data.loc.current)}
+		});
+		return expansionCommandTick;
 	}
 
 	if (data.escaping) {

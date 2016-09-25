@@ -415,3 +415,98 @@ test('parse arithmetic expansion', t => {
 		]
 	);
 });
+
+
+test('within double quotes parse parameter expansion', t => {
+	const result = tokenize('"a$b-c"');
+	const expansion = [{
+		type: 'PARAMETER',
+		loc: JSON.parse(mkloc([3, 1, 2], [4, 1, 3])),
+		value: 'b'
+	}];
+
+	t.deepEqual(
+		result, [
+			{TOKEN: '"a$b-c"', expansion},
+			{EOF: ''}
+		]
+	);
+});
+
+test('within double quotes parse special parameter expansion', t => {
+	const result = tokenize('"a$@cd"');
+	const expansion = [{
+		type: 'SPECIAL-PARAMETER',
+		loc: JSON.parse(mkloc([3, 1, 2], [4, 1, 3])),
+		value: '@'
+	}];
+	t.deepEqual(
+		result, [
+			{TOKEN: '"a$@cd"', expansion},
+			{EOF: ''}
+		]
+	);
+});
+
+test('within double quotes parse extended parameter expansion', t => {
+	const result = tokenize('"a${b}cd"');
+	const expansion = [{
+		type: 'PARAMETER',
+		loc: JSON.parse(mkloc([3, 1, 2], [6, 1, 5])),
+		value: 'b'
+	}];
+	t.deepEqual(
+		result, [
+			{TOKEN: '"a${b}cd"', expansion},
+			{EOF: ''}
+		]
+	);
+});
+
+test('within double quotes parse command expansion', t => {
+	const result = tokenize('"a$(b)cd"');
+	const expansion = [{
+		type: 'COMMAND',
+		loc: JSON.parse(mkloc([3, 1, 2], [6, 1, 5])),
+		value: 'b'
+	}];
+	// console.log(JSON.stringify(result, null, 4))
+	t.deepEqual(
+		result, [
+			{TOKEN: '"a$(b)cd"', expansion},
+			{EOF: ''}
+		]
+	);
+});
+
+test('within double quotes parse command with backticks', t => {
+	const result = tokenize('"a`b`cd"');
+	const expansion = [{
+		type: 'COMMAND',
+		loc: JSON.parse(mkloc([3, 1, 2], [5, 1, 4])),
+		value: 'b'
+	}];
+	// console.log(JSON.stringify(result, null, 4));
+
+	t.deepEqual(
+		result, [
+			{TOKEN: '"a`b`cd"', expansion},
+			{EOF: ''}
+		]
+	);
+});
+
+test('within double quotes parse arithmetic expansion', t => {
+	const result = tokenize('"a$((b))cd"');
+	const expansion = [{
+		type: 'ARITHMETIC',
+		loc: JSON.parse(mkloc([3, 1, 2], [8, 1, 7])),
+		value: 'b'
+	}];
+	t.deepEqual(
+		result, [
+			{TOKEN: '"a$((b))cd"', expansion},
+			{EOF: ''}
+		]
+	);
+});

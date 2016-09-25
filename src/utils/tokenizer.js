@@ -49,12 +49,11 @@ function * tokenizer(src) {
 		}
 	};
 	let reduction = start;
-	let tokens = null;
-	let nextReduction = null;
+
 	while (typeof reduction === 'function') {
 		const char = src[data.loc.current.char];
-		// console.log(reduction);
-
+		let tokens = null;
+		let nextReduction = null;
 		try {
 			[nextReduction, tokens] = reduction(data, char);
 
@@ -66,11 +65,6 @@ function * tokenizer(src) {
 		}
 
 		reduction = nextReduction;
-
-		/* if (char === undefined && reduction !== null) {
-			throw new Error(`Unexpted EOF on source code: ${reduction.constructor.name}, ${JSON.stringify(tokens)}`);
-		}*/
-
 		advanceLoc(data, char);
 	}
 }

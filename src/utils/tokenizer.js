@@ -37,7 +37,7 @@ function advanceLoc(data, char) {
 	}
 }
 
-function tokenizer(src) {
+function * tokenizer(src) {
 	let data = {
 		results: [],
 		current: '',
@@ -48,58 +48,71 @@ function tokenizer(src) {
 			current: {col: 1, row: 1, char: 0}
 		}
 	};
-	let status = start;
-
-	while (status !== null) {
+	let reduction = start;
+	let tokens = null;
+	let nextReduction = null;
+	while (typeof reduction === 'function') {
 		const char = src[data.loc.current.char];
-		status = status(data, char);
+		// console.log(reduction);
+
+		try {
+			[nextReduction, tokens] = reduction(data, char);
+
+			if (tokens) {
+				yield * tokens;
+			}
+		} catch (err) {
+			throw new Error(err.message + `: ${JSON.stringify({tokens, reduction, nextReduction})}`);
+		}
+
+		reduction = nextReduction;
+
+		/* if (char === undefined && reduction !== null) {
+			throw new Error(`Unexpted EOF on source code: ${reduction.constructor.name}, ${JSON.stringify(tokens)}`);
+		}*/
+
 		advanceLoc(data, char);
 	}
-
-	return data.results;
 }
 
 function start(data, char) {
 	if (char === undefined) {
-		addTokenIfNotEmpty(data);
-		return end;
+		return [end, tokenOrEmpty(data)];
+	}
+
+	if (data.current === '\n' || (!data.escaping && char === '\n')) {
+		const tokens = tokenOrEmpty(data).concat({
+			type: 'NEWLINE',
+			value: '\n'
+		});
+		data.current = '';
+		return [start, tokens];
 	}
 
 	if (!data.escaping && char === '\\') {
 		data.escaping = true;
 		data.current += char;
-		return start;
+		return [start];
 	}
 
 	if (!data.escaping && isPartOfOperator(char)) {
-		addTokenIfNotEmpty(data);
+		const tokens = tokenOrEmpty(data);
 		data.current = char;
-		return operator;
-	}
-
-	if (!data.escaping && char === '\n') {
-		addTokenIfNotEmpty(data);
-
-		data.results.push({
-			type: 'NEWLINE',
-			value: '\n'
-		});
-		return start;
+		return [operator, tokens];
 	}
 
 	if (!data.escaping && char === '\'') {
 		data.current += '\'';
-		return singleQuoting;
+		return [singleQuoting];
 	}
 
 	if (!data.escaping && char === '"') {
 		data.current += '"';
-		return doubleQuoting;
+		return [doubleQuoting];
 	}
 
 	if (!data.escaping && char.match(/\s/)) {
-		addTokenIfNotEmpty(data);
-		return start;
+		return [start, tokenOrEmpty(data)];
 	}
 
 	if (!data.escaping && char === '$') {
@@ -107,7 +120,7 @@ function start(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return expansionStart;
+		return [expansionStart];
 	}
 
 	if (!data.escaping && char === '`') {
@@ -115,7 +128,7 @@ function start(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return expansionCommandTick;
+		return [expansionCommandTick];
 	}
 
 	if (data.escaping) {
@@ -123,18 +136,18 @@ function start(data, char) {
 	}
 
 	data.current += char;
-	return start;
+	return [start];
 }
 
 function expansionStart(data, char) {
 	if (char === '{') {
 		data.current += char;
-		return expansionParameterExtended;
+		return [expansionParameterExtended];
 	}
 
 	if (char === '(') {
 		data.current += char;
-		return expansionCommandOrArithmetic;
+		return [expansionCommandOrArithmetic];
 	}
 
 	if (char.match(/[a-zA-Z_]/)) {
@@ -143,7 +156,7 @@ function expansionStart(data, char) {
 		xp.type = 'PARAMETER';
 		data.current += char;
 
-		return expansionParameter;
+		return [expansionParameter];
 	}
 
 	if (isSpecialParameter(char)) {
@@ -165,9 +178,9 @@ function expansionSpecialParameter(data, char) {
 	data.current += char;
 
 	if (data.doubleQuoting) {
-		return doubleQuoting;
+		return [doubleQuoting];
 	}
-	return start;
+	return [start];
 }
 
 function expansionParameterExtended(data, char) {
@@ -178,22 +191,22 @@ function expansionParameterExtended(data, char) {
 		xp.loc.end = Object.assign({}, data.loc.current);
 		data.current += char;
 		if (data.doubleQuoting) {
-			return doubleQuoting;
+			return [doubleQuoting];
 		}
 
-		return start;
+		return [start];
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return expansionParameterExtended;
+	return [expansionParameterExtended];
 }
 
 function expansionParameter(data, char) {
 	if (char.match(/[0-9a-zA-Z_]/)) {
 		data.current += char;
 		data.expansion[data.expansion.length - 1].value += char;
-		return expansionParameter;
+		return [expansionParameter];
 	}
 
 	data.expansion[data.expansion.length - 1].loc.end = Object.assign({}, data.loc.previous);
@@ -207,7 +220,7 @@ function expansionCommandOrArithmetic(data, char) {
 	const xp = data.expansion[data.expansion.length - 1];
 	if (char === '(' && data.current.slice(-2) === '$(') {
 		data.current += char;
-		return expansionArithmetic;
+		return [expansionArithmetic];
 	}
 
 	if (char === ')') {
@@ -215,14 +228,14 @@ function expansionCommandOrArithmetic(data, char) {
 		xp.type = 'COMMAND';
 		xp.loc.end = Object.assign({}, data.loc.current);
 		if (data.doubleQuoting) {
-			return doubleQuoting;
+			return [doubleQuoting];
 		}
-		return start;
+		return [start];
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return expansionCommandOrArithmetic;
+	return [expansionCommandOrArithmetic];
 }
 
 function expansionCommandTick(data, char) {
@@ -232,14 +245,14 @@ function expansionCommandTick(data, char) {
 		xp.type = 'COMMAND';
 		xp.loc.end = Object.assign({}, data.loc.current);
 		if (data.doubleQuoting) {
-			return doubleQuoting;
+			return [doubleQuoting];
 		}
-		return start;
+		return [start];
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return expansionCommandTick;
+	return [expansionCommandTick];
 }
 
 function expansionArithmetic(data, char) {
@@ -251,57 +264,53 @@ function expansionArithmetic(data, char) {
 		xp.value = xp.value.slice(0, -1);
 		xp.loc.end = Object.assign({}, data.loc.current);
 		if (data.doubleQuoting) {
-			return doubleQuoting;
+			return [doubleQuoting];
 		}
-		return start;
+		return [start];
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return expansionArithmetic;
+	return [expansionArithmetic];
 }
 
 function singleQuoting(data, char) {
 	if (char === undefined) {
-		addTokenIfNotEmpty(data);
-		data.results.push({
+		return [null, tokenOrEmpty(data).concat({
 			type: 'CONTINUE',
 			value: ''
-		});
-		return null;
+		})];
 	}
 
 	if (char === '\'') {
 		data.current += char;
-		return start;
+		return [start];
 	}
 
 	data.current += char;
-	return singleQuoting;
+	return [singleQuoting];
 }
 
 function doubleQuoting(data, char) {
 	data.doubleQuoting = true;
 	if (char === undefined) {
-		addTokenIfNotEmpty(data);
-		data.results.push({
+		data.doubleQuoting = false;
+		return [null, tokenOrEmpty(data).concat({
 			type: 'CONTINUE',
 			value: ''
-		});
-		data.doubleQuoting = false;
-		return null;
+		})];
 	}
 
 	if (!data.escaping && char === '\\') {
 		data.escaping = true;
 		data.current += char;
-		return doubleQuoting;
+		return [doubleQuoting];
 	}
 
 	if (!data.escaping && char === '"') {
 		data.current += char;
 		data.doubleQuoting = false;
-		return start;
+		return [start];
 	}
 
 	if (!data.escaping && char === '$') {
@@ -309,7 +318,7 @@ function doubleQuoting(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return expansionStart;
+		return [expansionStart];
 	}
 
 	if (!data.escaping && char === '`') {
@@ -317,7 +326,7 @@ function doubleQuoting(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return expansionCommandTick;
+		return [expansionCommandTick];
 	}
 
 	if (data.escaping) {
@@ -325,42 +334,45 @@ function doubleQuoting(data, char) {
 	}
 
 	data.current += char;
-	return doubleQuoting;
+	return [doubleQuoting];
 }
 
 function operator(data, char) {
 	if (char === undefined) {
 		if (isOperator(data.current)) {
-			addOperator(data);
-			return end;
+			return [end, operatorTokens(data)];
 		}
-		return start;
+		return start(data, char);
 	}
 
 	if (isPartOfOperator(data.current + char)) {
 		data.current += char;
-		return operator;
+		return [operator];
 	}
 
+	let tokens = [];
 	if (isOperator(data.current)) {
-		addOperator(data);
+		tokens = operatorTokens(data);
 	}
 
-	return start(data, char);
+	const [nextReduction, opTokens] = start(data, char);
+	if (opTokens) {
+		tokens = tokens.concat(opTokens);
+	}
+	return [nextReduction, tokens];
 }
 
-function end(data) {
-	data.results.push({
+function end() {
+	return [null, [{
 		type: 'EOF',
 		value: ''
-	});
-	return null;
+	}]];
 }
 
 module.exports = tokenizer;
 
-function addTokenIfNotEmpty(data) {
-	if (data.current !== '') {
+function tokenOrEmpty(data) {
+	if (data.current !== '' && data.current !== '\n') {
 		const token = {
 			type: 'TOKEN',
 			value: data.current,
@@ -375,23 +387,26 @@ function addTokenIfNotEmpty(data) {
 			delete data.expansion;
 		}
 
-		data.results.push(token);
 		data.loc.start = Object.assign({}, data.loc.current);
 		data.current = '';
+		return [token];
 	}
+	return [];
 }
 
-function addOperator(data) {
-	data.results.push({
+function operatorTokens(data) {
+	const token = {
 		type: operators[data.current],
 		value: data.current,
 		loc: {
 			start: Object.assign({}, data.loc.start),
 			end: Object.assign({}, data.loc.previous)
 		}
-	});
+	};
+
 	data.loc.start = Object.assign({}, data.loc.current);
 	data.current = '';
+	return [token];
 }
 
 function isPartOfOperator(text) {

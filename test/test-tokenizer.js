@@ -291,6 +291,7 @@ test('reset start loc on each token', t => {
 
 test('loc on operators', t => {
 	const result = tokenize('< <<', true);
+	// console.log(JSON.stringify(result, null, 4))
 	t.deepEqual(
 		result, [
 			{LESS: '<', loc: mkloc([1, 1, 0], [1, 1, 0])},
@@ -415,7 +416,6 @@ test('parse arithmetic expansion', t => {
 		]
 	);
 });
-
 
 test('within double quotes parse parameter expansion', t => {
 	const result = tokenize('"a$b-c"');

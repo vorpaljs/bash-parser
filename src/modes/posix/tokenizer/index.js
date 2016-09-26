@@ -2,50 +2,7 @@
 import hasOwnProperty from 'has-own-property';
 import deepFreeze from 'deep-freeze';
 import last from 'array-last';
-
-const operators = {
-	/*
-	'&': 'AND',*/
-	'|': 'PIPE',
-	'(': 'OPEN_PAREN',
-	')': 'CLOSE_PAREN',
-	'>': 'GREAT',
-	'<': 'LESS',
-	'&&': 'AND_IF',
-	'||': 'OR_IF',
-	';;': 'DSEMI',
-	'<<': 'DLESS',
-	'>>': 'DGREAT',
-	'<&': 'LESSAND',
-	'>&': 'GREATAND',
-	'<>': 'LESSGREAT',
-	'<<-': 'DLESSDASH',
-	'>|': 'CLOBBER'
-};
-
-function advanceLoc(state, char) {
-	const loc = {
-		...state.loc,
-		current: {...state.loc.current},
-		previous: {...state.loc.current}
-
-	};
-
-	if (char === '\n') {
-		loc.current.row++;
-		loc.current.col = 1;
-	} else {
-		loc.current.col++;
-	}
-
-	loc.current.char++;
-
-	if (char && char.match(/\s/) && state.current === '') {
-		loc.start = {...loc.current};
-	}
-
-	return {...state, loc};
-}
+import operators from '../enums/operators';
 
 function * tokenizer(src) {
 	let state = {
@@ -593,4 +550,28 @@ function appendEmptyExpansion(state) {
 	return (state.expansion || []).concat({
 		loc: {start: {...state.loc.current}}
 	});
+}
+
+function advanceLoc(state, char) {
+	const loc = {
+		...state.loc,
+		current: {...state.loc.current},
+		previous: {...state.loc.current}
+
+	};
+
+	if (char === '\n') {
+		loc.current.row++;
+		loc.current.col = 1;
+	} else {
+		loc.current.col++;
+	}
+
+	loc.current.char++;
+
+	if (char && char.match(/\s/) && state.current === '') {
+		loc.start = {...loc.current};
+	}
+
+	return {...state, loc};
 }

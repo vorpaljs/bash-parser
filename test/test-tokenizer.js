@@ -24,6 +24,7 @@ function tokenize(text, keepLoc) {
 	const results = Array.from(tokenizer(text)).map(t => {
 		const r = Object.assign({}, t);
 		r[r.type] = r.value;
+		delete r._;
 		delete r.type;
 		delete r.value;
 		if (keepLoc && r.loc) {
@@ -407,11 +408,11 @@ test('parse command with backticks', t => {
 test('parse arithmetic expansion', t => {
 	const result = tokenize('a$((b))cd');
 	const expansion = [{
-		type: 'ARITHMETIC',
+		type: 'arithmetic_expansion',
 		loc: JSON.parse(mkloc([2, 1, 1], [7, 1, 6])),
-		value: 'b'
+		expression: 'b'
 	}];
-	// console.log(JSON.stringify(result, null, 4));
+	console.log(JSON.stringify(result, null, 4));
 	t.deepEqual(
 		result, [
 			{TOKEN: 'a$((b))cd', expansion},
@@ -502,9 +503,9 @@ test('within double quotes parse command with backticks', t => {
 test('within double quotes parse arithmetic expansion', t => {
 	const result = tokenize('"a$((b))cd"');
 	const expansion = [{
-		type: 'ARITHMETIC',
+		type: 'arithmetic_expansion',
 		loc: JSON.parse(mkloc([3, 1, 2], [8, 1, 7])),
-		value: 'b'
+		expression: 'b'
 	}];
 	t.deepEqual(
 		result, [

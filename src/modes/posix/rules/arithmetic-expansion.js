@@ -5,94 +5,25 @@ const map = require('map-iterable');
 const babylon = require('babylon');
 const MagicString = require('magic-string');
 const fieldSplitting = require('./field-splitting');
+const tokens = require('../../../utils/tokens');
 
-function setArithmeticExpansion(args) {
-	let token = args.token;
-	const expression = args.expression;
-	const start = args.start;
-	const end = args.end;
+function setArithmeticExpansion(xp) {
 	let AST;
 	try {
-		AST = babylon.parse(expression);
+		AST = babylon.parse(xp.expression);
 	} catch (err) {
-		throw new SyntaxError(`Cannot parse arithmetic expression "${expression}": ${err.message}`);
+		throw new SyntaxError(`Cannot parse arithmetic expression "${xp.expression}": ${err.message}`);
 	}
 
-	const arithmeticAST = AST.program.body[0].expression;
+	const expression = AST.program.body[0].expression;
 
-	if (arithmeticAST === undefined) {
+	if (expression === undefined) {
 		throw new SyntaxError(`Cannot parse arithmetic expression "${expression}": Not an expression`);
 	}
 
-	if (!token.expansions) {
-		token = args.addExpansions(token);
-	}
+	const arithmeticAST = JSON.parse(JSON.stringify(expression));
 
-	token.expansion.push({
-		type: 'arithmetic_expansion',
-		expression,
-		arithmeticAST: JSON.parse(JSON.stringify(arithmeticAST)),
-		start,
-		end
-	});
-
-	return token;
-}
-
-function expandWord(token, addExpansions) {
-	const text = token.value;
-
-	let expandingArithmetic = false;
-	let expression = '';
-	let startOfExpansion = 0;
-	let currentCharIdx = 0;
-	let escaping = false;
-	let lastCharacter = null;
-	let quoting = '';
-
-	for (const currentCharacter of text) {
-		if ((!escaping) && (!expandingArithmetic)) {			// when no espanding is in progress
-			if (expression === '' && currentCharacter === '$' && quoting !== '\'') {
-				// start of expansion candidate
-				expression = '$';
-				startOfExpansion = currentCharIdx;
-			} else if (currentCharacter === '\'' || currentCharacter === '"') {
-				if (quoting === currentCharacter) {
-					quoting = '';
-				} else if (quoting === '') {
-					quoting = currentCharacter;
-				}
-			} else if (expression === '$' && currentCharacter === '(') {
-				expression = '$(';
-			} else if (expression === '$(' && currentCharacter === '(') {
-				// start of arithmetic expansion
-				expandingArithmetic = true;
-				expression = '+';
-			}
-		} else if ((!escaping) && currentCharacter === ')' && lastCharacter === ')') {
-			expression = expression.slice(1, -1);
-			// end of command expansion
-			token = setArithmeticExpansion({
-				token,
-				expression: expression,
-				start: startOfExpansion,
-				end: startOfExpansion + expression.length + 5,  // add 3 to take in account $(())
-				addExpansions
-			});
-			startOfExpansion = 0;
-			expandingArithmetic = false;
-			expression = '';
-		} else if (expression !== '') {
-			// accumulation
-			expression += currentCharacter;
-		}
-
-		escaping = currentCharacter === '\\';
-		lastCharacter = currentCharacter;
-		currentCharIdx++;
-	}
-
-	return token;
+	return {...xp, arithmeticAST};
 }
 
 // RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
@@ -100,9 +31,18 @@ function expandWord(token, addExpansions) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-const arithmeticExpansion = (options, utils) => map(token => {
+const arithmeticExpansion = () => map(token => {
 	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
-		return expandWord(token, utils.tokens.addExpansions);
+		if (!token.expansion || token.expansion.length === 0) {
+			return token;
+		}
+
+		return tokens.setExpansions(token, token.expansion.map(xp => {
+			if (xp.type === 'arithmetic_expansion') {
+				return setArithmeticExpansion(xp);
+			}
+			return xp;
+		}));
 	}
 	return token;
 });

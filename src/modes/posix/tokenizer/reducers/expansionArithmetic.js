@@ -8,10 +8,11 @@ export default function expansionArithmetic(state, char) {
 	if (char === ')' && state.current.slice(-1)[0] === ')') {
 		const newXp = {
 			...xp,
-			type: 'ARITHMETIC',
-			value: xp.value.slice(0, -1),
+			type: 'arithmetic_expansion',
+			expression: xp.value.slice(0, -1),
 			loc: {...xp.loc, end: state.loc.current}
 		};
+		delete newXp.value;
 
 		const expansion = state.expansion
 			.slice(0, -1)

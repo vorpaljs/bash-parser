@@ -77,6 +77,12 @@ exports.addExpansions = function addExpansions(tk) {
 	return newTk;
 };
 
+exports.setExpansions = function setExpansions(tk, expansion) {
+	const newTk = new Token(Object.assign({}, tk, {expansion}));
+	Object.freeze(newTk);
+	return newTk;
+};
+
 exports.tokenOrEmpty = function tokenOrEmpty(state) {
 	if (state.current !== '' && state.current !== '\n') {
 		const token = mkToken('TOKEN', state.current, {

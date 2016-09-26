@@ -1,5 +1,6 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -7,14 +8,17 @@ const utils = require('./_utils');
 test('arithmetic substitution', t => {
 	const result = bashParser('variable=$((42 + 43))');
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
+	// console.log(JSON.stringify(result.commands[0].prefix[0]))
 	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
 		type: 'assignment_word',
 		expansion: [{
 			expression: '42 + 43',
 			type: 'arithmetic_expansion',
-			start: 9,
-			end: 21
+			loc: {
+				start: {col: 10, row: 1, char: 9},
+				end: {col: 21, row: 1, char: 20}
+			}
 		}]
 	});
 });

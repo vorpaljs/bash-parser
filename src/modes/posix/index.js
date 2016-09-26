@@ -7,7 +7,8 @@ const tokenizer = require('./tokenizer').default;
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 
-const lexerPhases = () => [
+const lexerPhases = (utils) => [
+	// utils.loggerPhase('tokenizer'),
 	phaseCatalog.newLineList,
 	phaseCatalog.operatorTokens,
 	phaseCatalog.separator,
@@ -18,7 +19,7 @@ const lexerPhases = () => [
 	phaseCatalog.assignmentWord,
 	phaseCatalog.parameterExpansion,
 	phaseCatalog.arithmeticExpansion,
-	phaseCatalog.commandExpansion,
+	//phaseCatalog.commandExpansion,
 	// utils.loggerPhase('commandExpansion'),
 	phaseCatalog.forNameVariable,
 	// utils.loggerPhase('for'),

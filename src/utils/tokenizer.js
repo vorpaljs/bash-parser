@@ -39,7 +39,6 @@ function advanceLoc(data, char) {
 
 function * tokenizer(src) {
 	let data = {
-		results: [],
 		current: '',
 		escaping: false,
 		loc: {
@@ -52,17 +51,13 @@ function * tokenizer(src) {
 
 	while (typeof reduction === 'function') {
 		const char = src[data.loc.current.char];
-		let tokens = null;
-		let nextReduction = null;
-		try {
-			[nextReduction, tokens] = reduction(data, char);
 
-			if (tokens) {
-				yield * tokens;
-			}
-		} catch (err) {
-			throw new Error(err.message + `: ${JSON.stringify({tokens, reduction, nextReduction})}`);
+		const {nextReduction, tokensToEmit} = reduction(data, char);
+
+		if (tokensToEmit) {
+			yield * tokensToEmit;
 		}
+
 
 		reduction = nextReduction;
 		advanceLoc(data, char);
@@ -71,7 +66,7 @@ function * tokenizer(src) {
 
 function start(data, char) {
 	if (char === undefined) {
-		return [end, tokenOrEmpty(data)];
+		return {nextReduction: end, tokensToEmit: tokenOrEmpty(data)};
 	}
 
 	if (data.current === '\n' || (!data.escaping && char === '\n')) {
@@ -80,33 +75,33 @@ function start(data, char) {
 			value: '\n'
 		});
 		data.current = '';
-		return [start, tokens];
+		return {nextReduction: start, tokensToEmit: tokens};
 	}
 
 	if (!data.escaping && char === '\\') {
 		data.escaping = true;
 		data.current += char;
-		return [start];
+		return {nextReduction: start};
 	}
 
 	if (!data.escaping && isPartOfOperator(char)) {
 		const tokens = tokenOrEmpty(data);
 		data.current = char;
-		return [operator, tokens];
+		return {nextReduction: operator, tokensToEmit: tokens};
 	}
 
 	if (!data.escaping && char === '\'') {
 		data.current += '\'';
-		return [singleQuoting];
+		return {nextReduction: singleQuoting};
 	}
 
 	if (!data.escaping && char === '"') {
 		data.current += '"';
-		return [doubleQuoting];
+		return {nextReduction: doubleQuoting};
 	}
 
 	if (!data.escaping && char.match(/\s/)) {
-		return [start, tokenOrEmpty(data)];
+		return {nextReduction: start, tokensToEmit: tokenOrEmpty(data)};
 	}
 
 	if (!data.escaping && char === '$') {
@@ -114,7 +109,7 @@ function start(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return [expansionStart];
+		return {nextReduction: expansionStart};
 	}
 
 	if (!data.escaping && char === '`') {
@@ -122,7 +117,7 @@ function start(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return [expansionCommandTick];
+		return {nextReduction: expansionCommandTick};
 	}
 
 	if (data.escaping) {
@@ -130,18 +125,18 @@ function start(data, char) {
 	}
 
 	data.current += char;
-	return [start];
+	return {nextReduction: start};
 }
 
 function expansionStart(data, char) {
 	if (char === '{') {
 		data.current += char;
-		return [expansionParameterExtended];
+		return {nextReduction: expansionParameterExtended};
 	}
 
 	if (char === '(') {
 		data.current += char;
-		return [expansionCommandOrArithmetic];
+		return {nextReduction: expansionCommandOrArithmetic};
 	}
 
 	if (char.match(/[a-zA-Z_]/)) {
@@ -150,7 +145,7 @@ function expansionStart(data, char) {
 		xp.type = 'PARAMETER';
 		data.current += char;
 
-		return [expansionParameter];
+		return {nextReduction: expansionParameter};
 	}
 
 	if (isSpecialParameter(char)) {
@@ -172,9 +167,9 @@ function expansionSpecialParameter(data, char) {
 	data.current += char;
 
 	if (data.doubleQuoting) {
-		return [doubleQuoting];
+		return {nextReduction: doubleQuoting};
 	}
-	return [start];
+	return {nextReduction: start};
 }
 
 function expansionParameterExtended(data, char) {
@@ -185,22 +180,22 @@ function expansionParameterExtended(data, char) {
 		xp.loc.end = Object.assign({}, data.loc.current);
 		data.current += char;
 		if (data.doubleQuoting) {
-			return [doubleQuoting];
+			return {nextReduction: doubleQuoting};
 		}
 
-		return [start];
+		return {nextReduction: start};
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return [expansionParameterExtended];
+	return {nextReduction: expansionParameterExtended};
 }
 
 function expansionParameter(data, char) {
 	if (char.match(/[0-9a-zA-Z_]/)) {
 		data.current += char;
 		data.expansion[data.expansion.length - 1].value += char;
-		return [expansionParameter];
+		return {nextReduction: expansionParameter};
 	}
 
 	data.expansion[data.expansion.length - 1].loc.end = Object.assign({}, data.loc.previous);
@@ -214,7 +209,7 @@ function expansionCommandOrArithmetic(data, char) {
 	const xp = data.expansion[data.expansion.length - 1];
 	if (char === '(' && data.current.slice(-2) === '$(') {
 		data.current += char;
-		return [expansionArithmetic];
+		return {nextReduction: expansionArithmetic};
 	}
 
 	if (char === ')') {
@@ -222,14 +217,14 @@ function expansionCommandOrArithmetic(data, char) {
 		xp.type = 'COMMAND';
 		xp.loc.end = Object.assign({}, data.loc.current);
 		if (data.doubleQuoting) {
-			return [doubleQuoting];
+			return {nextReduction: doubleQuoting};
 		}
-		return [start];
+		return {nextReduction: start};
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return [expansionCommandOrArithmetic];
+	return {nextReduction: expansionCommandOrArithmetic};
 }
 
 function expansionCommandTick(data, char) {
@@ -239,14 +234,14 @@ function expansionCommandTick(data, char) {
 		xp.type = 'COMMAND';
 		xp.loc.end = Object.assign({}, data.loc.current);
 		if (data.doubleQuoting) {
-			return [doubleQuoting];
+			return {nextReduction: doubleQuoting};
 		}
-		return [start];
+		return {nextReduction: start};
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return [expansionCommandTick];
+	return {nextReduction: expansionCommandTick};
 }
 
 function expansionArithmetic(data, char) {
@@ -258,53 +253,53 @@ function expansionArithmetic(data, char) {
 		xp.value = xp.value.slice(0, -1);
 		xp.loc.end = Object.assign({}, data.loc.current);
 		if (data.doubleQuoting) {
-			return [doubleQuoting];
+			return {nextReduction: doubleQuoting};
 		}
-		return [start];
+		return {nextReduction: start};
 	}
 
 	data.current += char;
 	xp.value = (xp.value || '') + char;
-	return [expansionArithmetic];
+	return {nextReduction: expansionArithmetic};
 }
 
 function singleQuoting(data, char) {
 	if (char === undefined) {
-		return [null, tokenOrEmpty(data).concat({
+		return {nextReduction: null, tokensToEmit: tokenOrEmpty(data).concat({
 			type: 'CONTINUE',
 			value: ''
-		})];
+		})};
 	}
 
 	if (char === '\'') {
 		data.current += char;
-		return [start];
+		return {nextReduction: start};
 	}
 
 	data.current += char;
-	return [singleQuoting];
+	return {nextReduction: singleQuoting};
 }
 
 function doubleQuoting(data, char) {
 	data.doubleQuoting = true;
 	if (char === undefined) {
 		data.doubleQuoting = false;
-		return [null, tokenOrEmpty(data).concat({
+		return {nextReduction: null, tokensToEmit: tokenOrEmpty(data).concat({
 			type: 'CONTINUE',
 			value: ''
-		})];
+		})};
 	}
 
 	if (!data.escaping && char === '\\') {
 		data.escaping = true;
 		data.current += char;
-		return [doubleQuoting];
+		return {nextReduction: doubleQuoting};
 	}
 
 	if (!data.escaping && char === '"') {
 		data.current += char;
 		data.doubleQuoting = false;
-		return [start];
+		return {nextReduction: start};
 	}
 
 	if (!data.escaping && char === '$') {
@@ -312,7 +307,7 @@ function doubleQuoting(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return [expansionStart];
+		return {nextReduction: expansionStart};
 	}
 
 	if (!data.escaping && char === '`') {
@@ -320,7 +315,7 @@ function doubleQuoting(data, char) {
 		data.expansion = (data.expansion || []).concat({
 			loc: {start: Object.assign({}, data.loc.current)}
 		});
-		return [expansionCommandTick];
+		return {nextReduction: expansionCommandTick};
 	}
 
 	if (data.escaping) {
@@ -328,20 +323,20 @@ function doubleQuoting(data, char) {
 	}
 
 	data.current += char;
-	return [doubleQuoting];
+	return {nextReduction: doubleQuoting};
 }
 
 function operator(data, char) {
 	if (char === undefined) {
 		if (isOperator(data.current)) {
-			return [end, operatorTokens(data)];
+			return {nextReduction: end, tokensToEmit: operatorTokens(data)};
 		}
 		return start(data, char);
 	}
 
 	if (isPartOfOperator(data.current + char)) {
 		data.current += char;
-		return [operator];
+		return {nextReduction: operator};
 	}
 
 	let tokens = [];
@@ -349,18 +344,18 @@ function operator(data, char) {
 		tokens = operatorTokens(data);
 	}
 
-	const [nextReduction, opTokens] = start(data, char);
-	if (opTokens) {
-		tokens = tokens.concat(opTokens);
+	const {nextReduction, tokensToEmit} = start(data, char);
+	if (tokensToEmit) {
+		tokens = tokens.concat(tokensToEmit);
 	}
-	return [nextReduction, tokens];
+	return {nextReduction: nextReduction, tokensToEmit: tokens};
 }
 
 function end() {
-	return [null, [{
+	return {nextReduction: null, tokensToEmit: [{
 		type: 'EOF',
 		value: ''
-	}]];
+	}]};
 }
 
 module.exports = tokenizer;

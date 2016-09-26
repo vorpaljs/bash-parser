@@ -33,7 +33,7 @@ function advanceLoc(data, char) {
 	data.loc.current.char++;
 
 	if (char && char.match(/\s/) && data.current === '') {
-		data.loc.start = Object.assign({}, data.loc.current);
+		data.loc.start = {...data.loc.current};
 	}
 }
 
@@ -75,10 +75,7 @@ function start(state, char) {
 		return {
 			nextReduction: end,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: Object.assign({}, state, {
-				current: '',
-				expansion: []
-			})
+			nextState: {...state, current: '', expansion: []}
 		};
 	}
 
@@ -90,20 +87,14 @@ function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokens,
-			nextState: Object.assign({}, state, {
-				current: '',
-				expansion: []
-			})
+			nextState: {...state, current: '', expansion: []}
 		};
 	}
 
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				current: state.current + char,
-				escaping: true
-			})
+			nextState: {...state, current: state.current + char, escaping: true}
 		};
 	}
 
@@ -112,28 +103,21 @@ function start(state, char) {
 		return {
 			nextReduction: operator,
 			tokensToEmit: tokens,
-			nextState: Object.assign({}, state, {
-				current: char,
-				expansion: []
-			})
+			nextState: {...state, current: char, expansion: []}
 		};
 	}
 
 	if (!state.escaping && char === '\'') {
 		return {
 			nextReduction: singleQuoting,
-			nextState: Object.assign({}, state, {
-				current: state.current + '\''
-			})
+			nextState: {...state, current: state.current + '\''}
 		};
 	}
 
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: Object.assign({}, state, {
-				current: state.current + '"'
-			})
+			nextState: {...state, current: state.current + '"'}
 		};
 	}
 
@@ -141,41 +125,39 @@ function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: Object.assign({}, state, {current: ''})
+			nextState: {...state, current: ''}
 		};
 	}
 
 	if (!state.escaping && char === '$') {
 		return {
 			nextReduction: expansionStart,
-			nextState: Object.assign({}, state, {
+			nextState: {
+				...state,
 				current: state.current + '$',
 				expansion: (state.expansion || []).concat({
 					loc: {start: Object.assign({}, state.loc.current)}
 				})
-			})
+			}
 		};
 	}
 
 	if (!state.escaping && char === '`') {
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: Object.assign({}, state, {
+			nextState: {
+				...state,
 				current: state.current + '`',
 				expansion: (state.expansion || []).concat({
 					loc: {start: Object.assign({}, state.loc.current)}
 				})
-			})
+			}
 		};
 	}
 
 	return {
 		nextReduction: start,
-		nextState: Object.assign({}, state, {
-			escaping: false,
-			current: state.current + char
-
-		})
+		nextState: {...state, escaping: false, current: state.current + char}
 	};
 }
 
@@ -183,18 +165,14 @@ function expansionStart(state, char) {
 	if (char === '{') {
 		return {
 			nextReduction: expansionParameterExtended,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	if (char === '(') {
 		return {
 			nextReduction: expansionCommandOrArithmetic,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
@@ -205,9 +183,7 @@ function expansionStart(state, char) {
 
 		return {
 			nextReduction: expansionParameter,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
@@ -226,22 +202,18 @@ function expansionSpecialParameter(state, char) {
 	const xp = state.expansion[state.expansion.length - 1];
 	xp.value = char;
 	xp.type = 'SPECIAL-PARAMETER';
-	xp.loc.end = Object.assign({}, state.loc.current);
+	xp.loc.end = {...state.loc.current};
 
 	if (state.doubleQuoting) {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	return {
 		nextReduction: start,
-		nextState: Object.assign({}, state, {
-			current: state.current + char
-		})
+		nextState: {...state, current: state.current + char}
 	};
 }
 
@@ -254,26 +226,20 @@ function expansionParameterExtended(state, char) {
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: Object.assign({}, state, {
-					current: state.current + char
-				})
+				nextState: {...state, current: state.current + char}
 			};
 		}
 
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	xp.value = (xp.value || '') + char;
 	return {
 		nextReduction: expansionParameterExtended,
-		nextState: Object.assign({}, state, {
-			current: state.current + char
-		})
+		nextState: {...state, current: state.current + char}
 	};
 }
 
@@ -282,13 +248,11 @@ function expansionParameter(state, char) {
 		state.expansion[state.expansion.length - 1].value += char;
 		return {
 			nextReduction: expansionParameter,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
-	state.expansion[state.expansion.length - 1].loc.end = Object.assign({}, state.loc.previous);
+	state.expansion[state.expansion.length - 1].loc.end = {...state.loc.previous};
 	if (state.doubleQuoting) {
 		return doubleQuoting(state, char);
 	}
@@ -300,9 +264,7 @@ function expansionCommandOrArithmetic(state, char) {
 	if (char === '(' && state.current.slice(-2) === '$(') {
 		return {
 			nextReduction: expansionArithmetic,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
@@ -312,25 +274,19 @@ function expansionCommandOrArithmetic(state, char) {
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: Object.assign({}, state, {
-					current: state.current + char
-				})
+				nextState: {...state, current: state.current + char}
 			};
 		}
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	xp.value = (xp.value || '') + char;
 	return {
 		nextReduction: expansionCommandOrArithmetic,
-		nextState: Object.assign({}, state, {
-			current: state.current + char
-		})
+		nextState: {...state, current: state.current + char}
 	};
 }
 
@@ -338,29 +294,23 @@ function expansionCommandTick(state, char) {
 	const xp = state.expansion[state.expansion.length - 1];
 	if (!state.escaping && char === '`') {
 		xp.type = 'COMMAND';
-		xp.loc.end = Object.assign({}, state.loc.current);
+		xp.loc.end = {...state.loc.current};
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: Object.assign({}, state, {
-					current: state.current + char
-				})
+				nextState: {...state, current: state.current + char}
 			};
 		}
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	xp.value = (xp.value || '') + char;
 	return {
 		nextReduction: expansionCommandTick,
-		nextState: Object.assign({}, state, {
-			current: state.current + char
-		})
+		nextState: {...state, current: state.current + char}
 	};
 }
 
@@ -370,29 +320,23 @@ function expansionArithmetic(state, char) {
 	if (char === ')' && state.current.slice(-1)[0] === ')') {
 		xp.type = 'ARITHMETIC';
 		xp.value = xp.value.slice(0, -1);
-		xp.loc.end = Object.assign({}, state.loc.current);
+		xp.loc.end = {...state.loc.current};
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: Object.assign({}, state, {
-					current: state.current + char
-				})
+				nextState: {...state, current: state.current + char}
 			};
 		}
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	xp.value = (xp.value || '') + char;
 	return {
 		nextReduction: expansionArithmetic,
-		nextState: Object.assign({}, state, {
-			current: state.current + char
-		})
+		nextState: {...state, current: state.current + char}
 	};
 }
 
@@ -404,27 +348,20 @@ function singleQuoting(state, char) {
 				type: 'CONTINUE',
 				value: ''
 			}),
-			nextState: Object.assign({}, state, {
-				current: '',
-				expansion: []
-			})
+			nextState: {...state, current: '', expansion: []}
 		};
 	}
 
 	if (char === '\'') {
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	return {
 		nextReduction: singleQuoting,
-		nextState: Object.assign({}, state, {
-			current: state.current + char
-		})
+		nextState: {...state, current: state.current + char}
 	};
 }
 
@@ -436,22 +373,14 @@ function doubleQuoting(state, char) {
 				type: 'CONTINUE',
 				value: ''
 			}),
-			nextState: Object.assign({}, state, {
-				doubleQuoting: false,
-				current: '',
-				expansion: []
-			})
+			nextState: {...state, doubleQuoting: false, current: '', expansion: []}
 		};
 	}
 
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: Object.assign({}, state, {
-				doubleQuoting: true,
-				escaping: true,
-				current: state.current + char
-			})
+			nextState: {...state, doubleQuoting: true, escaping: true, current: state.current + char}
 
 		};
 	}
@@ -459,46 +388,35 @@ function doubleQuoting(state, char) {
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: start,
-			nextState: Object.assign({}, state, {
-				doubleQuoting: false,
-				current: state.current + char
-			})
+			nextState: {...state, doubleQuoting: false, current: state.current + char}
 		};
 	}
 
 	if (!state.escaping && char === '$') {
+		const expansion = (state.expansion || []).concat({
+			loc: {start: {...state.loc.current}}
+		});
+
 		return {
 			nextReduction: expansionStart,
-			nextState: Object.assign({}, state, {
-				doubleQuoting: true,
-				current: state.current + char,
-				expansion: (state.expansion || []).concat({
-					loc: {start: Object.assign({}, state.loc.current)}
-				})
-			})
+			nextState: {...state, doubleQuoting: true, current: state.current + char, expansion}
 		};
 	}
 
 	if (!state.escaping && char === '`') {
+		const expansion = (state.expansion || []).concat({
+			loc: {start: {...state.loc.current}}
+		});
+
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: Object.assign({}, state, {
-				doubleQuoting: true,
-				current: state.current + char,
-				expansion: (state.expansion || []).concat({
-					loc: {start: Object.assign({}, state.loc.current)}
-				})
-			})
+			nextState: {...state, doubleQuoting: true, current: state.current + char, expansion}
 		};
 	}
 
 	return {
 		nextReduction: doubleQuoting,
-		nextState: Object.assign({}, state, {
-			doubleQuoting: true,
-			escaping: false,
-			current: state.current + char
-		})
+		nextState: {...state, doubleQuoting: true, escaping: false, current: state.current + char}
 	};
 }
 
@@ -508,7 +426,7 @@ function operator(state, char) {
 			return {
 				nextReduction: end,
 				tokensToEmit: operatorTokens(state),
-				nextState: Object.assign({}, state, {current: ''})
+				nextState: {...state, current: ''}
 			};
 		}
 		return start(state, char);
@@ -517,16 +435,14 @@ function operator(state, char) {
 	if (isPartOfOperator(state.current + char)) {
 		return {
 			nextReduction: operator,
-			nextState: Object.assign({}, state, {
-				current: state.current + char
-			})
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	let tokens = [];
 	if (isOperator(state.current)) {
 		tokens = operatorTokens(state);
-		state = Object.assign({}, state, {current: ''});
+		state = {...state, current: ''};
 	}
 
 	const {nextReduction, tokensToEmit, nextState} = start(state, char);
@@ -558,8 +474,8 @@ function tokenOrEmpty(state) {
 			type: 'TOKEN',
 			value: state.current,
 			loc: {
-				start: Object.assign({}, state.loc.start),
-				end: Object.assign({}, state.loc.previous)
+				start: {...state.loc.start},
+				end: {...state.loc.previous}
 			}
 		};
 
@@ -567,7 +483,7 @@ function tokenOrEmpty(state) {
 			token.expansion = state.expansion;
 		}
 
-		state.loc.start = Object.assign({}, state.loc.current);
+		state.loc.start = {...state.loc.current};
 		return [token];
 	}
 	return [];
@@ -578,12 +494,12 @@ function operatorTokens(state) {
 		type: operators[state.current],
 		value: state.current,
 		loc: {
-			start: Object.assign({}, state.loc.start),
-			end: Object.assign({}, state.loc.previous)
+			start: {...state.loc.start},
+			end: {...state.loc.previous}
 		}
 	};
 
-	state.loc.start = Object.assign({}, state.loc.current);
+	state.loc.start = {...state.loc.current};
 	return [token];
 }
 

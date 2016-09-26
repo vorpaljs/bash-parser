@@ -1,6 +1,7 @@
 'use strict';
-const test = require('ava');
-const tokenDelimiter = require('../src/utils/tokenizer');
+import 'babel-register';
+import test from 'ava';
+import tokenDelimiter from '../src/utils/tokenizer';
 
 function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 	return JSON.stringify({

@@ -24,7 +24,7 @@ export default function expansionParameterExtended(state, char) {
 
 	const newXp = {
 		...xp,
-		value: (xp.value || '') + char
+		parameter: (xp.parameter || '') + char
 	};
 
 	const expansion = state.expansion

@@ -7,14 +7,17 @@ const utils = require('./_utils');
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
 	const result = bashParser('echoword=${other}test');
+	utils.logResults(result);
 	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'echoword=${other}test',
 		expansion: [{
 			type: 'parameter_expansion',
 			parameter: 'other',
-			start: 9,
-			end: 17
+			loc: {
+				start: 9,
+				end: 16
+			}
 		}]
 	}]);
 });
@@ -40,13 +43,15 @@ test('parameter substitution skip single quoted words', t => {
 
 test('parameter substitution and other words', t => {
 	const result = bashParser('foo ${other} bar baz');
-	// utils.logResults(result);
+	utils.logResults(result);
 	utils.checkResults(t, result.commands[0].suffix, [{
 		text: '${other}',
 		expansion: [{
 			parameter: 'other',
-			start: 0,
-			end: 8,
+			loc: {
+				start: 0,
+				end: 7
+			},
 			type: 'parameter_expansion'
 		}],
 		type: 'word'
@@ -61,14 +66,18 @@ test('parameter substitution and other words', t => {
 
 test('multi-word parameter substitution', t => {
 	const result = bashParser('echoword=${other word}test');
+	utils.logResults(result);
+
 	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'echoword=${other word}test',
 		expansion: [{
 			type: 'parameter_expansion',
 			parameter: 'other word',
-			start: 9,
-			end: 22
+			loc: {
+				start: 9,
+				end: 21
+			}
 		}]
 	}]);
 });
@@ -81,8 +90,10 @@ test('parameter substitution', t => {
 		expansion: [{
 			type: 'parameter_expansion',
 			parameter: 'other',
-			start: 4,
-			end: 12
+			loc: {
+				start: 4,
+				end: 11
+			}
 		}]
 	}]);
 });
@@ -95,29 +106,35 @@ test('multiple parameter substitution', t => {
 		expansion: [{
 			type: 'parameter_expansion',
 			parameter: 'other',
-			start: 4,
-			end: 12
+			loc: {
+				start: 4,
+				end: 11
+			}
 		},
 		{
 			type: 'parameter_expansion',
 			parameter: 'est',
-			start: 13,
-			end: 17
+			loc: {
+				start: 13,
+				end: 16
+			}
 		}]
 	}]);
 });
 
-test('command consisting of only parameter substitution', t => {
+test.only('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
-	// utils.logResults(result)
+	utils.logResults(result)
 	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: '$other',
 		expansion: [{
 			type: 'parameter_expansion',
 			parameter: 'other',
-			start: 0,
-			end: 6
+			loc: {
+				start: 0,
+				end: 5
+			}
 		}]
 	});
 });
@@ -137,8 +154,10 @@ test('resolve parameter', t => {
 			expansion: [
 				{
 					parameter: 'other',
-					start: 5,
-					end: 13,
+					loc: {
+						start: 5,
+						end: 12,
+					},
 					resolved: true,
 					type: 'parameter_expansion'
 				}
@@ -162,14 +181,18 @@ test('resolve double parameter', t => {
 			originalText: '"foo ${other} ${one} baz"',
 			expansion: [{
 				parameter: 'other',
-				start: 5,
-				end: 13,
+				loc: {
+					start: 5,
+					end: 12
+				},
 				resolved: true,
 				type: 'parameter_expansion'
 			}, {
 				parameter: 'one',
-				start: 14,
-				end: 20,
+				loc: {
+					start: 14,
+					end: 19
+				},
 				resolved: true,
 				type: 'parameter_expansion'
 			}],

@@ -26,7 +26,7 @@ export default function expansionParameter(state, char) {
 	if (char.match(/[0-9a-zA-Z_]/)) {
 		const newXp = {
 			...xp,
-			value: xp.value + (char || '')
+			parameter: xp.value + (char || '')
 		};
 		const expansion = state.expansion
 			.slice(0, -1)

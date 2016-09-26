@@ -4,16 +4,13 @@ import start from './start';
 import expansionStart from './expansionStart';
 import expansionCommandTick from './expansionCommandTick';
 
-import {tokenOrEmpty, appendEmptyExpansion} from '..';
+import {tokenOrEmpty, appendEmptyExpansion, continueToken} from '..';
 
 export default function doubleQuoting(state, char) {
 	if (char === undefined) {
 		return {
 			nextReduction: null,
-			tokensToEmit: tokenOrEmpty(state).concat({
-				type: 'CONTINUE',
-				value: ''
-			})
+			tokensToEmit: tokenOrEmpty(state).concat(continueToken())
 		};
 	}
 

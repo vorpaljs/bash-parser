@@ -3,10 +3,10 @@ import deepFreeze from 'deep-freeze';
 import {advanceLoc} from '../../../utils/tokens';
 import start from './reducers/start';
 
-export {tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
+export {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
 	isOperator, isSpecialParameter, appendEmptyExpansion, advanceLoc} from '../../../utils/tokens';
 
-export default function * tokenizer(src) {
+export default () => function * tokenizer(src) {
 	let state = {
 		current: '',
 		escaping: false,
@@ -39,4 +39,4 @@ export default function * tokenizer(src) {
 		deepFreeze(state);
 		reduction = nextReduction;
 	}
-}
+};

@@ -20,11 +20,16 @@ class Token {
 
 exports.Token = Token;
 
-exports.mkToken = function mkToken(type, value, loc) {
+function mkToken(type, value, loc, expansion) {
 	const tk = new Token({type, value, loc});
+	if (expansion && expansion.length) {
+		tk.expansion = expansion;
+	}
 	Object.freeze(tk);
 	return tk;
-};
+}
+
+exports.mkToken = mkToken;
 
 exports.mkFieldSplitToken = function mkFieldSplitToken(joinedTk, value, fieldIdx) {
 	const tk = new Token({
@@ -74,18 +79,14 @@ exports.addExpansions = function addExpansions(tk) {
 
 exports.tokenOrEmpty = function tokenOrEmpty(state) {
 	if (state.current !== '' && state.current !== '\n') {
-		const token = {
-			type: 'TOKEN',
-			value: state.current,
-			loc: {
-				start: {...state.loc.start},
-				end: {...state.loc.previous}
-			}
-		};
+		const token = mkToken('TOKEN', state.current, {
+			start: {...state.loc.start},
+			end: {...state.loc.previous}
+		}, state.expansion);
 
-		if (state.expansion && state.expansion.length) {
+		/* if (state.expansion && state.expansion.length) {
 			token.expansion = state.expansion;
-		}
+		}*/
 
 		return [token];
 	}
@@ -93,23 +94,27 @@ exports.tokenOrEmpty = function tokenOrEmpty(state) {
 };
 
 exports.operatorTokens = function operatorTokens(state) {
-	const token = {
-		type: operators[state.current],
-		value: state.current,
-		loc: {
+	const token = mkToken(
+		operators[state.current],
+		state.current, {
 			start: {...state.loc.start},
 			end: {...state.loc.previous}
 		}
-	};
+	);
 
 	return [token];
 };
 
 exports.newLine = function newLine() {
-	return {
-		type: 'NEWLINE',
-		value: '\n'
-	};
+	return mkToken('NEWLINE', '\n');
+};
+
+exports.continueToken = function newLine() {
+	return mkToken('CONTINUE', '');
+};
+
+exports.eof = function newLine() {
+	return mkToken('EOF', '');
 };
 
 exports.isPartOfOperator = function isPartOfOperator(text) {

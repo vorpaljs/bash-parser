@@ -3,7 +3,7 @@
 /* flow-include import type {ModePlugin} from '../plugin'; */
 
 const astBuilder = require('./ast-builder');
-const tokenizer = require('./token-delimiter');
+const tokenizer = require('./tokenizer').default;
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 

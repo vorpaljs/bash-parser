@@ -211,7 +211,7 @@ test('command with stderr redirection to file', t => {
 	});
 });
 
-test('parse subshell', t => {
+test.skip('parse subshell', t => {
 	const result = bashParser('( ls )');
 	utils.checkResults(t, result, {
 		type: 'complete_command',

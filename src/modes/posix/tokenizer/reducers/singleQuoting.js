@@ -1,16 +1,13 @@
 'use strict';
 
-import {tokenOrEmpty} from '..';
+import {tokenOrEmpty, continueToken} from '..';
 import start from './start';
 
 export default function singleQuoting(state, char) {
 	if (char === undefined) {
 		return {
 			nextReduction: null,
-			tokensToEmit: tokenOrEmpty(state).concat({
-				type: 'CONTINUE',
-				value: ''
-			})
+			tokensToEmit: tokenOrEmpty(state).concat(continueToken())
 		};
 	}
 

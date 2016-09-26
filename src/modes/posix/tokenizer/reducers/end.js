@@ -1,10 +1,10 @@
 'use strict';
+
+import {eof} from '..';
+
 export default function end() {
 	return {
 		nextReduction: null,
-		tokensToEmit: [{
-			type: 'EOF',
-			value: ''
-		}]
+		tokensToEmit: [eof()]
 	};
 }

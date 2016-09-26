@@ -3,6 +3,8 @@ import 'babel-register';
 import test from 'ava';
 import tokenDelimiter from '../src/modes/posix/tokenizer';
 
+const tokenizer = tokenDelimiter();
+
 function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 	return JSON.stringify({
 		start: {
@@ -19,7 +21,7 @@ function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 }
 
 function tokenize(text, keepLoc) {
-	const results = Array.from(tokenDelimiter(text)).map(t => {
+	const results = Array.from(tokenizer(text)).map(t => {
 		const r = Object.assign({}, t);
 		r[r.type] = r.value;
 		delete r.type;

@@ -4,8 +4,8 @@
 const map = require('map-iterable');
 const babylon = require('babylon');
 const MagicString = require('magic-string');
-const fieldSplitting = require('./field-splitting');
 const tokens = require('../../../utils/tokens');
+const fieldSplitting = require('./field-splitting');
 
 function setArithmeticExpansion(xp) {
 	let AST;
@@ -18,7 +18,7 @@ function setArithmeticExpansion(xp) {
 	const expression = AST.program.body[0].expression;
 
 	if (expression === undefined) {
-		throw new SyntaxError(`Cannot parse arithmetic expression "${expression}": Not an expression`);
+		throw new SyntaxError(`Cannot parse arithmetic expression "${xp.expression}": Not an expression`);
 	}
 
 	const arithmeticAST = JSON.parse(JSON.stringify(expression));
@@ -57,8 +57,8 @@ arithmeticExpansion.resolve = (options, utils) => map(token => {
 			if (xp.type === 'arithmetic_expansion') {
 				const result = options.runArithmeticExpression(xp);
 				magic.overwrite(
-					xp.start,
-					xp.end,
+					xp.loc.start,
+					xp.loc.end + 1,
 					fieldSplitting.mark(result, value, options)
 				);
 				xp.resolved = true;

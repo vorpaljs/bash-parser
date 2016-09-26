@@ -85,10 +85,17 @@ exports.setExpansions = function setExpansions(tk, expansion) {
 
 exports.tokenOrEmpty = function tokenOrEmpty(state) {
 	if (state.current !== '' && state.current !== '\n') {
+		const expansion = (state.expansion || []).map(xp => {
+			// console.log('aaa', {token: state.loc, xp: xp.loc});
+			return {...xp, loc: {
+				start: xp.loc.start.char - state.loc.start.char,
+				end: xp.loc.end.char - state.loc.start.char
+			}};
+		});
 		const token = mkToken('TOKEN', state.current, {
 			start: {...state.loc.start},
 			end: {...state.loc.previous}
-		}, state.expansion);
+		}, expansion);
 
 		/* if (state.expansion && state.expansion.length) {
 			token.expansion = state.expansion;

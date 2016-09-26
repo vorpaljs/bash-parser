@@ -17,7 +17,7 @@ const lexerPhases = (utils) => [
 	phaseCatalog.ioNumber,
 	phaseCatalog.identifyMaybeSimpleCommands,
 	phaseCatalog.assignmentWord,
-	phaseCatalog.parameterExpansion,
+	//phaseCatalog.parameterExpansion,
 	phaseCatalog.arithmeticExpansion,
 	//phaseCatalog.commandExpansion,
 	// utils.loggerPhase('commandExpansion'),

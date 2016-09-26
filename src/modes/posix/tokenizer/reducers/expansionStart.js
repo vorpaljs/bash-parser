@@ -24,7 +24,11 @@ export default function expansionStart(state, char) {
 	}
 
 	if (char.match(/[a-zA-Z_]/)) {
-		const newXp = {...last(state.expansion), value: char, type: 'PARAMETER'};
+		const newXp = {
+			...last(state.expansion),
+			value: char,
+			type: 'parameter_expansion'
+		};
 		const expansion = state.expansion
 			.slice(0, -1)
 			.concat(newXp);

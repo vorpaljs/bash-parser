@@ -1,4 +1,5 @@
 'use strict';
+import 'babel-register';
 const test = require('ava');
 const posixLexer = require('../src/shell-lexer');
 const posixMode = require('../src/modes/posix');

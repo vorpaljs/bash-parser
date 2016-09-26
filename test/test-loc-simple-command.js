@@ -1,4 +1,5 @@
 'use strict';
+import 'babel-register';
 // const json = require('json5');
 // const {diff} = require('rus-diff');
 const test = require('ava');

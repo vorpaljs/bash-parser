@@ -1,4 +1,5 @@
 'use strict';
+import 'babel-register';
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');

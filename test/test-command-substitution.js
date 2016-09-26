@@ -2,6 +2,7 @@
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
+import 'babel-register';
 
 /* eslint-disable camelcase */
 test('command substitution', t => {

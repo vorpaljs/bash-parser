@@ -1,6 +1,7 @@
 'use strict';
 import hasOwnProperty from 'has-own-property';
 import deepFreeze from 'deep-freeze';
+import last from 'array-last';
 
 const operators = {
 	/*
@@ -56,7 +57,7 @@ function * tokenizer(src) {
 			current: {col: 1, row: 1, char: 0}
 		}
 	};
-	// deepFreeze(state);
+	deepFreeze(state);
 	let reduction = start;
 
 	while (typeof reduction === 'function') {
@@ -74,7 +75,7 @@ function * tokenizer(src) {
 			state = advanceLoc(state, char);
 		}
 
-		// deepFreeze(state);
+		deepFreeze(state);
 		reduction = nextReduction;
 	}
 }
@@ -84,7 +85,7 @@ function start(state, char) {
 		return {
 			nextReduction: end,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: {...state, current: '', expansion: []}
+			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 
@@ -96,7 +97,7 @@ function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokens,
-			nextState: {...state, current: '', expansion: []}
+			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 
@@ -112,7 +113,7 @@ function start(state, char) {
 		return {
 			nextReduction: operator,
 			tokensToEmit: tokens,
-			nextState: {...state, current: char, expansion: []}
+			nextState: {...state, current: char, expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 
@@ -134,7 +135,7 @@ function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: {...state, current: ''}
+			nextState: {...state, current: '', loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 
@@ -145,7 +146,7 @@ function start(state, char) {
 				...state,
 				current: state.current + '$',
 				expansion: (state.expansion || []).concat({
-					loc: {start: Object.assign({}, state.loc.current)}
+					loc: {start: {...state.loc.current}}
 				})
 			}
 		};
@@ -158,7 +159,7 @@ function start(state, char) {
 				...state,
 				current: state.current + '`',
 				expansion: (state.expansion || []).concat({
-					loc: {start: Object.assign({}, state.loc.current)}
+					loc: {start: {...state.loc.current}}
 				})
 			}
 		};
@@ -186,13 +187,14 @@ function expansionStart(state, char) {
 	}
 
 	if (char.match(/[a-zA-Z_]/)) {
-		const xp = state.expansion[state.expansion.length - 1];
-		xp.value = char;
-		xp.type = 'PARAMETER';
+		const newXp = {...last(state.expansion), value: char, type: 'PARAMETER'};
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
 
 		return {
 			nextReduction: expansionParameter,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
 
@@ -208,68 +210,100 @@ function expansionStart(state, char) {
 }
 
 function expansionSpecialParameter(state, char) {
-	const xp = state.expansion[state.expansion.length - 1];
-	xp.value = char;
-	xp.type = 'SPECIAL-PARAMETER';
-	xp.loc.end = {...state.loc.current};
+	const xp = last(state.expansion);
+
+	const newXp = {
+		...xp,
+		value: char,
+		type: 'SPECIAL-PARAMETER',
+		loc: {...xp.loc, end: state.loc.current}
+	};
+
+	const expansion = state.expansion
+		.slice(0, -1)
+		.concat(newXp);
 
 	if (state.doubleQuoting) {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
 
 	return {
 		nextReduction: start,
-		nextState: {...state, current: state.current + char}
+		nextState: {...state, current: state.current + char, expansion}
 	};
 }
 
 function expansionParameterExtended(state, char) {
-	const xp = state.expansion[state.expansion.length - 1];
+	const xp = last(state.expansion);
 
 	if (char === '}') {
-		xp.type = 'PARAMETER';
-		xp.loc.end = Object.assign({}, state.loc.current);
+		const newXp = {
+			...xp,
+			type: 'PARAMETER',
+			loc: {...xp.loc, end: state.loc.current}
+		};
+
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char}
+				nextState: {...state, current: state.current + char, expansion}
 			};
 		}
 
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
 
-	xp.value = (xp.value || '') + char;
+	const newXp = {
+		...xp,
+		value: (xp.value || '') + char
+	};
+
+	const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 	return {
 		nextReduction: expansionParameterExtended,
-		nextState: {...state, current: state.current + char}
+		nextState: {...state, current: state.current + char, expansion}
 	};
 }
 
 function expansionParameter(state, char) {
+	const xp = last(state.expansion);
 	if (char.match(/[0-9a-zA-Z_]/)) {
-		state.expansion[state.expansion.length - 1].value += char;
+		const newXp = {...xp, value: xp.value + char};
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 		return {
 			nextReduction: expansionParameter,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
+	const newXp = {...xp, loc: {...xp.loc, end: state.loc.previous}};
+	const expansion = state.expansion
+		.slice(0, -1)
+		.concat(newXp);
 
-	state.expansion[state.expansion.length - 1].loc.end = {...state.loc.previous};
 	if (state.doubleQuoting) {
-		return doubleQuoting(state, char);
+		return doubleQuoting({...state, expansion}, char);
 	}
-	return start(state, char);
+	return start({...state, expansion}, char);
 }
 
 function expansionCommandOrArithmetic(state, char) {
-	const xp = state.expansion[state.expansion.length - 1];
+	const xp = last(state.expansion);
 	if (char === '(' && state.current.slice(-2) === '$(') {
 		return {
 			nextReduction: expansionArithmetic,
@@ -278,74 +312,121 @@ function expansionCommandOrArithmetic(state, char) {
 	}
 
 	if (char === ')') {
-		xp.type = 'COMMAND';
-		xp.loc.end = Object.assign({}, state.loc.current);
+		const newXp = {
+			...xp,
+			type: 'COMMAND',
+			loc: {...xp.loc, end: state.loc.current}
+		};
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char}
+				nextState: {...state, current: state.current + char, expansion}
 			};
 		}
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
 
-	xp.value = (xp.value || '') + char;
+	const newXp = {
+		...xp,
+		value: (xp.value || '') + char
+	};
+
+	const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 	return {
 		nextReduction: expansionCommandOrArithmetic,
-		nextState: {...state, current: state.current + char}
+		nextState: {...state, current: state.current + char, expansion}
 	};
 }
 
 function expansionCommandTick(state, char) {
-	const xp = state.expansion[state.expansion.length - 1];
+	const xp = last(state.expansion);
 	if (!state.escaping && char === '`') {
-		xp.type = 'COMMAND';
-		xp.loc.end = {...state.loc.current};
+		const newXp = {
+			...xp,
+			type: 'COMMAND',
+			loc: {...xp.loc, end: state.loc.current}
+		};
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char}
+				nextState: {...state, current: state.current + char, expansion}
 			};
 		}
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
 
-	xp.value = (xp.value || '') + char;
+	const newXp = {
+		...xp,
+		value: (xp.value || '') + char
+	};
+
+	const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 	return {
 		nextReduction: expansionCommandTick,
-		nextState: {...state, current: state.current + char}
+		nextState: {...state, current: state.current + char, expansion}
 	};
 }
 
 function expansionArithmetic(state, char) {
-	const xp = state.expansion[state.expansion.length - 1];
+	const xp = last(state.expansion);
 
 	if (char === ')' && state.current.slice(-1)[0] === ')') {
-		xp.type = 'ARITHMETIC';
-		xp.value = xp.value.slice(0, -1);
-		xp.loc.end = {...state.loc.current};
+		const newXp = {
+			...xp,
+			type: 'ARITHMETIC',
+			value: xp.value.slice(0, -1),
+			loc: {...xp.loc, end: state.loc.current}
+		};
+
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 		if (state.doubleQuoting) {
 			return {
 				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char}
+				nextState: {...state, current: state.current + char, expansion}
 			};
 		}
+
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char}
+			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
 
-	xp.value = (xp.value || '') + char;
+	const newXp = {
+		...xp,
+		value: (xp.value || '') + char
+	};
+
+	const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
 	return {
 		nextReduction: expansionArithmetic,
-		nextState: {...state, current: state.current + char}
+		nextState: {...state, current: state.current + char, expansion}
 	};
 }
 
@@ -357,7 +438,7 @@ function singleQuoting(state, char) {
 				type: 'CONTINUE',
 				value: ''
 			}),
-			nextState: {...state, current: '', expansion: []}
+			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 
@@ -382,7 +463,7 @@ function doubleQuoting(state, char) {
 				type: 'CONTINUE',
 				value: ''
 			}),
-			nextState: {...state, doubleQuoting: false, current: '', expansion: []}
+			nextState: {...state, doubleQuoting: false, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 
@@ -435,7 +516,7 @@ function operator(state, char) {
 			return {
 				nextReduction: end,
 				tokensToEmit: operatorTokens(state),
-				nextState: {...state, current: ''}
+				nextState: {...state, current: '', loc: {...state.loc, start: state.loc.current}}
 			};
 		}
 		return start(state, char);
@@ -451,7 +532,7 @@ function operator(state, char) {
 	let tokens = [];
 	if (isOperator(state.current)) {
 		tokens = operatorTokens(state);
-		state = {...state, current: ''};
+		state = {...state, current: '', loc: {...state.loc, start: state.loc.current}};
 	}
 
 	const {nextReduction, tokensToEmit, nextState} = start(state, char);
@@ -492,7 +573,7 @@ function tokenOrEmpty(state) {
 			token.expansion = state.expansion;
 		}
 
-		state.loc.start = {...state.loc.current};
+		// state.loc.start = {...state.loc.current};
 		return [token];
 	}
 	return [];
@@ -508,7 +589,7 @@ function operatorTokens(state) {
 		}
 	};
 
-	state.loc.start = {...state.loc.current};
+	// state.loc.start = {...state.loc.current};
 	return [token];
 }
 

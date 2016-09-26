@@ -62,8 +62,10 @@
     ]
   },
   "dependencies": {
+    "array-last": "^1.1.1",
     "babylon": "^6.9.1",
     "compose-function": "^3.0.3",
+    "deep-freeze": "0.0.1",
     "filter-obj": "^1.1.0",
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",

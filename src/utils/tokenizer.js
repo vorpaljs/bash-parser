@@ -1,5 +1,6 @@
 'use strict';
-const hasOwnProperty = require('has-own-property');
+import hasOwnProperty from 'has-own-property';
+import deepFreeze from 'deep-freeze';
 
 const operators = {
 	/*
@@ -21,20 +22,28 @@ const operators = {
 	'>|': 'CLOBBER'
 };
 
-function advanceLoc(data, char) {
-	data.loc.previous = Object.assign({}, data.loc.current);
+function advanceLoc(state, char) {
+	const loc = {
+		...state.loc,
+		current: {...state.loc.current},
+		previous: {...state.loc.current}
+
+	};
+
 	if (char === '\n') {
-		data.loc.current.row++;
-		data.loc.current.col = 1;
+		loc.current.row++;
+		loc.current.col = 1;
 	} else {
-		data.loc.current.col++;
+		loc.current.col++;
 	}
 
-	data.loc.current.char++;
+	loc.current.char++;
 
-	if (char && char.match(/\s/) && data.current === '') {
-		data.loc.start = {...data.loc.current};
+	if (char && char.match(/\s/) && state.current === '') {
+		loc.start = {...loc.current};
 	}
+
+	return {...state, loc};
 }
 
 function * tokenizer(src) {
@@ -47,7 +56,7 @@ function * tokenizer(src) {
 			current: {col: 1, row: 1, char: 0}
 		}
 	};
-	Object.freeze(state);
+	// deepFreeze(state);
 	let reduction = start;
 
 	while (typeof reduction === 'function') {
@@ -60,13 +69,13 @@ function * tokenizer(src) {
 		}
 
 		if (nextState) {
-			state = nextState;
-			Object.freeze(state);
+			state = advanceLoc(nextState, char);
+		} else {
+			state = advanceLoc(state, char);
 		}
 
+		// deepFreeze(state);
 		reduction = nextReduction;
-
-		advanceLoc(state, char);
 	}
 }
 

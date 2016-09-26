@@ -92,13 +92,9 @@ function start(state, char) {
 	}
 
 	if (state.current === '\n' || (!state.escaping && char === '\n')) {
-		const tokens = tokenOrEmpty(state).concat({
-			type: 'NEWLINE',
-			value: '\n'
-		});
 		return {
 			nextReduction: start,
-			tokensToEmit: tokens,
+			tokensToEmit: tokenOrEmpty(state).concat(newLine()),
 			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
@@ -111,10 +107,9 @@ function start(state, char) {
 	}
 
 	if (!state.escaping && isPartOfOperator(char)) {
-		const tokens = tokenOrEmpty(state);
 		return {
 			nextReduction: operator,
-			tokensToEmit: tokens,
+			tokensToEmit: tokenOrEmpty(state),
 			nextState: {...state, current: char, expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
@@ -147,9 +142,7 @@ function start(state, char) {
 			nextState: {
 				...state,
 				current: state.current + '$',
-				expansion: (state.expansion || []).concat({
-					loc: {start: {...state.loc.current}}
-				})
+				expansion: appendEmptyExpansion(state)
 			}
 		};
 	}
@@ -160,9 +153,7 @@ function start(state, char) {
 			nextState: {
 				...state,
 				current: state.current + '`',
-				expansion: (state.expansion || []).concat({
-					loc: {start: {...state.loc.current}}
-				})
+				expansion: appendEmptyExpansion(state)
 			}
 		};
 	}
@@ -460,9 +451,7 @@ function doubleQuoting(state, char) {
 	}
 
 	if (!state.escaping && char === '$') {
-		const expansion = (state.expansion || []).concat({
-			loc: {start: {...state.loc.current}}
-		});
+		const expansion = appendEmptyExpansion(state);
 
 		return {
 			nextReduction: expansionStart,
@@ -476,9 +465,7 @@ function doubleQuoting(state, char) {
 	}
 
 	if (!state.escaping && char === '`') {
-		const expansion = (state.expansion || []).concat({
-			loc: {start: {...state.loc.current}}
-		});
+		const expansion = appendEmptyExpansion(state);
 
 		return {
 			nextReduction: expansionCommandTick,
@@ -565,7 +552,6 @@ function tokenOrEmpty(state) {
 			token.expansion = state.expansion;
 		}
 
-		// state.loc.start = {...state.loc.current};
 		return [token];
 	}
 	return [];
@@ -581,8 +567,14 @@ function operatorTokens(state) {
 		}
 	};
 
-	// state.loc.start = {...state.loc.current};
 	return [token];
+}
+
+function newLine() {
+	return {
+		type: 'NEWLINE',
+		value: '\n'
+	};
 }
 
 function isPartOfOperator(text) {
@@ -595,4 +587,10 @@ function isOperator(text) {
 
 function isSpecialParameter(char) {
 	return char.match(/^[0-9\-!@#\?\*\$]$/);
+}
+
+function appendEmptyExpansion(state) {
+	return (state.expansion || []).concat({
+		loc: {start: {...state.loc.current}}
+	});
 }

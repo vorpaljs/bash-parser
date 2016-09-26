@@ -1,7 +1,7 @@
 'use strict';
 import 'babel-register';
 import test from 'ava';
-import tokenDelimiter from '../src/utils/tokenizer';
+import tokenDelimiter from '../src/modes/posix/tokenizer';
 
 function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 	return JSON.stringify({

@@ -10,8 +10,7 @@ export default function singleQuoting(state, char) {
 			tokensToEmit: tokenOrEmpty(state).concat({
 				type: 'CONTINUE',
 				value: ''
-			}),
-			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
+			})
 		};
 	}
 

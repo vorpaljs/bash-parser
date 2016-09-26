@@ -13,14 +13,7 @@ export default function doubleQuoting(state, char) {
 			tokensToEmit: tokenOrEmpty(state).concat({
 				type: 'CONTINUE',
 				value: ''
-			}),
-			nextState: {
-				...state,
-				previousReducer: start,
-				current: '',
-				expansion: [],
-				loc: {...state.loc, start: state.loc.current}
-			}
+			})
 		};
 	}
 

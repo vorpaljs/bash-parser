@@ -44,14 +44,14 @@ export default function start(state, char) {
 	if (!state.escaping && char === '\'') {
 		return {
 			nextReduction: singleQuoting,
-			nextState: {...state, current: state.current + '\''}
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: {...state, current: state.current + '"'}
+			nextState: {...state, current: state.current + char}
 		};
 	}
 
@@ -68,7 +68,7 @@ export default function start(state, char) {
 			nextReduction: expansionStart,
 			nextState: {
 				...state,
-				current: state.current + '$',
+				current: state.current + char,
 				expansion: appendEmptyExpansion(state)
 			}
 		};
@@ -79,7 +79,7 @@ export default function start(state, char) {
 			nextReduction: expansionCommandTick,
 			nextState: {
 				...state,
-				current: state.current + '`',
+				current: state.current + char,
 				expansion: appendEmptyExpansion(state)
 			}
 		};

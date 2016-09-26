@@ -51,12 +51,14 @@ function * tokenizer(src) {
 	let state = {
 		current: '',
 		escaping: false,
+		previousReducer: start,
 		loc: {
 			start: {col: 1, row: 1, char: 0},
 			previous: null,
 			current: {col: 1, row: 1, char: 0}
 		}
 	};
+
 	deepFreeze(state);
 	let reduction = start;
 
@@ -202,11 +204,7 @@ function expansionStart(state, char) {
 		return expansionSpecialParameter(state, char);
 	}
 
-	if (state.doubleQuoting) {
-		return doubleQuoting(state, char);
-	}
-
-	return start(state, char);
+	return state.previousReducer(state, char);
 }
 
 function expansionSpecialParameter(state, char) {
@@ -223,15 +221,8 @@ function expansionSpecialParameter(state, char) {
 		.slice(0, -1)
 		.concat(newXp);
 
-	if (state.doubleQuoting) {
-		return {
-			nextReduction: doubleQuoting,
-			nextState: {...state, current: state.current + char, expansion}
-		};
-	}
-
 	return {
-		nextReduction: start,
+		nextReduction: state.previousReducer,
 		nextState: {...state, current: state.current + char, expansion}
 	};
 }
@@ -250,15 +241,8 @@ function expansionParameterExtended(state, char) {
 			.slice(0, -1)
 			.concat(newXp);
 
-		if (state.doubleQuoting) {
-			return {
-				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char, expansion}
-			};
-		}
-
 		return {
-			nextReduction: start,
+			nextReduction: state.previousReducer,
 			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
@@ -296,10 +280,7 @@ function expansionParameter(state, char) {
 		.slice(0, -1)
 		.concat(newXp);
 
-	if (state.doubleQuoting) {
-		return doubleQuoting({...state, expansion}, char);
-	}
-	return start({...state, expansion}, char);
+	return state.previousReducer({...state, expansion}, char);
 }
 
 function expansionCommandOrArithmetic(state, char) {
@@ -321,14 +302,8 @@ function expansionCommandOrArithmetic(state, char) {
 			.slice(0, -1)
 			.concat(newXp);
 
-		if (state.doubleQuoting) {
-			return {
-				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char, expansion}
-			};
-		}
 		return {
-			nextReduction: start,
+			nextReduction: state.previousReducer,
 			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
@@ -360,14 +335,8 @@ function expansionCommandTick(state, char) {
 			.slice(0, -1)
 			.concat(newXp);
 
-		if (state.doubleQuoting) {
-			return {
-				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char, expansion}
-			};
-		}
 		return {
-			nextReduction: start,
+			nextReduction: state.previousReducer,
 			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
@@ -402,15 +371,8 @@ function expansionArithmetic(state, char) {
 			.slice(0, -1)
 			.concat(newXp);
 
-		if (state.doubleQuoting) {
-			return {
-				nextReduction: doubleQuoting,
-				nextState: {...state, current: state.current + char, expansion}
-			};
-		}
-
 		return {
-			nextReduction: start,
+			nextReduction: state.previousReducer,
 			nextState: {...state, current: state.current + char, expansion}
 		};
 	}
@@ -463,14 +425,25 @@ function doubleQuoting(state, char) {
 				type: 'CONTINUE',
 				value: ''
 			}),
-			nextState: {...state, doubleQuoting: false, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
+			nextState: {
+				...state,
+				previousReducer: start,
+				current: '',
+				expansion: [],
+				loc: {...state.loc, start: state.loc.current}
+			}
 		};
 	}
 
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: {...state, doubleQuoting: true, escaping: true, current: state.current + char}
+			nextState: {
+				...state,
+				previousReducer: doubleQuoting,
+				escaping: true,
+				current: state.current + char
+			}
 
 		};
 	}
@@ -478,7 +451,11 @@ function doubleQuoting(state, char) {
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: start,
-			nextState: {...state, doubleQuoting: false, current: state.current + char}
+			nextState: {
+				...state,
+				previousReducer: start,
+				current: state.current + char
+			}
 		};
 	}
 
@@ -489,7 +466,12 @@ function doubleQuoting(state, char) {
 
 		return {
 			nextReduction: expansionStart,
-			nextState: {...state, doubleQuoting: true, current: state.current + char, expansion}
+			nextState: {
+				...state,
+				previousReducer: doubleQuoting,
+				current: state.current + char,
+				expansion
+			}
 		};
 	}
 
@@ -500,13 +482,23 @@ function doubleQuoting(state, char) {
 
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: {...state, doubleQuoting: true, current: state.current + char, expansion}
+			nextState: {
+				...state,
+				previousReducer: doubleQuoting,
+				current: state.current + char,
+				expansion
+			}
 		};
 	}
 
 	return {
 		nextReduction: doubleQuoting,
-		nextState: {...state, doubleQuoting: true, escaping: false, current: state.current + char}
+		nextState: {
+			...state,
+			previousReducer: doubleQuoting,
+			escaping: false,
+			current: state.current + char
+		}
 	};
 }
 

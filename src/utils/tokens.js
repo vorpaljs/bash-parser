@@ -1,5 +1,7 @@
 'use strict';
 const filter = require('filter-obj');
+const hasOwnProperty = require('has-own-property');
+const operators = require('../modes/posix/enums/operators');
 
 class Token {
 	constructor(fields) {
@@ -68,4 +70,86 @@ exports.addExpansions = function addExpansions(tk) {
 	const newTk = new Token(Object.assign({}, tk, {expansion: []}));
 	Object.freeze(newTk);
 	return newTk;
+};
+
+exports.tokenOrEmpty = function tokenOrEmpty(state) {
+	if (state.current !== '' && state.current !== '\n') {
+		const token = {
+			type: 'TOKEN',
+			value: state.current,
+			loc: {
+				start: {...state.loc.start},
+				end: {...state.loc.previous}
+			}
+		};
+
+		if (state.expansion && state.expansion.length) {
+			token.expansion = state.expansion;
+		}
+
+		return [token];
+	}
+	return [];
+};
+
+exports.operatorTokens = function operatorTokens(state) {
+	const token = {
+		type: operators[state.current],
+		value: state.current,
+		loc: {
+			start: {...state.loc.start},
+			end: {...state.loc.previous}
+		}
+	};
+
+	return [token];
+};
+
+exports.newLine = function newLine() {
+	return {
+		type: 'NEWLINE',
+		value: '\n'
+	};
+};
+
+exports.isPartOfOperator = function isPartOfOperator(text) {
+	return Object.keys(operators).some(op => op.slice(0, text.length) === text);
+};
+
+exports.isOperator = function isOperator(text) {
+	return hasOwnProperty(operators, text);
+};
+
+exports.isSpecialParameter = function isSpecialParameter(char) {
+	return char.match(/^[0-9\-!@#\?\*\$]$/);
+};
+
+exports.appendEmptyExpansion = function appendEmptyExpansion(state) {
+	return (state.expansion || []).concat({
+		loc: {start: {...state.loc.current}}
+	});
+};
+
+exports.advanceLoc = function advanceLoc(state, char) {
+	const loc = {
+		...state.loc,
+		current: {...state.loc.current},
+		previous: {...state.loc.current}
+
+	};
+
+	if (char === '\n') {
+		loc.current.row++;
+		loc.current.col = 1;
+	} else {
+		loc.current.col++;
+	}
+
+	loc.current.char++;
+
+	if (char && char.match(/\s/) && state.current === '') {
+		loc.start = {...loc.current};
+	}
+
+	return {...state, loc};
 };

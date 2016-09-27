@@ -4,6 +4,9 @@ const unescape = require('unescape-js');
 
 function unquote(text) {
 	const unquoted = parse(text);
+	if (unquoted[0].comment) {
+		return '';
+	}
 	return unescape(unquoted[0]);
 }
 

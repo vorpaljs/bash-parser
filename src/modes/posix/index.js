@@ -8,7 +8,7 @@ const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 
 const lexerPhases = (utils) => [
-	// utils.loggerPhase('tokenizer'),
+
 	phaseCatalog.newLineList,
 	phaseCatalog.operatorTokens,
 	phaseCatalog.separator,
@@ -33,6 +33,7 @@ const lexerPhases = (utils) => [
 	phaseCatalog.quoteRemoval,
 	phaseCatalog.syntaxerrorOnContinue,
 	phaseCatalog.defaultNodeType,
+	// utils.loggerPhase('tokenizer'),
 	phaseCatalog.removeTempObject
 
 ];

@@ -220,7 +220,7 @@ test('in single quote escaping single quotes is not working', t => {
 	t.deepEqual(
 		result, [
 			{TOKEN: '\'\\\'\''},
-			{CONTINUE: ''}
+			{CONTINUE: '\''}
 		]
 	);
 });
@@ -350,9 +350,9 @@ test('parse parameter expansion', t => {
 test('parse special parameter expansion', t => {
 	const result = tokenize('a$@cd');
 	const expansion = [{
-		type: 'SPECIAL-PARAMETER',
+		type: 'parameter_expansion',
 		loc: {start: 1, end: 2},
-		value: '@'
+		parameter: '@'
 	}];
 	t.deepEqual(
 		result, [
@@ -442,9 +442,9 @@ test('within double quotes parse parameter expansion', t => {
 test('within double quotes parse special parameter expansion', t => {
 	const result = tokenize('"a$@cd"');
 	const expansion = [{
-		type: 'SPECIAL-PARAMETER',
+		type: 'parameter_expansion',
 		loc: {start: 2, end: 3},
-		value: '@'
+		parameter: '@'
 	}];
 	t.deepEqual(
 		result, [

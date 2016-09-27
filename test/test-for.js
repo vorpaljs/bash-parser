@@ -7,6 +7,7 @@ const utils = require('./_utils');
 /* eslint-disable camelcase */
 test('parse for', t => {
 	const result = bashParser('for x in a b c; do echo $x; done');
+	// utils.logResults(result)
 	utils.checkResults(t,
 		result, {
 			type: 'complete_command',
@@ -25,8 +26,10 @@ test('parse for', t => {
 							expansion: [{
 								type: 'parameter_expansion',
 								parameter: 'x',
-								start: 0,
-								end: 2
+								loc: {
+									start: 0,
+									end: 1
+								}
 							}]
 						}]
 					}]
@@ -56,8 +59,10 @@ test('parse for with default sequence', t => {
 							expansion: [{
 								type: 'parameter_expansion',
 								parameter: 'x',
-								start: 0,
-								end: 2
+								loc: {
+									start: 0,
+									end: 1
+								}
 							}]
 						}]
 					}]
@@ -87,8 +92,10 @@ test('parse for with default sequence - on one line', t => {
 							expansion: [{
 								type: 'parameter_expansion',
 								parameter: 'x',
-								start: 0,
-								end: 2
+								loc: {
+									start: 0,
+									end: 1
+								}
 							}]
 						}]
 					}]

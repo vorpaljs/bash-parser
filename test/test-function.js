@@ -29,7 +29,7 @@ test('parse function declaration multiple lines', t => {
 });
 
 test('parse function declaration', t => {
-	const result = bashParser('foo	(){ command bar --lol;}');
+	const result = bashParser('foo	(){ command bar --lol;  }');
 
 	utils.checkResults(t,
 		result, {

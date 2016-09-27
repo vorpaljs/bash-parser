@@ -38,8 +38,10 @@ test('2', t => {
 										{
 											kind: 'positional-string',
 											parameter: '*',
-											start: 1,
-											end: 3,
+											loc: {
+												start: 1,
+												end: 2
+											},
 											type: 'parameter_expansion'
 										}
 									],

@@ -59,7 +59,7 @@ export default function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: {...state, current: '', loc: {...state.loc, start: state.loc.current}}
+			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
 		};
 	}
 

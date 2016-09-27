@@ -26,7 +26,7 @@ export default function expansionStart(state, char) {
 	if (char.match(/[a-zA-Z_]/)) {
 		const newXp = {
 			...last(state.expansion),
-			value: char,
+			parameter: char,
 			type: 'parameter_expansion'
 		};
 		const expansion = state.expansion

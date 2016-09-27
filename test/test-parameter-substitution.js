@@ -66,7 +66,7 @@ test('parameter substitution and other words', t => {
 
 test('multi-word parameter substitution', t => {
 	const result = bashParser('echoword=${other word}test');
-	utils.logResults(result);
+	// utils.logResults(result);
 
 	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
@@ -122,9 +122,9 @@ test('multiple parameter substitution', t => {
 	}]);
 });
 
-test.only('command consisting of only parameter substitution', t => {
+test('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
-	utils.logResults(result)
+	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: '$other',

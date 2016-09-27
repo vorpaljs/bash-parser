@@ -2,6 +2,7 @@
 import 'babel-register';
 import test from 'ava';
 import tokenDelimiter from '../src/modes/posix/tokenizer';
+import utils from './_utils';
 
 const tokenizer = tokenDelimiter();
 
@@ -330,11 +331,12 @@ test('loc on line continuations', t => {
 
 test('parse parameter expansion', t => {
 	const result = tokenize('a$b-c');
-	// console.log(JSON.stringify(result, null, 4))
+	// utils.logResults(result);
+
 	const expansion = [{
-		type: 'PARAMETER',
+		type: 'parameter_expansion',
 		loc: {start: 1, end: 2},
-		value: 'b'
+		parameter: 'b'
 	}];
 
 	t.deepEqual(
@@ -363,9 +365,9 @@ test('parse special parameter expansion', t => {
 test('parse extended parameter expansion', t => {
 	const result = tokenize('a${b}cd');
 	const expansion = [{
-		type: 'PARAMETER',
+		type: 'parameter_expansion',
 		loc: {start: 1, end: 4},
-		value: 'b'
+		parameter: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -424,9 +426,9 @@ test('parse arithmetic expansion', t => {
 test('within double quotes parse parameter expansion', t => {
 	const result = tokenize('"a$b-c"');
 	const expansion = [{
-		type: 'PARAMETER',
+		type: 'parameter_expansion',
 		loc: {start: 2, end: 3},
-		value: 'b'
+		parameter: 'b'
 	}];
 
 	t.deepEqual(
@@ -455,9 +457,9 @@ test('within double quotes parse special parameter expansion', t => {
 test('within double quotes parse extended parameter expansion', t => {
 	const result = tokenize('"a${b}cd"');
 	const expansion = [{
-		type: 'PARAMETER',
+		type: 'parameter_expansion',
 		loc: {start: 2, end: 5},
-		value: 'b'
+		parameter: 'b'
 	}];
 	t.deepEqual(
 		result, [

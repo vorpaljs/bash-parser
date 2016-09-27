@@ -10,7 +10,7 @@ export default function expansionParameter(state, char) {
 		// console.log(state.loc, xp.loc)
 		const newXp = {
 			...xp,
-			loc: {...xp.loc, end: state.loc.current}
+			loc: {...xp.loc, end: state.loc.previous}
 		};
 		// console.log(newXp)
 		const expansion = state.expansion
@@ -26,7 +26,7 @@ export default function expansionParameter(state, char) {
 	if (char.match(/[0-9a-zA-Z_]/)) {
 		const newXp = {
 			...xp,
-			parameter: xp.value + (char || '')
+			parameter: xp.parameter + (char || '')
 		};
 		const expansion = state.expansion
 			.slice(0, -1)

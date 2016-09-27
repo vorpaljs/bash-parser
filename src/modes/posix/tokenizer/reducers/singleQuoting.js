@@ -7,7 +7,7 @@ export default function singleQuoting(state, char) {
 	if (char === undefined) {
 		return {
 			nextReduction: null,
-			tokensToEmit: tokenOrEmpty(state).concat(continueToken())
+			tokensToEmit: tokenOrEmpty(state).concat(continueToken('\''))
 		};
 	}
 

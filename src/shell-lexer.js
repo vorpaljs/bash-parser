@@ -41,7 +41,7 @@ const posixShellLexer = (mode, options) => ({
 		}
 
 		if (tk.loc) {
-			this.yylineno = tk.loc.startLine;
+			this.yylineno = tk.loc.start.row - 1;
 		}
 
 		return tkType;

@@ -12,74 +12,118 @@ test('loc in function declaration', t => {
 }
 `;
 	const result = bashParser(cmd, {insertLOC: true});
-
+	// utils.logResults(result)
 	const expected = {
 		type: 'function',
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 2,
-			endColumn: 0
-		},
 		name: {
-			type: 'name',
 			text: 'foo',
+			type: 'name',
 			loc: {
-				startLine: 0,
-				startColumn: 0,
-				endLine: 0,
-				endColumn: 2
+				start: {
+					col: 1,
+					row: 1,
+					char: 0
+				},
+				end: {
+					col: 3,
+					row: 1,
+					char: 2
+				}
 			}
 		},
 		body: {
 			type: 'compound_list',
-			loc: {
-				startLine: 0,
-				startColumn: 7,
-				endLine: 2,
-				endColumn: 0
-			},
 			commands: [
 				{
 					type: 'simple_command',
 					name: {
-						type: 'word',
 						text: 'command',
+						type: 'word',
 						loc: {
-							startLine: 1,
-							startColumn: 1,
-							endLine: 1,
-							endColumn: 7
+							start: {
+								col: 2,
+								row: 2,
+								char: 10
+							},
+							end: {
+								col: 8,
+								row: 2,
+								char: 16
+							}
 						}
 					},
 					loc: {
-						startLine: 1,
-						startColumn: 1,
-						endLine: 1,
-						endColumn: 17
+						start: {
+							col: 2,
+							row: 2,
+							char: 10
+						},
+						end: {
+							col: 18,
+							row: 2,
+							char: 26
+						}
 					},
-					suffix: [{
-						type: 'word',
-						text: 'bar',
-						loc: {
-							startLine: 1,
-							startColumn: 9,
-							endLine: 1,
-							endColumn: 11
+					suffix: [
+						{
+							text: 'bar',
+							type: 'word',
+							loc: {
+								start: {
+									col: 10,
+									row: 2,
+									char: 18
+								},
+								end: {
+									col: 12,
+									row: 2,
+									char: 20
+								}
+							}
+						},
+						{
+							text: '--lol',
+							type: 'word',
+							loc: {
+								start: {
+									col: 14,
+									row: 2,
+									char: 22
+								},
+								end: {
+									col: 18,
+									row: 2,
+									char: 26
+								}
+							}
 						}
-					}, {
-						type: 'word',
-						text: '--lol',
-						loc: {
-							startLine: 1,
-							startColumn: 13,
-							endLine: 1,
-							endColumn: 17
-						}
-					}]
+					]
 				}
-			]
-
+			],
+			loc: {
+				start: {
+					col: 8,
+					row: 1,
+					char: 7
+				},
+				end: {
+					col: 1,
+					row: 3,
+					char: 29
+				}
+			}
+		},
+		loc: {
+			start: {
+				col: 1,
+				row: 1,
+				char: 0
+			},
+			end: {
+				col: 1,
+				row: 3,
+				char: 29
+			}
 		}
 	};
 

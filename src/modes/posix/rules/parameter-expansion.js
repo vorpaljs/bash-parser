@@ -37,20 +37,21 @@ function isSpecialParameter(currentCharacter) {
 
 function setParameterExpansion(xp) {
 	let parameter = xp.parameter;
-	let word;
-	let op;
 
 	for (const pair of pairs(parameterOps)) {
 		const opName = pair[0];
 		const opChars = pair[1];
-
+		// console.log({opChars, parameter})
 		const pos = parameter.indexOf(opChars);
 
 		if (pos !== -1) {
+			const word = {text: parameter.slice(pos + 2)};
+
 			parameter = parameter.slice(0, pos);
 
+			/*
 			// recursive expansion of operator argument
-			/*word = expandWord({value: parameter.slice(pos + 2), WORD: parameter.slice(pos + 2)}, utils);
+			word = expandWord({value: parameter.slice(pos + 2), WORD: parameter.slice(pos + 2)}, utils);
 			word = Object.assign({}, word);
 			word.text = word.WORD;
 			delete word._;
@@ -58,9 +59,14 @@ function setParameterExpansion(xp) {
 			delete word.value;
 			delete word.undefined;*/
 
-			op = opName;
-			// only one operators is allowed
-			break;
+			const op = opName;
+
+			return {
+				...xp,
+				parameter,
+				...(op ? {op} : {}),
+				...(word ? {word} : {})
+			};
 		}
 	}
 
@@ -75,9 +81,7 @@ function setParameterExpansion(xp) {
 	if (isSpecialParameter(parameter)) {
 		return {
 			...xp,
-			kind: specialParameterNames[parameter],
-			...(op ? {op} : {}),
-			...(word ? {word} : {})
+			kind: specialParameterNames[parameter]
 		};
 	}
 

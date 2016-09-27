@@ -1,11 +1,10 @@
-'use strict';
+/* 'use strict';
 import 'babel-register';
 const test = require('ava');
 const tokenDelimiter = require('../src/modes/posix/token-delimiter')();
 const mkloc = require('./_utils').mkloc;
 const utils = require('./_utils');
 
-/* eslint-disable camelcase */
 function tokenize(text) {
 	const results = Array.from(tokenDelimiter(text)).map(t => {
 		const r = Object.assign({}, t);
@@ -289,3 +288,4 @@ test('escaped double quotes within double quotes', t => {
 		]
 	);
 });
+*/

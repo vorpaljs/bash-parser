@@ -10,7 +10,7 @@ export default function doubleQuoting(state, char) {
 	if (char === undefined) {
 		return {
 			nextReduction: null,
-			tokensToEmit: tokenOrEmpty(state).concat(continueToken())
+			tokensToEmit: tokenOrEmpty(state).concat(continueToken('"'))
 		};
 	}
 

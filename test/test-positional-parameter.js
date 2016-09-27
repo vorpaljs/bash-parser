@@ -8,8 +8,8 @@ const utils = require('./_utils');
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
 		.commands[0].prefix;
-	// utils.logResults(result);
-	//
+
+	utils.logResults(result);
 
 	utils.checkResults(t, result, [{
 		type: 'assignment_word',
@@ -18,8 +18,10 @@ test('positional parameter with word following', t => {
 			type: 'parameter_expansion',
 			kind: 'positional',
 			parameter: 1,
-			start: 9,
-			end: 11
+			loc: {
+				start: 9,
+				end: 10
+			}
 		}]
 	}]);
 });
@@ -39,8 +41,10 @@ test('positional parameter in braces', t => {
 						type: 'parameter_expansion',
 						parameter: 11,
 						kind: 'positional',
-						start: 9,
-						end: 14
+						loc: {
+							start: 9,
+							end: 13
+						}
 					}]
 				}]
 			}
@@ -63,8 +67,10 @@ test('positional parameter without braces', t => {
 					type: 'parameter_expansion',
 					parameter: 1,
 					kind: 'positional',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -86,8 +92,10 @@ test('positional parameter without braces allow one digit only', t => {
 					type: 'parameter_expansion',
 					parameter: 1,
 					kind: 'positional',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]

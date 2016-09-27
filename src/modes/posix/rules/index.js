@@ -21,3 +21,4 @@ exports.ioNumber = require('./io-number');
 exports.removeTempObject = require('./remove-temp-object');
 exports.newLineList = require('./new-line-list');
 exports.assignmentWord = require('./assignment-word');
+exports.syntaxerrorOnContinue = require('./syntaxerror-oncontinue');

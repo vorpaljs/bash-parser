@@ -23,8 +23,8 @@ export default () => function * tokenizer(src) {
 
 	while (typeof reduction === 'function') {
 		const char = src[state.loc.current.char];
+		// console.log({char, reduction})
 		const {nextReduction, tokensToEmit, nextState} = reduction(state, char);
-
 		if (tokensToEmit) {
 			yield * tokensToEmit;
 		}

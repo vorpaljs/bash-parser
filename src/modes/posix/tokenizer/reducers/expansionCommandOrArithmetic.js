@@ -1,6 +1,7 @@
 'use strict';
 
 import last from 'array-last';
+import {continueToken} from '..';
 import expansionArithmetic from './expansionArithmetic';
 
 export default function expansionCommandOrArithmetic(state, char) {
@@ -9,6 +10,23 @@ export default function expansionCommandOrArithmetic(state, char) {
 		return {
 			nextReduction: expansionArithmetic,
 			nextState: {...state, current: state.current + char}
+		};
+	}
+
+	if (char === undefined) {
+		const newXp = {
+			...xp,
+			loc: {...xp.loc, end: state.loc.previous}
+		};
+
+		const expansion = state.expansion
+			.slice(0, -1)
+			.concat(newXp);
+
+		return {
+			nextReduction: state.previousReducer,
+			tokensToEmit: [continueToken('$(')],
+			nextState: {...state, expansion}
 		};
 	}
 

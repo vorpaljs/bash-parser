@@ -7,8 +7,8 @@ export default function expansionSpecialParameter(state, char) {
 
 	const newXp = {
 		...xp,
-		value: char,
-		type: 'SPECIAL-PARAMETER',
+		parameter: char,
+		type: 'parameter_expansion',
 		loc: {...xp.loc, end: state.loc.current}
 	};
 

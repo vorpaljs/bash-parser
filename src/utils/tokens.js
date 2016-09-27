@@ -122,8 +122,8 @@ exports.newLine = function newLine() {
 	return mkToken('NEWLINE', '\n');
 };
 
-exports.continueToken = function newLine() {
-	return mkToken('CONTINUE', '');
+exports.continueToken = function continueToken(expectedChar) {
+	return mkToken('CONTINUE', expectedChar);
 };
 
 exports.eof = function newLine() {

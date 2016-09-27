@@ -31,6 +31,7 @@ const lexerPhases = (utils) => [
 	phaseCatalog.fieldSplitting.split,
 	phaseCatalog.pathExpansion,
 	phaseCatalog.quoteRemoval,
+	phaseCatalog.syntaxerrorOnContinue,
 	phaseCatalog.defaultNodeType,
 	phaseCatalog.removeTempObject
 

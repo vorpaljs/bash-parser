@@ -202,7 +202,7 @@ test('resolve double parameter', t => {
 	});
 });
 
-test.skip('field splitting', t => {
+test('field splitting', t => {
 	const result = bashParser('say ${other} plz', {
 		resolveParameter() {
 			return 'foo\tbar baz';
@@ -223,8 +223,10 @@ test.skip('field splitting', t => {
 			text: 'foo',
 			expansion: [{
 				parameter: 'other',
-				start: 0,
-				end: 8,
+				loc: {
+					start: 0,
+					end: 7
+				},
 				type: 'parameter_expansion',
 				resolved: true
 			}],
@@ -236,8 +238,10 @@ test.skip('field splitting', t => {
 			text: 'bar',
 			expansion: [{
 				parameter: 'other',
-				start: 0,
-				end: 8,
+				loc: {
+					start: 0,
+					end: 7
+				},
 				type: 'parameter_expansion',
 				resolved: true
 			}],
@@ -249,8 +253,10 @@ test.skip('field splitting', t => {
 			text: 'baz',
 			expansion: [{
 				parameter: 'other',
-				start: 0,
-				end: 8,
+				loc: {
+					start: 0,
+					end: 7
+				},
 				type: 'parameter_expansion',
 				resolved: true
 			}],
@@ -265,7 +271,7 @@ test.skip('field splitting', t => {
 	});
 });
 
-test.skip('field splitting not occurring within quoted words', t => {
+test('field splitting not occurring within quoted words', t => {
 	const result = bashParser('say "${other} plz"', {
 		resolveParameter() {
 			return 'foo\tbar baz';
@@ -286,8 +292,10 @@ test.skip('field splitting not occurring within quoted words', t => {
 			text: 'foo\tbar baz plz',
 			expansion: [{
 				parameter: 'other',
-				start: 1,
-				end: 9,
+				loc: {
+					start: 1,
+					end: 8
+				},
 				type: 'parameter_expansion',
 				resolved: true
 			}],

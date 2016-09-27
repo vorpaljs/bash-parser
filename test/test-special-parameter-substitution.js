@@ -48,9 +48,10 @@ test('parameter with assign default value', t => {
 	});
 });
 
-test.skip('parameter with other parameter in word', t => {
+/* TODO: restore parsing of arguments
+test.only('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
-	// utils.logResults(result)
+	utils.logResults(result)
 	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
 		type: 'word',
 		text: '${other:=default$value}',
@@ -74,6 +75,7 @@ test.skip('parameter with other parameter in word', t => {
 		}]
 	});
 });
+*/
 
 test('parameter with indicate error if null', t => {
 	const result = bashParser('${other:?default_value}');

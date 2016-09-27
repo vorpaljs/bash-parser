@@ -324,7 +324,7 @@ test('loc on line continuations', t => {
 
 	t.deepEqual(
 		result, [
-			{TOKEN: 'a\\\nbc', loc: mkloc([1, 1, 0], [2, 2, 4])},
+			{TOKEN: 'abc', loc: mkloc([1, 1, 0], [2, 2, 4])},
 			{EOF: ''}
 		]
 	);

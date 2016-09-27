@@ -41,7 +41,7 @@ test('arithmetic substitution skip escaped dollar', t => {
 	}]);
 });
 
-test.skip('arithmetic & parameter substitution', t => {
+test('arithmetic & parameter substitution', t => {
 	const result = bashParser('variable=$((42 + 43)) $ciao');
 
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
@@ -67,8 +67,8 @@ test.skip('arithmetic & parameter substitution', t => {
 			type: 'parameter_expansion',
 			parameter: 'ciao',
 			loc: {
-				start: 22,
-				end: 27
+				start: 0,
+				end: 4
 			}
 		}]
 	});
@@ -193,7 +193,7 @@ test('resolve expression', t => {
 	});
 });
 
-test.skip('field splitting', t => {
+test('field splitting', t => {
 	const result = bashParser('say $((other)) plz', {
 		runArithmeticExpression() {
 			return 'foo\tbar baz';

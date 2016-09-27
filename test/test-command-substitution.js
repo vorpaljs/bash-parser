@@ -32,13 +32,9 @@ test('command substitution skip escaped dollar', t => {
 	}]);
 });
 
-test.skip('command substitution skip escaped backtick', t => {
-	const result = bashParser('echo "\\`echo ciao`"');
-	// utils.logResults(result)
-	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
-		text: '\\`echo ciao`'
-	}]);
+test('command substitution skip escaped backtick', t => {
+	const err = t.throws(() => bashParser('echo "\\`echo ciao`"'));
+	t.is(err.message, 'Unclosed `');
 });
 
 test('command substitution skip single quoted words', t => {

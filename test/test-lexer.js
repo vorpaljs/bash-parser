@@ -165,7 +165,7 @@ test('support character escaping', t => {
 	);
 });
 
-test.skip('support line continuations', t => { // not yet implemented
+test('support line continuations', t => { // not yet implemented
 	// utils.logResults(tokenize('echo\\\n23'))
 	utils.checkResults(t,
 		tokenize('echo\\\n23'),
@@ -188,7 +188,8 @@ test('support &&', t => {
 	);
 });
 
-test.skip('support &', t => {
+test('support &', t => {
+	// utils.logResults(tokenize('run &'));
 	utils.checkResults(t,
 		tokenize('run &'),
 		[{token: 'WORD', value: 'run'}, {token: 'SEPARATOR_OP', value: '&'}]

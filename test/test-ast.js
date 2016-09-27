@@ -31,9 +31,9 @@ test('command with multiple new lines', t => {
 	});
 });
 
-test.skip('command with multiple lines continuation', t => {
+test('command with multiple lines continuation', t => {
 	const result = bashParser('echo \\\n\\\n\\\n\\\nthere');
-	// console.log(result.commands[0])
+	// utils.logResults(result);
 	utils.checkResults(t, result.commands[0].suffix[0], {
 		text: 'there',
 		type: 'word'
@@ -214,8 +214,9 @@ test('command with stderr redirection to file', t => {
 	});
 });
 
-test.skip('parse subshell', t => {
+test('parse subshell', t => {
 	const result = bashParser('( ls )');
+
 	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{

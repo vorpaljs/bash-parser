@@ -18,6 +18,13 @@ export default function start(state, char) {
 		};
 	}
 
+	if (char === '\n' && state.escaping) {
+		return {
+			nextReduction: start,
+			nextState: {...state, escaping: false, current: state.current.slice(0, -1)}
+		};
+	}
+
 	if (state.current === '\n' || (!state.escaping && char === '\n')) {
 		return {
 			nextReduction: start,

@@ -22,7 +22,7 @@ test('AST can include loc', t => {
 	});
 });
 
-test.skip('subshell can include loc', t => {
+test('subshell can include loc', t => {
 	const result = bashParser('(echo)', {insertLOC: true});
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
@@ -38,12 +38,12 @@ test.skip('subshell can include loc', t => {
 							name: {
 								text: 'echo',
 								type: 'word',
-								loc: mkloc(1, 2, 1, 5, 0, 4)
+								loc: mkloc(1, 2, 1, 5, 1, 4)
 							},
-							loc: mkloc(1, 2, 1, 5, 0, 4)
+							loc: mkloc(1, 2, 1, 5, 1, 4)
 						}
 					],
-					loc: mkloc(1, 2, 1, 5, 0, 4)
+					loc: mkloc(1, 2, 1, 5, 1, 4)
 				},
 				loc: mkloc(1, 1, 1, 6, 0, 5)
 			}

@@ -37,7 +37,7 @@ module.exports = function separator(options, utils) {
 				continue;
 			}
 
-			if (tk.value === ';' || (tk.is('OPERATOR') && tk.value === '&') || (tk.is('OPERATOR') && tk.value === ';')) {
+			if (tk.value === ';' || tk.value === '&' || (tk.is('OPERATOR') && tk.value === ';')) {
 				tk = changeTokenType(
 					tk,
 					'SEPARATOR_OP',

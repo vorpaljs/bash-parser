@@ -25,7 +25,7 @@ export default function start(state, char) {
 		};
 	}
 
-	if (state.current === '\n' || (!state.escaping && char === '\n')) {
+	if ((!state.escaping && char === '\n')) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state).concat(newLine()),

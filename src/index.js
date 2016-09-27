@@ -3,8 +3,14 @@
 const shellLexer = require('./shell-lexer');
 const utils = require('./utils');
 
+// preload all modes to have them browserified
+const modes = {
+	bash: require('./modes/bash'),
+	posix: require('./modes/posix')
+};
+
 function loadPlugin(name) {
-	const modePlugin = require(`./modes/${name}`);
+	const modePlugin = modes[name];
 
 	if (modePlugin.inherits) {
 		return modePlugin.init(loadPlugin(modePlugin.inherits), utils);

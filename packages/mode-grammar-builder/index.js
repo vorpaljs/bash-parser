@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+require('babel-register');
 const writeFile = require('fs').writeFile;
 const resolve = require('path').resolve;
 const minimist = require('minimist');

@@ -1,6 +1,4 @@
 'use strict';
-/* eslint-disable camelcase */
-/* eslint-disable babel/arrow-parens */
 
 const compose = require('compose-function');
 const identity = require('identity-function');

@@ -7,7 +7,7 @@ const MagicString = require('magic-string');
 const tokens = require('../../../utils/tokens');
 const fieldSplitting = require('./field-splitting');
 
-function setArithmeticExpansion(xp) {
+function parseArithmeticAST(xp) {
 	let AST;
 	try {
 		AST = babylon.parse(xp.expression);
@@ -21,16 +21,9 @@ function setArithmeticExpansion(xp) {
 		throw new SyntaxError(`Cannot parse arithmetic expression "${xp.expression}": Not an expression`);
 	}
 
-	const arithmeticAST = JSON.parse(JSON.stringify(expression));
-
-	return {...xp, arithmeticAST};
+	return JSON.parse(JSON.stringify(expression));
 }
 
-// RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
-// identify the start of any candidates for parameter expansion (Parameter Expansion),
-// command substitution (Command Substitution), or arithmetic expansion (Arithmetic
-// Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
-// or '`', and "$((", respectively.
 const arithmeticExpansion = () => map(token => {
 	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
 		if (!token.expansion || token.expansion.length === 0) {
@@ -39,7 +32,7 @@ const arithmeticExpansion = () => map(token => {
 
 		return tokens.setExpansions(token, token.expansion.map(xp => {
 			if (xp.type === 'arithmetic_expansion') {
-				return setArithmeticExpansion(xp);
+				return {...xp, arithmeticAST: parseArithmeticAST(xp)};
 			}
 			return xp;
 		}));
@@ -64,6 +57,7 @@ arithmeticExpansion.resolve = (options, utils) => map(token => {
 				xp.resolved = true;
 			}
 		}
+
 		return utils.tokens.alterValue(token, magic.toString());
 	}
 	return token;

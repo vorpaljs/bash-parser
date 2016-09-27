@@ -2,6 +2,7 @@
 
 import end from './end';
 import operator from './operator';
+import comment from './comment';
 import singleQuoting from './single-quoting';
 import doubleQuoting from './double-quoting';
 import expansionStart from './expansion-start';
@@ -18,14 +19,20 @@ export default function start(state, char) {
 		};
 	}
 
-	if (char === '\n' && state.escaping) {
+	if (state.escaping && char === '\n') {
 		return {
 			nextReduction: start,
 			nextState: {...state, escaping: false, current: state.current.slice(0, -1)}
 		};
 	}
 
-	if ((!state.escaping && char === '\n')) {
+	if (!state.escaping && char === '#' && state.current === '') {
+		return {
+			nextReduction: comment
+		};
+	}
+
+	if (!state.escaping && char === '\n') {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state).concat(newLine()),

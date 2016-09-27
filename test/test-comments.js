@@ -2,15 +2,10 @@
 import 'babel-register';
 
 const test = require('ava');
-
-/*
 const bashParser = require('../src');
 const utils = require('./_utils');
-*/
 
 test('loc take into account line continuations', t => {
-	t.pass();
-	/* TODO: restore parsing of comments
 	const cmd = 'echo world #this is a comment\necho ciao';
 	const result = bashParser(cmd);
 
@@ -37,9 +32,6 @@ test('loc take into account line continuations', t => {
 		}]
 	};
 
-	// utils.logResults(result);
-
 	utils.checkResults(t, result, expected);
-	*/
 });
 

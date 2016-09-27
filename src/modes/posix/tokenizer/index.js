@@ -29,7 +29,6 @@ export default () => function * tokenizer(src) {
 		// console.log({char, reduction})
 		const {nextReduction, tokensToEmit, nextState} = reduction(state, char);
 		if (tokensToEmit) {
-			// console.log(Array.from(tokensToEmit))
 			yield * tokensToEmit;
 		}
 

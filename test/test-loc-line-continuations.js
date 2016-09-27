@@ -40,7 +40,7 @@ test.skip('empty line after line continuation', t => {
 test('loc take into account line continuations', t => {
 	const cmd = 'echo \\\nworld';
 	const result = bashParser(cmd, {insertLOC: true});
-	utils.logResults(result);
+	// utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
 		commands: [

@@ -23,7 +23,6 @@
     "plugins": [
       "syntax-object-rest-spread",
       "transform-object-rest-spread"
-
     ]
   },
   "devDependencies": {
@@ -65,6 +64,7 @@
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",
     "iterable-lookahead": "^1.0.0",
+    "iterable-replace": "file:packages/iterable-replace",
     "magic-string": "^0.16.0",
     "map-iterable": "^1.0.1",
     "map-obj": "^2.0.0",

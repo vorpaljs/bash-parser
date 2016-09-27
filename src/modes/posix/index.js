@@ -1,14 +1,11 @@
 'use strict';
-// @flow
-/* flow-include import type {ModePlugin} from '../plugin'; */
 
 const astBuilder = require('./ast-builder');
 const tokenizer = require('./tokenizer').default;
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 
-const lexerPhases = (utils) => [
-
+const lexerPhases = () => [
 	phaseCatalog.newLineList,
 	phaseCatalog.operatorTokens,
 	phaseCatalog.separator,

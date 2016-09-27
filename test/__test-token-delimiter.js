@@ -1,5 +1,6 @@
 /* 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const tokenDelimiter = require('../src/modes/posix/token-delimiter')();
 const mkloc = require('./_utils').mkloc;

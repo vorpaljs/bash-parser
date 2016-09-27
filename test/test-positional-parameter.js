@@ -1,5 +1,6 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -9,7 +10,7 @@ test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
 		.commands[0].prefix;
 
-	utils.logResults(result);
+	// utils.logResults(result);
 
 	utils.checkResults(t, result, [{
 		type: 'assignment_word',

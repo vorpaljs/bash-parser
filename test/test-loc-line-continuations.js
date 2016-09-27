@@ -1,14 +1,15 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
-const mkloc = require('./_utils').mkloc2;
+// const mkloc = require('./_utils').mkloc2;
 
 test.skip('empty line after line continuation', t => {
 	const cmd = `echo \\\n\n\necho there`;
 	const result = bashParser(cmd);
-	utils.logResults(result);
+	// utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
 		commands: [

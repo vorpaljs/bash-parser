@@ -1,8 +1,8 @@
 'use strict';
 
 import start from './start';
-import expansionStart from './expansionStart';
-import expansionCommandTick from './expansionCommandTick';
+import expansionStart from './expansion-start';
+import expansionCommandTick from './expansion-command-tick';
 
 import {tokenOrEmpty, appendEmptyExpansion, continueToken} from '..';
 

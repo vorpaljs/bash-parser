@@ -1,5 +1,6 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const posixLexer = require('../src/shell-lexer');
 const posixMode = require('../src/modes/posix');
@@ -69,7 +70,7 @@ test('parses parameter substitution', t => {
 
 test('parses unquoted parameter substitution', t => {
 	const result = tokenize('echo word$test', true);
-	utils.logResults(result)
+	// utils.logResults(result)
 	utils.checkResults(t, result,
 		[{token: 'WORD', value: {text: 'echo'}},
 		{
@@ -165,7 +166,7 @@ test('support character escaping', t => {
 });
 
 test.skip('support line continuations', t => { // not yet implemented
-	utils.logResults(tokenize('echo\\\n23'))
+	// utils.logResults(tokenize('echo\\\n23'))
 	utils.checkResults(t,
 		tokenize('echo\\\n23'),
 		[{token: 'WORD', value: 'echo23'}]

@@ -1,10 +1,13 @@
 'use strict';
 import deepFreeze from 'deep-freeze';
-import {advanceLoc} from '../../../utils/tokens';
+
+import {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
+	isOperator, isSpecialParameter, appendEmptyExpansion, advanceLoc} from '../../../utils/tokens';
+
 import start from './reducers/start';
 
 export {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
-	isOperator, isSpecialParameter, appendEmptyExpansion, advanceLoc} from '../../../utils/tokens';
+	isOperator, isSpecialParameter, appendEmptyExpansion, advanceLoc};
 
 export default () => function * tokenizer(src) {
 	let state = {

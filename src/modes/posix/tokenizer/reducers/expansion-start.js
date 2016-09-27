@@ -1,10 +1,10 @@
 'use strict';
 
 import last from 'array-last';
-import expansionSpecialParameter from './expansionSpecialParameter';
-import expansionParameter from './expansionParameter';
-import expansionCommandOrArithmetic from './expansionCommandOrArithmetic';
-import expansionParameterExtended from './expansionParameterExtended';
+import expansionSpecialParameter from './expansion-special-parameter';
+import expansionParameter from './expansion-parameter';
+import expansionCommandOrArithmetic from './expansion-command-or-arithmetic';
+import expansionParameterExtended from './expansion-parameter-extended';
 
 import {isSpecialParameter} from '..';
 

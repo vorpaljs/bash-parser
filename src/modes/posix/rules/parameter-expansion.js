@@ -13,13 +13,6 @@ const parameterOps = {
 	useAlternativeValue: ':+'
 };
 
-const EXPANDING = {
-	NO: {},
-	PARAMETER: {},
-	COMMAND: {},
-	ARITHMETIC: {}
-};
-
 const specialParameterNames = {
 	'!': 'last-background-pid',
 	'@': 'positional-list',

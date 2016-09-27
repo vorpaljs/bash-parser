@@ -2,7 +2,7 @@
 
 import last from 'array-last';
 import {continueToken} from '..';
-import expansionArithmetic from './expansionArithmetic';
+import expansionArithmetic from './expansion-arithmetic';
 
 export default function expansionCommandOrArithmetic(state, char) {
 	const xp = last(state.expansion);

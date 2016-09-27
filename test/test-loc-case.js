@@ -1,10 +1,10 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
 const mkloc = require('./_utils').mkloc2;
-
 
 test('case statement has loc', t => {
 	const cmd =

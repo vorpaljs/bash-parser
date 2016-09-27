@@ -9,7 +9,7 @@ test.skip('loc take into account line continuations', t => {
 	const cmd = 'echo world #this is a comment\necho ciao';
 	const result = bashParser(cmd);
 
-	utils.logResults(result);
+	// utils.logResults(result);
 
 	const expected = {
 		type: 'complete_command',

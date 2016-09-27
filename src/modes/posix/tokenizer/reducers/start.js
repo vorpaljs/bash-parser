@@ -2,10 +2,10 @@
 
 import end from './end';
 import operator from './operator';
-import singleQuoting from './singleQuoting';
-import doubleQuoting from './doubleQuoting';
-import expansionStart from './expansionStart';
-import expansionCommandTick from './expansionCommandTick';
+import singleQuoting from './single-quoting';
+import doubleQuoting from './double-quoting';
+import expansionStart from './expansion-start';
+import expansionCommandTick from './expansion-command-tick';
 
 import {tokenOrEmpty, newLine, isPartOfOperator, appendEmptyExpansion} from '..';
 

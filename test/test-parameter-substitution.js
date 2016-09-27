@@ -1,5 +1,6 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -7,7 +8,7 @@ const utils = require('./_utils');
 /* eslint-disable camelcase */
 test('parameter substitution in assignment', t => {
 	const result = bashParser('echoword=${other}test');
-	utils.logResults(result);
+	// utils.logResults(result);
 	utils.checkResults(t, result.commands[0].prefix, [{
 		type: 'assignment_word',
 		text: 'echoword=${other}test',
@@ -43,7 +44,7 @@ test('parameter substitution skip single quoted words', t => {
 
 test('parameter substitution and other words', t => {
 	const result = bashParser('foo ${other} bar baz');
-	utils.logResults(result);
+	// utils.logResults(result);
 	utils.checkResults(t, result.commands[0].suffix, [{
 		text: '${other}',
 		expansion: [{
@@ -156,7 +157,7 @@ test('resolve parameter', t => {
 					parameter: 'other',
 					loc: {
 						start: 5,
-						end: 12,
+						end: 12
 					},
 					resolved: true,
 					type: 'parameter_expansion'

@@ -1,6 +1,7 @@
 'use strict';
 /* eslint-disable camelcase */
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -38,7 +39,7 @@ test('parse case', t => {
 /*
 test.skip('parse case with compound list', t => {
 	const result = bashParser('case foo in * ) echo foo;echo bar;; esac');
-	utils.logResults(result);
+	// utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
 		commands: [{

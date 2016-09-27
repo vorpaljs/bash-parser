@@ -207,7 +207,7 @@ test.skip('field splitting', t => {
 	delete result.commands[0].suffix[1].expansion[0].arithmeticAST;
 	delete result.commands[0].suffix[2].expansion[0].arithmeticAST;
 
-	utils.logResults(result)
+	// utils.logResults(result)
 
 	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',

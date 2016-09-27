@@ -1,5 +1,6 @@
 'use strict';
 import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');

@@ -7,7 +7,7 @@ export default function expansionCommandTick(state, char) {
 	if (!state.escaping && char === '`') {
 		const newXp = {
 			...xp,
-			type: 'COMMAND',
+			type: 'command_expansion',
 			loc: {...xp.loc, end: state.loc.current}
 		};
 		const expansion = state.expansion
@@ -20,9 +20,21 @@ export default function expansionCommandTick(state, char) {
 		};
 	}
 
+	if (!state.escaping && char === '\\') {
+		return {
+			nextReduction: expansionCommandTick,
+			nextState: {
+				...state,
+				current: state.current + char,
+				escaping: true
+			}
+
+		};
+	}
+
 	const newXp = {
 		...xp,
-		value: (xp.value || '') + char
+		command: (xp.command || '') + char
 	};
 
 	const expansion = state.expansion
@@ -31,6 +43,6 @@ export default function expansionCommandTick(state, char) {
 
 	return {
 		nextReduction: expansionCommandTick,
-		nextState: {...state, current: state.current + char, expansion}
+		nextState: {...state, escaping: false, current: state.current + char, expansion}
 	};
 }

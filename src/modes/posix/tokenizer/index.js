@@ -23,11 +23,14 @@ export default () => function * tokenizer(src) {
 
 	while (typeof reduction === 'function') {
 		const char = src[state.loc.current.char];
-
 		const {nextReduction, tokensToEmit, nextState} = reduction(state, char);
 
 		if (tokensToEmit) {
 			yield * tokensToEmit;
+		}
+
+		if (char === undefined && nextReduction === reduction) {
+			throw new Error('Loop detected');
 		}
 
 		if (nextState) {

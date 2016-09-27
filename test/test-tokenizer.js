@@ -380,9 +380,9 @@ test('parse extended parameter expansion', t => {
 test('parse command expansion', t => {
 	const result = tokenize('a$(b)cd');
 	const expansion = [{
-		type: 'COMMAND',
+		type: 'command_expansion',
 		loc: {start: 1, end: 4},
-		value: 'b'
+		command: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -395,9 +395,9 @@ test('parse command expansion', t => {
 test('parse command with backticks', t => {
 	const result = tokenize('a`b`cd');
 	const expansion = [{
-		type: 'COMMAND',
+		type: 'command_expansion',
 		loc: {start: 1, end: 3},
-		value: 'b'
+		command: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -472,9 +472,9 @@ test('within double quotes parse extended parameter expansion', t => {
 test('within double quotes parse command expansion', t => {
 	const result = tokenize('"a$(b)cd"');
 	const expansion = [{
-		type: 'COMMAND',
+		type: 'command_expansion',
 		loc: {start: 2, end: 5},
-		value: 'b'
+		command: 'b'
 	}];
 	// console.log(JSON.stringify(result, null, 4))
 	t.deepEqual(
@@ -488,9 +488,9 @@ test('within double quotes parse command expansion', t => {
 test('within double quotes parse command with backticks', t => {
 	const result = tokenize('"a`b`cd"');
 	const expansion = [{
-		type: 'COMMAND',
+		type: 'command_expansion',
 		loc: {start: 2, end: 4},
-		value: 'b'
+		command: 'b'
 	}];
 	// console.log(JSON.stringify(result, null, 4));
 

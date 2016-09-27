@@ -15,7 +15,7 @@ export default function expansionCommandOrArithmetic(state, char) {
 	if (char === ')') {
 		const newXp = {
 			...xp,
-			type: 'COMMAND',
+			type: 'command_expansion',
 			loc: {...xp.loc, end: state.loc.current}
 		};
 		const expansion = state.expansion
@@ -30,7 +30,7 @@ export default function expansionCommandOrArithmetic(state, char) {
 
 	const newXp = {
 		...xp,
-		value: (xp.value || '') + char
+		command: (xp.command || '') + char
 	};
 
 	const expansion = state.expansion

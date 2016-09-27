@@ -2,120 +2,26 @@
 
 const map = require('map-iterable');
 const MagicString = require('magic-string');
+const tokensUtils = require('../../../utils/tokens');
 const fieldSplitting = require('./field-splitting');
 
-function setCommandExpansion(args) {
-	let token = args.token;
-	const commandText = args.commandText;
-	const start = args.start;
-	const end = args.end;
-	const expandingCommand = args.expandingCommand;
+function setCommandExpansion(xp, token) {
+	let command = xp.command;
 
-	let command = commandText;
-
-	// skip command expansion if there
-	// is already an arithmetic expansion defined
-	// on same position
-	if (token.expansion) {
-		for (const exp of token.expansion) {
-			if (exp.start <= start && exp.end >= end && exp.type === 'arithmetic_expansion') {
-				return token;
-			}
-		}
-	}
-
-	if (expandingCommand === '`') {
+	if (token.value[xp.loc.start - 1] === '`') {
 		command = command.replace(/\\`/g, '`');
 	}
+
 	const bashParser = require('../../../index');
 
-	if (!token.expansion) {
-		token = args.addExpansions(token);
-	}
+	const commandAST = bashParser(command);
 
-	token.expansion.push({
-		type: 'command_expansion',
+	// console.log(JSON.stringify({command, commandAST}, null, 4))
+	return {
+		...xp,
 		command,
-		commandAST: bashParser(command),
-		start,
-		end
-	});
-
-	return token;
-}
-
-function expandWord(token, addExpansions) {
-	const text = token.value;
-
-	let expandingCommand = null;
-	let expansion = null;
-	let startOfExpansion = 0;
-	let currentCharIdx = 0;
-	let escaping = false;
-	let quoting = '';
-
-	for (const currentCharacter of text) {
-		if (!expandingCommand) {			// when no espanding is in progress
-			if (!escaping && currentCharacter === '$' && expansion === null && quoting !== '\'') {
-				// start of expansion candidate
-				expansion = '$';
-				startOfExpansion = currentCharIdx;
-			} else if (!escaping && (currentCharacter === '\'' || currentCharacter === '"')) {
-				if (quoting === currentCharacter) {
-					quoting = '';
-				} else if (quoting === '') {
-					quoting = currentCharacter;
-				}
-			} else if (!escaping && currentCharacter === '`' && expansion === null && quoting !== '\'') {
-				// start of expansion candidate
-				expandingCommand = '`';
-				expansion = '';
-				startOfExpansion = currentCharIdx;
-			} else if (expansion === '$' && !escaping && currentCharacter === '(') {
-				// start of command expansion
-				expandingCommand = '$';
-				expansion = '';
-			}
-		} else if (expandingCommand) {
-			if (!escaping && currentCharacter === ')' && expandingCommand === '$') {
-				// end of command expansion
-				token = setCommandExpansion({
-					token,
-					commandText: expansion,
-					start: startOfExpansion,
-					end: startOfExpansion + expansion.length + 3,  // add 3 to take in account $()
-					expandingCommand,
-					addExpansions
-				});
-
-				startOfExpansion = 0;
-				expandingCommand = null;
-				expansion = null;
-			} else if (!escaping && currentCharacter === '`' && expandingCommand === '`') {
-				// end of command expansion
-				token = setCommandExpansion({
-					token,
-					commandText: expansion,
-					start: startOfExpansion,
-					end: startOfExpansion + expansion.length + 2,  // add 2 to take in account ``
-					expandingCommand,
-					addExpansions
-				});
-
-				startOfExpansion = 0;
-				expandingCommand = null;
-				expansion = null;
-			} else {
-				// accumulation
-				expansion += currentCharacter;
-			}
-		}
-		escaping = currentCharacter === '\\';
-
-		currentCharIdx++;
-	}
-
-	return token;
+		commandAST
+	};
 }
 
 // RULE 5 - If the current character is an unquoted '$' or '`', the shell shall
@@ -124,9 +30,19 @@ function expandWord(token, addExpansions) {
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
 
-const commandExpansion = (options, utils) => map(token => {
+const commandExpansion = () => map(token => {
 	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
-		return expandWord(token, utils.tokens.addExpansions);
+		if (!token.expansion || token.expansion.length === 0) {
+			return token;
+		}
+
+		return tokensUtils.setExpansions(token, token.expansion.map(xp => {
+			if (xp.type === 'command_expansion') {
+				return setCommandExpansion(xp, token);
+			}
+
+			return xp;
+		}));
 	}
 	return token;
 });
@@ -140,9 +56,10 @@ commandExpansion.resolve = (options, utils) => map(token => {
 		for (const xp of token.expansion) {
 			if (xp.type === 'command_expansion') {
 				const result = options.execCommand(xp);
+				// console.log({value, xp})
 				magic.overwrite(
-					xp.start,
-					xp.end,
+					xp.loc.start,
+					xp.loc.end + 1,
 					fieldSplitting.mark(result.replace(/\n+$/, ''), value, options)
 				);
 				xp.resolved = true;

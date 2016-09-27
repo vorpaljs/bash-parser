@@ -17,12 +17,10 @@ const lexerPhases = (utils) => [
 	phaseCatalog.ioNumber,
 	phaseCatalog.identifyMaybeSimpleCommands,
 	phaseCatalog.assignmentWord,
-	//phaseCatalog.parameterExpansion,
+	phaseCatalog.parameterExpansion,
 	phaseCatalog.arithmeticExpansion,
-	//phaseCatalog.commandExpansion,
-	// utils.loggerPhase('commandExpansion'),
+	phaseCatalog.commandExpansion,
 	phaseCatalog.forNameVariable,
-	// utils.loggerPhase('for'),
 	phaseCatalog.functionName,
 	phaseCatalog.identifySimpleCommandNames,
 	phaseCatalog.aliasSubstitution,
@@ -35,6 +33,7 @@ const lexerPhases = (utils) => [
 	phaseCatalog.quoteRemoval,
 	phaseCatalog.defaultNodeType,
 	phaseCatalog.removeTempObject
+
 ];
 
 module.exports = {

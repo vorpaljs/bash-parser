@@ -1,6 +1,9 @@
 'use strict';
+
+const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
+const tokensUtils = require('../../../utils/tokens');
 const fieldSplitting = require('./field-splitting');
 
 const parameterOps = {
@@ -86,24 +89,22 @@ function setParameterExpansion(xp) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-const parameterExpansion = () => function * parameterExpansion(tokens) {
-	for (let token of tokens) {
-		if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
-			if (!token.expansion || token.expansion.length === 0) {
-				return token;
-			}
-
-			return tokens.setExpansions(token, token.expansion.map(xp => {
-				if (xp.type === 'parameter_expansion') {
-					return setParameterExpansion(xp);
-				}
-				return xp;
-			}));
+const parameterExpansion = () => map(token => {
+	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
+		if (!token.expansion || token.expansion.length === 0) {
+			return token;
 		}
 
-		yield token;
+		return tokensUtils.setExpansions(token, token.expansion.map(xp => {
+			if (xp.type === 'parameter_expansion') {
+				return setParameterExpansion(xp, token);
+			}
+
+			return xp;
+		}));
 	}
-};
+	return token;
+});
 
 parameterExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
 	for (let token of tokens) {

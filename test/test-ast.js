@@ -7,6 +7,7 @@ const utils = require('./_utils');
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
+	// utils.logResults(result)
 	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{

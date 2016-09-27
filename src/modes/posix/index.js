@@ -1,9 +1,7 @@
 'use strict';
-// @flow
-/* flow-include import type {ModePlugin} from '../plugin'; */
 
 const astBuilder = require('./ast-builder');
-const tokenizer = require('./token-delimiter');
+const tokenizer = require('./tokenizer').default;
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 
@@ -19,9 +17,7 @@ const lexerPhases = () => [
 	phaseCatalog.parameterExpansion,
 	phaseCatalog.arithmeticExpansion,
 	phaseCatalog.commandExpansion,
-	// utils.loggerPhase('commandExpansion'),
 	phaseCatalog.forNameVariable,
-	// utils.loggerPhase('for'),
 	phaseCatalog.functionName,
 	phaseCatalog.identifySimpleCommandNames,
 	phaseCatalog.aliasSubstitution,
@@ -32,8 +28,11 @@ const lexerPhases = () => [
 	phaseCatalog.fieldSplitting.split,
 	phaseCatalog.pathExpansion,
 	phaseCatalog.quoteRemoval,
+	phaseCatalog.syntaxerrorOnContinue,
 	phaseCatalog.defaultNodeType,
+	// utils.loggerPhase('tokenizer'),
 	phaseCatalog.removeTempObject
+
 ];
 
 module.exports = {

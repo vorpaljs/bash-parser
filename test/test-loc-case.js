@@ -1,8 +1,10 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
-/* eslint-disable camelcase */
+const mkloc = require('./_utils').mkloc2;
 
 test('case statement has loc', t => {
 	const cmd =
@@ -18,12 +20,7 @@ esac
 		clause: {
 			type: 'word',
 			text: 'foo',
-			loc: {
-				startLine: 0,
-				startColumn: 5,
-				endLine: 0,
-				endColumn: 7
-			}
+			loc: mkloc(1, 6, 1, 8, 5, 7)
 		},
 		cases: [
 			{
@@ -32,12 +29,7 @@ esac
 					{
 						type: 'word',
 						text: '*',
-						loc: {
-							startLine: 1,
-							startColumn: 1,
-							endLine: 1,
-							endColumn: 1
-						}
+						loc: mkloc(2, 2, 2, 2, 13, 13)
 					}
 				],
 				body: {
@@ -48,54 +40,24 @@ esac
 							name: {
 								type: 'word',
 								text: 'echo',
-								loc: {
-									startLine: 2,
-									startColumn: 2,
-									endLine: 2,
-									endColumn: 5
-								}
+								loc: mkloc(3, 3, 3, 6, 19, 22)
 							},
-							loc: {
-								startLine: 2,
-								startColumn: 2,
-								endLine: 2,
-								endColumn: 9
-							},
+							loc: mkloc(3, 3, 3, 10, 19, 26),
 							suffix: [{
 								type: 'word',
 								text: 'bar',
-								loc: {
-									startLine: 2,
-									startColumn: 7,
-									endLine: 2,
-									endColumn: 9
-								}
+								loc: mkloc(3, 8, 3, 10, 24, 26)
 							}]
 						}
 					],
-					loc: {
-						startLine: 2,
-						startColumn: 2,
-						endLine: 2,
-						endColumn: 9
-					}
+					loc: mkloc(3, 3, 3, 10, 19, 26)
 				},
-				loc: {
-					startLine: 1,
-					startColumn: 1,
-					endLine: 2,
-					endColumn: 11
-				}
+				loc: mkloc(2, 2, 3, 12, 13, 28)
 			}
 		],
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 3,
-			endColumn: 3
-		}
+		loc: mkloc(1, 1, 4, 4, 0, 33)
 	};
-	// utils.logResults(result.commands[0].commands[0]);
+	// utils.logResults(result.commands[0]);
 
 	utils.checkResults(t, result.commands[0], expected);
 });

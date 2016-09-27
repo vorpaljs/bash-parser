@@ -6,7 +6,6 @@ const utils = require('./utils');
 const posixShellLexer = (mode, options) => ({
 	lex() {
 		const item = this.tokenizer.next();
-		// console.log(item)
 		const tk = item.value;
 		const tkType = tk.originalType;
 		const text = tk.value;
@@ -42,7 +41,7 @@ const posixShellLexer = (mode, options) => ({
 		}
 
 		if (tk.loc) {
-			this.yylineno = tk.loc.startLine;
+			this.yylineno = tk.loc.start.row - 1;
 		}
 
 		return tkType;

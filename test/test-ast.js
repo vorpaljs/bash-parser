@@ -1,11 +1,14 @@
 'use strict';
 /* eslint-disable camelcase */
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
 
 test('command with one argument', t => {
 	const result = bashParser('echo world');
+	// utils.logResults(result)
 	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
@@ -30,6 +33,7 @@ test('command with multiple new lines', t => {
 
 test('command with multiple lines continuation', t => {
 	const result = bashParser('echo \\\n\\\n\\\n\\\nthere');
+	// utils.logResults(result);
 	utils.checkResults(t, result.commands[0].suffix[0], {
 		text: 'there',
 		type: 'word'
@@ -212,6 +216,7 @@ test('command with stderr redirection to file', t => {
 
 test('parse subshell', t => {
 	const result = bashParser('( ls )');
+
 	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{

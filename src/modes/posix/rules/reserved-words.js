@@ -29,7 +29,7 @@ function isValidReservedWordPosition(tk, iterable) {
 		(tk.value.toLowerCase() === 'in' || tk.value.toLowerCase() === 'do');
 
 	// console.log({tk, startOfCommand, lastIsReservedWord, thirdInFor, thirdInCase, twoAgo})
-	return startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
+	return tk.value === '}' || startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
 }
 
 module.exports = function reservedWords(options, utils) {
@@ -39,6 +39,7 @@ module.exports = function reservedWords(options, utils) {
 		// console.log(tk, isValidReservedWordPosition(tk, iterable), hasOwnProperty(words, tk.value))
 		// TOKEN tokens consisting of a reserved word
 		// are converted to their own token types
+		// console.log({tk, v:isValidReservedWordPosition(tk, iterable)})
 		if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(words, tk.value)) {
 			return changeTokenType(tk, words[tk.value], tk.value);
 		}

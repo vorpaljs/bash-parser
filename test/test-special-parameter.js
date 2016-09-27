@@ -1,4 +1,6 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -19,8 +21,10 @@ test('positional list paramter', t => {
 					type: 'parameter_expansion',
 					parameter: '@',
 					kind: 'positional-list',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -41,8 +45,10 @@ test('positional string paramter', t => {
 					type: 'parameter_expansion',
 					parameter: '*',
 					kind: 'positional-string',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -63,8 +69,10 @@ test('positional count paramter', t => {
 					type: 'parameter_expansion',
 					parameter: '#',
 					kind: 'positional-count',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -85,8 +93,10 @@ test('last exit status', t => {
 					type: 'parameter_expansion',
 					parameter: '?',
 					kind: 'last-exit-status',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -107,8 +117,10 @@ test('current option flags', t => {
 					type: 'parameter_expansion',
 					parameter: '-',
 					kind: 'current-option-flags',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -129,8 +141,10 @@ test('shell process id', t => {
 					type: 'parameter_expansion',
 					parameter: '$',
 					kind: 'shell-process-id',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -151,8 +165,10 @@ test('last background pid', t => {
 					type: 'parameter_expansion',
 					parameter: '!',
 					kind: 'last-background-pid',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -174,8 +190,10 @@ test('shell script name', t => {
 					type: 'parameter_expansion',
 					parameter: '0',
 					kind: 'shell-script-name',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]

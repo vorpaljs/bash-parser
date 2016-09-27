@@ -1,4 +1,6 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -11,54 +13,71 @@ test('loc in for statement', t => {
 done
 `;
 	const result = bashParser(cmd, {insertLOC: true});
-
 	const expected = {
 		type: 'for',
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 2,
-			endColumn: 3
-		},
 		name: {
-			type: 'name',
 			text: 'x',
+			type: 'name',
 			loc: {
-				startLine: 0,
-				startColumn: 4,
-				endLine: 0,
-				endColumn: 4
+				start: {
+					col: 5,
+					row: 1,
+					char: 4
+				},
+				end: {
+					col: 5,
+					row: 1,
+					char: 4
+				}
 			}
 		},
 		wordlist: [
 			{
-				type: 'word',
 				text: 'a',
+				type: 'word',
 				loc: {
-					startLine: 0,
-					startColumn: 9,
-					endLine: 0,
-					endColumn: 9
+					start: {
+						col: 10,
+						row: 1,
+						char: 9
+					},
+					end: {
+						col: 10,
+						row: 1,
+						char: 9
+					}
 				}
 			},
 			{
-				type: 'word',
 				text: 'b',
+				type: 'word',
 				loc: {
-					startLine: 0,
-					startColumn: 11,
-					endLine: 0,
-					endColumn: 11
+					start: {
+						col: 12,
+						row: 1,
+						char: 11
+					},
+					end: {
+						col: 12,
+						row: 1,
+						char: 11
+					}
 				}
 			},
 			{
-				type: 'word',
 				text: 'c',
+				type: 'word',
 				loc: {
-					startLine: 0,
-					startColumn: 13,
-					endLine: 0,
-					endColumn: 13
+					start: {
+						col: 14,
+						row: 1,
+						char: 13
+					},
+					end: {
+						col: 14,
+						row: 1,
+						char: 13
+					}
 				}
 			}
 		],
@@ -68,46 +87,86 @@ done
 				{
 					type: 'simple_command',
 					name: {
-						type: 'word',
 						text: 'echo',
+						type: 'word',
 						loc: {
-							startLine: 1,
-							startColumn: 1,
-							endLine: 1,
-							endColumn: 4
+							start: {
+								col: 2,
+								row: 2,
+								char: 20
+							},
+							end: {
+								col: 5,
+								row: 2,
+								char: 23
+							}
 						}
 					},
 					loc: {
-						startLine: 1,
-						startColumn: 1,
-						endLine: 1,
-						endColumn: 7
-					},
-					suffix: [{
-						type: 'word',
-						text: '$x',
-						expansion: [
-							{
-								type: 'parameter_expansion',
-								parameter: 'x',
-								start: 0,
-								end: 2
-							}
-						],
-						loc: {
-							startLine: 1,
-							startColumn: 6,
-							endLine: 1,
-							endColumn: 7
+						start: {
+							col: 2,
+							row: 2,
+							char: 20
+						},
+						end: {
+							col: 8,
+							row: 2,
+							char: 26
 						}
-					}]
+					},
+					suffix: [
+						{
+							text: '$x',
+							expansion: [
+								{
+									loc: {
+										start: 0,
+										end: 1
+									},
+									parameter: 'x',
+									type: 'parameter_expansion'
+								}
+							],
+							type: 'word',
+							loc: {
+								start: {
+									col: 7,
+									row: 2,
+									char: 25
+								},
+								end: {
+									col: 8,
+									row: 2,
+									char: 26
+								}
+							}
+						}
+					]
 				}
 			],
 			loc: {
-				startLine: 0,
-				startColumn: 16,
-				endLine: 2,
-				endColumn: 3
+				start: {
+					col: 17,
+					row: 1,
+					char: 16
+				},
+				end: {
+					col: 4,
+					row: 3,
+					char: 32
+				}
+			}
+		},
+		loc: {
+			start: {
+				col: 1,
+				row: 1,
+				char: 0
+			},
+			end: {
+				col: 4,
+				row: 3,
+				char: 32
 			}
 		}
 	};
@@ -129,10 +188,16 @@ done
 			text: 'x',
 			type: 'name',
 			loc: {
-				startLine: 0,
-				startColumn: 4,
-				endLine: 0,
-				endColumn: 4
+				start: {
+					col: 5,
+					row: 1,
+					char: 4
+				},
+				end: {
+					col: 5,
+					row: 1,
+					char: 4
+				}
 			}
 		},
 		do: {
@@ -144,52 +209,84 @@ done
 						text: 'echo',
 						type: 'word',
 						loc: {
-							startLine: 1,
-							startColumn: 1,
-							endLine: 1,
-							endColumn: 4
+							start: {
+								col: 2,
+								row: 2,
+								char: 10
+							},
+							end: {
+								col: 5,
+								row: 2,
+								char: 13
+							}
 						}
 					},
 					loc: {
-						startLine: 1,
-						startColumn: 1,
-						endLine: 1,
-						endColumn: 7
+						start: {
+							col: 2,
+							row: 2,
+							char: 10
+						},
+						end: {
+							col: 8,
+							row: 2,
+							char: 16
+						}
 					},
 					suffix: [
 						{
 							text: '$x',
 							expansion: [
 								{
-									type: 'parameter_expansion',
+									loc: {
+										start: 0,
+										end: 1
+									},
 									parameter: 'x',
-									start: 0,
-									end: 2
+									type: 'parameter_expansion'
 								}
 							],
 							type: 'word',
 							loc: {
-								startLine: 1,
-								startColumn: 6,
-								endLine: 1,
-								endColumn: 7
+								start: {
+									col: 7,
+									row: 2,
+									char: 15
+								},
+								end: {
+									col: 8,
+									row: 2,
+									char: 16
+								}
 							}
 						}
 					]
 				}
 			],
 			loc: {
-				startLine: 0,
-				startColumn: 6,
-				endLine: 2,
-				endColumn: 3
+				start: {
+					col: 7,
+					row: 1,
+					char: 6
+				},
+				end: {
+					col: 4,
+					row: 3,
+					char: 22
+				}
 			}
 		},
 		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 2,
-			endColumn: 3
+			start: {
+				col: 1,
+				row: 1,
+				char: 0
+			},
+			end: {
+				col: 4,
+				row: 3,
+				char: 22
+			}
 		}
 	};
 

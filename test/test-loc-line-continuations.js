@@ -1,7 +1,10 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
+// const mkloc = require('./_utils').mkloc2;
 
 test('empty line after line continuation', t => {
 	const cmd = `echo \\\n\n\necho there`;
@@ -38,42 +41,72 @@ test('empty line after line continuation', t => {
 test('loc take into account line continuations', t => {
 	const cmd = 'echo \\\nworld';
 	const result = bashParser(cmd, {insertLOC: true});
-	//  utils.logResults(result);
+	// utils.logResults(result);
 	const expected = {
 		type: 'complete_command',
+		commands: [
+			{
+				type: 'simple_command',
+				name: {
+					text: 'echo',
+					type: 'word',
+					loc: {
+						start: {
+							col: 1,
+							row: 1,
+							char: 0
+						},
+						end: {
+							col: 4,
+							row: 1,
+							char: 3
+						}
+					}
+				},
+				loc: {
+					start: {
+						col: 1,
+						row: 1,
+						char: 0
+					},
+					end: {
+						col: 5,
+						row: 2,
+						char: 11
+					}
+				},
+				suffix: [
+					{
+						text: 'world',
+						type: 'word',
+						loc: {
+							start: {
+								col: 1,
+								row: 2,
+								char: 7
+							},
+							end: {
+								col: 5,
+								row: 2,
+								char: 11
+							}
+						}
+					}
+				]
+			}
+		],
 		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 1,
-			endColumn: 5
-		},
-		commands: [{
-			loc: {
-				startLine: 0,
-				startColumn: 0,
-				endLine: 1,
-				endColumn: 5
+			start: {
+				col: 1,
+				row: 1,
+				char: 0
 			},
-			type: 'simple_command',
-			name: {
-				type: 'word', text: 'echo',
-				loc: {
-					startLine: 0,
-					startColumn: 0,
-					endLine: 0,
-					endColumn: 3
-				}
-			},
-			suffix: [{
-				type: 'word', text: 'world',
-				loc: {
-					startLine: 1,
-					startColumn: 0,
-					endLine: 1,
-					endColumn: 5
-				}
-			}]
-		}]
+			end: {
+				col: 5,
+				row: 2,
+				char: 11
+			}
+		}
 	};
 
 	// utils.logResults(result);

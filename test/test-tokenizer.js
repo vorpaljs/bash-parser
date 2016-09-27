@@ -1,6 +1,11 @@
 'use strict';
-const test = require('ava');
-const tokenDelimiter = require('../src/utils/tokenizer');
+import 'babel-register';
+
+import test from 'ava';
+import tokenDelimiter from '../src/modes/posix/tokenizer';
+// import utils from './_utils';
+
+const tokenizer = tokenDelimiter();
 
 function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 	return JSON.stringify({
@@ -18,9 +23,10 @@ function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 }
 
 function tokenize(text, keepLoc) {
-	const results = Array.from(tokenDelimiter(text)).map(t => {
+	const results = Array.from(tokenizer(text)).map(t => {
 		const r = Object.assign({}, t);
 		r[r.type] = r.value;
+		delete r._;
 		delete r.type;
 		delete r.value;
 		if (keepLoc && r.loc) {
@@ -215,7 +221,7 @@ test('in single quote escaping single quotes is not working', t => {
 	t.deepEqual(
 		result, [
 			{TOKEN: '\'\\\'\''},
-			{CONTINUE: ''}
+			{CONTINUE: '\''}
 		]
 	);
 });
@@ -318,7 +324,7 @@ test('loc on line continuations', t => {
 
 	t.deepEqual(
 		result, [
-			{TOKEN: 'a\\\nbc', loc: mkloc([1, 1, 0], [2, 2, 4])},
+			{TOKEN: 'abc', loc: mkloc([1, 1, 0], [2, 2, 4])},
 			{EOF: ''}
 		]
 	);
@@ -326,11 +332,12 @@ test('loc on line continuations', t => {
 
 test('parse parameter expansion', t => {
 	const result = tokenize('a$b-c');
-	// console.log(JSON.stringify(result, null, 4))
+	// utils.logResults(result);
+
 	const expansion = [{
-		type: 'PARAMETER',
-		loc: JSON.parse(mkloc([2, 1, 1], [3, 1, 2])),
-		value: 'b'
+		type: 'parameter_expansion',
+		loc: {start: 1, end: 2},
+		parameter: 'b'
 	}];
 
 	t.deepEqual(
@@ -344,9 +351,9 @@ test('parse parameter expansion', t => {
 test('parse special parameter expansion', t => {
 	const result = tokenize('a$@cd');
 	const expansion = [{
-		type: 'SPECIAL-PARAMETER',
-		loc: JSON.parse(mkloc([2, 1, 1], [3, 1, 2])),
-		value: '@'
+		type: 'parameter_expansion',
+		loc: {start: 1, end: 2},
+		parameter: '@'
 	}];
 	t.deepEqual(
 		result, [
@@ -359,9 +366,9 @@ test('parse special parameter expansion', t => {
 test('parse extended parameter expansion', t => {
 	const result = tokenize('a${b}cd');
 	const expansion = [{
-		type: 'PARAMETER',
-		loc: JSON.parse(mkloc([2, 1, 1], [5, 1, 4])),
-		value: 'b'
+		type: 'parameter_expansion',
+		loc: {start: 1, end: 4},
+		parameter: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -374,9 +381,9 @@ test('parse extended parameter expansion', t => {
 test('parse command expansion', t => {
 	const result = tokenize('a$(b)cd');
 	const expansion = [{
-		type: 'COMMAND',
-		loc: JSON.parse(mkloc([2, 1, 1], [5, 1, 4])),
-		value: 'b'
+		type: 'command_expansion',
+		loc: {start: 1, end: 4},
+		command: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -389,9 +396,9 @@ test('parse command expansion', t => {
 test('parse command with backticks', t => {
 	const result = tokenize('a`b`cd');
 	const expansion = [{
-		type: 'COMMAND',
-		loc: JSON.parse(mkloc([2, 1, 1], [4, 1, 3])),
-		value: 'b'
+		type: 'command_expansion',
+		loc: {start: 1, end: 3},
+		command: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -404,9 +411,9 @@ test('parse command with backticks', t => {
 test('parse arithmetic expansion', t => {
 	const result = tokenize('a$((b))cd');
 	const expansion = [{
-		type: 'ARITHMETIC',
-		loc: JSON.parse(mkloc([2, 1, 1], [7, 1, 6])),
-		value: 'b'
+		type: 'arithmetic_expansion',
+		loc: {start: 1, end: 6},
+		expression: 'b'
 	}];
 	// console.log(JSON.stringify(result, null, 4));
 	t.deepEqual(
@@ -420,9 +427,9 @@ test('parse arithmetic expansion', t => {
 test('within double quotes parse parameter expansion', t => {
 	const result = tokenize('"a$b-c"');
 	const expansion = [{
-		type: 'PARAMETER',
-		loc: JSON.parse(mkloc([3, 1, 2], [4, 1, 3])),
-		value: 'b'
+		type: 'parameter_expansion',
+		loc: {start: 2, end: 3},
+		parameter: 'b'
 	}];
 
 	t.deepEqual(
@@ -436,9 +443,9 @@ test('within double quotes parse parameter expansion', t => {
 test('within double quotes parse special parameter expansion', t => {
 	const result = tokenize('"a$@cd"');
 	const expansion = [{
-		type: 'SPECIAL-PARAMETER',
-		loc: JSON.parse(mkloc([3, 1, 2], [4, 1, 3])),
-		value: '@'
+		type: 'parameter_expansion',
+		loc: {start: 2, end: 3},
+		parameter: '@'
 	}];
 	t.deepEqual(
 		result, [
@@ -451,9 +458,9 @@ test('within double quotes parse special parameter expansion', t => {
 test('within double quotes parse extended parameter expansion', t => {
 	const result = tokenize('"a${b}cd"');
 	const expansion = [{
-		type: 'PARAMETER',
-		loc: JSON.parse(mkloc([3, 1, 2], [6, 1, 5])),
-		value: 'b'
+		type: 'parameter_expansion',
+		loc: {start: 2, end: 5},
+		parameter: 'b'
 	}];
 	t.deepEqual(
 		result, [
@@ -466,9 +473,9 @@ test('within double quotes parse extended parameter expansion', t => {
 test('within double quotes parse command expansion', t => {
 	const result = tokenize('"a$(b)cd"');
 	const expansion = [{
-		type: 'COMMAND',
-		loc: JSON.parse(mkloc([3, 1, 2], [6, 1, 5])),
-		value: 'b'
+		type: 'command_expansion',
+		loc: {start: 2, end: 5},
+		command: 'b'
 	}];
 	// console.log(JSON.stringify(result, null, 4))
 	t.deepEqual(
@@ -482,9 +489,9 @@ test('within double quotes parse command expansion', t => {
 test('within double quotes parse command with backticks', t => {
 	const result = tokenize('"a`b`cd"');
 	const expansion = [{
-		type: 'COMMAND',
-		loc: JSON.parse(mkloc([3, 1, 2], [5, 1, 4])),
-		value: 'b'
+		type: 'command_expansion',
+		loc: {start: 2, end: 4},
+		command: 'b'
 	}];
 	// console.log(JSON.stringify(result, null, 4));
 
@@ -499,9 +506,9 @@ test('within double quotes parse command with backticks', t => {
 test('within double quotes parse arithmetic expansion', t => {
 	const result = tokenize('"a$((b))cd"');
 	const expansion = [{
-		type: 'ARITHMETIC',
-		loc: JSON.parse(mkloc([3, 1, 2], [8, 1, 7])),
-		value: 'b'
+		type: 'arithmetic_expansion',
+		loc: {start: 2, end: 7},
+		expression: 'b'
 	}];
 	t.deepEqual(
 		result, [

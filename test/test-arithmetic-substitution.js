@@ -1,4 +1,6 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
@@ -6,14 +8,17 @@ const utils = require('./_utils');
 test('arithmetic substitution', t => {
 	const result = bashParser('variable=$((42 + 43))');
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
+	// console.log(JSON.stringify(result.commands[0].prefix[0]))
 	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
 		type: 'assignment_word',
 		expansion: [{
 			expression: '42 + 43',
 			type: 'arithmetic_expansion',
-			start: 9,
-			end: 21
+			loc: {
+				start: 9,
+				end: 20
+			}
 		}]
 	});
 });
@@ -38,16 +43,20 @@ test('arithmetic substitution skip escaped dollar', t => {
 
 test('arithmetic & parameter substitution', t => {
 	const result = bashParser('variable=$((42 + 43)) $ciao');
-	// utils.logResults(result.commands[0]);
+
 	delete result.commands[0].prefix[0].expansion[0].arithmeticAST;
+	// utils.logResults(result.commands[0].name);
 	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
 		type: 'assignment_word',
 		expansion: [{
 			expression: '42 + 43',
 			type: 'arithmetic_expansion',
-			start: 9,
-			end: 21
+			loc: {
+				start: 9,
+				end: 20
+			}
+
 		}]
 	});
 
@@ -57,8 +66,10 @@ test('arithmetic & parameter substitution', t => {
 		expansion: [{
 			type: 'parameter_expansion',
 			parameter: 'ciao',
-			start: 0,
-			end: 5
+			loc: {
+				start: 0,
+				end: 4
+			}
 		}]
 	});
 });
@@ -72,8 +83,10 @@ test('arithmetic substitution in suffix', t => {
 		expansion: [{
 			expression: '42 + 43',
 			type: 'arithmetic_expansion',
-			start: 0,
-			end: 12
+			loc: {
+				start: 0,
+				end: 11
+			}
 		}]
 	});
 });
@@ -168,8 +181,10 @@ test('resolve expression', t => {
 			originalText: '"foo $((42 * 42)) baz"',
 			expansion: [{
 				expression: '42 * 42',
-				start: 5,
-				end: 17,
+				loc: {
+					start: 5,
+					end: 16
+				},
 				resolved: true,
 				type: 'arithmetic_expansion'
 			}],
@@ -192,7 +207,7 @@ test('field splitting', t => {
 	delete result.commands[0].suffix[1].expansion[0].arithmeticAST;
 	delete result.commands[0].suffix[2].expansion[0].arithmeticAST;
 
-//	utils.logResults(result)
+	// utils.logResults(result)
 
 	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
@@ -204,8 +219,10 @@ test('field splitting', t => {
 			text: 'foo',
 			expansion: [{
 				expression: 'other',
-				start: 0,
-				end: 10,
+				loc: {
+					start: 0,
+					end: 9
+				},
 				type: 'arithmetic_expansion',
 				resolved: true
 			}],
@@ -217,8 +234,10 @@ test('field splitting', t => {
 			text: 'bar',
 			expansion: [{
 				expression: 'other',
-				start: 0,
-				end: 10,
+				loc: {
+					start: 0,
+					end: 9
+				},
 				type: 'arithmetic_expansion',
 				resolved: true
 			}],
@@ -230,8 +249,10 @@ test('field splitting', t => {
 			text: 'baz',
 			expansion: [{
 				expression: 'other',
-				start: 0,
-				end: 10,
+				loc: {
+					start: 0,
+					end: 9
+				},
 				type: 'arithmetic_expansion',
 				resolved: true
 			}],

@@ -6,6 +6,13 @@ exports.mkloc = function mkloc(startLine, startColumn, endLine, endColumn) {
 	return {startLine, startColumn, endLine, endColumn};
 };
 
+exports.mkloc2 = function mkloc(startLine, startColumn, endLine, endColumn, startChar, endChar) {
+	return {
+		start: {row: startLine, col: startColumn, char: startChar},
+		end: {row: endLine, col: endColumn, char: endChar}
+	};
+};
+
 exports.logDiff = function logDiff(expected, actual) {
 	console.log(json.stringify(diff(actual, expected), null, 4));
 };

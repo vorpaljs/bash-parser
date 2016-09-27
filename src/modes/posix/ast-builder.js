@@ -205,20 +205,16 @@ module.exports = options => {
 			node.loc = {};
 			if (prefix) {
 				const firstPrefix = prefix[0];
-				node.loc.startLine = firstPrefix.loc.startLine;
-				node.loc.startColumn = firstPrefix.loc.startColumn;
+				node.loc.start = firstPrefix.loc.start;
 			} else {
-				node.loc.startLine = command.loc.startLine;
-				node.loc.startColumn = command.loc.startColumn;
+				node.loc.start = command.loc.start;
 			}
 
 			if (suffix) {
 				const lastSuffix = suffix[suffix.length - 1];
-				node.loc.endLine = lastSuffix.loc.endLine;
-				node.loc.endColumn = lastSuffix.loc.endColumn;
+				node.loc.end = lastSuffix.loc.end;
 			} else {
-				node.loc.endLine = command.loc.endLine;
-				node.loc.endColumn = command.loc.endColumn;
+				node.loc.end = command.loc.end;
 			}
 		}
 
@@ -252,16 +248,14 @@ module.exports = options => {
 
 function setLocStart(target, source) {
 	if (source) {
-		target.startLine = source.startLine;
-		target.startColumn = source.startColumn;
+		target.start = source.start;
 	}
 	return target;
 }
 
 function setLocEnd(target, source) {
 	if (source) {
-		target.endLine = source.endLine;
-		target.endColumn = source.endColumn;
+		target.end = source.end;
 	}
 	return target;
 }

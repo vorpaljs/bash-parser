@@ -1,4 +1,6 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const posixLexer = require('../src/shell-lexer');
 const posixMode = require('../src/modes/posix');
@@ -52,34 +54,41 @@ test('parses parameter substitution', t => {
 				expansion: [{
 					type: 'parameter_expansion',
 					parameter: 'other',
-					start: 4,
-					end: 12
+					loc: {
+						start: 4,
+						end: 11
+					}
 				}]
 			}
 		}]);
 
 	t.is(result[1].value.text.slice(
-		result[1].value.expansion[0].start,
-		result[1].value.expansion[0].end
+		result[1].value.expansion[0].loc.start,
+		result[1].value.expansion[0].loc.end + 1
 	), '${other}');
 });
 
 test('parses unquoted parameter substitution', t => {
 	const result = tokenize('echo word$test', true);
+	// utils.logResults(result)
 	utils.checkResults(t, result,
 		[{token: 'WORD', value: {text: 'echo'}},
 		{
 			token: 'WORD',
 			value: {
 				text: 'word$test',
-				expansion: [{type: 'parameter_expansion', parameter: 'test', start: 4, end: 9}]
+				expansion: [{
+					type: 'parameter_expansion',
+					parameter: 'test',
+					loc: {start: 4, end: 8}
+				}]
 			}
 		}]
 	);
 
 	t.is(result[1].value.text.slice(
-		result[1].value.expansion[0].start,
-		result[1].value.expansion[0].end
+		result[1].value.expansion[0].loc.start,
+		result[1].value.expansion[0].loc.end + 1
 	), '$test');
 });
 
@@ -92,14 +101,17 @@ test('unquoted parameter delimited by symbol', t => {
 			token: 'WORD',
 			value: {
 				text: 'word$test,,',
-				expansion: [{type: 'parameter_expansion', parameter: 'test', start: 4, end: 9}]
+				expansion: [{
+					type: 'parameter_expansion', parameter: 'test',
+					loc: {start: 4, end: 8}
+				}]
 			}
 		}]
 	);
 
 	t.is(result[1].value.text.slice(
-		result[1].value.expansion[0].start,
-		result[1].value.expansion[0].end
+		result[1].value.expansion[0].loc.start,
+		result[1].value.expansion[0].loc.end + 1
 	), '$test');
 });
 
@@ -154,6 +166,7 @@ test('support character escaping', t => {
 });
 
 test('support line continuations', t => { // not yet implemented
+	// utils.logResults(tokenize('echo\\\n23'))
 	utils.checkResults(t,
 		tokenize('echo\\\n23'),
 		[{token: 'WORD', value: 'echo23'}]
@@ -176,6 +189,7 @@ test('support &&', t => {
 });
 
 test('support &', t => {
+	// utils.logResults(tokenize('run &'));
 	utils.checkResults(t,
 		tokenize('run &'),
 		[{token: 'WORD', value: 'run'}, {token: 'SEPARATOR_OP', value: '&'}]

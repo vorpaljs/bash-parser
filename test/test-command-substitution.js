@@ -1,9 +1,10 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
 
-/* eslint-disable camelcase */
 test('command substitution', t => {
 	const result = bashParser('variable=$(echo ciao)');
 	// utils.logResults(result)
@@ -14,8 +15,10 @@ test('command substitution', t => {
 		expansion: [{
 			command: 'echo ciao',
 			type: 'command_expansion',
-			start: 9,
-			end: 21
+			loc: {
+				start: 9,
+				end: 20
+			}
 		}]
 	}]);
 });
@@ -30,12 +33,8 @@ test('command substitution skip escaped dollar', t => {
 });
 
 test('command substitution skip escaped backtick', t => {
-	const result = bashParser('echo "\\`echo ciao`"');
-	// utils.logResults(result)
-	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
-		text: '\\`echo ciao`'
-	}]);
+	const err = t.throws(() => bashParser('echo "\\`echo ciao`"'));
+	t.is(err.message, 'Unclosed `');
 });
 
 test('command substitution skip single quoted words', t => {
@@ -62,8 +61,10 @@ test('command substitution in suffix', t => {
 		expansion: [{
 			command: 'ciao',
 			type: 'command_expansion',
-			start: 0,
-			end: 7
+			loc: {
+				start: 0,
+				end: 6
+			}
 		}]
 	}]);
 });
@@ -78,8 +79,10 @@ test('command substitution in suffix with backticks', t => {
 		expansion: [{
 			command: 'ciao',
 			type: 'command_expansion',
-			start: 0,
-			end: 6
+			loc: {
+				start: 0,
+				end: 5
+			}
 		}]
 	}]);
 });
@@ -87,6 +90,8 @@ test('command substitution in suffix with backticks', t => {
 test('command ast is recursively parsed', t => {
 	const result = bashParser('variable=$(echo ciao)')
 		.commands[0].prefix[0].expansion[0].commandAST;
+
+	// utils.logResults(result);
 
 	utils.checkResults(t, result, {
 		type: 'complete_command',
@@ -108,8 +113,10 @@ test('command substitution with backticks', t => {
 		expansion: [{
 			command: 'echo ciao',
 			type: 'command_expansion',
-			start: 9,
-			end: 20
+			loc: {
+				start: 9,
+				end: 19
+			}
 		}]
 	}]);
 });
@@ -125,8 +132,10 @@ test('quoted backtick are removed within command substitution with backticks', t
 		expansion: [{
 			command: 'echo `echo ciao`',
 			type: 'command_expansion',
-			start: 9,
-			end: 29
+			loc: {
+				start: 9,
+				end: 28
+			}
 		}]
 	}]);
 });
@@ -140,8 +149,10 @@ test('quoted backtick are not removed within command substitution with parenthes
 		expansion: [{
 			command: 'echo \\`echo ciao\\`',
 			type: 'command_expansion',
-			start: 9,
-			end: 30
+			loc: {
+				start: 9,
+				end: 29
+			}
 		}]
 	}]);
 });
@@ -164,12 +175,12 @@ test('resolve double command', t => {
 			originalText: '"foo $(other) $(one) baz"',
 			expansion: [{
 				command: 'other',
-				start: 5, end: 13,
+				loc: {start: 5, end: 12},
 				resolved: true,
 				type: 'command_expansion'
 			}, {
 				command: 'one',
-				start: 14, end: 20,
+				loc: {start: 14, end: 19},
 				resolved: true,
 				type: 'command_expansion'
 			}],
@@ -195,12 +206,12 @@ test('resolve double command with backticks', t => {
 			originalText: '"foo `other` `one` baz"',
 			expansion: [{
 				command: 'other',
-				start: 5, end: 12,
+				loc: {start: 5, end: 11},
 				resolved: true,
 				type: 'command_expansion'
 			}, {
 				command: 'one',
-				start: 13, end: 18,
+				loc: {start: 13, end: 17},
 				resolved: true,
 				type: 'command_expansion'
 			}],
@@ -224,7 +235,7 @@ test('last newlines are removed from command output', t => {
 			originalText: '"foo $(other) baz"',
 			expansion: [{
 				command: 'other',
-				start: 5, end: 13,
+				loc: {start: 5, end: 12},
 				resolved: true,
 				type: 'command_expansion'
 			}],
@@ -258,7 +269,7 @@ test('field splitting', t => {
 			text: 'foo',
 			expansion: [{
 				command: 'other',
-				start: 0, end: 8,
+				loc: {start: 0, end: 7},
 				type: 'command_expansion',
 				resolved: true
 			}],
@@ -270,7 +281,7 @@ test('field splitting', t => {
 			text: 'bar',
 			expansion: [{
 				command: 'other',
-				start: 0, end: 8,
+				loc: {start: 0, end: 7},
 				type: 'command_expansion',
 				resolved: true
 			}],
@@ -282,7 +293,7 @@ test('field splitting', t => {
 			text: 'baz',
 			expansion: [{
 				command: 'other',
-				start: 0, end: 8,
+				loc: {start: 0, end: 7},
 				type: 'command_expansion',
 				resolved: true
 			}],

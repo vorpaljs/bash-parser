@@ -1,5 +1,7 @@
 'use strict';
 const filter = require('filter-obj');
+const hasOwnProperty = require('has-own-property');
+const operators = require('../modes/posix/enums/operators');
 
 class Token {
 	constructor(fields) {
@@ -18,11 +20,16 @@ class Token {
 
 exports.Token = Token;
 
-exports.mkToken = function mkToken(type, value, loc) {
+function mkToken(type, value, loc, expansion) {
 	const tk = new Token({type, value, loc});
+	if (expansion && expansion.length) {
+		tk.expansion = expansion;
+	}
 	Object.freeze(tk);
 	return tk;
-};
+}
+
+exports.mkToken = mkToken;
 
 exports.mkFieldSplitToken = function mkFieldSplitToken(joinedTk, value, fieldIdx) {
 	const tk = new Token({
@@ -68,4 +75,99 @@ exports.addExpansions = function addExpansions(tk) {
 	const newTk = new Token(Object.assign({}, tk, {expansion: []}));
 	Object.freeze(newTk);
 	return newTk;
+};
+
+exports.setExpansions = function setExpansions(tk, expansion) {
+	const newTk = new Token(Object.assign({}, tk, {expansion}));
+	Object.freeze(newTk);
+	return newTk;
+};
+
+exports.tokenOrEmpty = function tokenOrEmpty(state) {
+	if (state.current !== '' && state.current !== '\n') {
+		const expansion = (state.expansion || []).map(xp => {
+			// console.log('aaa', {token: state.loc, xp: xp.loc});
+			return {...xp, loc: {
+				start: xp.loc.start.char - state.loc.start.char,
+				end: xp.loc.end.char - state.loc.start.char
+			}};
+		});
+		const token = mkToken('TOKEN', state.current, {
+			start: {...state.loc.start},
+			end: {...state.loc.previous}
+		}, expansion);
+
+		/* if (state.expansion && state.expansion.length) {
+			token.expansion = state.expansion;
+		}*/
+
+		return [token];
+	}
+	return [];
+};
+
+exports.operatorTokens = function operatorTokens(state) {
+	const token = mkToken(
+		operators[state.current],
+		state.current, {
+			start: {...state.loc.start},
+			end: {...state.loc.previous}
+		}
+	);
+
+	return [token];
+};
+
+exports.newLine = function newLine() {
+	return mkToken('NEWLINE', '\n');
+};
+
+exports.continueToken = function continueToken(expectedChar) {
+	return mkToken('CONTINUE', expectedChar);
+};
+
+exports.eof = function newLine() {
+	return mkToken('EOF', '');
+};
+
+exports.isPartOfOperator = function isPartOfOperator(text) {
+	return Object.keys(operators).some(op => op.slice(0, text.length) === text);
+};
+
+exports.isOperator = function isOperator(text) {
+	return hasOwnProperty(operators, text);
+};
+
+exports.isSpecialParameter = function isSpecialParameter(char) {
+	return char.match(/^[0-9\-!@#\?\*\$]$/);
+};
+
+exports.appendEmptyExpansion = function appendEmptyExpansion(state) {
+	return (state.expansion || []).concat({
+		loc: {start: {...state.loc.current}}
+	});
+};
+
+exports.advanceLoc = function advanceLoc(state, char) {
+	const loc = {
+		...state.loc,
+		current: {...state.loc.current},
+		previous: {...state.loc.current}
+
+	};
+
+	if (char === '\n') {
+		loc.current.row++;
+		loc.current.col = 1;
+	} else {
+		loc.current.col++;
+	}
+
+	loc.current.char++;
+
+	if (char && char.match(/\s/) && state.current === '') {
+		loc.start = {...loc.current};
+	}
+
+	return {...state, loc};
 };

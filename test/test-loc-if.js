@@ -1,7 +1,7 @@
 'use strict';
+import 'babel-register';
+
 const test = require('ava');
-// const json = require('json5');
-// const {diff} = require('rus-diff');
 const bashParser = require('../src');
 const utils = require('./_utils');
 
@@ -17,8 +17,9 @@ fi
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 
-	// console.log(json.stringify(result.commands[0].left.commands[0], null, '\t').replace(/"/g, '\''));
-	const expected = {
+	// utils.logResults(result)
+
+	const expected = 	{
 		type: 'if',
 		clause: {
 			type: 'compound_list',
@@ -26,28 +27,46 @@ fi
 				{
 					type: 'simple_command',
 					name: {
-						type: 'word',
 						text: 'true',
+						type: 'word',
 						loc: {
-							startLine: 0,
-							startColumn: 3,
-							endLine: 0,
-							endColumn: 6
+							start: {
+								col: 4,
+								row: 1,
+								char: 3
+							},
+							end: {
+								col: 7,
+								row: 1,
+								char: 6
+							}
 						}
 					},
 					loc: {
-						startLine: 0,
-						startColumn: 3,
-						endLine: 0,
-						endColumn: 6
+						start: {
+							col: 4,
+							row: 1,
+							char: 3
+						},
+						end: {
+							col: 7,
+							row: 1,
+							char: 6
+						}
 					}
 				}
 			],
 			loc: {
-				startLine: 0,
-				startColumn: 3,
-				endLine: 0,
-				endColumn: 6
+				start: {
+					col: 4,
+					row: 1,
+					char: 3
+				},
+				end: {
+					col: 7,
+					row: 1,
+					char: 6
+				}
 			}
 		},
 		then: {
@@ -56,38 +75,64 @@ fi
 				{
 					type: 'simple_command',
 					name: {
-						type: 'word',
 						text: 'echo',
+						type: 'word',
 						loc: {
-							startLine: 1,
-							startColumn: 1,
-							endLine: 1,
-							endColumn: 4
+							start: {
+								col: 2,
+								row: 2,
+								char: 15
+							},
+							end: {
+								col: 5,
+								row: 2,
+								char: 18
+							}
 						}
 					},
 					loc: {
-						startLine: 1,
-						startColumn: 1,
-						endLine: 1,
-						endColumn: 6
-					},
-					suffix: [{
-						type: 'word',
-						text: '1',
-						loc: {
-							startLine: 1,
-							startColumn: 6,
-							endLine: 1,
-							endColumn: 6
+						start: {
+							col: 2,
+							row: 2,
+							char: 15
+						},
+						end: {
+							col: 7,
+							row: 2,
+							char: 20
 						}
-					}]
+					},
+					suffix: [
+						{
+							text: '1',
+							type: 'word',
+							loc: {
+								start: {
+									col: 7,
+									row: 2,
+									char: 20
+								},
+								end: {
+									col: 7,
+									row: 2,
+									char: 20
+								}
+							}
+						}
+					]
 				}
 			],
 			loc: {
-				startLine: 1,
-				startColumn: 1,
-				endLine: 1,
-				endColumn: 6
+				start: {
+					col: 2,
+					row: 2,
+					char: 15
+				},
+				end: {
+					col: 7,
+					row: 2,
+					char: 20
+				}
 			}
 		},
 		else: {
@@ -98,28 +143,46 @@ fi
 					{
 						type: 'simple_command',
 						name: {
-							type: 'word',
 							text: 'false',
+							type: 'word',
 							loc: {
-								startLine: 2,
-								startColumn: 5,
-								endLine: 2,
-								endColumn: 9
+								start: {
+									col: 6,
+									row: 3,
+									char: 28
+								},
+								end: {
+									col: 10,
+									row: 3,
+									char: 32
+								}
 							}
 						},
 						loc: {
-							startLine: 2,
-							startColumn: 5,
-							endLine: 2,
-							endColumn: 9
+							start: {
+								col: 6,
+								row: 3,
+								char: 28
+							},
+							end: {
+								col: 10,
+								row: 3,
+								char: 32
+							}
 						}
 					}
 				],
 				loc: {
-					startLine: 2,
-					startColumn: 5,
-					endLine: 2,
-					endColumn: 9
+					start: {
+						col: 6,
+						row: 3,
+						char: 28
+					},
+					end: {
+						col: 10,
+						row: 3,
+						char: 32
+					}
 				}
 			},
 			then: {
@@ -128,38 +191,64 @@ fi
 					{
 						type: 'simple_command',
 						name: {
-							type: 'word',
 							text: 'echo',
+							type: 'word',
 							loc: {
-								startLine: 3,
-								startColumn: 1,
-								endLine: 3,
-								endColumn: 4
+								start: {
+									col: 2,
+									row: 4,
+									char: 41
+								},
+								end: {
+									col: 5,
+									row: 4,
+									char: 44
+								}
 							}
 						},
 						loc: {
-							startLine: 3,
-							startColumn: 1,
-							endLine: 3,
-							endColumn: 6
-						},
-						suffix: [{
-							type: 'word',
-							text: '3',
-							loc: {
-								startLine: 3,
-								startColumn: 6,
-								endLine: 3,
-								endColumn: 6
+							start: {
+								col: 2,
+								row: 4,
+								char: 41
+							},
+							end: {
+								col: 7,
+								row: 4,
+								char: 46
 							}
-						}]
+						},
+						suffix: [
+							{
+								text: '3',
+								type: 'word',
+								loc: {
+									start: {
+										col: 7,
+										row: 4,
+										char: 46
+									},
+									end: {
+										col: 7,
+										row: 4,
+										char: 46
+									}
+								}
+							}
+						]
 					}
 				],
 				loc: {
-					startLine: 3,
-					startColumn: 1,
-					endLine: 3,
-					endColumn: 6
+					start: {
+						col: 2,
+						row: 4,
+						char: 41
+					},
+					end: {
+						col: 7,
+						row: 4,
+						char: 46
+					}
 				}
 			},
 			else: {
@@ -168,52 +257,90 @@ fi
 					{
 						type: 'simple_command',
 						name: {
-							type: 'word',
 							text: 'echo',
+							type: 'word',
 							loc: {
-								startLine: 5,
-								startColumn: 1,
-								endLine: 5,
-								endColumn: 4
+								start: {
+									col: 2,
+									row: 6,
+									char: 55
+								},
+								end: {
+									col: 5,
+									row: 6,
+									char: 58
+								}
 							}
 						},
 						loc: {
-							startLine: 5,
-							startColumn: 1,
-							endLine: 5,
-							endColumn: 6
-						},
-						suffix: [{
-							type: 'word',
-							text: '2',
-							loc: {
-								startLine: 5,
-								startColumn: 6,
-								endLine: 5,
-								endColumn: 6
+							start: {
+								col: 2,
+								row: 6,
+								char: 55
+							},
+							end: {
+								col: 7,
+								row: 6,
+								char: 60
 							}
-						}]
+						},
+						suffix: [
+							{
+								text: '2',
+								type: 'word',
+								loc: {
+									start: {
+										col: 7,
+										row: 6,
+										char: 60
+									},
+									end: {
+										col: 7,
+										row: 6,
+										char: 60
+									}
+								}
+							}
+						]
 					}
 				],
 				loc: {
-					startLine: 4,
-					startColumn: 0,
-					endLine: 5,
-					endColumn: 6
+					start: {
+						col: 1,
+						row: 5,
+						char: 49
+					},
+					end: {
+						col: 7,
+						row: 6,
+						char: 60
+					}
 				}
 			},
 			loc: {
-				startLine: 2,
-				startColumn: 0,
-				endLine: 5,
-				endColumn: 6
+				start: {
+					col: 1,
+					row: 3,
+					char: 23
+				},
+				end: {
+					col: 7,
+					row: 6,
+					char: 60
+				}
 			}
 		},
 		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 6,
-			endColumn: 1
+			start: {
+				col: 1,
+				row: 1,
+				char: 0
+			},
+			end: {
+				col: 2,
+				row: 7,
+				char: 64
+			}
 		}
 	};
 	// console.log(diff(result.commands[0].left.commands[0], expected));

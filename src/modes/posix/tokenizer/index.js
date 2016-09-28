@@ -21,7 +21,7 @@ export default () => function * tokenizer(src) {
 		}
 	};
 
-	deepFreeze(state);
+	// deepFreeze(state);
 	let reduction = start;
 
 	while (typeof reduction === 'function') {
@@ -42,7 +42,7 @@ export default () => function * tokenizer(src) {
 			state = advanceLoc(state, char);
 		}
 
-		deepFreeze(state);
+		// deepFreeze(state);
 		reduction = nextReduction;
 	}
 };

@@ -136,6 +136,7 @@ export function appendEmptyExpansion(state) {
 }
 
 export function advanceLoc(state, char) {
+	return null;
 	const loc = {
 		...state.loc,
 		current: {...state.loc.current},

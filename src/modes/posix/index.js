@@ -1,7 +1,7 @@
 'use strict';
 
 const astBuilder = require('./ast-builder');
-const tokenizer = require('./tokenizer').default;
+const tokenizer = require('./tokenizer');
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
 

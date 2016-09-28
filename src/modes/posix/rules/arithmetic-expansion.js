@@ -32,7 +32,7 @@ const arithmeticExpansion = () => map(token => {
 
 		return tokens.setExpansions(token, token.expansion.map(xp => {
 			if (xp.type === 'arithmetic_expansion') {
-				return {...xp, arithmeticAST: parseArithmeticAST(xp)};
+				return Object.assign({}, xp, {arithmeticAST: parseArithmeticAST(xp)});
 			}
 			return xp;
 		}));

@@ -1,13 +1,8 @@
 'use strict';
-import deepFreeze from 'deep-freeze';
+// const deepFreeze = require('deep-freeze');
+const last = require('array-last');
 
-import {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
-	isOperator, isSpecialParameter} from '../../../utils/tokens';
-
-import start from './reducers/start';
-
-export {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
-	isOperator, isSpecialParameter};
+const start = require('./reducers/start');
 
 const defaultFields = {
 	current: '',
@@ -20,6 +15,7 @@ const defaultFields = {
 	}
 };
 
+/*
 class State {
 	constructor(fields = defaultFields) {
 		Object.assign(this, fields);
@@ -27,54 +23,55 @@ class State {
 	}
 
 	setLoc(loc) {
-		return new State({...this, loc});
+		return new State(Object.assign({}, this, {loc}));
 	}
 
 	setEscaping(escaping) {
-		return new State({...this, escaping});
+		return new State(Object.assign({}, this, {escaping}));
 	}
 
 	setExpansion(expansion) {
-		return new State({...this, expansion});
+		return new State(Object.assign({}, this, {expansion}));
 	}
 
 	setPreviousReducer(previousReducer) {
-		return new State({...this, previousReducer});
+		return new State(Object.assign({}, this, {previousReducer}));
 	}
 
 	setCurrent(current) {
-		return new State({...this, current});
+		return new State(Object.assign({}, this, {current}));
 	}
 
 	appendEmptyExpansion() {
 		const expansion = (this.expansion || []).concat({
-			loc: {start: {...this.loc.current}}
+			loc: {start: Object.assign({}, this.loc.current)}
 		});
 		return this.setExpansion(expansion);
 	}
 
 	appendChar(char) {
-		return new State({...this, current: this.current + char});
+		return new State(Object.assign({}, this, {current: this.current + char}));
 	}
 
 	removeLastChar() {
-		return new State({...this, current: this.current.slice(0, -1)});
+		return new State(Object.assign({}, this, {current: this.current.slice(0, -1)}));
 	}
 
 	saveCurrentLocAsStart() {
-		return new State({...this, loc: {...this.loc, start: this.loc.current}});
+		return new State(Object.assign({}, this, {loc: Object.assign({}, this.loc, {start: this.loc.current})}));
 	}
 
 	resetCurrent() {
-		return new State({...this, current: ''});
+		return new State(Object.assign({}, this, {current: ''}));
 	}
 
 	advanceLoc(char) {
-		const loc = {
-			...this.loc,
-			current: {...this.loc.current},
-			previous: {...this.loc.current}
-		};
+		const loc = Object.assign({},
+			this.loc, {
+				current: Object.assign({}, this.loc.current),
+				previous: Object.assign({}, this.loc.current)
+			}
+		);
 
 		if (char === '\n') {
 			loc.current.row++;
@@ -86,12 +83,13 @@ class State {
 		loc.current.char++;
 
 		if (char && char.match(/\s/) && this.current === '') {
-			loc.start = {...loc.current};
+			loc.start = Object.assign({}, loc.current);
 		}
 
 		return this.setLoc(loc);
 	}
 }
+*/
 
 class MutableState {
 	constructor(fields = defaultFields) {
@@ -126,7 +124,7 @@ class MutableState {
 	appendEmptyExpansion() {
 		this.expansion = (this.expansion || []);
 		this.expansion.push({
-			loc: {start: {...this.loc.current}}
+			loc: {start: Object.assign({}, this.loc.current)}
 		});
 		return this;
 	}
@@ -151,6 +149,18 @@ class MutableState {
 		return this;
 	}
 
+	replaceLastExpansion(fields) {
+		const xp = last(this.expansion);
+		Object.assign(xp, fields);
+		return this;
+	}
+
+	deleteLastExpansionValue() {
+		const xp = last(this.expansion);
+		delete xp.value;
+		return this;
+	}
+
 	advanceLoc(char) {
 		const loc = JSON.parse(JSON.stringify(this.loc));
 		loc.previous = Object.assign({}, this.loc.current);
@@ -172,7 +182,7 @@ class MutableState {
 	}
 }
 
-export default () => function * tokenizer(src) {
+module.exports = () => function * tokenizer(src) {
 	let state = new MutableState();
 
 	// deepFreeze(state);
@@ -200,3 +210,4 @@ export default () => function * tokenizer(src) {
 		reduction = nextReduction;
 	}
 };
+

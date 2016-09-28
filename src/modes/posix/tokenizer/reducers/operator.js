@@ -1,13 +1,12 @@
 'use strict';
 
-import end from './end';
-import start from './start';
+const {operatorTokens, isPartOfOperator, isOperator} = require('../../../../utils/tokens');
 
-import {operatorTokens, isPartOfOperator, isOperator} from '..';
+module.exports = function operator(state, source) {
+	const end = require('./end');
+	const start = require('./start');
 
-export default function operator(state, source) {
 	const char = source && source.shift();
-
 
 	if (char === undefined) {
 		if (isOperator(state.current)) {
@@ -42,4 +41,4 @@ export default function operator(state, source) {
 		tokensToEmit: tokens,
 		nextState
 	};
-}
+};

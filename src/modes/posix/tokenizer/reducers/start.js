@@ -1,18 +1,17 @@
 'use strict';
 
-import end from './end';
-import operator from './operator';
-import comment from './comment';
-import singleQuoting from './single-quoting';
-import doubleQuoting from './double-quoting';
-import expansionStart from './expansion-start';
-import expansionCommandTick from './expansion-command-tick';
+const {tokenOrEmpty, newLine, isPartOfOperator} = require('../../../../utils/tokens');
 
-import {tokenOrEmpty, newLine, isPartOfOperator} from '..';
+const end = require('./end');
+const operator = require('./operator');
+const comment = require('./comment');
+const singleQuoting = require('./single-quoting');
+const doubleQuoting = require('./double-quoting');
+const expansionStart = require('./expansion-start');
+const expansionCommandTick = require('./expansion-command-tick');
 
-export default function start(state, source) {
+module.exports = function start(state, source) {
 	const char = source && source.shift();
-
 
 	if (char === undefined) {
 		return {
@@ -98,4 +97,4 @@ export default function start(state, source) {
 		nextReduction: start,
 		nextState: state.appendChar(char).setEscaping(false)
 	};
-}
+};

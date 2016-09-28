@@ -1,12 +1,12 @@
 'use strict';
 
-import end from './end';
-import start from './start';
-import {newLine} from '..';
+const {newLine} = require('../../../../utils/tokens');
 
-export default function comment(state, source) {
+module.exports = function comment(state, source) {
+	const end = require('./end');
+	const start = require('./start');
+
 	const char = source && source.shift();
-
 
 	if (char === undefined) {
 		return {
@@ -27,4 +27,4 @@ export default function comment(state, source) {
 		nextReduction: comment,
 		nextState: state
 	};
-}
+};

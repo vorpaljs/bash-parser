@@ -17,11 +17,7 @@ function setCommandExpansion(xp, token) {
 	const commandAST = bashParser(command);
 
 	// console.log(JSON.stringify({command, commandAST}, null, 4))
-	return {
-		...xp,
-		command,
-		commandAST
-	};
+	return Object.assign({}, xp, {command, commandAST});
 }
 
 // RULE 5 - If the current character is an unquoted '$' or '`', the shell shall

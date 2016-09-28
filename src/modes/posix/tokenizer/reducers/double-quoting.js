@@ -1,12 +1,12 @@
 'use strict';
 
-import start from './start';
-import expansionStart from './expansion-start';
-import expansionCommandTick from './expansion-command-tick';
+const {tokenOrEmpty, continueToken} = require('../../../../utils/tokens');
 
-import {tokenOrEmpty, continueToken} from '..';
+module.exports = function doubleQuoting(state, source) {
+	const start = require('./start');
+	const expansionStart = require('./expansion-start');
+	const expansionCommandTick = require('./expansion-command-tick');
 
-export default function doubleQuoting(state, source) {
 	const char = source && source.shift();
 
 	state = state.setPreviousReducer(doubleQuoting);
@@ -51,4 +51,4 @@ export default function doubleQuoting(state, source) {
 		nextReduction: doubleQuoting,
 		nextState: state.setEscaping(false).appendChar(char)
 	};
-}
+};

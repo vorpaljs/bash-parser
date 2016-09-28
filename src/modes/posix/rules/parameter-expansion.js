@@ -54,28 +54,27 @@ function setParameterExpansion(xp) {
 
 			const op = opName;
 
-			return {
-				...xp,
-				parameter,
-				...(op ? {op} : {}),
-				...(word ? {word} : {})
-			};
+			return Object.assign(
+				xp,
+				{parameter},
+				op ? {op} : {},
+				word ? {word} : {}
+			);
 		}
 	}
 
 	if (parameter.match(/^[0-9]+$/) && parameter !== '0') {
-		return {
-			...xp,
-			kind: 'positional',
-			parameter: Number(xp.parameter)
-		};
+		return Object.assign(
+			xp,
+			{kind: 'positional', parameter: Number(xp.parameter)}
+		);
 	}
 
 	if (isSpecialParameter(parameter)) {
-		return {
-			...xp,
-			kind: specialParameterNames[parameter]
-		};
+		return Object.assign(
+			xp,
+			{kind: specialParameterNames[parameter]}
+		);
 	}
 
 	return xp;

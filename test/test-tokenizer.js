@@ -1,9 +1,7 @@
 'use strict';
-require('babel-register');
 
 const test = require('ava');
-const tokenDelimiter = require('../src/modes/posix/tokenizer').default;
-// import utils from './_utils';
+const tokenDelimiter = require('../src/modes/posix/tokenizer');
 
 const tokenizer = tokenDelimiter();
 

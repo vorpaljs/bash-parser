@@ -1,49 +1,34 @@
 'use strict';
 
-import last from 'array-last';
-import start from './start';
+const last = require('array-last');
 
-export default function expansionParameter(state, source) {
+module.exports = function expansionParameter(state, source) {
+	const start = require('./start');
+
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
 
 	if (char === undefined) {
-		// console.log(state.loc, xp.loc)
-		const newXp = {
-			...xp,
-			loc: {...xp.loc, end: state.loc.previous}
-		};
-		// console.log(newXp)
-		const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 		return {
 			nextReduction: start,
-			nextState: state.setExpansion(expansion)
+			nextState: state.replaceLastExpansion({
+				loc: Object.assign({}, xp.loc, {end: state.loc.previous})
+			})
 		};
 	}
 
 	if (char.match(/[0-9a-zA-Z_]/)) {
-		const newXp = {
-			...xp,
-			parameter: xp.parameter + (char || '')
-		};
-		const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 		return {
 			nextReduction: expansionParameter,
-			nextState: state.appendChar(char).setExpansion(expansion)
+			nextState: state.appendChar(char).replaceLastExpansion({
+				parameter: xp.parameter + (char || '')
+			})
 		};
 	}
 
-	const newXp = {...xp, loc: {...xp.loc, end: state.loc.previous}};
-	const expansion = state.expansion
-		.slice(0, -1)
-		.concat(newXp);
-
-	return state.previousReducer(state.setExpansion(expansion), [char].concat(source));
-}
+	return state.previousReducer(
+		state.replaceLastExpansion({loc: Object.assign({}, xp.loc, {end: state.loc.previous})}),
+		[char].concat(source)
+	);
+};

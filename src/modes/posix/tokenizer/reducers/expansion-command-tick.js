@@ -1,43 +1,30 @@
 'use strict';
 
-import last from 'array-last';
-import {continueToken} from '..';
+const last = require('array-last');
+const {continueToken} = require('../../../../utils/tokens');
 
-export default function expansionCommandTick(state, source) {
+module.exports = function expansionCommandTick(state, source) {
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
 
 	if (!state.escaping && char === '`') {
-		const newXp = {
-			...xp,
-			type: 'command_expansion',
-			loc: {...xp.loc, end: state.loc.current}
-		};
-		const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 		return {
 			nextReduction: state.previousReducer,
-			nextState: state.appendChar(char).setExpansion(expansion)
+			nextState: state.appendChar(char).replaceLastExpansion({
+				type: 'command_expansion',
+				loc: Object.assign({}, xp.loc, {end: state.loc.current})
+			})
 		};
 	}
 
 	if (char === undefined) {
-		const newXp = {
-			...xp,
-			loc: {...xp.loc, end: state.loc.previous}
-		};
-
-		const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 		return {
 			nextReduction: state.previousReducer,
 			tokensToEmit: [continueToken('`')],
-			nextState: state.setExpansion(expansion)
+			nextState: state.replaceLastExpansion({
+				loc: Object.assign({}, xp.loc, {end: state.loc.previous})
+			})
 		};
 	}
 
@@ -45,21 +32,14 @@ export default function expansionCommandTick(state, source) {
 		return {
 			nextReduction: expansionCommandTick,
 			nextState: state.appendChar(char).setEscaping(true)
-
 		};
 	}
 
-	const newXp = {
-		...xp,
-		command: (xp.command || '') + char
-	};
-
-	const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 	return {
 		nextReduction: expansionCommandTick,
-		nextState: state.setEscaping(false).appendChar(char).setExpansion(expansion)
+		nextState: state
+			.setEscaping(false)
+			.appendChar(char)
+			.replaceLastExpansion({command: (xp.command || '') + char})
 	};
-}
+};

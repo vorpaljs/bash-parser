@@ -1,56 +1,37 @@
 'use strict';
 
-import last from 'array-last';
-import {continueToken} from '..';
+const last = require('array-last');
+const {continueToken} = require('../../../../utils/tokens');
 
-export default function expansionParameterExtended(state, char) {
+module.exports = function expansionParameterExtended(state, source) {
+	const char = source && source.shift();
+
 	const xp = last(state.expansion);
 
 	if (char === '}') {
-		const newXp = {
-			...xp,
-			type: 'parameter_expansion',
-			loc: {...xp.loc, end: state.loc.current}
-		};
-
-		const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 		return {
 			nextReduction: state.previousReducer,
-			nextState: {...state, current: state.current + char, expansion}
+			nextState: state.appendChar(char).replaceLastExpansion({
+				type: 'parameter_expansion',
+				loc: Object.assign({}, xp.loc, {end: state.loc.current})
+			})
 		};
 	}
 
 	if (char === undefined) {
-		const newXp = {
-			...xp,
-			loc: {...xp.loc, end: state.loc.previous}
-		};
-
-		const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 		return {
 			nextReduction: state.previousReducer,
 			tokensToEmit: [continueToken('${')],
-			nextState: {...state, expansion}
+			nextState: state.replaceLastExpansion({
+				loc: Object.assign({}, xp.loc, {end: state.loc.previous})
+			})
 		};
 	}
 
-	const newXp = {
-		...xp,
-		parameter: (xp.parameter || '') + char
-	};
-
-	const expansion = state.expansion
-			.slice(0, -1)
-			.concat(newXp);
-
 	return {
 		nextReduction: expansionParameterExtended,
-		nextState: {...state, current: state.current + char, expansion}
+		nextState: state
+			.appendChar(char)
+			.replaceLastExpansion({parameter: (xp.parameter || '') + char})
 	};
-}
+};

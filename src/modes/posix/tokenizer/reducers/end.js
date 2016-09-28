@@ -1,10 +1,10 @@
 'use strict';
 
-import {eof} from '..';
+const {eof} = require('../../../../utils/tokens');
 
-export default function end() {
+module.exports = function end() {
 	return {
 		nextReduction: null,
 		tokensToEmit: [eof()]
 	};
-}
+};

@@ -1,17 +1,19 @@
 'use strict';
 
-import end from './end';
-import start from './start';
+const {operatorTokens, isPartOfOperator, isOperator} = require('../../../../utils/tokens');
 
-import {operatorTokens, isPartOfOperator, isOperator} from '..';
+module.exports = function operator(state, source) {
+	const end = require('./end');
+	const start = require('./start');
 
-export default function operator(state, char) {
+	const char = source && source.shift();
+
 	if (char === undefined) {
 		if (isOperator(state.current)) {
 			return {
 				nextReduction: end,
 				tokensToEmit: operatorTokens(state),
-				nextState: {...state, current: '', loc: {...state.loc, start: state.loc.current}}
+				nextState: state.resetCurrent().saveCurrentLocAsStart()
 			};
 		}
 		return start(state, char);
@@ -20,17 +22,17 @@ export default function operator(state, char) {
 	if (isPartOfOperator(state.current + char)) {
 		return {
 			nextReduction: operator,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
 	let tokens = [];
 	if (isOperator(state.current)) {
 		tokens = operatorTokens(state);
-		state = {...state, current: '', loc: {...state.loc, start: state.loc.current}};
+		state = state.resetCurrent().saveCurrentLocAsStart();
 	}
 
-	const {nextReduction, tokensToEmit, nextState} = start(state, char);
+	const {nextReduction, tokensToEmit, nextState} = start(state, [char].concat(source));
 	if (tokensToEmit) {
 		tokens = tokens.concat(tokensToEmit);
 	}
@@ -39,4 +41,4 @@ export default function operator(state, char) {
 		tokensToEmit: tokens,
 		nextState
 	};
-}
+};

@@ -7,7 +7,7 @@ module.exports = () => function * defaultNodeType(tokens) {
 			tk.originalType = tk.type;
 			tk.type = tk.type.toLowerCase();
 		}
-		Object.freeze(tk);
+		// Object.freeze(tk);
 		yield tk;
 	}
 };

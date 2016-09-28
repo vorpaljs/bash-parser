@@ -1,11 +1,15 @@
 'use strict';
 
-import {tokenOrEmpty, continueToken} from '..';
-import start from './start';
+const {tokenOrEmpty, continueToken} = require('../../../../utils/tokens');
 
-export default function singleQuoting(state, char) {
+module.exports = function singleQuoting(state, source) {
+	const start = require('./start');
+
+	const char = source && source.shift();
+
 	if (char === undefined) {
 		return {
+			nextState: state,
 			nextReduction: null,
 			tokensToEmit: tokenOrEmpty(state).concat(continueToken('\''))
 		};
@@ -14,12 +18,12 @@ export default function singleQuoting(state, char) {
 	if (char === '\'') {
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
 	return {
 		nextReduction: singleQuoting,
-		nextState: {...state, current: state.current + char}
+		nextState: state.appendChar(char)
 	};
-}
+};

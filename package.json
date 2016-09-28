@@ -7,32 +7,20 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-    "test": "ava -c 15 && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
+  	"time": "time ava --no-babel",
+    "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build": "mgb ./src/modes posix && mgb ./src/modes bash",
-    "cover-test": "nyc ava -c 5 && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
+    "cover-test": "nyc ava --no-babel 5 && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"
   },
   "keywords": [],
   "engines": {
     "node": ">=4"
   },
-  "babel": {
-    "presets": [
-      "es2015-node4"
-    ],
-    "plugins": [
-      "syntax-object-rest-spread",
-      "transform-object-rest-spread"
-    ]
-  },
   "devDependencies": {
     "ava": "^0.15.2",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "^6.14.0",
-    "babel-preset-es2015-node4": "^2.1.0",
-    "babel-register": "^6.14.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
     "callsite": "^1.0.0",

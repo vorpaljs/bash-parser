@@ -1,78 +1,54 @@
 'use strict';
 
-import start from './start';
-import expansionStart from './expansion-start';
-import expansionCommandTick from './expansion-command-tick';
+const {tokenOrEmpty, continueToken} = require('../../../../utils/tokens');
 
-import {tokenOrEmpty, appendEmptyExpansion, continueToken} from '..';
+module.exports = function doubleQuoting(state, source) {
+	const start = require('./start');
+	const expansionStart = require('./expansion-start');
+	const expansionCommandTick = require('./expansion-command-tick');
 
-export default function doubleQuoting(state, char) {
+	const char = source && source.shift();
+
+	state = state.setPreviousReducer(doubleQuoting);
+
 	if (char === undefined) {
 		return {
 			nextReduction: null,
-			tokensToEmit: tokenOrEmpty(state).concat(continueToken('"'))
+			tokensToEmit: tokenOrEmpty(state).concat(continueToken('"')),
+			nextState: state
 		};
 	}
 
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: {
-				...state,
-				previousReducer: doubleQuoting,
-				escaping: true,
-				current: state.current + char
-			}
-
+			nextState: state.setEscaping(true).appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: start,
-			nextState: {
-				...state,
-				previousReducer: start,
-				current: state.current + char
-			}
+			nextState: state.setPreviousReducer(start).appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '$') {
-		const expansion = appendEmptyExpansion(state);
-
 		return {
 			nextReduction: expansionStart,
-			nextState: {
-				...state,
-				previousReducer: doubleQuoting,
-				current: state.current + char,
-				expansion
-			}
+			nextState: state.appendEmptyExpansion().appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '`') {
-		const expansion = appendEmptyExpansion(state);
-
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: {
-				...state,
-				previousReducer: doubleQuoting,
-				current: state.current + char,
-				expansion
-			}
+			nextState: state.appendEmptyExpansion().appendChar(char)
 		};
 	}
 
 	return {
 		nextReduction: doubleQuoting,
-		nextState: {
-			...state,
-			previousReducer: doubleQuoting,
-			escaping: false,
-			current: state.current + char
-		}
+		nextState: state.setEscaping(false).appendChar(char)
 	};
-}
+};

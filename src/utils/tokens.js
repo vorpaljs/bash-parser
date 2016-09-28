@@ -129,33 +129,4 @@ export function isSpecialParameter(char) {
 	return char.match(/^[0-9\-!@#\?\*\$]$/);
 }
 
-export function appendEmptyExpansion(state) {
-	return (state.expansion || []).concat({
-		loc: {start: {...state.loc.current}}
-	});
-}
 
-export function advanceLoc(state, char) {
-	return null;
-	const loc = {
-		...state.loc,
-		current: {...state.loc.current},
-		previous: {...state.loc.current}
-
-	};
-
-	if (char === '\n') {
-		loc.current.row++;
-		loc.current.col = 1;
-	} else {
-		loc.current.col++;
-	}
-
-	loc.current.char++;
-
-	if (char && char.match(/\s/) && state.current === '') {
-		loc.start = {...loc.current};
-	}
-
-	return {...state, loc};
-}

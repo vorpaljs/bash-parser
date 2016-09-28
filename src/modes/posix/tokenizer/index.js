@@ -2,12 +2,12 @@
 import deepFreeze from 'deep-freeze';
 
 import {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
-	isOperator, isSpecialParameter, appendEmptyExpansion, advanceLoc} from '../../../utils/tokens';
+	isOperator, isSpecialParameter} from '../../../utils/tokens';
 
 import start from './reducers/start';
 
 export {eof, continueToken, tokenOrEmpty, operatorTokens, newLine, isPartOfOperator,
-	isOperator, isSpecialParameter, appendEmptyExpansion, advanceLoc};
+	isOperator, isSpecialParameter};
 
 const defaultFields = {
 	current: '',
@@ -93,8 +93,87 @@ class State {
 	}
 }
 
+class MutableState {
+	constructor(fields = defaultFields) {
+		Object.assign(this, fields);
+	}
+
+	setLoc(loc) {
+		this.loc = loc;
+		return this;
+	}
+
+	setEscaping(escaping) {
+		this.escaping = escaping;
+		return this;
+	}
+
+	setExpansion(expansion) {
+		this.expansion = expansion;
+		return this;
+	}
+
+	setPreviousReducer(previousReducer) {
+		this.previousReducer = previousReducer;
+		return this;
+	}
+
+	setCurrent(current) {
+		this.current = current;
+		return this;
+	}
+
+	appendEmptyExpansion() {
+		this.expansion = (this.expansion || []);
+		this.expansion.push({
+			loc: {start: {...this.loc.current}}
+		});
+		return this;
+	}
+
+	appendChar(char) {
+		this.current = this.current + char;
+		return this;
+	}
+
+	removeLastChar() {
+		this.current = this.current.slice(0, -1);
+		return this;
+	}
+
+	saveCurrentLocAsStart() {
+		this.loc.start = Object.assign({}, this.loc.current);
+		return this;
+	}
+
+	resetCurrent() {
+		this.current = '';
+		return this;
+	}
+
+	advanceLoc(char) {
+		const loc = JSON.parse(JSON.stringify(this.loc));
+		loc.previous = Object.assign({}, this.loc.current);
+
+		if (char === '\n') {
+			loc.current.row++;
+			loc.current.col = 1;
+		} else {
+			loc.current.col++;
+		}
+
+		loc.current.char++;
+
+		if (char && char.match(/\s/) && this.current === '') {
+			loc.start = Object.assign({}, loc.current);
+		}
+
+		return this.setLoc(loc);
+	}
+}
+
 export default () => function * tokenizer(src) {
-	let state = new State();
+	let state = new MutableState();
 
 	// deepFreeze(state);
 	let reduction = start;

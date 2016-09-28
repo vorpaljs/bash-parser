@@ -177,18 +177,18 @@ export default () => function * tokenizer(src) {
 
 	// deepFreeze(state);
 	let reduction = start;
+	const source = Array.from(src);
 
 	while (typeof reduction === 'function') {
-		const char = src[state.loc.current.char];
-		// console.log({char, reduction})
-		const {nextReduction, tokensToEmit, nextState} = reduction(state, char);
+		const char = source[0];
+		const {nextReduction, tokensToEmit, nextState} = reduction(state, source);
 		if (tokensToEmit) {
 			yield * tokensToEmit;
 		}
 
-		if (char === undefined && nextReduction === reduction) {
+		/* if (char === undefined && nextReduction === reduction) {
 			throw new Error('Loop detected');
-		}
+		} */
 
 		if (nextState) {
 			state = nextState.advanceLoc(char);

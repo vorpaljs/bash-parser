@@ -8,7 +8,9 @@ import expansionParameterExtended from './expansion-parameter-extended';
 
 import {isSpecialParameter} from '..';
 
-export default function expansionStart(state, char) {
+export default function expansionStart(state, source) {
+	const char = source && source.shift();
+
 	if (char === '{') {
 		return {
 			nextReduction: expansionParameterExtended,
@@ -40,8 +42,8 @@ export default function expansionStart(state, char) {
 	}
 
 	if (isSpecialParameter(char)) {
-		return expansionSpecialParameter(state, char);
+		return expansionSpecialParameter(state, [char].concat(source));
 	}
 
-	return state.previousReducer(state, char);
+	return state.previousReducer(state, [char].concat(source));
 }

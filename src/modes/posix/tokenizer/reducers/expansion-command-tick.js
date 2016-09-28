@@ -3,8 +3,11 @@
 import last from 'array-last';
 import {continueToken} from '..';
 
-export default function expansionCommandTick(state, char) {
+export default function expansionCommandTick(state, source) {
+	const char = source && source.shift();
+
 	const xp = last(state.expansion);
+
 	if (!state.escaping && char === '`') {
 		const newXp = {
 			...xp,

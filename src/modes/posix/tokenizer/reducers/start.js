@@ -8,9 +8,12 @@ import doubleQuoting from './double-quoting';
 import expansionStart from './expansion-start';
 import expansionCommandTick from './expansion-command-tick';
 
-import {tokenOrEmpty, newLine, isPartOfOperator, appendEmptyExpansion} from '..';
+import {tokenOrEmpty, newLine, isPartOfOperator} from '..';
 
-export default function start(state, char) {
+export default function start(state, source) {
+	const char = source && source.shift();
+
+
 	if (char === undefined) {
 		return {
 			nextReduction: end,

@@ -5,7 +5,10 @@ import start from './start';
 
 import {operatorTokens, isPartOfOperator, isOperator} from '..';
 
-export default function operator(state, char) {
+export default function operator(state, source) {
+	const char = source && source.shift();
+
+
 	if (char === undefined) {
 		if (isOperator(state.current)) {
 			return {
@@ -30,7 +33,7 @@ export default function operator(state, char) {
 		state = state.resetCurrent().saveCurrentLocAsStart();
 	}
 
-	const {nextReduction, tokensToEmit, nextState} = start(state, char);
+	const {nextReduction, tokensToEmit, nextState} = start(state, [char].concat(source));
 	if (tokensToEmit) {
 		tokens = tokens.concat(tokensToEmit);
 	}

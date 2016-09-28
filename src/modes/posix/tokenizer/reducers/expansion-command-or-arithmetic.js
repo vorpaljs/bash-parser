@@ -4,7 +4,10 @@ import last from 'array-last';
 import {continueToken} from '..';
 import expansionArithmetic from './expansion-arithmetic';
 
-export default function expansionCommandOrArithmetic(state, char) {
+export default function expansionCommandOrArithmetic(state, source) {
+	const char = source && source.shift();
+
+
 	const xp = last(state.expansion);
 	if (char === '(' && state.current.slice(-2) === '$(') {
 		return {

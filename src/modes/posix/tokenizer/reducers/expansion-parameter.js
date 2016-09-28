@@ -3,7 +3,9 @@
 import last from 'array-last';
 import start from './start';
 
-export default function expansionParameter(state, char) {
+export default function expansionParameter(state, source) {
+	const char = source && source.shift();
+
 	const xp = last(state.expansion);
 
 	if (char === undefined) {
@@ -43,5 +45,5 @@ export default function expansionParameter(state, char) {
 		.slice(0, -1)
 		.concat(newXp);
 
-	return state.previousReducer(state.setExpansion(expansion), char);
+	return state.previousReducer(state.setExpansion(expansion), [char].concat(source));
 }

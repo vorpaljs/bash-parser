@@ -6,13 +6,16 @@ import expansionCommandTick from './expansion-command-tick';
 
 import {tokenOrEmpty, continueToken} from '..';
 
-export default function doubleQuoting(state, char) {
+export default function doubleQuoting(state, source) {
+	const char = source && source.shift();
+
 	state = state.setPreviousReducer(doubleQuoting);
 
 	if (char === undefined) {
 		return {
 			nextReduction: null,
-			tokensToEmit: tokenOrEmpty(state).concat(continueToken('"'))
+			tokensToEmit: tokenOrEmpty(state).concat(continueToken('"')),
+			nextState: state
 		};
 	}
 

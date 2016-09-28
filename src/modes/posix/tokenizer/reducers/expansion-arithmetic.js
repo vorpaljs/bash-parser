@@ -3,7 +3,9 @@
 import last from 'array-last';
 import {continueToken} from '..';
 
-export default function expansionArithmetic(state, char) {
+export default function expansionArithmetic(state, source) {
+	const char = source && source.shift();
+
 	const xp = last(state.expansion);
 
 	if (char === ')' && state.current.slice(-1)[0] === ')') {

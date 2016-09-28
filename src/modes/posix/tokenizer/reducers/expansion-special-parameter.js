@@ -2,7 +2,9 @@
 
 import last from 'array-last';
 
-export default function expansionSpecialParameter(state, char) {
+export default function expansionSpecialParameter(state, source) {
+	const char = source && source.shift();
+
 	const xp = last(state.expansion);
 
 	const newXp = {

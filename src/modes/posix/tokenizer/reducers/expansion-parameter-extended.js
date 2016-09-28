@@ -3,7 +3,9 @@
 import last from 'array-last';
 import {continueToken} from '..';
 
-export default function expansionParameterExtended(state, char) {
+export default function expansionParameterExtended(state, source) {
+	const char = source && source.shift();
+
 	const xp = last(state.expansion);
 
 	if (char === '}') {

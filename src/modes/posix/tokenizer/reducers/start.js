@@ -1,6 +1,10 @@
 'use strict';
 
-const {tokenOrEmpty, newLine, isPartOfOperator} = require('../../../../utils/tokens');
+const t = require('../../../../utils/tokens');
+
+const tokenOrEmpty = t.tokenOrEmpty;
+const newLine = t.newLine;
+const isPartOfOperator = t.isPartOfOperator;
 
 const end = require('./end');
 const operator = require('./operator');

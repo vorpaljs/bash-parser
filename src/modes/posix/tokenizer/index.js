@@ -92,8 +92,8 @@ class State {
 */
 
 class MutableState {
-	constructor(fields = defaultFields) {
-		Object.assign(this, fields);
+	constructor(fields) {
+		Object.assign(this, fields || defaultFields);
 	}
 
 	setLoc(loc) {
@@ -191,7 +191,10 @@ module.exports = () => function * tokenizer(src) {
 
 	while (typeof reduction === 'function') {
 		const char = source[0];
-		const {nextReduction, tokensToEmit, nextState} = reduction(state, source);
+		const r = reduction(state, source);
+		const nextReduction = r.nextReduction;
+		const tokensToEmit = r.tokensToEmit;
+		const nextState = r.nextState;
 		if (tokensToEmit) {
 			yield * tokensToEmit;
 		}

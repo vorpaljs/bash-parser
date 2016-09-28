@@ -1,6 +1,9 @@
 'use strict';
 
-const {tokenOrEmpty, continueToken} = require('../../../../utils/tokens');
+const t = require('../../../../utils/tokens');
+
+const tokenOrEmpty = t.tokenOrEmpty;
+const continueToken = t.continueToken;
 
 module.exports = function singleQuoting(state, source) {
 	const start = require('./start');

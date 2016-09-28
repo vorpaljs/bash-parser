@@ -1,6 +1,6 @@
 'use strict';
 
-const {newLine} = require('../../../../utils/tokens');
+const newLine = require('../../../../utils/tokens').newLine;
 
 module.exports = function comment(state, source) {
 	const end = require('./end');

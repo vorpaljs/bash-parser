@@ -1,6 +1,6 @@
 'use strict';
 
-const {isSpecialParameter} = require('../../../../utils/tokens');
+const isSpecialParameter = require('../../../../utils/tokens').isSpecialParameter;
 
 module.exports = function expansionStart(state, source) {
 	const expansionSpecialParameter = require('./expansion-special-parameter');

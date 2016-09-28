@@ -1,6 +1,10 @@
 'use strict';
 
-const {operatorTokens, isPartOfOperator, isOperator} = require('../../../../utils/tokens');
+const t = require('../../../../utils/tokens');
+
+const isPartOfOperator = t.isPartOfOperator;
+const operatorTokens = t.operatorTokens;
+const isOperator = t.isOperator;
 
 module.exports = function operator(state, source) {
 	const end = require('./end');
@@ -32,7 +36,11 @@ module.exports = function operator(state, source) {
 		state = state.resetCurrent().saveCurrentLocAsStart();
 	}
 
-	const {nextReduction, tokensToEmit, nextState} = start(state, [char].concat(source));
+	const ret = start(state, [char].concat(source));
+	const nextReduction = ret.nextReduction;
+	const tokensToEmit = ret.tokensToEmit;
+	const nextState = ret.nextState;
+
 	if (tokensToEmit) {
 		tokens = tokens.concat(tokensToEmit);
 	}

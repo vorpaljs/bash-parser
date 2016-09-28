@@ -1,6 +1,6 @@
 'use strict';
 
-const {eof} = require('../../../../utils/tokens');
+const eof = require('../../../../utils/tokens').eof;
 
 module.exports = function end() {
 	return {

@@ -19,7 +19,7 @@ export default function expansionParameterExtended(state, char) {
 
 		return {
 			nextReduction: state.previousReducer,
-			nextState: {...state, current: state.current + char, expansion}
+			nextState: state.appendChar(char).setExpansion(expansion)
 		};
 	}
 
@@ -36,7 +36,7 @@ export default function expansionParameterExtended(state, char) {
 		return {
 			nextReduction: state.previousReducer,
 			tokensToEmit: [continueToken('${')],
-			nextState: {...state, expansion}
+			nextState: state.setExpansion(expansion)
 		};
 	}
 
@@ -51,6 +51,6 @@ export default function expansionParameterExtended(state, char) {
 
 	return {
 		nextReduction: expansionParameterExtended,
-		nextState: {...state, current: state.current + char, expansion}
+		nextState: state.appendChar(char).setExpansion(expansion)
 	};
 }

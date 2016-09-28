@@ -11,7 +11,7 @@ export default function operator(state, char) {
 			return {
 				nextReduction: end,
 				tokensToEmit: operatorTokens(state),
-				nextState: {...state, current: '', loc: {...state.loc, start: state.loc.current}}
+				nextState: state.resetCurrent().saveCurrentLocAsStart()
 			};
 		}
 		return start(state, char);
@@ -20,14 +20,14 @@ export default function operator(state, char) {
 	if (isPartOfOperator(state.current + char)) {
 		return {
 			nextReduction: operator,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
 	let tokens = [];
 	if (isOperator(state.current)) {
 		tokens = operatorTokens(state);
-		state = {...state, current: '', loc: {...state.loc, start: state.loc.current}};
+		state = state.resetCurrent().saveCurrentLocAsStart();
 	}
 
 	const {nextReduction, tokensToEmit, nextState} = start(state, char);

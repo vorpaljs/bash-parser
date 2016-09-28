@@ -9,7 +9,7 @@ export default function expansionCommandOrArithmetic(state, char) {
 	if (char === '(' && state.current.slice(-2) === '$(') {
 		return {
 			nextReduction: expansionArithmetic,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
@@ -26,7 +26,7 @@ export default function expansionCommandOrArithmetic(state, char) {
 		return {
 			nextReduction: state.previousReducer,
 			tokensToEmit: [continueToken('$(')],
-			nextState: {...state, expansion}
+			nextState: state.setExpansion(expansion)
 		};
 	}
 
@@ -42,7 +42,7 @@ export default function expansionCommandOrArithmetic(state, char) {
 
 		return {
 			nextReduction: state.previousReducer,
-			nextState: {...state, current: state.current + char, expansion}
+			nextState: state.appendChar(char).setExpansion(expansion)
 		};
 	}
 
@@ -57,6 +57,6 @@ export default function expansionCommandOrArithmetic(state, char) {
 
 	return {
 		nextReduction: expansionCommandOrArithmetic,
-		nextState: {...state, current: state.current + char, expansion}
+		nextState: state.appendChar(char).setExpansion(expansion)
 	};
 }

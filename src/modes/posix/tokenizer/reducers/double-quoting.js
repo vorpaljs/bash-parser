@@ -4,9 +4,11 @@ import start from './start';
 import expansionStart from './expansion-start';
 import expansionCommandTick from './expansion-command-tick';
 
-import {tokenOrEmpty, appendEmptyExpansion, continueToken} from '..';
+import {tokenOrEmpty, continueToken} from '..';
 
 export default function doubleQuoting(state, char) {
+	state = state.setPreviousReducer(doubleQuoting);
+
 	if (char === undefined) {
 		return {
 			nextReduction: null,
@@ -17,62 +19,33 @@ export default function doubleQuoting(state, char) {
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: {
-				...state,
-				previousReducer: doubleQuoting,
-				escaping: true,
-				current: state.current + char
-			}
-
+			nextState: state.setEscaping(true).appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: start,
-			nextState: {
-				...state,
-				previousReducer: start,
-				current: state.current + char
-			}
+			nextState: state.setPreviousReducer(start).appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '$') {
-		const expansion = appendEmptyExpansion(state);
-
 		return {
 			nextReduction: expansionStart,
-			nextState: {
-				...state,
-				previousReducer: doubleQuoting,
-				current: state.current + char,
-				expansion
-			}
+			nextState: state.appendEmptyExpansion().appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '`') {
-		const expansion = appendEmptyExpansion(state);
-
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: {
-				...state,
-				previousReducer: doubleQuoting,
-				current: state.current + char,
-				expansion
-			}
+			nextState: state.appendEmptyExpansion().appendChar(char)
 		};
 	}
 
 	return {
 		nextReduction: doubleQuoting,
-		nextState: {
-			...state,
-			previousReducer: doubleQuoting,
-			escaping: false,
-			current: state.current + char
-		}
+		nextState: state.setEscaping(false).appendChar(char)
 	};
 }

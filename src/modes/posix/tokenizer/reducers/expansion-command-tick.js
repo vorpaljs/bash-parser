@@ -17,7 +17,7 @@ export default function expansionCommandTick(state, char) {
 
 		return {
 			nextReduction: state.previousReducer,
-			nextState: {...state, current: state.current + char, expansion}
+			nextState: state.appendChar(char).setExpansion(expansion)
 		};
 	}
 
@@ -34,18 +34,14 @@ export default function expansionCommandTick(state, char) {
 		return {
 			nextReduction: state.previousReducer,
 			tokensToEmit: [continueToken('`')],
-			nextState: {...state, expansion}
+			nextState: state.setExpansion(expansion)
 		};
 	}
 
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: {
-				...state,
-				current: state.current + char,
-				escaping: true
-			}
+			nextState: state.appendChar(char).setEscaping(true)
 
 		};
 	}
@@ -61,6 +57,6 @@ export default function expansionCommandTick(state, char) {
 
 	return {
 		nextReduction: expansionCommandTick,
-		nextState: {...state, escaping: false, current: state.current + char, expansion}
+		nextState: state.setEscaping(false).appendChar(char).setExpansion(expansion)
 	};
 }

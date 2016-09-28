@@ -1,5 +1,5 @@
 'use strict';
-require('babel-register');
+// require('babel-register');
 const bashParser = require('../lib');
 
 const source = `

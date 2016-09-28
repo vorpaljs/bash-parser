@@ -1,8 +1,8 @@
 'use strict';
-import 'babel-register';
+require('babel-register');
 
-import test from 'ava';
-import tokenDelimiter from '../src/modes/posix/tokenizer';
+const test = require('ava');
+const tokenDelimiter = require('../src/modes/posix/tokenizer').default;
 // import utils from './_utils';
 
 const tokenizer = tokenDelimiter();

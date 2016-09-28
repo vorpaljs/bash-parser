@@ -1,5 +1,5 @@
 'use strict';
-import 'babel-register';
+require('babel-register');
 
 /* eslint-disable camelcase */
 const test = require('ava');

@@ -1,5 +1,5 @@
 'use strict';
-import 'babel-register';
+require('babel-register');
 
 const test = require('ava');
 const rules = require('../src/modes/posix/rules');

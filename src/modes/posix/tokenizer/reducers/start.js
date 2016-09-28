@@ -15,14 +15,14 @@ export default function start(state, char) {
 		return {
 			nextReduction: end,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
+			nextState: state.resetCurrent().saveCurrentLocAsStart()
 		};
 	}
 
 	if (state.escaping && char === '\n') {
 		return {
 			nextReduction: start,
-			nextState: {...state, escaping: false, current: state.current.slice(0, -1)}
+			nextState: state.setEscaping(false).removeLastChar()
 		};
 	}
 
@@ -36,14 +36,14 @@ export default function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state).concat(newLine()),
-			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
+			nextState: state.resetCurrent().saveCurrentLocAsStart()
 		};
 	}
 
 	if (!state.escaping && char === '\\') {
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char, escaping: true}
+			nextState: state.setEscaping(true).appendChar(char)
 		};
 	}
 
@@ -51,21 +51,21 @@ export default function start(state, char) {
 		return {
 			nextReduction: operator,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: {...state, current: char, expansion: [], loc: {...state.loc, start: state.loc.current}}
+			nextState: state.setCurrent(char).saveCurrentLocAsStart()
 		};
 	}
 
 	if (!state.escaping && char === '\'') {
 		return {
 			nextReduction: singleQuoting,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
 	if (!state.escaping && char === '"') {
 		return {
 			nextReduction: doubleQuoting,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
@@ -73,34 +73,26 @@ export default function start(state, char) {
 		return {
 			nextReduction: start,
 			tokensToEmit: tokenOrEmpty(state),
-			nextState: {...state, current: '', expansion: [], loc: {...state.loc, start: state.loc.current}}
+			nextState: state.resetCurrent().saveCurrentLocAsStart().setExpansion([])
 		};
 	}
 
 	if (!state.escaping && char === '$') {
 		return {
 			nextReduction: expansionStart,
-			nextState: {
-				...state,
-				current: state.current + char,
-				expansion: appendEmptyExpansion(state)
-			}
+			nextState: state.appendChar(char).appendEmptyExpansion()
 		};
 	}
 
 	if (!state.escaping && char === '`') {
 		return {
 			nextReduction: expansionCommandTick,
-			nextState: {
-				...state,
-				current: state.current + char,
-				expansion: appendEmptyExpansion(state)
-			}
+			nextState: state.appendChar(char).appendEmptyExpansion()
 		};
 	}
 
 	return {
 		nextReduction: start,
-		nextState: {...state, escaping: false, current: state.current + char}
+		nextState: state.appendChar(char).setEscaping(false)
 	};
 }

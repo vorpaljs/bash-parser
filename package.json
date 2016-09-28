@@ -7,7 +7,8 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-    "test": "ava && xo --ignore **/built-grammar.js --ignore lib/**/* --ignore 'packages/**/*'",
+  	"time": "time ava --no-babel",
+    "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore lib/**/* --ignore 'packages/**/*'",
     "build": "mgb ./src/modes posix && mgb ./src/modes bash && babel src --out-dir lib",
     "cover-test": "nyc ava -c 5 && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"

@@ -18,6 +18,6 @@ export default function expansionSpecialParameter(state, char) {
 
 	return {
 		nextReduction: state.previousReducer,
-		nextState: {...state, current: state.current + char, expansion}
+		nextState: state.appendChar(char).setExpansion(expansion)
 	};
 }

@@ -12,14 +12,14 @@ export default function expansionStart(state, char) {
 	if (char === '{') {
 		return {
 			nextReduction: expansionParameterExtended,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
 	if (char === '(') {
 		return {
 			nextReduction: expansionCommandOrArithmetic,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
@@ -35,7 +35,7 @@ export default function expansionStart(state, char) {
 
 		return {
 			nextReduction: expansionParameter,
-			nextState: {...state, current: state.current + char, expansion}
+			nextState: state.appendChar(char).setExpansion(expansion)
 		};
 	}
 

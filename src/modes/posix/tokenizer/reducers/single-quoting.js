@@ -14,12 +14,12 @@ export default function singleQuoting(state, char) {
 	if (char === '\'') {
 		return {
 			nextReduction: start,
-			nextState: {...state, current: state.current + char}
+			nextState: state.appendChar(char)
 		};
 	}
 
 	return {
 		nextReduction: singleQuoting,
-		nextState: {...state, current: state.current + char}
+		nextState: state.appendChar(char)
 	};
 }

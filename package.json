@@ -7,10 +7,10 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-    "t": "ava --require babel-register test/test-tokenizer.js",
-    "test": "ava && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
+
+    "test": "ava -c 15 && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build": "mgb ./src/modes posix && mgb ./src/modes bash",
-    "cover-test": "nyc ava --require babel-register && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
+    "cover-test": "nyc ava -c 5 && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"
   },
   "keywords": [],
@@ -22,24 +22,19 @@
       "es2015-node4"
     ],
     "plugins": [
-      "syntax-async-functions",
       "syntax-object-rest-spread",
-      "transform-object-rest-spread",
-      "transform-async-to-generator"
+      "transform-object-rest-spread"
     ]
   },
   "devDependencies": {
     "ava": "^0.15.2",
-    "babel-plugin-syntax-async-functions": "^6.13.0",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-async-to-generator": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-register": "^6.14.0",
     "babelify": "^7.3.0",
-    "bash-ast-traverser": "file:packages/bash-ast-traverser",
     "browserify": "^13.1.0",
     "callsite": "^1.0.0",
     "coveralls": "^2.11.11",
@@ -70,6 +65,7 @@
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",
     "iterable-lookahead": "^1.0.0",
+    "iterable-replace": "file:packages/iterable-replace",
     "magic-string": "^0.16.0",
     "map-iterable": "^1.0.1",
     "map-obj": "^2.0.0",

@@ -22,7 +22,22 @@
   "bin": {
     "mgb": "index.js"
   },
+  "babel": {
+    "presets": [
+      "es2015-node4"
+    ],
+    "plugins": [
+      "syntax-object-rest-spread",
+      "transform-object-rest-spread"
+
+    ]
+  },
   "dependencies": {
+  	"babel-register": "^6.14.0",
+  	"babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-polyfill": "^6.13.0",
+
     "chalk": "^1.1.3",
     "jison": "^0.4.17",
     "minimist": "^1.2.0",

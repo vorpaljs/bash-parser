@@ -1,7 +1,8 @@
 'use strict';
-const filter = require('filter-obj');
-const hasOwnProperty = require('has-own-property');
-const operators = require('../modes/posix/enums/operators');
+
+import filter from 'filter-obj';
+import hasOwnProperty from 'has-own-property';
+import operators from '../modes/posix/enums/operators';
 
 class Token {
 	constructor(fields) {
@@ -16,22 +17,39 @@ class Token {
 	is(type) {
 		return this.type === type;
 	}
+
+	appendTo(chunk) {
+		return new Token({...this, value: this.value + chunk});
+	}
+	changeTokenType(type, value) {
+		return new Token({type, value, loc: this.loc, _: this._, expansion: this.expansion});
+	}
+	setValue(value) {
+		return new Token({...this, value});
+	}
+	alterValue(value) {
+		return new Token({...this, value, originalText: this.originalText || this.value});
+	}
+	addExpansions() {
+		return new Token({...this, expansion: []});
+	}
+	setExpansions(expansion) {
+		return new Token({...this, expansion});
+	}
 }
 
-exports.Token = Token;
+export const token = args => new Token(args);
 
-function mkToken(type, value, loc, expansion) {
+export function mkToken(type, value, loc, expansion) {
 	const tk = new Token({type, value, loc});
 	if (expansion && expansion.length) {
 		tk.expansion = expansion;
 	}
-	Object.freeze(tk);
+
 	return tk;
 }
 
-exports.mkToken = mkToken;
-
-exports.mkFieldSplitToken = function mkFieldSplitToken(joinedTk, value, fieldIdx) {
+export function mkFieldSplitToken(joinedTk, value, fieldIdx) {
 	const tk = new Token({
 		type: joinedTk.type,
 		value,
@@ -42,48 +60,17 @@ exports.mkFieldSplitToken = function mkFieldSplitToken(joinedTk, value, fieldIdx
 		originalText: joinedTk.originalText
 	});
 
-	Object.freeze(tk);
 	return tk;
-};
+}
 
-exports.appendTo = function appendTo(tk, chunk) {
-	const newTk = new Token(Object.assign({}, tk, {value: tk.value + chunk}));
-	Object.freeze(newTk);
-	return newTk;
-};
+export const appendTo = (tk, chunk) => tk.appendTo(chunk);
+export const changeTokenType = (tk, type, value) => tk.changeTokenType(type, value);
+export const setValue = (tk, value) => tk.setValue(value);
+export const alterValue = (tk, value) => tk.alterValue(value);
+export const addExpansions = tk => tk.addExpansions();
+export const setExpansions = (tk, expansion) => tk.setExpansions(expansion);
 
-exports.changeTokenType = function changeTokenType(tk, type, value) {
-	const newTk = new Token({type, value, loc: tk.loc, _: tk._, expansion: tk.expansion});
-	Object.freeze(newTk);
-	return newTk;
-};
-
-exports.setValue = function setValue(tk, value) {
-	const newTk = new Token(Object.assign({}, tk, {value}));
-	Object.freeze(newTk);
-	return newTk;
-};
-
-exports.alterValue = function setValue(tk, value) {
-	const originalText = tk.originalText || tk.value;
-	const newTk = new Token(Object.assign({}, tk, {value, originalText}));
-	Object.freeze(newTk);
-	return newTk;
-};
-
-exports.addExpansions = function addExpansions(tk) {
-	const newTk = new Token(Object.assign({}, tk, {expansion: []}));
-	Object.freeze(newTk);
-	return newTk;
-};
-
-exports.setExpansions = function setExpansions(tk, expansion) {
-	const newTk = new Token(Object.assign({}, tk, {expansion}));
-	Object.freeze(newTk);
-	return newTk;
-};
-
-exports.tokenOrEmpty = function tokenOrEmpty(state) {
+export function tokenOrEmpty(state) {
 	if (state.current !== '' && state.current !== '\n') {
 		const expansion = (state.expansion || []).map(xp => {
 			// console.log('aaa', {token: state.loc, xp: xp.loc});
@@ -104,9 +91,9 @@ exports.tokenOrEmpty = function tokenOrEmpty(state) {
 		return [token];
 	}
 	return [];
-};
+}
 
-exports.operatorTokens = function operatorTokens(state) {
+export function operatorTokens(state) {
 	const token = mkToken(
 		operators[state.current],
 		state.current, {
@@ -116,39 +103,39 @@ exports.operatorTokens = function operatorTokens(state) {
 	);
 
 	return [token];
-};
+}
 
-exports.newLine = function newLine() {
+export function newLine() {
 	return mkToken('NEWLINE', '\n');
-};
+}
 
-exports.continueToken = function continueToken(expectedChar) {
+export function continueToken(expectedChar) {
 	return mkToken('CONTINUE', expectedChar);
-};
+}
 
-exports.eof = function newLine() {
+export function eof() {
 	return mkToken('EOF', '');
-};
+}
 
-exports.isPartOfOperator = function isPartOfOperator(text) {
+export function isPartOfOperator(text) {
 	return Object.keys(operators).some(op => op.slice(0, text.length) === text);
-};
+}
 
-exports.isOperator = function isOperator(text) {
+export function isOperator(text) {
 	return hasOwnProperty(operators, text);
-};
+}
 
-exports.isSpecialParameter = function isSpecialParameter(char) {
+export function isSpecialParameter(char) {
 	return char.match(/^[0-9\-!@#\?\*\$]$/);
-};
+}
 
-exports.appendEmptyExpansion = function appendEmptyExpansion(state) {
+export function appendEmptyExpansion(state) {
 	return (state.expansion || []).concat({
 		loc: {start: {...state.loc.current}}
 	});
-};
+}
 
-exports.advanceLoc = function advanceLoc(state, char) {
+export function advanceLoc(state, char) {
 	const loc = {
 		...state.loc,
 		current: {...state.loc.current},
@@ -170,4 +157,4 @@ exports.advanceLoc = function advanceLoc(state, char) {
 	}
 
 	return {...state, loc};
-};
+}

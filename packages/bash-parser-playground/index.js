@@ -1,6 +1,6 @@
 'use strict';
 require('babel-polyfill');
-const bashParser = require('../src');
+const bashParser = require('bash-parser');
 
 const $ = global.$;
 

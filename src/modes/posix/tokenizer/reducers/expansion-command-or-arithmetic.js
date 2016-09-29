@@ -1,7 +1,9 @@
 'use strict';
 
 const last = require('array-last');
-const {continueToken} = require('../../../../utils/tokens');
+const t = require('../../../../utils/tokens');
+
+const continueToken = t.continueToken;
 
 module.exports = function expansionCommandOrArithmetic(state, source) {
 	const expansionArithmetic = require('./expansion-arithmetic');

@@ -1,7 +1,6 @@
 'use strict';
-
-const filter = require('filter-obj');
 const hasOwnProperty = require('has-own-property');
+const filter = require('filter-obj');
 const operators = require('../modes/posix/enums/operators');
 
 class Token {

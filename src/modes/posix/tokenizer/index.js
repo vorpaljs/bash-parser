@@ -1,5 +1,5 @@
 'use strict';
-// const deepFreeze = require('deep-freeze');
+const deepFreeze = require('deep-freeze');
 const last = require('array-last');
 
 const start = require('./reducers/start');
@@ -15,8 +15,8 @@ const defaultFields = {
 	}
 };
 
-/*
-class State {
+
+class ImmutableState {
 	constructor(fields = defaultFields) {
 		Object.assign(this, fields);
 		deepFreeze(this);
@@ -89,7 +89,6 @@ class State {
 		return this.setLoc(loc);
 	}
 }
-*/
 
 class MutableState {
 	constructor(fields) {
@@ -182,10 +181,11 @@ class MutableState {
 	}
 }
 
-module.exports = () => function * tokenizer(src) {
-	let state = new MutableState();
+const State = process.env.NODE_NEV === 'development' ? ImmutableState : MutableState;
 
-	// deepFreeze(state);
+module.exports = () => function * tokenizer(src) {
+	let state = new State();
+
 	let reduction = start;
 	const source = Array.from(src);
 
@@ -209,7 +209,6 @@ module.exports = () => function * tokenizer(src) {
 			state = state.advanceLoc(char);
 		}
 
-		// deepFreeze(state);
 		reduction = nextReduction;
 	}
 };

@@ -1,5 +1,5 @@
 const json = require('json5');
-const diff = require('rus-diff').diff;
+// const diff = require('rus-diff').diff;
 // const tokens = require('../src/utils/tokens');
 
 exports.mkloc = function mkloc(startLine, startColumn, endLine, endColumn) {
@@ -12,11 +12,11 @@ exports.mkloc2 = function mkloc(startLine, startColumn, endLine, endColumn, star
 		end: {row: endLine, col: endColumn, char: endChar}
 	};
 };
-
+/*
 exports.logDiff = function logDiff(expected, actual) {
 	console.log(json.stringify(diff(actual, expected), null, 4));
 };
-
+*/
 exports.logResults = function logResults(results) {
 	console.log(json.stringify(results, null, '\t').replace(/"/g, '\''));
 };

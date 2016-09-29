@@ -7,11 +7,10 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-  	"time": "time ava --no-babel",
     "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build": "mgb ./src/modes posix && mgb ./src/modes bash",
     "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
-    "build-site": "browserify docs/index.js -o docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify"
+    "cover-publish": "nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "engines": {
@@ -19,19 +18,10 @@
   },
   "devDependencies": {
     "ava": "^0.15.2",
-    "babel-polyfill": "^6.13.0",
-    "babel-preset-es2015": "^6.14.0",
-    "babelify": "^7.3.0",
-    "browserify": "^13.1.0",
-    "callsite": "^1.0.0",
     "coveralls": "^2.11.11",
-    "jison": "^0.4.17",
     "json5": "^0.5.0",
     "mode-grammar-builder": "file:packages/mode-grammar-builder",
     "nyc": "^7.0.0",
-    "rus-diff": "^1.1.0",
-    "tree-walk": "^0.4.0",
-    "uglifyify": "^3.0.2",
     "xo": "^0.16.0"
   },
   "files": [
@@ -55,7 +45,6 @@
     "iterable-replace": "file:packages/iterable-replace",
     "magic-string": "^0.16.0",
     "map-iterable": "^1.0.1",
-    "map-obj": "^2.0.0",
     "object-pairs": "^0.1.0",
     "object-values": "^1.0.0",
     "shell-quote-word": "^1.0.1",

@@ -16,8 +16,8 @@ const defaultFields = {
 };
 
 class ImmutableState {
-	constructor(fields = defaultFields) {
-		Object.assign(this, fields);
+	constructor(fields) {
+		Object.assign(this, fields || defaultFields);
 		deepFreeze(this);
 	}
 

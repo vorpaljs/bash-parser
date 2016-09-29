@@ -20,8 +20,5 @@
     "browserify": "^13.1.0",
     "uglifyify": "^3.0.2",
     "xo": "^0.16.0"
-  },
-  "dependencies": {
-    "bash-parser": "file:///Users/parroit/Desktop/repos/bash-parser"
   }
 }

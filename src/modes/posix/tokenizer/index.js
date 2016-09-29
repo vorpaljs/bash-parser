@@ -15,7 +15,6 @@ const defaultFields = {
 	}
 };
 
-
 class ImmutableState {
 	constructor(fields = defaultFields) {
 		Object.assign(this, fields);
@@ -23,23 +22,23 @@ class ImmutableState {
 	}
 
 	setLoc(loc) {
-		return new State(Object.assign({}, this, {loc}));
+		return new ImmutableState(Object.assign({}, this, {loc}));
 	}
 
 	setEscaping(escaping) {
-		return new State(Object.assign({}, this, {escaping}));
+		return new ImmutableState(Object.assign({}, this, {escaping}));
 	}
 
 	setExpansion(expansion) {
-		return new State(Object.assign({}, this, {expansion}));
+		return new ImmutableState(Object.assign({}, this, {expansion}));
 	}
 
 	setPreviousReducer(previousReducer) {
-		return new State(Object.assign({}, this, {previousReducer}));
+		return new ImmutableState(Object.assign({}, this, {previousReducer}));
 	}
 
 	setCurrent(current) {
-		return new State(Object.assign({}, this, {current}));
+		return new ImmutableState(Object.assign({}, this, {current}));
 	}
 
 	appendEmptyExpansion() {
@@ -50,19 +49,19 @@ class ImmutableState {
 	}
 
 	appendChar(char) {
-		return new State(Object.assign({}, this, {current: this.current + char}));
+		return new ImmutableState(Object.assign({}, this, {current: this.current + char}));
 	}
 
 	removeLastChar() {
-		return new State(Object.assign({}, this, {current: this.current.slice(0, -1)}));
+		return new ImmutableState(Object.assign({}, this, {current: this.current.slice(0, -1)}));
 	}
 
 	saveCurrentLocAsStart() {
-		return new State(Object.assign({}, this, {loc: Object.assign({}, this.loc, {start: this.loc.current})}));
+		return new ImmutableState(Object.assign({}, this, {loc: Object.assign({}, this.loc, {start: this.loc.current})}));
 	}
 
 	resetCurrent() {
-		return new State(Object.assign({}, this, {current: ''}));
+		return new ImmutableState(Object.assign({}, this, {current: ''}));
 	}
 
 	advanceLoc(char) {

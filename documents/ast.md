@@ -16,6 +16,7 @@
 - [Case](#Case)
 - [CaseItem](#CaseItem)
 - [If](#If)
+- [For](#For)
 - [While](#While)
 - [Until](#Until)
 - [Word](#Word)
@@ -202,13 +203,13 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-### for
+### For
 
 > A for statement. The for loop shall execute a sequence of commands for each member in a list of items.
 
 ```js
  {
-	type: 'for',
+	type: 'For',
 	name: Name,
 	wordlist: Array<Word>,
 	do: CompoundList
@@ -217,7 +218,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 ### Case
 
-> A Case statement. The conditional construct Case shall execute the compound-list corresponding to the first one of several patterns that is matched by the `clause` Word.
+> A Case statement. The conditional construct Case shall execute the CompoundList corresponding to the first one of several patterns that is matched by the `clause` Word.
 
 ```js
 {
@@ -241,7 +242,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 ### If
 
-> If statement. The if command shall execute a compound-list and use its exit status to determine whether to execute the `then` compound-list or the optional `else` one.
+> If statement. The if command shall execute a CompoundList and use its exit status to determine whether to execute the `then` CompoundList or the optional `else` one.
 
 ```js
 {
@@ -254,7 +255,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 ### While
 
-> While statement. The While loop shall continuously execute one compound-list as long as another compound-list has a zero exit status.
+> While statement. The While loop shall continuously execute one CompoundList as long as another CompoundList has a zero exit status.
 
 ```js
 {
@@ -266,13 +267,26 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 ### Until
 
-> Until statement. The Until loop shall continuously execute one compound-list as long as another compound-list has a non-zero exit status.
+> Until statement. The Until loop shall continuously execute one CompoundList as long as another CompoundList has a non-zero exit status.
 
 ```js
 {
 	type: 'Until',
 	clause: CompoundList,
 	do: CompoundList
+}
+```
+
+### Redirect
+
+> Represents the redirection of input or output stream of a command to or from a filename or another stream.
+
+```js
+{
+	type: 'Redirect',
+	op: string,
+	file: word,
+	numberIo: Number
 }
 ```
 
@@ -304,6 +318,10 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
+## Expansions node types
+
+Word and AssignmentWord could optionally contain a list of expansion to perform on the token.
+
 ### ArithmeticExpansion
 
 > Represent an arithmetic expansion operation to perform in the Word.
@@ -315,7 +333,8 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 ```js
 {
 	type: 'ArithmeticExpansion',
-	expression: String,
+	expression: string,
+	resolved: boolean,
 	arithmeticAST: Object,
 	loc: {
 		start:Number,
@@ -336,7 +355,9 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 {
 	type: 'CommandExpansion',
 	command: string,
+	resolved: boolean,
 	commandAST: Object,
+
 	loc: {
 		start:Number,
 		end:Number
@@ -352,6 +373,8 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 > The `loc.start` property contains the index of the character in the Word text where the substitution starts. The `loc.end` property contains the index where it the ends.
 
+> TODO: add some details on special parameters and kinds
+
 ```js
 {
 	type: 'ParameterExpansion',
@@ -366,15 +389,3 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# Redirect
-
-> Represents the redirection of input or output stream of a command to or from a filename or another stream.
-
-```js
-{
-	type: 'Redirect',
-	op: string,
-	file: word,
-	numberIo: Number
-}
-```

@@ -14,7 +14,7 @@ test('loc in function declaration', t => {
 	const result = bashParser(cmd, {insertLOC: true});
 	// utils.logResults(result)
 	const expected = {
-		type: 'function',
+		type: 'Function',
 		name: {
 			text: 'foo',
 			type: 'Name',
@@ -38,7 +38,7 @@ test('loc in function declaration', t => {
 					type: 'SimpleCommand',
 					name: {
 						text: 'command',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 2,
@@ -67,7 +67,7 @@ test('loc in function declaration', t => {
 					suffix: [
 						{
 							text: 'bar',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 10,
@@ -83,7 +83,7 @@ test('loc in function declaration', t => {
 						},
 						{
 							text: '--lol',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 14,

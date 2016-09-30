@@ -12,20 +12,20 @@ test('parse if', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'if',
+				type: 'If',
 				clause: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'true'}
+						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				then: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '1'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '1'}]
 					}]
 				}
 			}]
@@ -40,28 +40,28 @@ test('parse if else', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'if',
+				type: 'If',
 				clause: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'true'}
+						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				then: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '1'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '1'}]
 					}]
 				},
 				else: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '2'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '2'}]
 					}]
 				}
 			}]
@@ -76,28 +76,28 @@ test('parse if else multiline', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'if',
+				type: 'If',
 				clause: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'true'}
+						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				then: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '1'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '1'}]
 					}]
 				},
 				else: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '2'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '2'}]
 					}]
 				}
 			}]
@@ -111,45 +111,45 @@ test('parse if elif else', t => {
 	const expected = {
 		type: 'Script',
 		commands: [{
-			type: 'if',
+			type: 'If',
 			clause: {
 				type: 'CompoundList',
 				commands: [{
 					type: 'SimpleCommand',
-					name: {type: 'word', text: 'true'}
+					name: {type: 'Word', text: 'true'}
 				}]
 			},
 			then: {
 				type: 'CompoundList',
 				commands: [{
 					type: 'SimpleCommand',
-					name: {type: 'word', text: 'echo'},
-					suffix: [{type: 'word', text: '1'}]
+					name: {type: 'Word', text: 'echo'},
+					suffix: [{type: 'Word', text: '1'}]
 				}]
 			},
 			else: {
-				type: 'if',
+				type: 'If',
 				clause: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'false'}
+						name: {type: 'Word', text: 'false'}
 					}]
 				},
 				then: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '3'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '3'}]
 					}]
 				},
 				else: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: '2'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: '2'}]
 					}]
 				}
 			}

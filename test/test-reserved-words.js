@@ -15,12 +15,12 @@ test('single quoted tokens are not parsed as reserved words', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'if',
-					type: 'word'
+					type: 'Word'
 				},
 				suffix: [
 					{
 						text: 'true',
-						type: 'word'
+						type: 'Word'
 					}
 				]
 			}
@@ -39,12 +39,12 @@ test('double quoted tokens are not parsed as reserved words', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'if',
-					type: 'word'
+					type: 'Word'
 				},
 				suffix: [
 					{
 						text: 'true',
-						type: 'word'
+						type: 'Word'
 					}
 				]
 			}
@@ -63,12 +63,12 @@ test('partially double quoted tokens are not parsed as reserved words', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'if',
-					type: 'word'
+					type: 'Word'
 				},
 				suffix: [
 					{
 						text: 'true',
-						type: 'word'
+						type: 'Word'
 					}
 				]
 			}
@@ -87,12 +87,12 @@ test('partially single quoted tokens are not parsed as reserved words', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'if',
-					type: 'word'
+					type: 'Word'
 				},
 				suffix: [
 					{
 						text: 'true',
-						type: 'word'
+						type: 'Word'
 					}
 				]
 			}
@@ -111,12 +111,12 @@ test('tokens in invalid positions are not parsed as reserved words', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'echo',
-					type: 'word'
+					type: 'Word'
 				},
 				suffix: [
 					{
 						text: 'if',
-						type: 'word'
+						type: 'Word'
 					}
 				]
 			}

@@ -16,19 +16,19 @@ test('empty line after line continuation', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'echo',
-					type: 'word'
+					type: 'Word'
 				}
 			},
 			{
 				type: 'SimpleCommand',
 				name: {
 					text: 'echo',
-					type: 'word'
+					type: 'Word'
 				},
 				suffix: [
 					{
 						text: 'there',
-						type: 'word'
+						type: 'Word'
 					}
 				]
 			}
@@ -48,7 +48,7 @@ test('loc take into account line continuations', t => {
 				type: 'SimpleCommand',
 				name: {
 					text: 'echo',
-					type: 'word',
+					type: 'Word',
 					loc: {
 						start: {
 							col: 1,
@@ -77,7 +77,7 @@ test('loc take into account line continuations', t => {
 				suffix: [
 					{
 						text: 'world',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 1,

@@ -17,9 +17,9 @@ test('resolve tilde to current user home', t => {
 		commands: [
 			{
 				type: 'SimpleCommand',
-				name: {type: 'word', text: 'echo'},
+				name: {type: 'Word', text: 'echo'},
 				suffix: [{
-					type: 'word',
+					type: 'Word',
 					text: '/home/current/subdir'
 				}]
 			}
@@ -39,9 +39,9 @@ test('resolve one tilde only in normal WORD tokens', t => {
 		commands: [
 			{
 				type: 'SimpleCommand',
-				name: {type: 'word', text: 'echo'},
+				name: {type: 'Word', text: 'echo'},
 				suffix: [{
-					type: 'word',
+					type: 'Word',
 					text: '/home/current/subdir/~other/'
 				}]
 			}
@@ -57,7 +57,7 @@ test('resolve multiple tilde in assignments', t => {
 	});
 	// utils.logResults(result.commands[0].prefix[0]);
 	utils.checkResults(t, result.commands[0].prefix[0], {
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'a=/home/current/subdir:/home/current/othersubdir/ciao'
 	});
 });
@@ -74,9 +74,9 @@ test('resolve tilde to any user home', t => {
 		commands: [
 			{
 				type: 'SimpleCommand',
-				name: {type: 'word', text: 'echo'},
+				name: {type: 'Word', text: 'echo'},
 				suffix: [{
-					type: 'word',
+					type: 'Word',
 					text: '/home/username/subdir'
 				}]
 			}

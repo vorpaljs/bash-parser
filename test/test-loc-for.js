@@ -13,7 +13,7 @@ done
 `;
 	const result = bashParser(cmd, {insertLOC: true});
 	const expected = {
-		type: 'for',
+		type: 'For',
 		name: {
 			text: 'x',
 			type: 'Name',
@@ -33,7 +33,7 @@ done
 		wordlist: [
 			{
 				text: 'a',
-				type: 'word',
+				type: 'Word',
 				loc: {
 					start: {
 						col: 10,
@@ -49,7 +49,7 @@ done
 			},
 			{
 				text: 'b',
-				type: 'word',
+				type: 'Word',
 				loc: {
 					start: {
 						col: 12,
@@ -65,7 +65,7 @@ done
 			},
 			{
 				text: 'c',
-				type: 'word',
+				type: 'Word',
 				loc: {
 					start: {
 						col: 14,
@@ -87,7 +87,7 @@ done
 					type: 'SimpleCommand',
 					name: {
 						text: 'echo',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 2,
@@ -123,10 +123,10 @@ done
 										end: 1
 									},
 									parameter: 'x',
-									type: 'parameter_expansion'
+									type: 'ParameterExpansion'
 								}
 							],
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 7,
@@ -182,7 +182,7 @@ done
 	const result = bashParser(cmd, {insertLOC: true});
 	// utils.logResults(result.commands[0])
 	const expected = {
-		type: 'for',
+		type: 'For',
 		name: {
 			text: 'x',
 			type: 'Name',
@@ -206,7 +206,7 @@ done
 					type: 'SimpleCommand',
 					name: {
 						text: 'echo',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 2,
@@ -242,10 +242,10 @@ done
 										end: 1
 									},
 									parameter: 'x',
-									type: 'parameter_expansion'
+									type: 'ParameterExpansion'
 								}
 							],
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 7,

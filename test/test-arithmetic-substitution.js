@@ -10,10 +10,10 @@ test('arithmetic substitution', t => {
 	// console.log(JSON.stringify(result.commands[0].prefix[0]))
 	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		expansion: [{
 			expression: '42 + 43',
-			type: 'arithmetic_expansion',
+			type: 'ArithmeticExpansion',
 			loc: {
 				start: 9,
 				end: 20
@@ -26,7 +26,7 @@ test('arithmetic substitution skip single quoted words', t => {
 	const result = bashParser('echo \'$((42 * 42))\'');
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '$((42 * 42))'
 	}]);
 });
@@ -35,7 +35,7 @@ test('arithmetic substitution skip escaped dollar', t => {
 	const result = bashParser('echo "\\$(\\(42 * 42))"');
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '\\$(\\(42 * 42))'
 	}]);
 });
@@ -47,10 +47,10 @@ test('arithmetic & parameter substitution', t => {
 	// utils.logResults(result.commands[0].name);
 	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'variable=$((42 + 43))',
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		expansion: [{
 			expression: '42 + 43',
-			type: 'arithmetic_expansion',
+			type: 'ArithmeticExpansion',
 			loc: {
 				start: 9,
 				end: 20
@@ -61,9 +61,9 @@ test('arithmetic & parameter substitution', t => {
 
 	utils.checkResults(t, result.commands[0].name, {
 		text: '$ciao',
-		type: 'word',
+		type: 'Word',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'ciao',
 			loc: {
 				start: 0,
@@ -77,11 +77,11 @@ test('arithmetic substitution in suffix', t => {
 	const result = bashParser('echo $((42 + 43))');
 	delete result.commands[0].suffix[0].expansion[0].arithmeticAST;
 	utils.checkResults(t, result.commands[0].suffix[0], {
-		type: 'word',
+		type: 'Word',
 		text: '$((42 + 43))',
 		expansion: [{
 			expression: '42 + 43',
-			type: 'arithmetic_expansion',
+			type: 'ArithmeticExpansion',
 			loc: {
 				start: 0,
 				end: 11
@@ -185,9 +185,9 @@ test('resolve expression', t => {
 					end: 16
 				},
 				resolved: true,
-				type: 'arithmetic_expansion'
+				type: 'ArithmeticExpansion'
 			}],
-			type: 'word'
+			type: 'Word'
 		}
 	});
 });
@@ -212,7 +212,7 @@ test('field splitting', t => {
 		type: 'SimpleCommand',
 		name: {
 			text: 'say',
-			type: 'word'
+			type: 'Word'
 		},
 		suffix: [{
 			text: 'foo',
@@ -222,11 +222,11 @@ test('field splitting', t => {
 					start: 0,
 					end: 9
 				},
-				type: 'arithmetic_expansion',
+				type: 'ArithmeticExpansion',
 				resolved: true
 			}],
 			originalText: '$((other))',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 0
 		}, {
@@ -237,11 +237,11 @@ test('field splitting', t => {
 					start: 0,
 					end: 9
 				},
-				type: 'arithmetic_expansion',
+				type: 'ArithmeticExpansion',
 				resolved: true
 			}],
 			originalText: '$((other))',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 1
 		}, {
@@ -252,16 +252,16 @@ test('field splitting', t => {
 					start: 0,
 					end: 9
 				},
-				type: 'arithmetic_expansion',
+				type: 'ArithmeticExpansion',
 				resolved: true
 			}],
 			originalText: '$((other))',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 2
 		}, {
 			text: 'plz',
-			type: 'word'
+			type: 'Word'
 		}]
 	});
 });

@@ -13,17 +13,17 @@ test('simple command with prefixes and name', t => {
 	utils.checkResults(t, result.commands[0], {
 		type: 'SimpleCommand',
 		name: {
-			type: 'word',
+			type: 'Word',
 			text: 'echo',
 			loc: mkloc(1, 9, 1, 12, 8, 11)
 		},
 		loc: mkloc(1, 1, 1, 12, 0, 11),
 		prefix: [{
-			type: 'assignment_word',
+			type: 'AssignmentWord',
 			text: 'a=1',
 			loc: mkloc(1, 1, 1, 3, 0, 2)
 		}, {
-			type: 'assignment_word',
+			type: 'AssignmentWord',
 			text: 'b=2',
 			loc: mkloc(1, 5, 1, 7, 4, 6)
 		}]
@@ -35,7 +35,7 @@ test('simple command with only name', t => {
 	utils.checkResults(t, result.commands[0], {
 		type: 'SimpleCommand',
 		name: {
-			type: 'word',
+			type: 'Word',
 			text: 'echo',
 			loc: mkloc(1, 1, 1, 4, 0, 3)
 		},
@@ -51,7 +51,7 @@ test('simple command with pipeline', t => {
 		commands: [{
 			type: 'SimpleCommand',
 			name: {
-				type: 'word',
+				type: 'Word',
 				text: 'echo',
 				loc: mkloc(1, 1, 1, 4, 0, 3)
 			},
@@ -59,7 +59,7 @@ test('simple command with pipeline', t => {
 		}, {
 			type: 'SimpleCommand',
 			name: {
-				type: 'word',
+				type: 'Word',
 				text: 'grep',
 				loc: mkloc(1, 8, 1, 11, 7, 10)
 			},
@@ -74,17 +74,17 @@ test('simple command with suffixes', t => {
 	utils.checkResults(t, result.commands[0], {
 		type: 'SimpleCommand',
 		name: {
-			type: 'word',
+			type: 'Word',
 			text: 'echo',
 			loc: mkloc(1, 1, 1, 4, 0, 3)
 		},
 		loc: mkloc(1, 1, 1, 10, 0, 9),
 		suffix: [{
-			type: 'word',
+			type: 'Word',
 			text: '42',
 			loc: mkloc(1, 6, 1, 7, 5, 6)
 		}, {
-			type: 'word',
+			type: 'Word',
 			text: '43',
 			loc: mkloc(1, 9, 1, 10, 8, 9)
 		}]
@@ -93,23 +93,25 @@ test('simple command with suffixes', t => {
 
 test('simple command with IO redirection', t => {
 	const result = bashParser('echo > 43', {insertLOC: true});
+	// utils.logResults(result)
+
 	utils.checkResults(t, result.commands[0], {
 		type: 'SimpleCommand',
 		name: {
-			type: 'word',
+			type: 'Word',
 			text: 'echo',
 			loc: mkloc(1, 1, 1, 4, 0, 3)
 		},
 		loc: mkloc(1, 1, 1, 9, 0, 8),
 		suffix: [{
-			type: 'io_redirect',
+			type: 'IORedirect',
 			op: {
 				type: 'great',
 				text: '>',
 				loc: mkloc(1, 6, 1, 6, 5, 5)
 			},
 			file: {
-				type: 'word',
+				type: 'Word',
 				text: '43',
 				loc: mkloc(1, 8, 1, 9, 7, 8)
 			},
@@ -124,20 +126,20 @@ test('simple command with numbered IO redirection', t => {
 	const expected = {
 		type: 'SimpleCommand',
 		name: {
-			type: 'word',
+			type: 'Word',
 			text: 'echo',
 			loc: mkloc(1, 1, 1, 4, 0, 3)
 		},
 		loc: mkloc(1, 1, 1, 10, 0, 9),
 		suffix: [{
-			type: 'io_redirect',
+			type: 'IORedirect',
 			op: {
 				type: 'great',
 				text: '>',
 				loc: mkloc(1, 7, 1, 7, 6, 6)
 			},
 			file: {
-				type: 'word',
+				type: 'Word',
 				text: '43',
 				loc: mkloc(1, 9, 1, 10, 8, 9)
 			},
@@ -159,26 +161,26 @@ test('simple command with suffixes & prefixes', t => {
 	utils.checkResults(t, result.commands[0], {
 		type: 'SimpleCommand',
 		name: {
-			type: 'word',
+			type: 'Word',
 			text: 'echo',
 			loc: mkloc(1, 9, 1, 12, 8, 11)
 		},
 		loc: mkloc(1, 1, 1, 18, 0, 17),
 		prefix: [{
-			type: 'assignment_word',
+			type: 'AssignmentWord',
 			text: 'a=1',
 			loc: mkloc(1, 1, 1, 3, 0, 2)
 		}, {
-			type: 'assignment_word',
+			type: 'AssignmentWord',
 			text: 'b=2',
 			loc: mkloc(1, 5, 1, 7, 4, 6)
 		}],
 		suffix: [{
-			type: 'word',
+			type: 'Word',
 			text: '42',
 			loc: mkloc(1, 14, 1, 15, 13, 14)
 		}, {
-			type: 'word',
+			type: 'Word',
 			text: '43',
 			loc: mkloc(1, 17, 1, 18, 16, 17)
 		}]

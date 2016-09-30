@@ -13,7 +13,7 @@ test('2', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'function',
+				type: 'Function',
 				name: {
 					text: 'echo',
 					type: 'Name'
@@ -25,12 +25,12 @@ test('2', t => {
 							type: 'SimpleCommand',
 							name: {
 								text: 'printf',
-								type: 'word'
+								type: 'Word'
 							},
 							suffix: [
 								{
 									text: '%sn',
-									type: 'word'
+									type: 'Word'
 								},
 								{
 									text: '"$*"',
@@ -42,10 +42,10 @@ test('2', t => {
 												start: 1,
 												end: 2
 											},
-											type: 'parameter_expansion'
+											type: 'ParameterExpansion'
 										}
 									],
-									type: 'word'
+									type: 'Word'
 								}
 							]
 						}
@@ -61,9 +61,9 @@ test('3', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'read'},
-			prefix: [{type: 'assignment_word', text: 'IFS='}],
-			suffix: [{type: 'word', text: '-r'}, {type: 'word', text: 'var'}]
+			name: {type: 'Word', text: 'read'},
+			prefix: [{type: 'AssignmentWord', text: 'IFS='}],
+			suffix: [{type: 'Word', text: '-r'}, {type: 'Word', text: 'var'}]
 		}]
 	});
 });
@@ -78,12 +78,12 @@ test('4', t => {
 			type: 'Pipeline',
 			commands: [{
 				type: 'SimpleCommand',
-				name: {type: 'word', text: 'foo'}
+				name: {type: 'Word', text: 'foo'}
 			}, {
 				type: 'SimpleCommand',
-				name: {type: 'word', text: 'read'},
-				prefix: [{type: 'assignment_word', text: 'IFS='}],
-				suffix: [{type: 'word', text: 'var'}]
+				name: {type: 'Word', text: 'read'},
+				prefix: [{type: 'AssignmentWord', text: 'IFS='}],
+				suffix: [{type: 'Word', text: 'var'}]
 			}]
 		}]
 	});
@@ -100,16 +100,16 @@ eval "dest=foo"`
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
-			prefix: [{type: 'assignment_word', text: 'foo=hello ; rm -rf /'}]
+			name: {type: 'Word', text: ''},
+			prefix: [{type: 'AssignmentWord', text: 'foo=hello ; rm -rf /'}]
 		}, {
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
-			prefix: [{type: 'assignment_word', text: 'dest=bar'}]
+			name: {type: 'Word', text: ''},
+			prefix: [{type: 'AssignmentWord', text: 'dest=bar'}]
 		}, {
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'eval'},
-			suffix: [{type: 'word', text: 'dest=foo'}]
+			name: {type: 'Word', text: 'eval'},
+			suffix: [{type: 'Word', text: 'dest=foo'}]
 		}]
 	});
 });

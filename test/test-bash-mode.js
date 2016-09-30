@@ -16,8 +16,8 @@ test('alias on reserved word', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
-			suffix: [{type: 'word', text: 'world'}]
+			name: {type: 'Word', text: 'echo'},
+			suffix: [{type: 'Word', text: 'world'}]
 		}]
 	});
 });

@@ -12,10 +12,10 @@ test('positional parameter with word following', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'echoword=$1ciao',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			kind: 'positional',
 			parameter: 1,
 			loc: {
@@ -33,12 +33,12 @@ test('positional parameter in braces', t => {
 		commands: [
 			{
 				type: 'SimpleCommand',
-				name: {type: 'word', text: ''},
+				name: {type: 'Word', text: ''},
 				prefix: [{
-					type: 'assignment_word',
+					type: 'AssignmentWord',
 					text: 'echoword=${11}test',
 					expansion: [{
-						type: 'parameter_expansion',
+						type: 'ParameterExpansion',
 						parameter: 11,
 						kind: 'positional',
 						loc: {
@@ -59,12 +59,12 @@ test('positional parameter without braces', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$1',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: 1,
 					kind: 'positional',
 					loc: {
@@ -84,12 +84,12 @@ test('positional parameter without braces allow one digit only', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$11',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: 1,
 					kind: 'positional',
 					loc: {

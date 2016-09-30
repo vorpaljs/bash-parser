@@ -51,7 +51,7 @@ test('parses parameter substitution', t => {
 			value: {
 				text: 'word${other}test',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: 'other',
 					loc: {
 						start: 4,
@@ -77,7 +77,7 @@ test('parses unquoted parameter substitution', t => {
 			value: {
 				text: 'word$test',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: 'test',
 					loc: {start: 4, end: 8}
 				}]
@@ -101,7 +101,7 @@ test('unquoted parameter delimited by symbol', t => {
 			value: {
 				text: 'word$test,,',
 				expansion: [{
-					type: 'parameter_expansion', parameter: 'test',
+					type: 'ParameterExpansion', parameter: 'test',
 					loc: {start: 4, end: 8}
 				}]
 			}

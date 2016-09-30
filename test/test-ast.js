@@ -12,8 +12,8 @@ test('command with one argument', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
-			suffix: [{type: 'word', text: 'world'}]
+			name: {type: 'Word', text: 'echo'},
+			suffix: [{type: 'Word', text: 'world'}]
 		}]
 	});
 });
@@ -24,8 +24,8 @@ test('command with multiple new lines', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
-			suffix: [{type: 'word', text: 'world'}]
+			name: {type: 'Word', text: 'echo'},
+			suffix: [{type: 'Word', text: 'world'}]
 		}]
 	});
 });
@@ -35,7 +35,7 @@ test('command with multiple lines continuation', t => {
 	// utils.logResults(result);
 	utils.checkResults(t, result.commands[0].suffix[0], {
 		text: 'there',
-		type: 'word'
+		type: 'Word'
 	});
 });
 
@@ -45,8 +45,8 @@ test('command with pre-assignment', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'run'},
-			prefix: [{type: 'assignment_word', text: 'TEST=1'}]
+			name: {type: 'Word', text: 'run'},
+			prefix: [{type: 'AssignmentWord', text: 'TEST=1'}]
 		}]
 	});
 });
@@ -59,8 +59,8 @@ test('commands with AND', t => {
 		commands: [{
 			type: 'LogicalExpression',
 			op: 'and',
-			left: {type: 'SimpleCommand', name: {type: 'word', text: 'run'}},
-			right: {type: 'SimpleCommand', name: {type: 'word', text: 'stop'}}
+			left: {type: 'SimpleCommand', name: {type: 'Word', text: 'run'}},
+			right: {type: 'SimpleCommand', name: {type: 'Word', text: 'stop'}}
 		}]
 	});
 });
@@ -73,8 +73,8 @@ test('commands with AND \\n', t => {
 		commands: [{
 			type: 'LogicalExpression',
 			op: 'and',
-			left: {type: 'SimpleCommand', name: {type: 'word', text: 'run'}},
-			right: {type: 'SimpleCommand', name: {type: 'word', text: 'stop'}}
+			left: {type: 'SimpleCommand', name: {type: 'Word', text: 'run'}},
+			right: {type: 'SimpleCommand', name: {type: 'Word', text: 'stop'}}
 		}]
 	});
 });
@@ -86,8 +86,8 @@ test('commands with OR', t => {
 		commands: [{
 			type: 'LogicalExpression',
 			op: 'or',
-			left: {type: 'SimpleCommand', name: {type: 'word', text: 'run'}},
-			right: {type: 'SimpleCommand', name: {type: 'word', text: 'cry'}}
+			left: {type: 'SimpleCommand', name: {type: 'Word', text: 'run'}},
+			right: {type: 'SimpleCommand', name: {type: 'Word', text: 'cry'}}
 		}]
 	});
 });
@@ -100,8 +100,8 @@ test('pipelines', t => {
 		commands: [{
 			type: 'Pipeline',
 			commands: [
-				{type: 'SimpleCommand', name: {type: 'word', text: 'run'}},
-				{type: 'SimpleCommand', name: {type: 'word', text: 'cry'}}
+				{type: 'SimpleCommand', name: {type: 'Word', text: 'run'}},
+				{type: 'SimpleCommand', name: {type: 'Word', text: 'cry'}}
 			]
 		}]
 	});
@@ -115,8 +115,8 @@ test('bang pipelines', t => {
 			type: 'Pipeline',
 			bang: true,
 			commands: [
-				{type: 'SimpleCommand', name: {type: 'word', text: 'run'}},
-				{type: 'SimpleCommand', name: {type: 'word', text: 'cry'}}
+				{type: 'SimpleCommand', name: {type: 'Word', text: 'run'}},
+				{type: 'SimpleCommand', name: {type: 'Word', text: 'cry'}}
 			]
 		}]
 	});
@@ -128,8 +128,8 @@ test('no pre-assignment on suffix', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
-			suffix: [{type: 'word', text: 'TEST=1'}]
+			name: {type: 'Word', text: 'echo'},
+			suffix: [{type: 'Word', text: 'TEST=1'}]
 		}]
 	});
 });
@@ -141,12 +141,12 @@ test('command with multiple prefixes', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
+			name: {type: 'Word', text: 'echo'},
 			prefix: [
-				{type: 'assignment_word', text: 'TEST1=1'},
-				{type: 'assignment_word', text: 'TEST2=2'}
+				{type: 'AssignmentWord', text: 'TEST1=1'},
+				{type: 'AssignmentWord', text: 'TEST2=2'}
 			],
-			suffix: [{type: 'word', text: 'world'}]
+			suffix: [{type: 'Word', text: 'world'}]
 		}]
 	});
 });
@@ -157,10 +157,10 @@ test('multi line commands', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'}
+			name: {type: 'Word', text: 'echo'}
 		}, {
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'ls'}
+			name: {type: 'Word', text: 'ls'}
 		}]
 	});
 });
@@ -171,11 +171,11 @@ test('command with redirection to file', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'ls'},
+			name: {type: 'Word', text: 'ls'},
 			suffix: [{
-				type: 'io_redirect',
+				type: 'IORedirect',
 				op: {type: 'great', text: '>'},
-				file: {type: 'word', text: 'file.txt'}
+				file: {type: 'Word', text: 'file.txt'}
 			}]
 		}]
 	});
@@ -188,8 +188,8 @@ test('parse multiple suffix', t => {
 			type: 'Script',
 			commands: [{
 				type: 'SimpleCommand',
-				name: {type: 'word', text: 'command'},
-				suffix: [{type: 'word', text: 'foo'}, {type: 'word', text: '--lol'}]
+				name: {type: 'Word', text: 'command'},
+				suffix: [{type: 'Word', text: 'foo'}, {type: 'Word', text: '--lol'}]
 			}]
 		}
 	);
@@ -202,11 +202,11 @@ test('command with stderr redirection to file', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'ls'},
+			name: {type: 'Word', text: 'ls'},
 			suffix: [{
-				type: 'io_redirect',
+				type: 'IORedirect',
 				op: {type: 'great', text: '>'},
-				file: {type: 'word', text: 'file.txt'},
+				file: {type: 'Word', text: 'file.txt'},
 				numberIo: {type: 'io_number', text: '2'}
 			}]
 		}]
@@ -222,7 +222,7 @@ test('parse subshell', t => {
 			type: 'Subshell',
 			list: {
 				type: 'CompoundList',
-				commands: [{type: 'SimpleCommand', name: {type: 'word', text: 'ls'}}]
+				commands: [{type: 'SimpleCommand', name: {type: 'Word', text: 'ls'}}]
 			}
 		}]
 	});

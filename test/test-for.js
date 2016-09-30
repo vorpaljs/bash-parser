@@ -12,19 +12,19 @@ test('parse for', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'for',
+				type: 'For',
 				name: {type: 'Name', text: 'x'},
-				wordlist: [{type: 'word', text: 'a'}, {type: 'word', text: 'b'}, {type: 'word', text: 'c'}],
+				wordlist: [{type: 'Word', text: 'a'}, {type: 'Word', text: 'b'}, {type: 'Word', text: 'c'}],
 				do: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
+						name: {type: 'Word', text: 'echo'},
 						suffix: [{
-							type: 'word',
+							type: 'Word',
 							text: '$x',
 							expansion: [{
-								type: 'parameter_expansion',
+								type: 'ParameterExpansion',
 								parameter: 'x',
 								loc: {
 									start: 0,
@@ -46,18 +46,18 @@ test('parse for with default sequence', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'for',
+				type: 'For',
 				name: {type: 'Name', text: 'x'},
 				do: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
+						name: {type: 'Word', text: 'echo'},
 						suffix: [{
-							type: 'word',
+							type: 'Word',
 							text: '$x',
 							expansion: [{
-								type: 'parameter_expansion',
+								type: 'ParameterExpansion',
 								parameter: 'x',
 								loc: {
 									start: 0,
@@ -79,18 +79,18 @@ test('parse for with default sequence - on one line', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'for',
+				type: 'For',
 				name: {type: 'Name', text: 'x'},
 				do: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
+						name: {type: 'Word', text: 'echo'},
 						suffix: [{
-							type: 'word',
+							type: 'Word',
 							text: '$x',
 							expansion: [{
-								type: 'parameter_expansion',
+								type: 'ParameterExpansion',
 								parameter: 'x',
 								loc: {
 									start: 0,

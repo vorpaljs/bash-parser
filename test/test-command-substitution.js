@@ -9,11 +9,11 @@ test('command substitution', t => {
 	// utils.logResults(result)
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
 	utils.checkResults(t, result.commands[0].prefix, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'variable=$(echo ciao)',
 		expansion: [{
 			command: 'echo ciao',
-			type: 'command_expansion',
+			type: 'CommandExpansion',
 			loc: {
 				start: 9,
 				end: 20
@@ -26,7 +26,7 @@ test('command substitution skip escaped dollar', t => {
 	const result = bashParser('echo "\\$\\(echo ciao)"');
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '\\$\\(echo ciao)'
 	}]);
 });
@@ -40,7 +40,7 @@ test('command substitution skip single quoted words', t => {
 	const result = bashParser('echo \'$(echo ciao)\'');
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '$(echo ciao)'
 	}]);
 });
@@ -48,18 +48,18 @@ test('command substitution skip single quoted words', t => {
 test('command substitution with backticks skip single quoted words', t => {
 	const result = bashParser('echo \'`echo ciao`\'');
 	// utils.logResults(result)
-	utils.checkResults(t, result.commands[0].suffix, [{type: 'word', text: '`echo ciao`'}]);
+	utils.checkResults(t, result.commands[0].suffix, [{type: 'Word', text: '`echo ciao`'}]);
 });
 
 test('command substitution in suffix', t => {
 	const result = bashParser('echo $(ciao)');
 	delete result.commands[0].suffix[0].expansion[0].commandAST;
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '$(ciao)',
 		expansion: [{
 			command: 'ciao',
-			type: 'command_expansion',
+			type: 'CommandExpansion',
 			loc: {
 				start: 0,
 				end: 6
@@ -73,11 +73,11 @@ test('command substitution in suffix with backticks', t => {
 	delete result.commands[0].suffix[0].expansion[0].commandAST;
 
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '`ciao`',
 		expansion: [{
 			command: 'ciao',
-			type: 'command_expansion',
+			type: 'CommandExpansion',
 			loc: {
 				start: 0,
 				end: 5
@@ -96,8 +96,8 @@ test('command ast is recursively parsed', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
-			suffix: [{type: 'word', text: 'ciao'}]
+			name: {type: 'Word', text: 'echo'},
+			suffix: [{type: 'Word', text: 'ciao'}]
 		}]
 	});
 });
@@ -107,11 +107,11 @@ test('command substitution with backticks', t => {
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
 
 	utils.checkResults(t, result.commands[0].prefix, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'variable=`echo ciao`',
 		expansion: [{
 			command: 'echo ciao',
-			type: 'command_expansion',
+			type: 'CommandExpansion',
 			loc: {
 				start: 9,
 				end: 19
@@ -126,11 +126,11 @@ test('quoted backtick are removed within command substitution with backticks', t
 	// utils.logResults(result);
 
 	utils.checkResults(t, result.commands[0].prefix, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'variable=`echo \\`echo ciao\\``',
 		expansion: [{
 			command: 'echo `echo ciao`',
-			type: 'command_expansion',
+			type: 'CommandExpansion',
 			loc: {
 				start: 9,
 				end: 28
@@ -143,11 +143,11 @@ test('quoted backtick are not removed within command substitution with parenthes
 	const result = bashParser('variable=$(echo \\`echo ciao\\`)');
 	delete result.commands[0].prefix[0].expansion[0].commandAST;
 	utils.checkResults(t, result.commands[0].prefix, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'variable=$(echo \\`echo ciao\\`)',
 		expansion: [{
 			command: 'echo \\`echo ciao\\`',
-			type: 'command_expansion',
+			type: 'CommandExpansion',
 			loc: {
 				start: 9,
 				end: 29
@@ -176,14 +176,14 @@ test('resolve double command', t => {
 				command: 'other',
 				loc: {start: 5, end: 12},
 				resolved: true,
-				type: 'command_expansion'
+				type: 'CommandExpansion'
 			}, {
 				command: 'one',
 				loc: {start: 14, end: 19},
 				resolved: true,
-				type: 'command_expansion'
+				type: 'CommandExpansion'
 			}],
-			type: 'word'
+			type: 'Word'
 		}
 	});
 });
@@ -207,14 +207,14 @@ test('resolve double command with backticks', t => {
 				command: 'other',
 				loc: {start: 5, end: 11},
 				resolved: true,
-				type: 'command_expansion'
+				type: 'CommandExpansion'
 			}, {
 				command: 'one',
 				loc: {start: 13, end: 17},
 				resolved: true,
-				type: 'command_expansion'
+				type: 'CommandExpansion'
 			}],
-			type: 'word'
+			type: 'Word'
 		}
 	});
 });
@@ -236,9 +236,9 @@ test('last newlines are removed from command output', t => {
 				command: 'other',
 				loc: {start: 5, end: 12},
 				resolved: true,
-				type: 'command_expansion'
+				type: 'CommandExpansion'
 			}],
-			type: 'word'
+			type: 'Word'
 		}
 	});
 });
@@ -254,6 +254,8 @@ test('field splitting', t => {
 		}
 	});
 
+	// utils.logResults(result)
+
 	delete result.commands[0].suffix[0].expansion[0].commandAST;
 	delete result.commands[0].suffix[1].expansion[0].commandAST;
 	delete result.commands[0].suffix[2].expansion[0].commandAST;
@@ -262,18 +264,18 @@ test('field splitting', t => {
 		type: 'SimpleCommand',
 		name: {
 			text: 'say',
-			type: 'word'
+			type: 'Word'
 		},
 		suffix: [{
 			text: 'foo',
 			expansion: [{
 				command: 'other',
 				loc: {start: 0, end: 7},
-				type: 'command_expansion',
+				type: 'CommandExpansion',
 				resolved: true
 			}],
 			originalText: '$(other)',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 0
 		}, {
@@ -281,11 +283,11 @@ test('field splitting', t => {
 			expansion: [{
 				command: 'other',
 				loc: {start: 0, end: 7},
-				type: 'command_expansion',
+				type: 'CommandExpansion',
 				resolved: true
 			}],
 			originalText: '$(other)',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 1
 		}, {
@@ -293,16 +295,16 @@ test('field splitting', t => {
 			expansion: [{
 				command: 'other',
 				loc: {start: 0, end: 7},
-				type: 'command_expansion',
+				type: 'CommandExpansion',
 				resolved: true
 			}],
 			originalText: '$(other)',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 2
 		}, {
 			text: 'plz',
-			type: 'word'
+			type: 'Word'
 		}]
 	});
 });

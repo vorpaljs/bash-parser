@@ -12,20 +12,20 @@ test('parse while', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'while',
+				type: 'While',
 				clause: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'true'}
+						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				do: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'sleep'},
-						suffix: [{type: 'word', text: '1'}]
+						name: {type: 'Word', text: 'sleep'},
+						suffix: [{type: 'Word', text: '1'}]
 					}]
 				}
 			}]
@@ -40,20 +40,20 @@ test('parse until', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'until',
+				type: 'Until',
 				clause: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'true'}
+						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				do: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'sleep'},
-						suffix: [{type: 'word', text: '1'}]
+						name: {type: 'Word', text: 'sleep'},
+						suffix: [{type: 'Word', text: '1'}]
 					}]
 				}
 			}]

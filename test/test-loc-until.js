@@ -9,7 +9,7 @@ test('loc in until statement', t => {
 	const result = bashParser('until true || 1; do sleep 1;echo ciao; done', {insertLOC: true});
 	// utils.logResults(result.commands[0]);
 	const expected = {
-		type: 'until',
+		type: 'Until',
 		clause: {
 			type: 'CompoundList',
 			commands: [
@@ -20,7 +20,7 @@ test('loc in until statement', t => {
 						type: 'SimpleCommand',
 						name: {
 							text: 'true',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 7,
@@ -51,7 +51,7 @@ test('loc in until statement', t => {
 						type: 'SimpleCommand',
 						name: {
 							text: '1',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 15,
@@ -112,7 +112,7 @@ test('loc in until statement', t => {
 					type: 'SimpleCommand',
 					name: {
 						text: 'sleep',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 21,
@@ -141,7 +141,7 @@ test('loc in until statement', t => {
 					suffix: [
 						{
 							text: '1',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 27,
@@ -157,7 +157,7 @@ test('loc in until statement', t => {
 						},
 						{
 							text: 'echo',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 28,
@@ -173,7 +173,7 @@ test('loc in until statement', t => {
 						},
 						{
 							text: 'ciao',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 34,

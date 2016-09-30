@@ -19,7 +19,7 @@ fi
 	// utils.logResults(result)
 
 	const expected = 	{
-		type: 'if',
+		type: 'If',
 		clause: {
 			type: 'CompoundList',
 			commands: [
@@ -27,7 +27,7 @@ fi
 					type: 'SimpleCommand',
 					name: {
 						text: 'true',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 4,
@@ -75,7 +75,7 @@ fi
 					type: 'SimpleCommand',
 					name: {
 						text: 'echo',
-						type: 'word',
+						type: 'Word',
 						loc: {
 							start: {
 								col: 2,
@@ -104,7 +104,7 @@ fi
 					suffix: [
 						{
 							text: '1',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 7,
@@ -135,7 +135,7 @@ fi
 			}
 		},
 		else: {
-			type: 'if',
+			type: 'If',
 			clause: {
 				type: 'CompoundList',
 				commands: [
@@ -143,7 +143,7 @@ fi
 						type: 'SimpleCommand',
 						name: {
 							text: 'false',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 6,
@@ -191,7 +191,7 @@ fi
 						type: 'SimpleCommand',
 						name: {
 							text: 'echo',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 2,
@@ -220,7 +220,7 @@ fi
 						suffix: [
 							{
 								text: '3',
-								type: 'word',
+								type: 'Word',
 								loc: {
 									start: {
 										col: 7,
@@ -257,7 +257,7 @@ fi
 						type: 'SimpleCommand',
 						name: {
 							text: 'echo',
-							type: 'word',
+							type: 'Word',
 							loc: {
 								start: {
 									col: 2,
@@ -286,7 +286,7 @@ fi
 						suffix: [
 							{
 								text: '2',
-								type: 'word',
+								type: 'Word',
 								loc: {
 									start: {
 										col: 7,

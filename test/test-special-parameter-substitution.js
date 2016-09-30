@@ -10,10 +10,10 @@ test('parameter with use default value', t => {
 
 	// utils.logResults(result.commands[0].name)
 	utils.checkResults(t, result.commands[0].name, {
-		type: 'word',
+		type: 'Word',
 		text: '${other:-default_value}',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'
@@ -30,10 +30,10 @@ test('parameter with use default value', t => {
 test('parameter with assign default value', t => {
 	const result = bashParser('${other:=default_value}');
 	utils.checkResults(t, result.commands[0].name, {
-		type: 'word',
+		type: 'Word',
 		text: '${other:=default_value}',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'
@@ -52,15 +52,15 @@ test.only('parameter with other parameter in word', t => {
 	const result = bashParser('${other:=default$value}');
 	utils.logResults(result)
 	utils.checkResults(t, JSON.parse(JSON.stringify(result.commands[0].name)), {
-		type: 'word',
+		type: 'Word',
 		text: '${other:=default$value}',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
 				text: 'default$value',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: 'value',
 					start: 7,
 					end: 13
@@ -80,9 +80,9 @@ test('parameter with indicate error if null', t => {
 	const result = bashParser('${other:?default_value}');
 	utils.checkResults(t, result.commands[0].name, {
 		text: '${other:?default_value}',
-		type: 'word',
+		type: 'Word',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'
@@ -100,9 +100,9 @@ test('parameter with use alternative value', t => {
 	const result = bashParser('${other:+default_value}');
 	utils.checkResults(t, result.commands[0].name, {
 		text: '${other:+default_value}',
-		type: 'word',
+		type: 'Word',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			word: {
 				text: 'default_value'

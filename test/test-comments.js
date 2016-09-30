@@ -15,18 +15,18 @@ test('loc take into account line continuations', t => {
 		commands: [{
 			type: 'SimpleCommand',
 			name: {
-				type: 'word', text: 'echo'
+				type: 'Word', text: 'echo'
 			},
 			suffix: [{
-				type: 'word', text: 'world'
+				type: 'Word', text: 'world'
 			}]
 		}, {
 			type: 'SimpleCommand',
 			name: {
-				type: 'word', text: 'echo'
+				type: 'Word', text: 'echo'
 			},
 			suffix: [{
-				type: 'word', text: 'ciao'
+				type: 'Word', text: 'ciao'
 			}]
 		}]
 	};

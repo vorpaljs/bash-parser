@@ -12,7 +12,7 @@ test('parameter substitution in commands', t => {
 		}
 	});
 	utils.checkResults(t, result.commands[0].name, {
-		type: 'word',
+		type: 'Word',
 		text: 'ciao'
 	});
 });
@@ -24,7 +24,7 @@ test('parameter substitution in assignment', t => {
 		}
 	});
 	utils.checkResults(t, result.commands[0].prefix[0], {
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'a=ciao'
 	});
 });

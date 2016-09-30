@@ -294,7 +294,7 @@ module.exports = {
 			],
 			[
 				'cmd_prefix',
-				'$$ =yy.command($cmd_prefix, {text:"", type:"word"});'
+				'$$ =yy.commandAssignment($cmd_prefix);'
 			],
 			[
 				'cmd_name cmd_suffix',

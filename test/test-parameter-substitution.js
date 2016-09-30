@@ -9,10 +9,10 @@ test('parameter substitution in assignment', t => {
 	const result = bashParser('echoword=${other}test');
 	// utils.logResults(result);
 	utils.checkResults(t, result.commands[0].prefix, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'echoword=${other}test',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			loc: {
 				start: 9,
@@ -24,19 +24,19 @@ test('parameter substitution in assignment', t => {
 
 test('parameter substitution skip escaped dollar', t => {
 	const result = bashParser('echo "\\$ciao"');
-	utils.checkResults(t, result.commands[0].suffix, [{type: 'word', text: '\\$ciao'}]);
+	utils.checkResults(t, result.commands[0].suffix, [{type: 'Word', text: '\\$ciao'}]);
 });
 
 test('parameter substitution skip escaped dollar with braces', t => {
 	const result = bashParser('echo "\\${ciao}"');
-	utils.checkResults(t, result.commands[0].suffix, [{type: 'word', text: '\\${ciao}'}]);
+	utils.checkResults(t, result.commands[0].suffix, [{type: 'Word', text: '\\${ciao}'}]);
 });
 
 test('parameter substitution skip single quoted words', t => {
 	const result = bashParser('echo \'${echo } $ciao\'');
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: '${echo } $ciao'
 	}]);
 });
@@ -52,15 +52,15 @@ test('parameter substitution and other words', t => {
 				start: 0,
 				end: 7
 			},
-			type: 'parameter_expansion'
+			type: 'ParameterExpansion'
 		}],
-		type: 'word'
+		type: 'Word'
 	}, {
 		text: 'bar',
-		type: 'word'
+		type: 'Word'
 	}, {
 		text: 'baz',
-		type: 'word'
+		type: 'Word'
 	}]);
 });
 
@@ -69,10 +69,10 @@ test('multi-word parameter substitution', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result.commands[0].prefix, [{
-		type: 'assignment_word',
+		type: 'AssignmentWord',
 		text: 'echoword=${other word}test',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other word',
 			loc: {
 				start: 9,
@@ -85,10 +85,10 @@ test('multi-word parameter substitution', t => {
 test('parameter substitution', t => {
 	const result = bashParser('echo word${other}test');
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: 'word${other}test',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			loc: {
 				start: 4,
@@ -101,10 +101,10 @@ test('parameter substitution', t => {
 test('multiple parameter substitution', t => {
 	const result = bashParser('echo word${other}t$est');
 	utils.checkResults(t, result.commands[0].suffix, [{
-		type: 'word',
+		type: 'Word',
 		text: 'word${other}t$est',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			loc: {
 				start: 4,
@@ -112,7 +112,7 @@ test('multiple parameter substitution', t => {
 			}
 		},
 		{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'est',
 			loc: {
 				start: 13,
@@ -126,10 +126,10 @@ test('command consisting of only parameter substitution', t => {
 	const result = bashParser('$other');
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0].name, {
-		type: 'word',
+		type: 'Word',
 		text: '$other',
 		expansion: [{
-			type: 'parameter_expansion',
+			type: 'ParameterExpansion',
 			parameter: 'other',
 			loc: {
 				start: 0,
@@ -159,10 +159,10 @@ test('resolve parameter', t => {
 						end: 12
 					},
 					resolved: true,
-					type: 'parameter_expansion'
+					type: 'ParameterExpansion'
 				}
 			],
-			type: 'word'
+			type: 'Word'
 		}
 	});
 });
@@ -186,7 +186,7 @@ test('resolve double parameter', t => {
 					end: 12
 				},
 				resolved: true,
-				type: 'parameter_expansion'
+				type: 'ParameterExpansion'
 			}, {
 				parameter: 'one',
 				loc: {
@@ -194,9 +194,9 @@ test('resolve double parameter', t => {
 					end: 19
 				},
 				resolved: true,
-				type: 'parameter_expansion'
+				type: 'ParameterExpansion'
 			}],
-			type: 'word'
+			type: 'Word'
 		}
 	});
 });
@@ -216,7 +216,7 @@ test('field splitting', t => {
 		type: 'SimpleCommand',
 		name: {
 			text: 'say',
-			type: 'word'
+			type: 'Word'
 		},
 		suffix: [{
 			text: 'foo',
@@ -226,11 +226,11 @@ test('field splitting', t => {
 					start: 0,
 					end: 7
 				},
-				type: 'parameter_expansion',
+				type: 'ParameterExpansion',
 				resolved: true
 			}],
 			originalText: '${other}',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 0
 		}, {
@@ -241,11 +241,11 @@ test('field splitting', t => {
 					start: 0,
 					end: 7
 				},
-				type: 'parameter_expansion',
+				type: 'ParameterExpansion',
 				resolved: true
 			}],
 			originalText: '${other}',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 1
 		}, {
@@ -256,16 +256,16 @@ test('field splitting', t => {
 					start: 0,
 					end: 7
 				},
-				type: 'parameter_expansion',
+				type: 'ParameterExpansion',
 				resolved: true
 			}],
 			originalText: '${other}',
-			type: 'word',
+			type: 'Word',
 			joined: 'foo\u0000bar\u0000baz',
 			fieldIdx: 2
 		}, {
 			text: 'plz',
-			type: 'word'
+			type: 'Word'
 		}]
 	});
 });
@@ -285,7 +285,7 @@ test('field splitting not occurring within quoted words', t => {
 		type: 'SimpleCommand',
 		name: {
 			text: 'say',
-			type: 'word'
+			type: 'Word'
 		},
 		suffix: [{
 			text: 'foo\tbar baz plz',
@@ -295,11 +295,11 @@ test('field splitting not occurring within quoted words', t => {
 					start: 1,
 					end: 8
 				},
-				type: 'parameter_expansion',
+				type: 'ParameterExpansion',
 				resolved: true
 			}],
 			originalText: '"${other} plz"',
-			type: 'word'
+			type: 'Word'
 		}]
 	});
 });

@@ -13,14 +13,14 @@ test('parse function declaration multiple lines', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'function',
+				type: 'Function',
 				name: {type: 'Name', text: 'foo'},
 				body: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'command'},
-						suffix: [{type: 'word', text: 'bar'}, {type: 'word', text: '--lol'}]
+						name: {type: 'Word', text: 'command'},
+						suffix: [{type: 'Word', text: 'bar'}, {type: 'Word', text: '--lol'}]
 					}]
 				}
 			}]
@@ -35,14 +35,14 @@ test('parse function declaration', t => {
 		result, {
 			type: 'Script',
 			commands: [{
-				type: 'function',
+				type: 'Function',
 				name: {type: 'Name', text: 'foo'},
 				body: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'command'},
-						suffix: [{type: 'word', text: 'bar'}, {type: 'word', text: '--lol'}]
+						name: {type: 'Word', text: 'command'},
+						suffix: [{type: 'Word', text: 'bar'}, {type: 'Word', text: '--lol'}]
 					}]
 				}
 			}]

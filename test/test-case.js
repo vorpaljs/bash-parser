@@ -13,21 +13,21 @@ test('parse case', t => {
 		commands: [{
 			type: 'Case',
 			clause: {
-				type: 'word',
+				type: 'Word',
 				text: 'foo'
 			},
 			cases: [{
 				type: 'CaseItem',
 				pattern: [{
-					type: 'word',
+					type: 'Word',
 					text: '*'
 				}],
 				body: {
 					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
-						name: {type: 'word', text: 'echo'},
-						suffix: [{type: 'word', text: 'bar'}]
+						name: {type: 'Word', text: 'echo'},
+						suffix: [{type: 'Word', text: 'bar'}]
 					}]
 				}
 			}]

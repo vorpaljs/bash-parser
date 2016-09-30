@@ -17,7 +17,7 @@ esac
 	const expected = {
 		type: 'Case',
 		clause: {
-			type: 'word',
+			type: 'Word',
 			text: 'foo',
 			loc: mkloc(1, 6, 1, 8, 5, 7)
 		},
@@ -26,7 +26,7 @@ esac
 				type: 'CaseItem',
 				pattern: [
 					{
-						type: 'word',
+						type: 'Word',
 						text: '*',
 						loc: mkloc(2, 2, 2, 2, 13, 13)
 					}
@@ -37,13 +37,13 @@ esac
 						{
 							type: 'SimpleCommand',
 							name: {
-								type: 'word',
+								type: 'Word',
 								text: 'echo',
 								loc: mkloc(3, 3, 3, 6, 19, 22)
 							},
 							loc: mkloc(3, 3, 3, 10, 19, 26),
 							suffix: [{
-								type: 'word',
+								type: 'Word',
 								text: 'bar',
 								loc: mkloc(3, 8, 3, 10, 24, 26)
 							}]

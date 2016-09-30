@@ -12,12 +12,12 @@ test('positional list paramter', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$@',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '@',
 					kind: 'positional-list',
 					loc: {
@@ -36,12 +36,12 @@ test('positional string paramter', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$*',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '*',
 					kind: 'positional-string',
 					loc: {
@@ -60,12 +60,12 @@ test('positional count paramter', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$#',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '#',
 					kind: 'positional-count',
 					loc: {
@@ -84,12 +84,12 @@ test('last exit status', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$?',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '?',
 					kind: 'last-exit-status',
 					loc: {
@@ -108,12 +108,12 @@ test('current option flags', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$-',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '-',
 					kind: 'current-option-flags',
 					loc: {
@@ -132,12 +132,12 @@ test('shell process id', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$$',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '$',
 					kind: 'shell-process-id',
 					loc: {
@@ -156,12 +156,12 @@ test('last background pid', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$!',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '!',
 					kind: 'last-background-pid',
 					loc: {
@@ -181,12 +181,12 @@ test('shell script name', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: ''},
+			name: {type: 'Word', text: ''},
 			prefix: [{
-				type: 'assignment_word',
+				type: 'AssignmentWord',
 				text: 'echoword=$0',
 				expansion: [{
-					type: 'parameter_expansion',
+					type: 'ParameterExpansion',
 					parameter: '0',
 					kind: 'shell-script-name',
 					loc: {

@@ -13,8 +13,8 @@ test('alias with no argument', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'test-value'},
-			suffix: [{type: 'word', text: 'world'}]
+			name: {type: 'Word', text: 'test-value'},
+			suffix: [{type: 'Word', text: 'world'}]
 		}]
 	});
 });
@@ -26,7 +26,7 @@ test('alias with duplicating stream redirection', t => {
 	// utils.logResults(result);
 	utils.checkResults(t,
 		result.commands[0].name,
-		{type: 'word', text: 'test-value'}
+		{type: 'Word', text: 'test-value'}
 	);
 });
 
@@ -38,10 +38,10 @@ test('alias with arguments', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'test-value'},
+			name: {type: 'Word', text: 'test-value'},
 			suffix: [
-				{type: 'word', text: 'earth'},
-				{type: 'word', text: 'world'}
+				{type: 'Word', text: 'earth'},
+				{type: 'Word', text: 'world'}
 			]
 		}]
 	});
@@ -54,10 +54,10 @@ test('alias with prefixes', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			prefix: [{type: 'assignment_word', text: 'a=42'}],
+			prefix: [{type: 'AssignmentWord', text: 'a=42'}],
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'test-value'},
-			suffix: [{type: 'word', text: 'world'}]
+			name: {type: 'Word', text: 'test-value'},
+			suffix: [{type: 'Word', text: 'world'}]
 		}]
 	});
 });
@@ -78,12 +78,12 @@ test('recursive alias with prefixes', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			prefix: [{type: 'assignment_word', text: 'a=42'}],
+			prefix: [{type: 'AssignmentWord', text: 'a=42'}],
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'echo'},
+			name: {type: 'Word', text: 'echo'},
 			suffix: [
-				{type: 'word', text: 'other'},
-				{type: 'word', text: 'world'}
+				{type: 'Word', text: 'other'},
+				{type: 'Word', text: 'world'}
 			]
 		}]
 	});
@@ -109,10 +109,10 @@ test('guarded against infinite loops', t => {
 		type: 'Script',
 		commands: [{
 			type: 'SimpleCommand',
-			name: {type: 'word', text: 'thisIsAlias'},
+			name: {type: 'Word', text: 'thisIsAlias'},
 			suffix: [
-				{type: 'word', text: 'ciao'},
-				{type: 'word', text: 'world'}
+				{type: 'Word', text: 'ciao'},
+				{type: 'Word', text: 'world'}
 			]
 		}]
 	});

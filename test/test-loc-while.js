@@ -14,7 +14,7 @@ test('loc in while statement', t => {
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'and_or',
+					type: 'LogicalExpression',
 					op: 'and',
 					left: {
 						type: 'simple_command',

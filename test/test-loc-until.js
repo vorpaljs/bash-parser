@@ -14,7 +14,7 @@ test('loc in until statement', t => {
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'and_or',
+					type: 'LogicalExpression',
 					op: 'or',
 					left: {
 						type: 'simple_command',

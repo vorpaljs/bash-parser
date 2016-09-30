@@ -57,7 +57,7 @@ test('commands with AND', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'and_or',
+			type: 'LogicalExpression',
 			op: 'and',
 			left: {type: 'simple_command', name: {type: 'word', text: 'run'}},
 			right: {type: 'simple_command', name: {type: 'word', text: 'stop'}}
@@ -71,7 +71,7 @@ test('commands with AND \\n', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'and_or',
+			type: 'LogicalExpression',
 			op: 'and',
 			left: {type: 'simple_command', name: {type: 'word', text: 'run'}},
 			right: {type: 'simple_command', name: {type: 'word', text: 'stop'}}
@@ -84,7 +84,7 @@ test('commands with OR', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'and_or',
+			type: 'LogicalExpression',
 			op: 'or',
 			left: {type: 'simple_command', name: {type: 'word', text: 'run'}},
 			right: {type: 'simple_command', name: {type: 'word', text: 'cry'}}

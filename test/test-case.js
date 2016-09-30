@@ -42,7 +42,7 @@ test.skip('parse case with compound list', t => {
 	const expected = {
 		type: 'Script',
 		commands: [{
-			type: 'and_or',
+			type: 'LogicalExpression',
 			left: {
 				type: 'Pipeline',
 				commands: [{
@@ -58,7 +58,7 @@ test.skip('parse case with compound list', t => {
 						body: {
 							type: 'compound_list',
 							commands: [{
-								type: 'and_or',
+								type: 'LogicalExpression',
 								left: {
 									type: 'Pipeline',
 									commands: [{

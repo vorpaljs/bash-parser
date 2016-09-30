@@ -116,7 +116,7 @@ module.exports = options => {
 	};
 
 	builder.andAndOr = (left, right) => {
-		const node = {type: 'and_or', op: 'and', left, right};
+		const node = {type: 'LogicalExpression', op: 'and', left, right};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, left.loc), right.loc);
 		}
@@ -124,7 +124,7 @@ module.exports = options => {
 	};
 
 	builder.orAndOr = (left, right) => {
-		const node = {type: 'and_or', op: 'or', left, right};
+		const node = {type: 'LogicalExpression', op: 'or', left, right};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, left.loc), right.loc);
 		}

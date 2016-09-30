@@ -15,7 +15,7 @@ esac
 	const result = bashParser(cmd, {insertLOC: true});
 
 	const expected = {
-		type: 'case',
+		type: 'Case',
 		clause: {
 			type: 'word',
 			text: 'foo',
@@ -23,7 +23,7 @@ esac
 		},
 		cases: [
 			{
-				type: 'case_item',
+				type: 'CaseItem',
 				pattern: [
 					{
 						type: 'word',

@@ -8,7 +8,7 @@ module.exports = options => {
 	mkListHelper(builder, 'suffix');
 
 	builder.caseItem = (pattern, body, locStart, locEnd) => {
-		const type = 'case_item';
+		const type = 'CaseItem';
 		const node = {type, pattern, body};
 
 		if (options.insertLOC) {
@@ -19,7 +19,7 @@ module.exports = options => {
 	};
 
 	builder.caseClause = (clause, cases, locStart, locEnd) => {
-		const type = 'case';
+		const type = 'Case';
 		const node = {type, clause};
 
 		if (cases) {

@@ -11,13 +11,13 @@ test('parse case', t => {
 	const expected = {
 		type: 'Script',
 		commands: [{
-			type: 'case',
+			type: 'Case',
 			clause: {
 				type: 'word',
 				text: 'foo'
 			},
 			cases: [{
-				type: 'case_item',
+				type: 'CaseItem',
 				pattern: [{
 					type: 'word',
 					text: '*'
@@ -46,12 +46,12 @@ test.skip('parse case with compound list', t => {
 			left: {
 				type: 'Pipeline',
 				commands: [{
-					type: 'case',
+					type: 'Case',
 					clause: {
 						text: 'foo'
 					},
 					cases: [{
-						type: 'case_item',
+						type: 'CaseItem',
 						pattern: [{
 							text: '*'
 						}],

@@ -1,14 +1,15 @@
 'use strict';
+
 /* eslint-disable camelcase */
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('alias with no argument', t => {
 	const result = bashParser('thisIsAlias world', {
 		resolveAlias: name => name === 'thisIsAlias' ? 'test-value' : null
 	});
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -23,7 +24,7 @@ test('alias with duplicating stream redirection', t => {
 		resolveAlias: name => name === 'world' ? 'test-value' : null
 	});
 	// utils.logResults(result);
-	t.deepEqual(
+	utils.checkResults(t,
 		result.commands[0].name,
 		{type: 'word', text: 'test-value'}
 	);
@@ -33,7 +34,7 @@ test('alias with arguments', t => {
 	const result = bashParser('thisIsAlias world', {
 		resolveAlias: name => name === 'thisIsAlias' ? 'test-value earth' : undefined
 	});
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -50,7 +51,7 @@ test('alias with prefixes', t => {
 	const result = bashParser('thisIsAlias world', {
 		resolveAlias: name => name === 'thisIsAlias' ? 'a=42 test-value' : undefined
 	});
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			prefix: [{type: 'assignment_word', text: 'a=42'}],
@@ -74,7 +75,7 @@ test('recursive alias with prefixes', t => {
 	});
 	// utils.logResults(result)
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			prefix: [{type: 'assignment_word', text: 'a=42'}],
@@ -104,7 +105,7 @@ test('guarded against infinite loops', t => {
 	});
 	// utils.logResults(result)
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',

@@ -1,8 +1,9 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-const mkloc = require('./_utils').mkloc;
-// const utils = require('./_utils');
+const mkloc = require('./_utils').mkloc2;
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('syntax error contains line number', async t => {
@@ -12,17 +13,18 @@ test('syntax error contains line number', async t => {
 
 test('AST can include loc', t => {
 	const result = bashParser('echo', {insertLOC: true});
-	t.deepEqual(result.commands[0].name, {
+	// utils.logResults(result)
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'echo',
-		loc: mkloc(0, 0, 0, 3)
+		loc: mkloc(1, 1, 1, 4, 0, 3)
 	});
 });
 
 test('subshell can include loc', t => {
 	const result = bashParser('(echo)', {insertLOC: true});
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -35,69 +37,44 @@ test('subshell can include loc', t => {
 							name: {
 								text: 'echo',
 								type: 'word',
-								loc: {
-									startLine: 0,
-									startColumn: 1,
-									endLine: 0,
-									endColumn: 4
-								}
+								loc: mkloc(1, 2, 1, 5, 1, 4)
 							},
-							loc: {
-								startLine: 0,
-								startColumn: 1,
-								endLine: 0,
-								endColumn: 4
-							}
+							loc: mkloc(1, 2, 1, 5, 1, 4)
 						}
 					],
-					loc: {
-						startLine: 0,
-						startColumn: 1,
-						endLine: 0,
-						endColumn: 4
-					}
+					loc: mkloc(1, 2, 1, 5, 1, 4)
 				},
-				loc: {
-					startLine: 0,
-					startColumn: 0,
-					endLine: 0,
-					endColumn: 5
-				}
+				loc: mkloc(1, 1, 1, 6, 0, 5)
 			}
 		],
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 0,
-			endColumn: 5
-		}
+		loc: mkloc(1, 1, 1, 6, 0, 5)
 	});
 });
 
 test('double command with only name', t => {
 	const result = bashParser('echo; ciao;', {insertLOC: true});
-	// logResults(result);
-	t.deepEqual(result, {
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
 		type: 'complete_command',
-		loc: mkloc(0, 0, 0, 9),
+		loc: mkloc(1, 1, 1, 10, 0, 9),
 		commands: [
 			{
 				type: 'simple_command',
 				name: {
 					type: 'word',
 					text: 'echo',
-					loc: mkloc(0, 0, 0, 3)
+					loc: mkloc(1, 1, 1, 4, 0, 3)
 				},
-				loc: mkloc(0, 0, 0, 3)
+				loc: mkloc(1, 1, 1, 4, 0, 3)
 			},
 			{
 				type: 'simple_command',
 				name: {
 					type: 'word',
 					text: 'ciao',
-					loc: mkloc(0, 6, 0, 9)
+					loc: mkloc(1, 7, 1, 10, 6, 9)
 				},
-				loc: mkloc(0, 6, 0, 9)
+				loc: mkloc(1, 7, 1, 10, 6, 9)
 			}
 		]
 	});
@@ -106,36 +83,36 @@ test('double command with only name', t => {
 test('loc are composed by all tokens', t => {
 	const result = bashParser('echo 42', {insertLOC: true});
 	// console.log(JSON.stringify(result, null, 4));
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			type: 'word',
 			text: 'echo',
-			loc: mkloc(0, 0, 0, 3)
+			loc: mkloc(1, 1, 1, 4, 0, 3)
 		},
-		loc: mkloc(0, 0, 0, 6),
+		loc: mkloc(1, 1, 1, 7, 0, 6),
 		suffix: [{
 			type: 'word',
 			text: '42',
-			loc: mkloc(0, 5, 0, 6)
+			loc: mkloc(1, 6, 1, 7, 5, 6)
 		}]
 	});
 });
 
 test('loc works with multiple newlines', t => {
 	const result = bashParser('\n\n\necho 42', {insertLOC: true});
-	t.deepEqual(result.commands[0], {
+	utils.checkResults(t, result.commands[0], {
 		type: 'simple_command',
 		name: {
 			type: 'word',
 			text: 'echo',
-			loc: mkloc(3, 0, 3, 3)
+			loc: mkloc(4, 1, 4, 4, 3, 6)
 		},
-		loc: mkloc(3, 0, 3, 6),
+		loc: mkloc(4, 1, 4, 7, 3, 9),
 		suffix: [{
 			type: 'word',
 			text: '42',
-			loc: mkloc(3, 5, 3, 6)
+			loc: mkloc(4, 6, 4, 7, 8, 9)
 		}]
 	});
 });
@@ -147,24 +124,24 @@ test('loc with LINEBREAK_IN statement', t => {
 	echo $x;
 done
 `;
+
 	const result = bashParser(cmd, {insertLOC: true});
-	// utils.logResults(result);
 	const expected = {
 		type: 'for',
-		loc: {
-			startLine: 0,
-			startColumn: 0,
-			endLine: 3,
-			endColumn: 3
-		},
 		name: {
-			type: 'name',
 			text: 'x',
+			type: 'name',
 			loc: {
-				startLine: 0,
-				startColumn: 4,
-				endLine: 0,
-				endColumn: 4
+				start: {
+					col: 5,
+					row: 1,
+					char: 4
+				},
+				end: {
+					col: 5,
+					row: 1,
+					char: 4
+				}
 			}
 		},
 		do: {
@@ -173,67 +150,107 @@ done
 				{
 					type: 'simple_command',
 					name: {
-						type: 'word',
 						text: 'echo',
+						type: 'word',
 						loc: {
-							startLine: 2,
-							startColumn: 1,
-							endLine: 2,
-							endColumn: 4
+							start: {
+								col: 2,
+								row: 3,
+								char: 16
+							},
+							end: {
+								col: 5,
+								row: 3,
+								char: 19
+							}
 						}
 					},
 					loc: {
-						startLine: 2,
-						startColumn: 1,
-						endLine: 2,
-						endColumn: 7
-					},
-					suffix: [{
-						type: 'word',
-						text: '$x',
-						expansion: [
-							{
-								type: 'parameter_expansion',
-								parameter: 'x',
-								start: 0,
-								end: 2
-							}
-						],
-						loc: {
-							startLine: 2,
-							startColumn: 6,
-							endLine: 2,
-							endColumn: 7
+						start: {
+							col: 2,
+							row: 3,
+							char: 16
+						},
+						end: {
+							col: 8,
+							row: 3,
+							char: 22
 						}
-					}]
+					},
+					suffix: [
+						{
+							text: '$x',
+							expansion: [
+								{
+									loc: {
+										start: 0,
+										end: 1
+									},
+									parameter: 'x',
+									type: 'parameter_expansion'
+								}
+							],
+							type: 'word',
+							loc: {
+								start: {
+									col: 7,
+									row: 3,
+									char: 21
+								},
+								end: {
+									col: 8,
+									row: 3,
+									char: 22
+								}
+							}
+						}
+					]
 				}
 			],
 			loc: {
-				startLine: 1,
-				startColumn: 6,
-				endLine: 3,
-				endColumn: 3
+				start: {
+					col: 7,
+					row: 2,
+					char: 12
+				},
+				end: {
+					col: 4,
+					row: 4,
+					char: 28
+				}
+			}
+		},
+		loc: {
+			start: {
+				col: 1,
+				row: 1,
+				char: 0
+			},
+			end: {
+				col: 4,
+				row: 4,
+				char: 28
 			}
 		}
 	};
 
-	t.deepEqual(result.commands[0], expected);
+	utils.checkResults(t, result.commands[0], expected);
 });
 
 test('loc in multi line commands', t => {
 	const result = bashParser('echo;\nls;\n', {insertLOC: true});
 	// utils.logResults(result);
-	t.deepEqual(result, {
-		loc: mkloc(0, 0, 1, 1),
+	utils.checkResults(t, result, {
+		loc: mkloc(1, 1, 2, 2, 0, 7),
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
-			name: {type: 'word', text: 'echo', loc: mkloc(0, 0, 0, 3)},
-			loc: mkloc(0, 0, 0, 3)
+			name: {type: 'word', text: 'echo', loc: mkloc(1, 1, 1, 4, 0, 3)},
+			loc: mkloc(1, 1, 1, 4, 0, 3)
 		}, {
 			type: 'simple_command',
-			name: {type: 'word', text: 'ls', loc: mkloc(1, 0, 1, 1)},
-			loc: mkloc(1, 0, 1, 1)
+			name: {type: 'word', text: 'ls', loc: mkloc(2, 1, 2, 2, 6, 7)},
+			loc: mkloc(2, 1, 2, 2, 6, 7)
 		}]
 	});
 });

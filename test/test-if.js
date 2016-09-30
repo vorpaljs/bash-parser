@@ -1,13 +1,14 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('parse if', t => {
 	const result = bashParser('if true; then echo 1; fi');
 	// console.log(inspect(result, {depth:null}))
-	t.deepEqual(
+	utils.checkResults(t,
 		result, {
 			type: 'complete_command',
 			commands: [{
@@ -35,7 +36,7 @@ test('parse if', t => {
 test('parse if else', t => {
 	const result = bashParser('if true; then echo 1; else echo 2; fi');
 	// utils.logResults(result);
-	t.deepEqual(
+	utils.checkResults(t,
 		result, {
 			type: 'complete_command',
 			commands: [{
@@ -71,7 +72,7 @@ test('parse if else', t => {
 test('parse if else multiline', t => {
 	const result = bashParser('if true; then \n echo 1;\n else\n echo 2;\n fi');
 	// console.log(inspect(result, {depth:null}))
-	t.deepEqual(
+	utils.checkResults(t,
 		result, {
 			type: 'complete_command',
 			commands: [{
@@ -156,5 +157,5 @@ test('parse if elif else', t => {
 	};
 
 	// utils.logDiff(result, expected)
-	t.deepEqual(result, expected);
+	utils.checkResults(t, result, expected);
 });

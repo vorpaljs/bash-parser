@@ -1,0 +1,24 @@
+{
+  "name": "bash-parser-playground",
+  "version": "0.3.2",
+  "description": "Playground website for bash-parser",
+  "repository": "vorpaljs/bash-parser",
+  "license": "MIT",
+  "author": "vorpal-js",
+  "scripts": {
+    "test": "xo",
+    "serve": "serve ../../docs",
+    "clean": "rm -rf ../../docs && mkdir ../../docs",
+    "copy": "cp ./*.html ../../docs",
+    "browserify": "browserify index.js -o ../../docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify",
+    "build": "npm run clean --silent && npm run browserify --silent && npm run copy --silent"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "uglifyify": "^3.0.2",
+    "xo": "^0.16.0"
+  }
+}

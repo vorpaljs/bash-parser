@@ -5,8 +5,8 @@ node_js:
   - 6
 sudo: false
 before_script:
-  - npm run build
+  - npm run build --silent
 script:
-  - npm run cover-test
+  - npm run cover-test --silent
 after_success:
-  - './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
+  - npm run cover-publish --silent

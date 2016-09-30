@@ -1,47 +1,67 @@
 'use strict';
+
 const test = require('ava');
-const rules = require('../src/tokenization-rules');
-/* eslint-disable camelcase */
+const rules = require('../src/modes/posix/rules');
+const utils = require('../src/utils');
+// const _utils = require('./_utils');
+
+const token = utils.tokens.token;
+
+function check(t, rule, actual, expected) {
+	// _utils.logResults({actual: Array.from(rule({}, utils)(actual)), expected});
+	t.is(
+		JSON.stringify(
+			Array.from(rule({}, utils)(actual))
+		),
+		JSON.stringify(expected)
+	);
+}
+
 test('operatorTokens - identify operator with their tokens', t => {
-	t.deepEqual(
-		Array.from(rules.operatorTokens([{OPERATOR: '<<', loc: 42}])),
-		[{DLESS: '<<', loc: 42}]
+	check(t, rules.operatorTokens,
+		[token({type: 'OPERATOR', value: '<<', loc: 42})],
+		[token({type: 'DLESS', value: '<<', loc: 42})]
 	);
 });
 
 test('reservedWords - identify reserved words or WORD', t => {
-	t.deepEqual(
-		Array.from(rules.reservedWords([
-			{TOKEN: 'while', loc: 42},
-			{TOKEN: 'otherWord', loc: 42}
-		])),
-		[{While: 'while', loc: 42}, {WORD: 'otherWord', loc: 42}]
+	check(
+		t,
+		rules.reservedWords, [
+			token({type: 'TOKEN', value: 'while', loc: 42}),
+			token({type: 'TOKEN', value: 'otherWord', loc: 42})
+		], [
+			token({type: 'While', value: 'while', loc: 42}),
+			token({type: 'WORD', value: 'otherWord', loc: 42})
+		]
 	);
 });
 
 test('functionName - replace function name token as NAME', t => {
-	const result = Array.from(rules.functionName([
-		{WORD: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
-		{OPEN_PAREN: '(', loc: 42, _: {}},
-		{CLOSE_PAREN: ')', loc: 42, _: {}},
-		{Lbrace: '{', loc: 42, _: {}},
-		{WORD: 'body', loc: 42, _: {}},
-		{WORD: 'foo', loc: 42, _: {}},
-		{WORD: '--lol', loc: 42, _: {}},
-		{';': ';', 'loc': 42, '_': {}},
-		{Lbrace: '}', loc: 42, _: {}}
-	]));
-	t.deepEqual(result,
+	const input = [
+		token({type: 'WORD', value: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}}),
+		token({type: 'OPEN_PAREN', value: '(', loc: 42}),
+		token({type: 'CLOSE_PAREN', value: ')', loc: 42}),
+		token({type: 'Lbrace', value: '{', loc: 42}),
+		token({type: 'WORD', value: 'body', loc: 42}),
+		token({type: 'WORD', value: 'foo', loc: 42}),
+		token({type: 'WORD', value: '--lol', loc: 42}),
+		token({type: ';', value: ';', loc: 42}),
+		token({type: 'Rbrace', value: '}', loc: 42})
+	];
+	// _utils.logResults(result);
+
+	check(t, rules.functionName, input,
 		[
-			{NAME: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}},
-			{OPEN_PAREN: '(', loc: 42, _: {}},
-			{CLOSE_PAREN: ')', loc: 42, _: {}},
-			{Lbrace: '{', loc: 42, _: {}},
-			{WORD: 'body', loc: 42, _: {}},
-			{WORD: 'foo', loc: 42, _: {}},
-			{WORD: '--lol', loc: 42, _: {}},
-			{';': ';', 'loc': 42, '_': {}},
-			{Lbrace: '}', loc: 42, _: {}}
+			token({type: 'NAME', value: 'test', loc: 42, _: {maybeStartOfSimpleCommand: true}}),
+			token({type: 'OPEN_PAREN', value: '(', loc: 42}),
+			token({type: 'CLOSE_PAREN', value: ')', loc: 42}),
+			token({type: 'Lbrace', value: '{', loc: 42}),
+			token({type: 'WORD', value: 'body', loc: 42}),
+			token({type: 'WORD', value: 'foo', loc: 42}),
+			token({type: 'WORD', value: '--lol', loc: 42}),
+			token({type: ';', value: ';', loc: 42}),
+			token({type: 'Rbrace', value: '}', loc: 42})
 		]
 	);
 });

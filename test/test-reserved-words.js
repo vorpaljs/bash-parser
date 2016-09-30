@@ -1,13 +1,14 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('single quoted tokens are not parsed as reserved words', t => {
 	const result = bashParser('\'if\' true');
 	// utils.logResults(result);
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -31,7 +32,7 @@ test('double quoted tokens are not parsed as reserved words', t => {
 	const result = bashParser('"if" true');
 	// utils.logResults(result);
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -55,7 +56,7 @@ test('partially double quoted tokens are not parsed as reserved words', t => {
 	const result = bashParser('i"f" true');
 	// utils.logResults(result);
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -79,7 +80,7 @@ test('partially single quoted tokens are not parsed as reserved words', t => {
 	const result = bashParser('i\'f\' true');
 	// utils.logResults(result);
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -103,7 +104,7 @@ test('tokens in invalid positions are not parsed as reserved words', t => {
 	const result = bashParser('echo if');
 	// utils.logResults(result);
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{

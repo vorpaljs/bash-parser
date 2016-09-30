@@ -1,31 +1,34 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
 		.commands[0].prefix;
-	// utils.logResults(result);
-	//
 
-	t.deepEqual(result, [{
+	// utils.logResults(result);
+
+	utils.checkResults(t, result, [{
 		type: 'assignment_word',
 		text: 'echoword=$1ciao',
 		expansion: [{
 			type: 'parameter_expansion',
 			kind: 'positional',
 			parameter: 1,
-			start: 9,
-			end: 11
+			loc: {
+				start: 9,
+				end: 10
+			}
 		}]
 	}]);
 });
 
 test('positional parameter in braces', t => {
 	const result = bashParser('echoword=${11}test');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -38,8 +41,10 @@ test('positional parameter in braces', t => {
 						type: 'parameter_expansion',
 						parameter: 11,
 						kind: 'positional',
-						start: 9,
-						end: 14
+						loc: {
+							start: 9,
+							end: 13
+						}
 					}]
 				}]
 			}
@@ -50,7 +55,7 @@ test('positional parameter in braces', t => {
 test('positional parameter without braces', t => {
 	const result = bashParser('echoword=$1');
 	// console.log(JSON.stringify(result, null, 5))
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -62,8 +67,10 @@ test('positional parameter without braces', t => {
 					type: 'parameter_expansion',
 					parameter: 1,
 					kind: 'positional',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -73,7 +80,7 @@ test('positional parameter without braces', t => {
 test('positional parameter without braces allow one digit only', t => {
 	const result = bashParser('echoword=$11');
 	// console.log(JSON.stringify(result, null, 5))
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -85,8 +92,10 @@ test('positional parameter without braces allow one digit only', t => {
 					type: 'parameter_expansion',
 					parameter: 1,
 					kind: 'positional',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]

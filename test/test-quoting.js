@@ -1,27 +1,28 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
-function testUnclosed(cmd) {
+function testUnclosed(cmd, char) {
 	return t => {
 		const err = t.throws(() => bashParser(cmd));
 		t.truthy(err instanceof SyntaxError);
-		t.is(err.message, 'Parse error on line 0: Unexpected \'EOF\'');
+		t.is(err.message, 'Unclosed ' + char);
 	};
 }
 
-test('throws on unclosed double quotes', testUnclosed('echo "TEST1'));
-test('throws on unclosed single quotes', testUnclosed('echo \'TEST1'));
-test('throws on unclosed command subst', testUnclosed('echo $(TEST1'));
-test('throws on unclosed backtick command subst', testUnclosed('echo `TEST1'));
-test('throws on unclosed arhit subst', testUnclosed('echo $((TEST1'));
-test('throws on unclosed param subst', testUnclosed('echo ${TEST1'));
+test('throws on unclosed double quotes', testUnclosed('echo "TEST1', '"'));
+test('throws on unclosed single quotes', testUnclosed('echo \'TEST1', '\''));
+test('throws on unclosed command subst', testUnclosed('echo $(TEST1', '$('));
+test('throws on unclosed backtick command subst', testUnclosed('echo `TEST1', '`'));
+test('throws on unclosed arhit subst', testUnclosed('echo $((TEST1', '$(('));
+test('throws on unclosed param subst', testUnclosed('echo ${TEST1', '${'));
 
 test('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// utils.logResults(result)
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -34,7 +35,7 @@ test('quotes within double quotes', t => {
 test('escaped double quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \\"TEST2"');
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -46,7 +47,7 @@ test('escaped double quotes within double quotes', t => {
 
 test('double quotes within single quotes', t => {
 	const result = bashParser('echo \'TEST1 "TEST2\'');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -58,7 +59,7 @@ test('double quotes within single quotes', t => {
 
 test('Partially quoted word', t => {
 	const result = bashParser('echo TEST1\' TEST2 \'TEST3');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -71,7 +72,7 @@ test('Partially quoted word', t => {
 test('Partially double quoted word', t => {
 	const result = bashParser('echo TEST3" TEST4 "TEST5');
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',

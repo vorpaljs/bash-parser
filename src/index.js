@@ -1,51 +1,36 @@
 'use strict';
-// const walk = require('tree-walk');
-// const assert = require('assert');
-// const traverse = require('bash-ast-traverser');
-const Parser = require('../grammar.js').Parser;
-const posixShellLexer = require('./posix-shell-lexer');
-const astBuilder = require('./ast-builder');
-/* eslint-disable camelcase */
 
-/*
-	## options
+const shellLexer = require('./shell-lexer');
+const utils = require('./utils');
 
-	* insertLOC: Boolean = false - whether to track line and column information for tokens
-*/
+// preload all modes to have them browserified
+const modes = {
+	bash: require('./modes/bash'),
+	posix: require('./modes/posix')
+};
+
+function loadPlugin(name) {
+	const modePlugin = modes[name];
+
+	if (modePlugin.inherits) {
+		return modePlugin.init(loadPlugin(modePlugin.inherits), utils);
+	}
+	return modePlugin.init(null, utils);
+}
+
 module.exports = function parse(sourceCode, options) {
 	try {
 		options = options || {};
+		options.mode = options.mode || 'posix';
+
+		const mode = loadPlugin(options.mode);
+		const Parser = mode.grammar.Parser;
+		const astBuilder = mode.astBuilder;
 		const parser = new Parser();
-		parser.lexer = posixShellLexer(options);
+		parser.lexer = shellLexer(mode, options);
 		parser.yy = astBuilder(options);
+
 		const ast = parser.parse(sourceCode);
-/*
-		walk.preorder(ast, (value, key, parent) => {
-			if (value !== null && typeof value === 'object') {
-
-				console.log(Object.getPrototypeOf(value));
-			}
-		});
-
-		traverse(ast, {
-			simple_command(node) {
-				if (node.name.text !== '') {
-					const expectAliasCheck =
-						node.name.maybeSimpleCommandName ||
-						node.name.text.indexOf('$') !== -1 ||
-						node.name.text[0].match(/[0-9]/);
-
-					assert.ok(expectAliasCheck, `expected simple_command name ${JSON.stringify(node, null, 2)}`);
-				}
-				delete node.name.maybeSimpleCommandName;
-			},
-
-			defaultMethod(node) {
-				assert.ok(!node.maybeSimpleCommandName, `simple_command name not expected ${JSON.stringify(node, null, 2)}`);
-				delete node.maybeSimpleCommandName;
-			}
-		});
-*/
 		return ast;
 	} catch (err) {
 		if (err instanceof SyntaxError) {

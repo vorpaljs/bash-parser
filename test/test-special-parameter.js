@@ -1,13 +1,14 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const logResults = require('./_utils').logResults;
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('positional list paramter', t => {
 	const result = bashParser('echoword=$@');
 	// console.log(JSON.stringify(result, null, 5))
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -19,8 +20,10 @@ test('positional list paramter', t => {
 					type: 'parameter_expansion',
 					parameter: '@',
 					kind: 'positional-list',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -29,7 +32,7 @@ test('positional list paramter', t => {
 
 test('positional string paramter', t => {
 	const result = bashParser('echoword=$*');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -41,8 +44,10 @@ test('positional string paramter', t => {
 					type: 'parameter_expansion',
 					parameter: '*',
 					kind: 'positional-string',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -51,7 +56,7 @@ test('positional string paramter', t => {
 
 test('positional count paramter', t => {
 	const result = bashParser('echoword=$#');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -63,8 +68,10 @@ test('positional count paramter', t => {
 					type: 'parameter_expansion',
 					parameter: '#',
 					kind: 'positional-count',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -73,7 +80,7 @@ test('positional count paramter', t => {
 
 test('last exit status', t => {
 	const result = bashParser('echoword=$?');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -85,8 +92,10 @@ test('last exit status', t => {
 					type: 'parameter_expansion',
 					parameter: '?',
 					kind: 'last-exit-status',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -95,7 +104,7 @@ test('last exit status', t => {
 
 test('current option flags', t => {
 	const result = bashParser('echoword=$-');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -107,8 +116,10 @@ test('current option flags', t => {
 					type: 'parameter_expansion',
 					parameter: '-',
 					kind: 'current-option-flags',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -117,7 +128,7 @@ test('current option flags', t => {
 
 test('shell process id', t => {
 	const result = bashParser('echoword=$$');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -129,8 +140,10 @@ test('shell process id', t => {
 					type: 'parameter_expansion',
 					parameter: '$',
 					kind: 'shell-process-id',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -139,7 +152,7 @@ test('shell process id', t => {
 
 test('last background pid', t => {
 	const result = bashParser('echoword=$!');
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -151,8 +164,10 @@ test('last background pid', t => {
 					type: 'parameter_expansion',
 					parameter: '!',
 					kind: 'last-background-pid',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]
@@ -162,7 +177,7 @@ test('last background pid', t => {
 test('shell script name', t => {
 	const result = bashParser('echoword=$0');
 	// logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [{
 			type: 'simple_command',
@@ -174,8 +189,10 @@ test('shell script name', t => {
 					type: 'parameter_expansion',
 					parameter: '0',
 					kind: 'shell-script-name',
-					start: 9,
-					end: 11
+					loc: {
+						start: 9,
+						end: 10
+					}
 				}]
 			}]
 		}]

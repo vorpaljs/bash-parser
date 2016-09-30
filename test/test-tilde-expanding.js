@@ -1,7 +1,8 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 /* eslint-disable camelcase */
 test('resolve tilde to current user home', t => {
@@ -11,7 +12,7 @@ test('resolve tilde to current user home', t => {
 		}
 	});
 	// utils.logResults(result);
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -33,7 +34,7 @@ test('resolve one tilde only in normal WORD tokens', t => {
 		}
 	});
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{
@@ -55,7 +56,7 @@ test('resolve multiple tilde in assignments', t => {
 		}
 	});
 	// utils.logResults(result.commands[0].prefix[0]);
-	t.deepEqual(result.commands[0].prefix[0], {
+	utils.checkResults(t, result.commands[0].prefix[0], {
 		type: 'assignment_word',
 		text: 'a=/home/current/subdir:/home/current/othersubdir/ciao'
 	});
@@ -68,7 +69,7 @@ test('resolve tilde to any user home', t => {
 		}
 	});
 
-	t.deepEqual(result, {
+	utils.checkResults(t, result, {
 		type: 'complete_command',
 		commands: [
 			{

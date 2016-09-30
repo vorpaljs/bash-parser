@@ -1,11 +1,12 @@
 'use strict';
+
 const test = require('ava');
 const bashParser = require('../src');
-// const utils = require('./_utils');
+const utils = require('./_utils');
 
 test('remove double quote from string', t => {
 	const result = bashParser('"echo"');
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'echo'
 	});
@@ -13,7 +14,7 @@ test('remove double quote from string', t => {
 
 test('remove single quotes from string', t => {
 	const result = bashParser('\'echo\'');
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'echo'
 	});
@@ -21,7 +22,7 @@ test('remove single quotes from string', t => {
 
 test('remove unnecessary slashes from string', t => {
 	const result = bashParser('ec\\%ho');
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'ec%ho'
 	});
@@ -30,7 +31,7 @@ test('remove unnecessary slashes from string', t => {
 test('not remove quotes from middle of string if escaped', t => {
 	const result = bashParser('ec\\\'\\"ho');
 
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'ec\'"ho'
 	});
@@ -39,7 +40,7 @@ test('not remove quotes from middle of string if escaped', t => {
 test('transform escaped characters', t => {
 	const result = bashParser('"ec\\t\\nho"');
 
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'ec\t\nho'
 	});
@@ -48,7 +49,7 @@ test('transform escaped characters', t => {
 test('not remove special characters', t => {
 	const result = bashParser('"ec\tho"');
 
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'ec\tho'
 	});
@@ -57,7 +58,7 @@ test('not remove special characters', t => {
 test('remove quotes from middle of string', t => {
 	const result = bashParser('ec\'h\'o');
 	// utils.logResults(result)
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		type: 'word',
 		text: 'echo'
 	});
@@ -66,7 +67,7 @@ test('remove quotes from middle of string', t => {
 test('remove quotes on assignment', t => {
 	const result = bashParser('echo="ciao mondo"');
 
-	t.deepEqual(result.commands[0].prefix[0], {
+	utils.checkResults(t, result.commands[0].prefix[0], {
 		text: 'echo=ciao mondo',
 		type: 'assignment_word'
 	});
@@ -75,7 +76,7 @@ test('remove quotes on assignment', t => {
 test('remove quotes followed by single quotes', t => {
 	const result = bashParser('echo"ciao"\'mondo\'');
 
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		text: 'echociaomondo',
 		type: 'word'
 	});
@@ -84,7 +85,7 @@ test('remove quotes followed by single quotes', t => {
 test('remove single quotes followed by quotes', t => {
 	const result = bashParser('echo\'ciao\'"mondo"');
 
-	t.deepEqual(result.commands[0].name, {
+	utils.checkResults(t, result.commands[0].name, {
 		text: 'echociaomondo',
 		type: 'word'
 	});

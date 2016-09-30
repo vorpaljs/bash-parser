@@ -13,7 +13,7 @@ test('resolve tilde to current user home', t => {
 	});
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -35,7 +35,7 @@ test('resolve one tilde only in normal WORD tokens', t => {
 	});
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -70,7 +70,7 @@ test('resolve tilde to any user home', t => {
 	});
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',

@@ -25,7 +25,7 @@ test('subshell can include loc', t => {
 	const result = bashParser('(echo)', {insertLOC: true});
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'subshell',
@@ -55,7 +55,7 @@ test('double command with only name', t => {
 	const result = bashParser('echo; ciao;', {insertLOC: true});
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		loc: mkloc(1, 1, 1, 10, 0, 9),
 		commands: [
 			{
@@ -242,7 +242,7 @@ test('loc in multi line commands', t => {
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
 		loc: mkloc(1, 1, 2, 2, 0, 7),
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo', loc: mkloc(1, 1, 1, 4, 0, 3)},

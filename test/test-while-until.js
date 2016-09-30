@@ -10,7 +10,7 @@ test('parse while', t => {
 
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'while',
 				clause: {
@@ -38,7 +38,7 @@ test('parse until', t => {
  //	console.log(inspect(result, {depth:null}))
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'until',
 				clause: {

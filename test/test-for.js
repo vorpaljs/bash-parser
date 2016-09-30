@@ -10,7 +10,7 @@ test('parse for', t => {
 	// utils.logResults(result)
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'for',
 				name: {type: 'name', text: 'x'},
@@ -44,7 +44,7 @@ test('parse for with default sequence', t => {
 	// utils.logResults(result)
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'for',
 				name: {type: 'name', text: 'x'},
@@ -77,7 +77,7 @@ test('parse for with default sequence - on one line', t => {
 	// utils.logResults(result)
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'for',
 				name: {type: 'name', text: 'x'},

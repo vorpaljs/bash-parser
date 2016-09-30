@@ -9,7 +9,7 @@ test('Redirect should be allowed immediately following argument', t => {
 	const result = bashParser('echo foo>file.txt');
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -28,7 +28,7 @@ test('Redirect should be allowed immediately following argument', t => {
 test('Equal sign should be allowed in arguments', t => {
 	const result = bashParser('echo foo=bar');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},

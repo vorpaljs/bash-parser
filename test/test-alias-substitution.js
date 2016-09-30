@@ -10,7 +10,7 @@ test('alias with no argument', t => {
 		resolveAlias: name => name === 'thisIsAlias' ? 'test-value' : null
 	});
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'test-value'},
@@ -35,7 +35,7 @@ test('alias with arguments', t => {
 		resolveAlias: name => name === 'thisIsAlias' ? 'test-value earth' : undefined
 	});
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'test-value'},
@@ -52,7 +52,7 @@ test('alias with prefixes', t => {
 		resolveAlias: name => name === 'thisIsAlias' ? 'a=42 test-value' : undefined
 	});
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			prefix: [{type: 'assignment_word', text: 'a=42'}],
 			type: 'simple_command',
@@ -76,7 +76,7 @@ test('recursive alias with prefixes', t => {
 	// utils.logResults(result)
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			prefix: [{type: 'assignment_word', text: 'a=42'}],
 			type: 'simple_command',
@@ -106,7 +106,7 @@ test('guarded against infinite loops', t => {
 	// utils.logResults(result)
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'thisIsAlias'},

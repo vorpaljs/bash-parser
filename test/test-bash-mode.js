@@ -13,7 +13,7 @@ test('alias on reserved word', t => {
 		}
 	});
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},

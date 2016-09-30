@@ -29,7 +29,7 @@ test('positional parameter with word following', t => {
 test('positional parameter in braces', t => {
 	const result = bashParser('echoword=${11}test');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -56,7 +56,7 @@ test('positional parameter without braces', t => {
 	const result = bashParser('echoword=$1');
 	// console.log(JSON.stringify(result, null, 5))
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -81,7 +81,7 @@ test('positional parameter without braces allow one digit only', t => {
 	const result = bashParser('echoword=$11');
 	// console.log(JSON.stringify(result, null, 5))
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},

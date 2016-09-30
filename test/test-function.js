@@ -11,7 +11,7 @@ test('parse function declaration multiple lines', t => {
 	// utils.logResults(result);
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'function',
 				name: {type: 'name', text: 'foo'},
@@ -33,7 +33,7 @@ test('parse function declaration', t => {
 
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'function',
 				name: {type: 'name', text: 'foo'},

@@ -10,7 +10,7 @@ test('parse if', t => {
 	// console.log(inspect(result, {depth:null}))
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'if',
 				clause: {
@@ -38,7 +38,7 @@ test('parse if else', t => {
 	// utils.logResults(result);
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'if',
 				clause: {
@@ -74,7 +74,7 @@ test('parse if else multiline', t => {
 	// console.log(inspect(result, {depth:null}))
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'if',
 				clause: {
@@ -109,7 +109,7 @@ test('parse if elif else', t => {
 	const result = bashParser('if true; then echo 1; elif false; then echo 3; else echo 2; fi');
 	// utils.logResults(result);
 	const expected = {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'if',
 			clause: {

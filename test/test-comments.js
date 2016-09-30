@@ -11,7 +11,7 @@ test('loc take into account line continuations', t => {
 	// utils.logResults(result);
 
 	const expected = {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {

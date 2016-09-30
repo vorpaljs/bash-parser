@@ -10,7 +10,7 @@ test('empty line after line continuation', t => {
 	const result = bashParser(cmd);
 	// utils.logResults(result);
 	const expected = {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -42,7 +42,7 @@ test('loc take into account line continuations', t => {
 	const result = bashParser(cmd, {insertLOC: true});
 	// utils.logResults(result);
 	const expected = {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',

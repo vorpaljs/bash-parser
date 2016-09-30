@@ -9,7 +9,7 @@ test('positional list paramter', t => {
 	const result = bashParser('echoword=$@');
 	// console.log(JSON.stringify(result, null, 5))
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -33,7 +33,7 @@ test('positional list paramter', t => {
 test('positional string paramter', t => {
 	const result = bashParser('echoword=$*');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -57,7 +57,7 @@ test('positional string paramter', t => {
 test('positional count paramter', t => {
 	const result = bashParser('echoword=$#');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -81,7 +81,7 @@ test('positional count paramter', t => {
 test('last exit status', t => {
 	const result = bashParser('echoword=$?');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -105,7 +105,7 @@ test('last exit status', t => {
 test('current option flags', t => {
 	const result = bashParser('echoword=$-');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -129,7 +129,7 @@ test('current option flags', t => {
 test('shell process id', t => {
 	const result = bashParser('echoword=$$');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -153,7 +153,7 @@ test('shell process id', t => {
 test('last background pid', t => {
 	const result = bashParser('echoword=$!');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},
@@ -178,7 +178,7 @@ test('shell script name', t => {
 	const result = bashParser('echoword=$0');
 	// logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},

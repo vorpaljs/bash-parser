@@ -48,7 +48,7 @@ module.exports = options => {
 	};
 
 	builder.list = logicalExpression => {
-		const node = {type: 'complete_command', commands: [logicalExpression]};
+		const node = {type: 'Script', commands: [logicalExpression]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, logicalExpression.loc), logicalExpression.loc);
 		}

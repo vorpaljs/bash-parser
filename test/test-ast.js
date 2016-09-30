@@ -9,7 +9,7 @@ test('command with one argument', t => {
 	const result = bashParser('echo world');
 	// utils.logResults(result)
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -21,7 +21,7 @@ test('command with one argument', t => {
 test('command with multiple new lines', t => {
 	const result = bashParser('\n\n\necho world');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -42,7 +42,7 @@ test('command with multiple lines continuation', t => {
 test('command with pre-assignment', t => {
 	const result = bashParser('TEST=1 run');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'run'},
@@ -55,7 +55,7 @@ test('commands with AND', t => {
 	const result = bashParser('run && stop');
 	// utils.logResults(result)
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'and_or',
 			op: 'and',
@@ -69,7 +69,7 @@ test('commands with AND \\n', t => {
 	const result = bashParser('run && \n stop');
 	// console.log(inspect(result, {depth: null}))
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'and_or',
 			op: 'and',
@@ -82,7 +82,7 @@ test('commands with AND \\n', t => {
 test('commands with OR', t => {
 	const result = bashParser('run || cry');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'and_or',
 			op: 'or',
@@ -96,7 +96,7 @@ test('pipelines', t => {
 	const result = bashParser('run | cry');
 	// console.log(inspect(result, {depth: null}));
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'pipeline',
 			commands: [
@@ -110,7 +110,7 @@ test('pipelines', t => {
 test('bang pipelines', t => {
 	const result = bashParser('! run | cry');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'pipeline',
 			bang: true,
@@ -125,7 +125,7 @@ test('bang pipelines', t => {
 test('no pre-assignment on suffix', t => {
 	const result = bashParser('echo TEST=1');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -138,7 +138,7 @@ test('command with multiple prefixes', t => {
 	const result = bashParser('TEST1=1 TEST2=2 echo world');
 	// utils.logResults(result)
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -154,7 +154,7 @@ test('command with multiple prefixes', t => {
 test('multi line commands', t => {
 	const result = bashParser('echo; \nls;\n');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'}
@@ -168,7 +168,7 @@ test('multi line commands', t => {
 test('command with redirection to file', t => {
 	const result = bashParser('ls > file.txt');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'ls'},
@@ -185,7 +185,7 @@ test('parse multiple suffix', t => {
 	const result = bashParser('command foo --lol');
 	utils.checkResults(t,
 		result, {
-			type: 'complete_command',
+			type: 'Script',
 			commands: [{
 				type: 'simple_command',
 				name: {type: 'word', text: 'command'},
@@ -199,7 +199,7 @@ test('command with stderr redirection to file', t => {
 	const result = bashParser('ls 2> file.txt');
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'ls'},
@@ -217,7 +217,7 @@ test('parse subshell', t => {
 	const result = bashParser('( ls )');
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'subshell',
 			list: {

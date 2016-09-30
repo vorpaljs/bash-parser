@@ -10,7 +10,7 @@ test('2', t => {
 	const result = bashParser('echo () { printf %s\\n "$*" ; }');
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'function',
@@ -58,7 +58,7 @@ test('2', t => {
 test('3', t => {
 	const result = bashParser('IFS= read -r var');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'read'},
@@ -73,7 +73,7 @@ test('4', t => {
 	// console.log(inspect(result, {depth: null}));
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'pipeline',
 			commands: [{
@@ -97,7 +97,7 @@ eval "dest=foo"`
 );
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: ''},

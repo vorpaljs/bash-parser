@@ -9,7 +9,7 @@ test('parse case', t => {
 	const result = bashParser('case foo in * ) echo bar;; esac');
 	// utils.logResults(result);
 	const expected = {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'case',
 			clause: {
@@ -40,7 +40,7 @@ test.skip('parse case with compound list', t => {
 	const result = bashParser('case foo in * ) echo foo;echo bar;; esac');
 	// utils.logResults(result);
 	const expected = {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'and_or',
 			left: {

@@ -9,7 +9,7 @@ test('single quoted tokens are not parsed as reserved words', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -33,7 +33,7 @@ test('double quoted tokens are not parsed as reserved words', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -57,7 +57,7 @@ test('partially double quoted tokens are not parsed as reserved words', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -81,7 +81,7 @@ test('partially single quoted tokens are not parsed as reserved words', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',
@@ -105,7 +105,7 @@ test('tokens in invalid positions are not parsed as reserved words', t => {
 	// utils.logResults(result);
 
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [
 			{
 				type: 'simple_command',

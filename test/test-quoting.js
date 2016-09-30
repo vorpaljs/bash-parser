@@ -23,7 +23,7 @@ test('quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \'TEST2"');
 	// utils.logResults(result)
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -36,7 +36,7 @@ test('escaped double quotes within double quotes', t => {
 	const result = bashParser('echo "TEST1 \\"TEST2"');
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -48,7 +48,7 @@ test('escaped double quotes within double quotes', t => {
 test('double quotes within single quotes', t => {
 	const result = bashParser('echo \'TEST1 "TEST2\'');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -60,7 +60,7 @@ test('double quotes within single quotes', t => {
 test('Partially quoted word', t => {
 	const result = bashParser('echo TEST1\' TEST2 \'TEST3');
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},
@@ -73,7 +73,7 @@ test('Partially double quoted word', t => {
 	const result = bashParser('echo TEST3" TEST4 "TEST5');
 	// utils.logResults(result);
 	utils.checkResults(t, result, {
-		type: 'complete_command',
+		type: 'Script',
 		commands: [{
 			type: 'simple_command',
 			name: {type: 'word', text: 'echo'},

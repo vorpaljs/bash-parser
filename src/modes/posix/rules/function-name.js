@@ -27,7 +27,7 @@ module.exports = function functionName(options, utils) {
 			iterable.ahead(1).is('OPEN_PAREN') &&
 			iterable.ahead(2).is('CLOSE_PAREN')
 		) {
-			tk = changeTokenType(tk, 'Name', tk.value);
+			tk = changeTokenType(tk, 'NAME', tk.value);
 		}
 
 		return tk;

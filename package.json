@@ -7,6 +7,7 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
+    "doc": "doctoc",
     "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "build": "mgb ./src/modes posix && mgb ./src/modes bash",
     "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "ava": "^0.15.2",
     "coveralls": "^2.11.11",
+    "doctoc": "^1.2.0",
     "json5": "^0.5.0",
     "mode-grammar-builder": "file:packages/mode-grammar-builder",
     "nyc": "^7.0.0",

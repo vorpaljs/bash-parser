@@ -1,4 +1,4 @@
-# AST
+# Bash parser AST types
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -8,7 +8,7 @@
 - [Script](#Script)
 - [Pipeline](#Pipeline)
 - [LogicalExpression](#LogicalExpression)
-- [SimpleCommand](#SimpleCommand)
+- [Command](#Command)
 - [Function](#Function)
 - [Name](#Name)
 - [CompoundList](#CompoundList)
@@ -23,29 +23,44 @@
 - [ArithmeticExpansion](#ArithmeticExpansion)
 - [CommandExpansion](#CommandExpansion)
 - [ParameterExpansion](#ParameterExpansion)
-- [Redirect
-					type: 'Word'](#Redirect
-					type: 'Word')
+- [Redirect](#Redirect)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
 
+### Node Type
+
 Each AST node has a `type` property that define the type of the node.
 
-If the source is parsed specifing the `insertLOC` option, each node contins a `loc` property that contains the starting and ending lines and columns of the node:
+### Token Codepoints
+
+If the source is parsed specifing the `insertLOC` option, each node contins a `loc` property that contains the starting and ending lines and columns of the node, and the start and end index of the character in the source string:
 
 ```js
 {
-	endLine: Number,
-	endColumn: Number
+	type: 'WORD',
+	value: 'ls',
+	loc: {
+		start: {
+			row: Number,
+			col: Number,
+			char: 42
+		},
+		end: {
+			row: Number,
+			col: Number,
+			char: 43
+		}
+	}
 }
 ```
 
+## Node types
 
-# Script
+### Script
 
-> `Script` is the root node of the AST.
+> `Script` is the root node of the AST. It simply represent a list of commands that form the body of the script.
 
 
 ```js
@@ -53,18 +68,18 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 	type: 'Script',
 	commands: Array<LogicalExpression |
 					Pipeline |
-					SimpleCommand |
+					Command |
 					Function |
 					Subshell |
-					for |
+					For |
 					Case |
-					if_clause |
-					While_clause |
-					Until_clause>
+					if |
+					While |
+					Until>
 }
 ```
 
-# Pipeline
+### Pipeline
 
 > `Pipeline` represents a list of commands concatenated with pipes.
 
@@ -73,19 +88,18 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 ```js
 {
 	type: 'Pipeline',
-	commands: Array<SimpleCommand |
+	commands: Array<Command |
 					Function |
-					brace_group |
 					Subshell |
-					for |
+					For |
 					Case |
-					If_clause |
-					While_clause |
-					Until_clause>
+					If |
+					While |
+					Until>
 }
 ```
 
-# LogicalExpression
+### LogicalExpression
 
 > Represents two commands (left and right) concateneted in a `and` (&&) or `or` (||) operation.
 
@@ -97,58 +111,54 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 	op: string,
 	left: LogicalExpression |
 		  Pipeline |
-		  SimpleCommand |
+		  Command |
 		  Function |
-		  brace_group |
 		  Subshell |
-		  for |
+		  For |
 		  Case |
-		  If_clause |
-		  While_clause |
-		  Until_clause,
+		  If |
+		  While |
+		  Until,
 	right: LogicalExpression |
 		   Pipeline |
-		   SimpleCommand |
+		   Command |
 		   Function |
-		   brace_group |
 		   Subshell |
-		   for |
+		   For |
 		   Case |
-		   If_clause |
-		   While_clause |
-		   Until_clause
+		   If |
+		   While |
+		   Until
 }
 ```
 
-# SimpleCommand
+### Command
 > Represents a builtin or external command to execute. It could optionally have a list of arguments, stream redirection operation and environment variable assignments.
 
 ```js
 {
-	type: 'SimpleCommand',
-	Name: Ford,
-	prefix: Array<AssignmentWord | Redirect
-					type: 'Word'>,
-	suffix: Array<Word | Redirect
-					type: 'Word'>
+	type: 'Command',
+	name: string,
+	prefix: Array<AssignmentWord | Redirect>,
+	suffix: Array<Word | Redirect>
 }
 ```
 
-# Function
+### Function
 
 > `Function` represents the definition of a Function.
 
-> It is formed by the Name of the Function  itself and a list of all command that forms the body of the Function.
+> It is formed by the name of the Function  itself and a list of all command that forms the body of the Function.
 
 ```js
 {
 	type: 'Function',
-	Name: Name,
+	name: Name,
 	body: CompoundList
 }
 ```
 
-# Name
+### Name
 
 > Represents the Name of a Function or a `for` variable.
 
@@ -157,32 +167,31 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 ```js
 {
 	type: 'Name',
-	text: String
+	text: string
 }
 ```
 
-# CompoundList
+### CompoundList
 
-> `CompoundList` represent a group of commands that form the body of `for`, `Until` `While`, `if`, `else`, `Case` items and `Function` command.
+> `CompoundList` represent a group of commands that form the body of `for`, `until` `while`, `if`, `else`, `case` items and `function` command.
 
 ```js
 {
 	type: 'CompoundList',
 	commands: Array<LogicalExpression |
 					Pipeline |
-					SimpleCommand |
+					Command |
 					Function |
-					brace_group |
 					Subshell |
-					for |
+					For |
 					Case |
-					If_clause |
-					While_clause |
-					Until_clause>
+					If |
+					While |
+					Until>
 }
 ```
 
-# Subshell
+### Subshell
 
 > `Subshell` node represents a Subshell command. It consist of a group of one or more commands to execute in a separated shell environment.
 
@@ -193,20 +202,20 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# for
+### for
 
 > A for statement. The for loop shall execute a sequence of commands for each member in a list of items.
 
 ```js
  {
 	type: 'for',
-	Name: Name,
-	Wordlist: Array<Word>,
+	name: Name,
+	wordlist: Array<Word>,
 	do: CompoundList
 }
 ```
 
-# Case
+### Case
 
 > A Case statement. The conditional construct Case shall execute the compound-list corresponding to the first one of several patterns that is matched by the `clause` Word.
 
@@ -214,11 +223,11 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 {
 	type: 'Case',
 	clause: Word,
-	Cases: Array<CaseItem>
+	cases: Array<CaseItem>
 }
 ```
 
-# CaseItem
+### CaseItem
 
 > Represents a single pattern item in a `Cases` list of a Case. It's formed by the pattern to match against and the corresponding set of statements to execute if it is matched.
 
@@ -230,7 +239,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# If
+### If
 
 > If statement. The if command shall execute a compound-list and use its exit status to determine whether to execute the `then` compound-list or the optional `else` one.
 
@@ -243,7 +252,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# While
+### While
 
 > While statement. The While loop shall continuously execute one compound-list as long as another compound-list has a zero exit status.
 
@@ -255,7 +264,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# Until
+### Until
 
 > Until statement. The Until loop shall continuously execute one compound-list as long as another compound-list has a non-zero exit status.
 
@@ -267,7 +276,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# Word
+### Word
 
 > A `Word` node could appear various part of the AST. It's formed by a series of characters, and is subjected to `tilde expansion`, `parameter expansion`, `command substitution`, `arithmetic expansion`, `pathName expansion`, `field splitting` and `quote removal`.
 
@@ -281,7 +290,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# AssignmentWord
+### AssignmentWord
 
 > A special kind of Word that represents assignment of a value to an environment variable.
 
@@ -295,79 +304,77 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 }
 ```
 
-# ArithmeticExpansion
+### ArithmeticExpansion
 
 > Represent an arithmetic expansion operation to perform in the Word.
 
 > The parsing of the arithmetic expression is done using [Babel parser](https://github.com/babel/babylon). See there for the `arithmeticAST` node specification.
 
-> The `start` property contains the index of the character in the Word text where the substitution starts. The end property contains the index of the character in the Word following the last one of the substitution. These two values are choosen to simplify the replacement in the string using the `slice` String method.
-
-> `Word.text.slice(0, exp.start) + value +  Word.text.slice(exp.end)`
+> The `loc.start` property contains the index of the character in the Word text where the substitution starts. The `loc.end` property contains the index where it the ends.
 
 ```js
 {
 	type: 'ArithmeticExpansion',
 	expression: String,
 	arithmeticAST: Object,
-	start:Number,
-	end:Number
+	loc: {
+		start:Number,
+		end:Number
+	}
 }
 ```
 
-# CommandExpansion
-
+### CommandExpansion
 
 > Represent a command substitution operation to perform on the Word.
 
 > The parsing of the command is done recursively using `bash-parser` itself.
 
-> The `start` property contains the index of the character in the Word text where the substitution starts. The end property contains the index of the character in the Word following the last one of the substitution. These two values are choosen to simplIfy the replacement in the string using the `slice` String method.
-
-> `Word.text.slice(0, exp.start) + value +  Word.text.slice(exp.end)`
+> The `loc.start` property contains the index of the character in the Word text where the substitution starts. The `loc.end` property contains the index where it the ends.
 
 ```js
 {
 	type: 'CommandExpansion',
-	command: String,
+	command: string,
 	commandAST: Object,
-	start:Number,
-	end:Number
+	loc: {
+		start:Number,
+		end:Number
+	}
 }
 ```
 
-# ParameterExpansion
+### ParameterExpansion
 
 > Represent a parameter expansion operation to perform on the Word.
 
-> The `op` and `Word` properties represents, in Case of special parameters, respectively the operator used and the right Word of the special parameter.
+> The `op` and `Word` properties represents, in the case of special parameters, respectively the operator used and the right Word of the special parameter.
 
-> The `start` property contains the index of the character in the Word text where the substitution starts. The end property contains the index of the character in the Word following the last one of the substitution. These two values are choosen to simplify the replacement in the string using the `slice` String method.
-
-> `Word.text.slice(0, exp.start) + value +  Word.text.slice(exp.end)`
+> The `loc.start` property contains the index of the character in the Word text where the substitution starts. The `loc.end` property contains the index where it the ends.
 
 ```js
 {
 	type: 'ParameterExpansion',
-	parameter: String,
-	Word: Word,
-	op: String,
-	start:Number,
-	end:Number
+	parameter: string,
+	kind: ?string,
+	word: ?string,
+	op: ?string,
+	loc: {
+		start:Number,
+		end:Number
+	}
 }
 ```
 
 # Redirect
-					type: 'Word'
 
 > Represents the redirection of input or output stream of a command to or from a filename or another stream.
 
 ```js
 {
-	type: 'Redirect
-					type: 'Word'',
-	op: String,
-	file: Word,
+	type: 'Redirect',
+	op: string,
+	file: word,
 	numberIo: Number
 }
 ```

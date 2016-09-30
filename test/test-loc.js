@@ -28,7 +28,7 @@ test('subshell can include loc', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'subshell',
+				type: 'Subshell',
 				list: {
 					type: 'CompoundList',
 					commands: [

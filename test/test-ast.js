@@ -219,7 +219,7 @@ test('parse subshell', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'subshell',
+			type: 'Subshell',
 			list: {
 				type: 'CompoundList',
 				commands: [{type: 'SimpleCommand', name: {type: 'word', text: 'ls'}}]

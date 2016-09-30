@@ -77,7 +77,7 @@ module.exports = options => {
 	};
 
 	builder.subshell = (list, locStart, locEnd) => {
-		const node = {type: 'subshell', list};
+		const node = {type: 'Subshell', list};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, locStart), locEnd);
 		}

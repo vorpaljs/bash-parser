@@ -11,8 +11,7 @@ module.exports = {
 				},
 				prefix: [
 					{
-						type: "Redirect
-					type: 'Word'",
+						type: "Redirect",
 						op: {
 							text: ">&",
 							type: "greatand"

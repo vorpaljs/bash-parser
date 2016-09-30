@@ -35,8 +35,7 @@ module.exports = {
 				},
 				suffix: [
 					{
-						type: "Redirect
-					type: 'Word'",
+						type: "Redirect",
 						op: {
 							text: ">",
 							type: "great",

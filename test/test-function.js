@@ -16,7 +16,7 @@ test('parse function declaration multiple lines', t => {
 				type: 'function',
 				name: {type: 'Name', text: 'foo'},
 				body: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'command'},
@@ -38,7 +38,7 @@ test('parse function declaration', t => {
 				type: 'function',
 				name: {type: 'Name', text: 'foo'},
 				body: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'command'},

@@ -81,7 +81,7 @@ done
 			}
 		],
 		do: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',
@@ -200,7 +200,7 @@ done
 			}
 		},
 		do: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',

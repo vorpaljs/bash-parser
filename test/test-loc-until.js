@@ -11,7 +11,7 @@ test('loc in until statement', t => {
 	const expected = {
 		type: 'until',
 		clause: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'LogicalExpression',
@@ -106,7 +106,7 @@ test('loc in until statement', t => {
 			}
 		},
 		do: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',

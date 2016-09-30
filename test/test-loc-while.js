@@ -11,7 +11,7 @@ test('loc in while statement', t => {
 	const expected = {
 		type: 'while',
 		clause: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'LogicalExpression',
@@ -106,7 +106,7 @@ test('loc in while statement', t => {
 			}
 		},
 		do: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',

@@ -63,7 +63,7 @@ module.exports = options => {
 	};
 
 	builder.term = logicalExpression => {
-		const node = {type: 'compound_list', commands: [logicalExpression]};
+		const node = {type: 'CompoundList', commands: [logicalExpression]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, logicalExpression.loc), logicalExpression.loc);
 		}

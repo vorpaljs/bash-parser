@@ -221,7 +221,7 @@ test('parse subshell', t => {
 		commands: [{
 			type: 'subshell',
 			list: {
-				type: 'compound_list',
+				type: 'CompoundList',
 				commands: [{type: 'SimpleCommand', name: {type: 'word', text: 'ls'}}]
 			}
 		}]

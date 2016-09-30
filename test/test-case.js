@@ -23,7 +23,7 @@ test('parse case', t => {
 					text: '*'
 				}],
 				body: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -56,7 +56,7 @@ test.skip('parse case with compound list', t => {
 							text: '*'
 						}],
 						body: {
-							type: 'compound_list',
+							type: 'CompoundList',
 							commands: [{
 								type: 'LogicalExpression',
 								left: {

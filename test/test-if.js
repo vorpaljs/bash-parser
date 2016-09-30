@@ -14,14 +14,14 @@ test('parse if', t => {
 			commands: [{
 				type: 'if',
 				clause: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'true'}
 					}]
 				},
 				then: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -42,14 +42,14 @@ test('parse if else', t => {
 			commands: [{
 				type: 'if',
 				clause: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'true'}
 					}]
 				},
 				then: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -57,7 +57,7 @@ test('parse if else', t => {
 					}]
 				},
 				else: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -78,14 +78,14 @@ test('parse if else multiline', t => {
 			commands: [{
 				type: 'if',
 				clause: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'true'}
 					}]
 				},
 				then: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -93,7 +93,7 @@ test('parse if else multiline', t => {
 					}]
 				},
 				else: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -113,14 +113,14 @@ test('parse if elif else', t => {
 		commands: [{
 			type: 'if',
 			clause: {
-				type: 'compound_list',
+				type: 'CompoundList',
 				commands: [{
 					type: 'SimpleCommand',
 					name: {type: 'word', text: 'true'}
 				}]
 			},
 			then: {
-				type: 'compound_list',
+				type: 'CompoundList',
 				commands: [{
 					type: 'SimpleCommand',
 					name: {type: 'word', text: 'echo'},
@@ -130,14 +130,14 @@ test('parse if elif else', t => {
 			else: {
 				type: 'if',
 				clause: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'false'}
 					}]
 				},
 				then: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},
@@ -145,7 +145,7 @@ test('parse if elif else', t => {
 					}]
 				},
 				else: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [{
 						type: 'SimpleCommand',
 						name: {type: 'word', text: 'echo'},

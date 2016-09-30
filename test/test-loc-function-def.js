@@ -32,7 +32,7 @@ test('loc in function declaration', t => {
 			}
 		},
 		body: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',

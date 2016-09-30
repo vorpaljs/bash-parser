@@ -21,7 +21,7 @@ fi
 	const expected = 	{
 		type: 'if',
 		clause: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',
@@ -69,7 +69,7 @@ fi
 			}
 		},
 		then: {
-			type: 'compound_list',
+			type: 'CompoundList',
 			commands: [
 				{
 					type: 'SimpleCommand',
@@ -137,7 +137,7 @@ fi
 		else: {
 			type: 'if',
 			clause: {
-				type: 'compound_list',
+				type: 'CompoundList',
 				commands: [
 					{
 						type: 'SimpleCommand',
@@ -185,7 +185,7 @@ fi
 				}
 			},
 			then: {
-				type: 'compound_list',
+				type: 'CompoundList',
 				commands: [
 					{
 						type: 'SimpleCommand',
@@ -251,7 +251,7 @@ fi
 				}
 			},
 			else: {
-				type: 'compound_list',
+				type: 'CompoundList',
 				commands: [
 					{
 						type: 'SimpleCommand',

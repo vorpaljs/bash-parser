@@ -19,7 +19,7 @@ test('2', t => {
 					type: 'Name'
 				},
 				body: {
-					type: 'compound_list',
+					type: 'CompoundList',
 					commands: [
 						{
 							type: 'SimpleCommand',

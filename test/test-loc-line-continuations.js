@@ -13,14 +13,14 @@ test('empty line after line continuation', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {
 					text: 'echo',
 					type: 'Word'
 				}
 			},
 			{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {
 					text: 'echo',
 					type: 'Word'
@@ -45,7 +45,7 @@ test('loc take into account line continuations', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {
 					text: 'echo',
 					type: 'Word',

@@ -12,7 +12,7 @@ test('alias with no argument', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'test-value'},
 			suffix: [{type: 'Word', text: 'world'}]
 		}]
@@ -37,7 +37,7 @@ test('alias with arguments', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'test-value'},
 			suffix: [
 				{type: 'Word', text: 'earth'},
@@ -55,7 +55,7 @@ test('alias with prefixes', t => {
 		type: 'Script',
 		commands: [{
 			prefix: [{type: 'AssignmentWord', text: 'a=42'}],
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'test-value'},
 			suffix: [{type: 'Word', text: 'world'}]
 		}]
@@ -79,7 +79,7 @@ test('recursive alias with prefixes', t => {
 		type: 'Script',
 		commands: [{
 			prefix: [{type: 'AssignmentWord', text: 'a=42'}],
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'echo'},
 			suffix: [
 				{type: 'Word', text: 'other'},
@@ -108,7 +108,7 @@ test('guarded against infinite loops', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'thisIsAlias'},
 			suffix: [
 				{type: 'Word', text: 'ciao'},

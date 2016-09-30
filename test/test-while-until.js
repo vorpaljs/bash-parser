@@ -16,14 +16,14 @@ test('parse while', t => {
 				clause: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				do: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'sleep'},
 						suffix: [{type: 'Word', text: '1'}]
 					}]
@@ -44,14 +44,14 @@ test('parse until', t => {
 				clause: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'true'}
 					}]
 				},
 				do: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'sleep'},
 						suffix: [{type: 'Word', text: '1'}]
 					}]

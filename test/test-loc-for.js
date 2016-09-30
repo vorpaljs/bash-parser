@@ -84,7 +84,7 @@ done
 			type: 'CompoundList',
 			commands: [
 				{
-					type: 'SimpleCommand',
+					type: 'Command',
 					name: {
 						text: 'echo',
 						type: 'Word',
@@ -203,7 +203,7 @@ done
 			type: 'CompoundList',
 			commands: [
 				{
-					type: 'SimpleCommand',
+					type: 'Command',
 					name: {
 						text: 'echo',
 						type: 'Word',

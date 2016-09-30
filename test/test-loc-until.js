@@ -17,7 +17,7 @@ test('loc in until statement', t => {
 					type: 'LogicalExpression',
 					op: 'or',
 					left: {
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {
 							text: 'true',
 							type: 'Word',
@@ -48,7 +48,7 @@ test('loc in until statement', t => {
 						}
 					},
 					right: {
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {
 							text: '1',
 							type: 'Word',
@@ -109,7 +109,7 @@ test('loc in until statement', t => {
 			type: 'CompoundList',
 			commands: [
 				{
-					type: 'SimpleCommand',
+					type: 'Command',
 					name: {
 						text: 'sleep',
 						type: 'Word',

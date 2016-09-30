@@ -11,7 +11,7 @@ test('Redirect should be allowed immediately following argument', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'echo'},
 			suffix: [
 				{type: 'Word', text: 'foo'},
@@ -30,7 +30,7 @@ test('Equal sign should be allowed in arguments', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'echo'},
 			suffix: [{type: 'Word', text: 'foo=bar'}]
 		}]

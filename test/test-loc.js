@@ -33,7 +33,7 @@ test('subshell can include loc', t => {
 					type: 'CompoundList',
 					commands: [
 						{
-							type: 'SimpleCommand',
+							type: 'Command',
 							name: {
 								text: 'echo',
 								type: 'Word',
@@ -59,7 +59,7 @@ test('double command with only name', t => {
 		loc: mkloc(1, 1, 1, 10, 0, 9),
 		commands: [
 			{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {
 					type: 'Word',
 					text: 'echo',
@@ -68,7 +68,7 @@ test('double command with only name', t => {
 				loc: mkloc(1, 1, 1, 4, 0, 3)
 			},
 			{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {
 					type: 'Word',
 					text: 'ciao',
@@ -84,7 +84,7 @@ test('loc are composed by all tokens', t => {
 	const result = bashParser('echo 42', {insertLOC: true});
 	// console.log(JSON.stringify(result, null, 4));
 	utils.checkResults(t, result.commands[0], {
-		type: 'SimpleCommand',
+		type: 'Command',
 		name: {
 			type: 'Word',
 			text: 'echo',
@@ -102,7 +102,7 @@ test('loc are composed by all tokens', t => {
 test('loc works with multiple newlines', t => {
 	const result = bashParser('\n\n\necho 42', {insertLOC: true});
 	utils.checkResults(t, result.commands[0], {
-		type: 'SimpleCommand',
+		type: 'Command',
 		name: {
 			type: 'Word',
 			text: 'echo',
@@ -149,7 +149,7 @@ done
 			type: 'CompoundList',
 			commands: [
 				{
-					type: 'SimpleCommand',
+					type: 'Command',
 					name: {
 						text: 'echo',
 						type: 'Word',
@@ -245,11 +245,11 @@ test('loc in multi line commands', t => {
 		loc: mkloc(1, 1, 2, 2, 0, 7),
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'echo', loc: mkloc(1, 1, 1, 4, 0, 3)},
 			loc: mkloc(1, 1, 1, 4, 0, 3)
 		}, {
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'ls', loc: mkloc(2, 1, 2, 2, 6, 7)},
 			loc: mkloc(2, 1, 2, 2, 6, 7)
 		}]

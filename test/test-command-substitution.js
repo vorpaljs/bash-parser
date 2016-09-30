@@ -95,7 +95,7 @@ test('command ast is recursively parsed', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'echo'},
 			suffix: [{type: 'Word', text: 'ciao'}]
 		}]
@@ -168,7 +168,7 @@ test('resolve double command', t => {
 
 	// utils.logResults(result.commands[0]);
 	utils.checkResults(t, result.commands[0], {
-		type: 'SimpleCommand',
+		type: 'Command',
 		name: {
 			text: 'foo bar bar baz',
 			originalText: '"foo $(other) $(one) baz"',
@@ -199,7 +199,7 @@ test('resolve double command with backticks', t => {
 
 	// utils.logResults(result.commands[0]);
 	utils.checkResults(t, result.commands[0], {
-		type: 'SimpleCommand',
+		type: 'Command',
 		name: {
 			text: 'foo bar bar baz',
 			originalText: '"foo `other` `one` baz"',
@@ -228,7 +228,7 @@ test('last newlines are removed from command output', t => {
 	delete result.commands[0].name.expansion[0].commandAST;
 	// utils.logResults(result)
 	utils.checkResults(t, result.commands[0], {
-		type: 'SimpleCommand',
+		type: 'Command',
 		name: {
 			text: 'foo bar baz',
 			originalText: '"foo $(other) baz"',
@@ -261,7 +261,7 @@ test('field splitting', t => {
 	delete result.commands[0].suffix[2].expansion[0].commandAST;
 
 	utils.checkResults(t, result.commands[0], {
-		type: 'SimpleCommand',
+		type: 'Command',
 		name: {
 			text: 'say',
 			type: 'Word'

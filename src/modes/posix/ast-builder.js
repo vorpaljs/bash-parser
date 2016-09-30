@@ -203,7 +203,7 @@ module.exports = options => {
 	};
 
 	builder.command = function command(prefix, command, suffix) {
-		const node = {type: 'SimpleCommand', name: command};
+		const node = {type: 'Command', name: command};
 
 		if (options.insertLOC) {
 			node.loc = {};

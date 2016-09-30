@@ -25,7 +25,7 @@ test('parse case', t => {
 				body: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'echo'},
 						suffix: [{type: 'Word', text: 'bar'}]
 					}]
@@ -62,7 +62,7 @@ test.skip('parse case with compound list', t => {
 								left: {
 									type: 'Pipeline',
 									commands: [{
-										type: 'SimpleCommand',
+										type: 'Command',
 										name: {text: 'echo'},
 										suffix: [{text: 'bar'}]
 									}]

@@ -17,7 +17,7 @@ test('loc in while statement', t => {
 					type: 'LogicalExpression',
 					op: 'and',
 					left: {
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {
 							text: 'true',
 							type: 'Word',
@@ -48,7 +48,7 @@ test('loc in while statement', t => {
 						}
 					},
 					right: {
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {
 							text: '1',
 							type: 'Word',
@@ -109,7 +109,7 @@ test('loc in while statement', t => {
 			type: 'CompoundList',
 			commands: [
 				{
-					type: 'SimpleCommand',
+					type: 'Command',
 					name: {
 						text: 'sleep',
 						type: 'Word',

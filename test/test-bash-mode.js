@@ -15,7 +15,7 @@ test('alias on reserved word', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'echo'},
 			suffix: [{type: 'Word', text: 'world'}]
 		}]

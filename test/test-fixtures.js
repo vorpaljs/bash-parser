@@ -22,7 +22,7 @@ test('2', t => {
 					type: 'CompoundList',
 					commands: [
 						{
-							type: 'SimpleCommand',
+							type: 'Command',
 							name: {
 								text: 'printf',
 								type: 'Word'
@@ -60,7 +60,7 @@ test('3', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'read'},
 			prefix: [{type: 'AssignmentWord', text: 'IFS='}],
 			suffix: [{type: 'Word', text: '-r'}, {type: 'Word', text: 'var'}]
@@ -77,10 +77,10 @@ test('4', t => {
 		commands: [{
 			type: 'Pipeline',
 			commands: [{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {type: 'Word', text: 'foo'}
 			}, {
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {type: 'Word', text: 'read'},
 				prefix: [{type: 'AssignmentWord', text: 'IFS='}],
 				suffix: [{type: 'Word', text: 'var'}]
@@ -99,15 +99,15 @@ eval "dest=foo"`
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: ''},
 			prefix: [{type: 'AssignmentWord', text: 'foo=hello ; rm -rf /'}]
 		}, {
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: ''},
 			prefix: [{type: 'AssignmentWord', text: 'dest=bar'}]
 		}, {
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: 'eval'},
 			suffix: [{type: 'Word', text: 'dest=foo'}]
 		}]

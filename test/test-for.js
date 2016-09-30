@@ -18,7 +18,7 @@ test('parse for', t => {
 				do: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'echo'},
 						suffix: [{
 							type: 'Word',
@@ -51,7 +51,7 @@ test('parse for with default sequence', t => {
 				do: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'echo'},
 						suffix: [{
 							type: 'Word',
@@ -84,7 +84,7 @@ test('parse for with default sequence - on one line', t => {
 				do: {
 					type: 'CompoundList',
 					commands: [{
-						type: 'SimpleCommand',
+						type: 'Command',
 						name: {type: 'Word', text: 'echo'},
 						suffix: [{
 							type: 'Word',

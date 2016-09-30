@@ -32,7 +32,7 @@ test('positional parameter in braces', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'SimpleCommand',
+				type: 'Command',
 				name: {type: 'Word', text: ''},
 				prefix: [{
 					type: 'AssignmentWord',
@@ -58,7 +58,7 @@ test('positional parameter without braces', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
@@ -83,7 +83,7 @@ test('positional parameter without braces allow one digit only', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'SimpleCommand',
+			type: 'Command',
 			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',

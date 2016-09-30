@@ -12,7 +12,7 @@ test('single quoted tokens are not parsed as reserved words', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {
 					text: 'if',
 					type: 'word'
@@ -36,7 +36,7 @@ test('double quoted tokens are not parsed as reserved words', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {
 					text: 'if',
 					type: 'word'
@@ -60,7 +60,7 @@ test('partially double quoted tokens are not parsed as reserved words', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {
 					text: 'if',
 					type: 'word'
@@ -84,7 +84,7 @@ test('partially single quoted tokens are not parsed as reserved words', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {
 					text: 'if',
 					type: 'word'
@@ -108,7 +108,7 @@ test('tokens in invalid positions are not parsed as reserved words', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {
 					text: 'echo',
 					type: 'word'

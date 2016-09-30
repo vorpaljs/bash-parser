@@ -35,7 +35,7 @@ test('loc in function declaration', t => {
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'simple_command',
+					type: 'SimpleCommand',
 					name: {
 						text: 'command',
 						type: 'word',

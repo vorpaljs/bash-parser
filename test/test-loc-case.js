@@ -35,7 +35,7 @@ esac
 					type: 'compound_list',
 					commands: [
 						{
-							type: 'simple_command',
+							type: 'SimpleCommand',
 							name: {
 								type: 'word',
 								text: 'echo',

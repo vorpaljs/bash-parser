@@ -16,7 +16,7 @@ test('resolve tilde to current user home', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {type: 'word', text: 'echo'},
 				suffix: [{
 					type: 'word',
@@ -38,7 +38,7 @@ test('resolve one tilde only in normal WORD tokens', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {type: 'word', text: 'echo'},
 				suffix: [{
 					type: 'word',
@@ -73,7 +73,7 @@ test('resolve tilde to any user home', t => {
 		type: 'Script',
 		commands: [
 			{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {type: 'word', text: 'echo'},
 				suffix: [{
 					type: 'word',

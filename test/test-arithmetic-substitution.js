@@ -174,7 +174,7 @@ test('resolve expression', t => {
 
 	// utils.logResults(result.commands[0]);
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			text: 'foo 43 baz',
 			originalText: '"foo $((42 * 42)) baz"',
@@ -209,7 +209,7 @@ test('field splitting', t => {
 	// utils.logResults(result)
 
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			text: 'say',
 			type: 'word'

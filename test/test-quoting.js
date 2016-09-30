@@ -25,7 +25,7 @@ test('quotes within double quotes', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'echo'},
 			suffix: [{type: 'word', text: 'TEST1 \'TEST2'}]
 		}]
@@ -38,7 +38,7 @@ test('escaped double quotes within double quotes', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'echo'},
 			suffix: [{type: 'word', text: 'TEST1 "TEST2'}]
 		}]
@@ -50,7 +50,7 @@ test('double quotes within single quotes', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'echo'},
 			suffix: [{type: 'word', text: 'TEST1 "TEST2'}]
 		}]
@@ -62,7 +62,7 @@ test('Partially quoted word', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'echo'},
 			suffix: [{type: 'word', text: 'TEST1 TEST2 TEST3'}]
 		}]
@@ -75,7 +75,7 @@ test('Partially double quoted word', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'echo'},
 			suffix: [{type: 'word', text: 'TEST3 TEST4 TEST5'}]
 		}]

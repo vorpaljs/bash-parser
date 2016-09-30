@@ -22,7 +22,7 @@ test('2', t => {
 					type: 'compound_list',
 					commands: [
 						{
-							type: 'simple_command',
+							type: 'SimpleCommand',
 							name: {
 								text: 'printf',
 								type: 'word'
@@ -60,7 +60,7 @@ test('3', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'read'},
 			prefix: [{type: 'assignment_word', text: 'IFS='}],
 			suffix: [{type: 'word', text: '-r'}, {type: 'word', text: 'var'}]
@@ -77,10 +77,10 @@ test('4', t => {
 		commands: [{
 			type: 'Pipeline',
 			commands: [{
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {type: 'word', text: 'foo'}
 			}, {
-				type: 'simple_command',
+				type: 'SimpleCommand',
 				name: {type: 'word', text: 'read'},
 				prefix: [{type: 'assignment_word', text: 'IFS='}],
 				suffix: [{type: 'word', text: 'var'}]
@@ -99,15 +99,15 @@ eval "dest=foo"`
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{type: 'assignment_word', text: 'foo=hello ; rm -rf /'}]
 		}, {
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{type: 'assignment_word', text: 'dest=bar'}]
 		}, {
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: 'eval'},
 			suffix: [{type: 'word', text: 'dest=foo'}]
 		}]

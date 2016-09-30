@@ -11,7 +11,7 @@ const utils = require('./_utils');
 test('simple command with prefixes and name', t => {
 	const result = bashParser('a=1 b=2 echo', {insertLOC: true});
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			type: 'word',
 			text: 'echo',
@@ -33,7 +33,7 @@ test('simple command with prefixes and name', t => {
 test('simple command with only name', t => {
 	const result = bashParser('echo', {insertLOC: true});
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			type: 'word',
 			text: 'echo',
@@ -49,7 +49,7 @@ test('simple command with pipeline', t => {
 	utils.checkResults(t, result.commands[0], {
 		type: 'Pipeline',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {
 				type: 'word',
 				text: 'echo',
@@ -57,7 +57,7 @@ test('simple command with pipeline', t => {
 			},
 			loc: mkloc(1, 1, 1, 4, 0, 3)
 		}, {
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {
 				type: 'word',
 				text: 'grep',
@@ -72,7 +72,7 @@ test('simple command with pipeline', t => {
 test('simple command with suffixes', t => {
 	const result = bashParser('echo 42 43', {insertLOC: true});
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			type: 'word',
 			text: 'echo',
@@ -94,7 +94,7 @@ test('simple command with suffixes', t => {
 test('simple command with IO redirection', t => {
 	const result = bashParser('echo > 43', {insertLOC: true});
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			type: 'word',
 			text: 'echo',
@@ -122,7 +122,7 @@ test('simple command with numbered IO redirection', t => {
 	const result = bashParser('echo 2> 43', {insertLOC: true});
 	// utils.logResults(result);
 	const expected = {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			type: 'word',
 			text: 'echo',
@@ -157,7 +157,7 @@ test('simple command with numbered IO redirection', t => {
 test('simple command with suffixes & prefixes', t => {
 	const result = bashParser('a=1 b=2 echo 42 43', {insertLOC: true});
 	utils.checkResults(t, result.commands[0], {
-		type: 'simple_command',
+		type: 'SimpleCommand',
 		name: {
 			type: 'word',
 			text: 'echo',

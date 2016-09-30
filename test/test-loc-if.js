@@ -24,7 +24,7 @@ fi
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'simple_command',
+					type: 'SimpleCommand',
 					name: {
 						text: 'true',
 						type: 'word',
@@ -72,7 +72,7 @@ fi
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'simple_command',
+					type: 'SimpleCommand',
 					name: {
 						text: 'echo',
 						type: 'word',
@@ -140,7 +140,7 @@ fi
 				type: 'compound_list',
 				commands: [
 					{
-						type: 'simple_command',
+						type: 'SimpleCommand',
 						name: {
 							text: 'false',
 							type: 'word',
@@ -188,7 +188,7 @@ fi
 				type: 'compound_list',
 				commands: [
 					{
-						type: 'simple_command',
+						type: 'SimpleCommand',
 						name: {
 							text: 'echo',
 							type: 'word',
@@ -254,7 +254,7 @@ fi
 				type: 'compound_list',
 				commands: [
 					{
-						type: 'simple_command',
+						type: 'SimpleCommand',
 						name: {
 							text: 'echo',
 							type: 'word',

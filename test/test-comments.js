@@ -13,7 +13,7 @@ test('loc take into account line continuations', t => {
 	const expected = {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {
 				type: 'word', text: 'echo'
 			},
@@ -21,7 +21,7 @@ test('loc take into account line continuations', t => {
 				type: 'word', text: 'world'
 			}]
 		}, {
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {
 				type: 'word', text: 'echo'
 			},

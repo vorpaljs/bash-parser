@@ -11,7 +11,7 @@ test('positional list paramter', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -35,7 +35,7 @@ test('positional string paramter', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -59,7 +59,7 @@ test('positional count paramter', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -83,7 +83,7 @@ test('last exit status', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -107,7 +107,7 @@ test('current option flags', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -131,7 +131,7 @@ test('shell process id', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -155,7 +155,7 @@ test('last background pid', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',
@@ -180,7 +180,7 @@ test('shell script name', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'simple_command',
+			type: 'SimpleCommand',
 			name: {type: 'word', text: ''},
 			prefix: [{
 				type: 'assignment_word',

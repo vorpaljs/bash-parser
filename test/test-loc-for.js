@@ -84,7 +84,7 @@ done
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'simple_command',
+					type: 'SimpleCommand',
 					name: {
 						text: 'echo',
 						type: 'word',
@@ -203,7 +203,7 @@ done
 			type: 'compound_list',
 			commands: [
 				{
-					type: 'simple_command',
+					type: 'SimpleCommand',
 					name: {
 						text: 'echo',
 						type: 'word',

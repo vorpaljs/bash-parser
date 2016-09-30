@@ -16,7 +16,7 @@ test('2', t => {
 				type: 'function',
 				name: {
 					text: 'echo',
-					type: 'name'
+					type: 'Name'
 				},
 				body: {
 					type: 'compound_list',

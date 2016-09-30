@@ -13,7 +13,7 @@ test('parse for', t => {
 			type: 'Script',
 			commands: [{
 				type: 'for',
-				name: {type: 'name', text: 'x'},
+				name: {type: 'Name', text: 'x'},
 				wordlist: [{type: 'word', text: 'a'}, {type: 'word', text: 'b'}, {type: 'word', text: 'c'}],
 				do: {
 					type: 'compound_list',
@@ -47,7 +47,7 @@ test('parse for with default sequence', t => {
 			type: 'Script',
 			commands: [{
 				type: 'for',
-				name: {type: 'name', text: 'x'},
+				name: {type: 'Name', text: 'x'},
 				do: {
 					type: 'compound_list',
 					commands: [{
@@ -80,7 +80,7 @@ test('parse for with default sequence - on one line', t => {
 			type: 'Script',
 			commands: [{
 				type: 'for',
-				name: {type: 'name', text: 'x'},
+				name: {type: 'Name', text: 'x'},
 				do: {
 					type: 'compound_list',
 					commands: [{

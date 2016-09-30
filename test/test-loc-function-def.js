@@ -17,7 +17,7 @@ test('loc in function declaration', t => {
 		type: 'function',
 		name: {
 			text: 'foo',
-			type: 'name',
+			type: 'Name',
 			loc: {
 				start: {
 					col: 1,

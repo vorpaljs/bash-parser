@@ -130,7 +130,7 @@ done
 		type: 'for',
 		name: {
 			text: 'x',
-			type: 'name',
+			type: 'Name',
 			loc: {
 				start: {
 					col: 5,

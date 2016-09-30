@@ -44,7 +44,7 @@ test.skip('parse case with compound list', t => {
 		commands: [{
 			type: 'and_or',
 			left: {
-				type: 'pipeline',
+				type: 'Pipeline',
 				commands: [{
 					type: 'case',
 					clause: {
@@ -60,7 +60,7 @@ test.skip('parse case with compound list', t => {
 							commands: [{
 								type: 'and_or',
 								left: {
-									type: 'pipeline',
+									type: 'Pipeline',
 									commands: [{
 										type: 'simple_command',
 										name: {text: 'echo'},

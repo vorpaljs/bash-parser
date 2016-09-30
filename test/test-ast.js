@@ -98,7 +98,7 @@ test('pipelines', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'pipeline',
+			type: 'Pipeline',
 			commands: [
 				{type: 'simple_command', name: {type: 'word', text: 'run'}},
 				{type: 'simple_command', name: {type: 'word', text: 'cry'}}
@@ -112,7 +112,7 @@ test('bang pipelines', t => {
 	utils.checkResults(t, result, {
 		type: 'Script',
 		commands: [{
-			type: 'pipeline',
+			type: 'Pipeline',
 			bang: true,
 			commands: [
 				{type: 'simple_command', name: {type: 'word', text: 'run'}},

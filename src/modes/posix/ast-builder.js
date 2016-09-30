@@ -85,7 +85,7 @@ module.exports = options => {
 	};
 
 	builder.pipeSequence = command => {
-		const node = {type: 'pipeline', commands: [command]};
+		const node = {type: 'Pipeline', commands: [command]};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, command.loc), command.loc);
 		}

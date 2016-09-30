@@ -47,7 +47,7 @@ test('simple command with pipeline', t => {
 	const result = bashParser('echo | grep', {insertLOC: true});
 	// console.log(JSON.stringify(result, null, 4));
 	utils.checkResults(t, result.commands[0], {
-		type: 'pipeline',
+		type: 'Pipeline',
 		commands: [{
 			type: 'simple_command',
 			name: {

@@ -31,6 +31,18 @@ module.exports = function parse(sourceCode, options) {
 		parser.yy = astBuilder(options);
 
 		const ast = parser.parse(sourceCode);
+
+/*
+		const fixtureFolder = `${__dirname}/../test/fixtures`;
+		const json = require('json5');
+		const {writeFileSync} = require('fs');
+
+		const fileName = require('node-uuid').v4();
+		const filePath = `${fixtureFolder}/${fileName}.js`;
+		writeFileSync(filePath, 'module.exports = ' + json.stringify({
+			sourceCode, result: ast
+		}, null, '\t'));
+*/
 		return ast;
 	} catch (err) {
 		if (err instanceof SyntaxError) {

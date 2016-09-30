@@ -198,7 +198,7 @@ module.exports = options => {
 
 	builder.commandName = name => name;
 
-	builder.commandAssignment = function commandAssignment(prefix, command) {
+	builder.commandAssignment = function commandAssignment(prefix) {
 		return builder.command(prefix, {text: '', type: 'Word'});
 	};
 

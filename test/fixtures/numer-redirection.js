@@ -35,7 +35,8 @@ module.exports = {
 				},
 				suffix: [
 					{
-						type: "IORedirect",
+						type: "Redirect
+					type: 'Word'",
 						op: {
 							text: ">",
 							type: "great",

@@ -232,7 +232,7 @@ module.exports = options => {
 	};
 
 	builder.ioRedirect = (op, file) => {
-		const node = {type: 'IORedirect', op: op, file: file};
+		const node = {type: 'Redirect', op: op, file: file};
 		if (options.insertLOC) {
 			node.loc = setLocEnd(setLocStart({}, op.loc), file.loc);
 		}

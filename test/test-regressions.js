@@ -16,7 +16,7 @@ test('Redirect should be allowed immediately following argument', t => {
 			suffix: [
 				{type: 'Word', text: 'foo'},
 				{
-					type: 'IORedirect',
+					type: 'Redirect',
 					op: {type: 'great', text: '>'},
 					file: {type: 'Word', text: 'file.txt'}
 				}

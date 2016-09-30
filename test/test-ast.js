@@ -173,7 +173,7 @@ test('command with redirection to file', t => {
 			type: 'SimpleCommand',
 			name: {type: 'Word', text: 'ls'},
 			suffix: [{
-				type: 'IORedirect',
+				type: 'Redirect',
 				op: {type: 'great', text: '>'},
 				file: {type: 'Word', text: 'file.txt'}
 			}]
@@ -204,7 +204,7 @@ test('command with stderr redirection to file', t => {
 			type: 'SimpleCommand',
 			name: {type: 'Word', text: 'ls'},
 			suffix: [{
-				type: 'IORedirect',
+				type: 'Redirect',
 				op: {type: 'great', text: '>'},
 				file: {type: 'Word', text: 'file.txt'},
 				numberIo: {type: 'io_number', text: '2'}

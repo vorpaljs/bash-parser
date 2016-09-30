@@ -104,7 +104,7 @@ test('simple command with IO redirection', t => {
 		},
 		loc: mkloc(1, 1, 1, 9, 0, 8),
 		suffix: [{
-			type: 'IORedirect',
+			type: 'Redirect',
 			op: {
 				type: 'great',
 				text: '>',
@@ -132,7 +132,7 @@ test('simple command with numbered IO redirection', t => {
 		},
 		loc: mkloc(1, 1, 1, 10, 0, 9),
 		suffix: [{
-			type: 'IORedirect',
+			type: 'Redirect',
 			op: {
 				type: 'great',
 				text: '>',

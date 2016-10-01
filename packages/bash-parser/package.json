@@ -44,7 +44,7 @@
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",
     "iterable-lookahead": "^1.0.0",
-    "iterable-replace": "file:packages/iterable-replace",
+    "iterable-replace": "1.0.0",
     "magic-string": "^0.16.0",
     "map-iterable": "^1.0.1",
     "object-pairs": "^0.1.0",

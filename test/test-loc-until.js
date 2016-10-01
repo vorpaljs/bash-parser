@@ -133,9 +133,9 @@ test('loc in until statement', t => {
 							char: 20
 						},
 						end: {
-							col: 37,
+							col: 27,
 							row: 1,
-							char: 36
+							char: 26
 						}
 					},
 					suffix: [
@@ -154,23 +154,40 @@ test('loc in until statement', t => {
 									char: 26
 								}
 							}
-						},
-						{
-							text: 'echo',
-							type: 'Word',
-							loc: {
-								start: {
-									col: 28,
-									row: 1,
-									char: 27
-								},
-								end: {
-									col: 32,
-									row: 1,
-									char: 31
-								}
+						}
+					]
+				},
+				{
+					type: 'Command',
+					name: {
+						text: 'echo',
+						type: 'Word',
+						loc: {
+							start: {
+								col: 29,
+								row: 1,
+								char: 28
+							},
+							end: {
+								col: 32,
+								row: 1,
+								char: 31
 							}
+						}
+					},
+					loc: {
+						start: {
+							col: 29,
+							row: 1,
+							char: 28
 						},
+						end: {
+							col: 37,
+							row: 1,
+							char: 36
+						}
+					},
+					suffix: [
 						{
 							text: 'ciao',
 							type: 'Word',

@@ -12,6 +12,8 @@ module.exports = function operator(state, source) {
 
 	const char = source && source.shift();
 
+	// console.log('isOperator ', {state,char})
+
 	if (char === undefined) {
 		if (isOperator(state.current)) {
 			return {
@@ -32,6 +34,7 @@ module.exports = function operator(state, source) {
 
 	let tokens = [];
 	if (isOperator(state.current)) {
+		// console.log('isOperator ', state.current)
 		tokens = operatorTokens(state);
 		state = state.resetCurrent().saveCurrentLocAsStart();
 	}

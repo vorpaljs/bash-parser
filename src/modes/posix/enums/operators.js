@@ -16,6 +16,7 @@ const operators = {
 	'>&': 'GREATAND',
 	'<>': 'LESSGREAT',
 	'<<-': 'DLESSDASH',
-	'>|': 'CLOBBER'
+	'>|': 'CLOBBER',
+	';': 'SEMICOLON'
 };
 module.exports = operators;

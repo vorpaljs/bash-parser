@@ -195,6 +195,7 @@ module.exports = () => function * tokenizer(src) {
 		const tokensToEmit = r.tokensToEmit;
 		const nextState = r.nextState;
 		if (tokensToEmit) {
+			// console.log({tokensToEmit, reduction, nextReduction})
 			yield * tokensToEmit;
 		}
 

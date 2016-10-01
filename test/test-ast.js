@@ -165,6 +165,21 @@ test('multi line commands', t => {
 	});
 });
 
+test('single line commands', t => {
+	const result = bashParser('echo;ls');
+	// utils.logResults(result)
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'Command',
+			name: {type: 'Word', text: 'echo'}
+		}, {
+			type: 'Command',
+			name: {type: 'Word', text: 'ls'}
+		}]
+	});
+});
+
 test('command with redirection to file', t => {
 	const result = bashParser('ls > file.txt');
 	utils.checkResults(t, result, {

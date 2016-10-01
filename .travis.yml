@@ -5,7 +5,7 @@ node_js:
   - 6
 sudo: false
 before_script:
-  - lerna boostrap && lerna run build
+  - lerna bootstrap && lerna run build
 script:
   - lerna run build
 after_success:

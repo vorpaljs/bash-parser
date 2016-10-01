@@ -5,8 +5,8 @@ node_js:
   - 6
 sudo: false
 before_script:
-  - npm run build --silent
+  - lerna boostrap && lerna run build
 script:
-  - npm run cover-test --silent
+  - lerna run build
 after_success:
-  - npm run cover-publish --silent
+  - lerna run cover-publish

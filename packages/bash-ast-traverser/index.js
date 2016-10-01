@@ -21,12 +21,12 @@ function visit(node, context, visitor) {
 
 	const method = visitor[node.type];
 	if (typeof method === 'function') {
-		return method(node, ...context);
+		return method.apply(null, [node].concat(context));
 	}
 
 	const defaultMethod = visitor.defaultMethod;
 	if (typeof defaultMethod === 'function') {
-		return defaultMethod(node, ...context);
+		return defaultMethod.apply(null, [node].concat(context));
 	}
 }
 

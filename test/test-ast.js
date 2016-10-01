@@ -180,6 +180,102 @@ test('single line commands', t => {
 	});
 });
 
+test('single line commands separated by &', t => {
+	const result = bashParser('echo&ls');
+	// utils.logResults(result)
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'Command',
+			async: true,
+			name: {type: 'Word', text: 'echo'}
+		}, {
+			type: 'Command',
+			name: {type: 'Word', text: 'ls'}
+		}]
+	});
+});
+
+test('LogicalExpression separated by &', t => {
+	const result = bashParser('echo && ls &');
+	// utils.logResults(result)
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [
+			{
+				type: 'LogicalExpression',
+				op: 'and',
+				left: {
+					type: 'Command',
+					name: {
+						text: 'echo',
+						type: 'Word'
+					}
+				},
+				right: {
+					type: 'Command',
+					name: {
+						text: 'ls',
+						type: 'Word'
+					}
+				},
+				async: true
+			}
+		]
+	});
+});
+
+test('LogicalExpressions separated by &', t => {
+	const result = bashParser('echo && ls & ciao');
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [
+			{
+				type: 'LogicalExpression',
+				op: 'and',
+				left: {
+					type: 'Command',
+					name: {
+						text: 'echo',
+						type: 'Word'
+					}
+				},
+				right: {
+					type: 'Command',
+					name: {
+						text: 'ls',
+						type: 'Word'
+					}
+				},
+				async: true
+			},
+			{
+				type: 'Command',
+				name: {
+					text: 'ciao',
+					type: 'Word'
+				}
+			}
+		]
+	});
+});
+
+test('single line commands separated by &;', t => {
+	const result = bashParser('echo&;ls');
+	// utils.logResults(result)
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'Command',
+			async: true,
+			name: {type: 'Word', text: 'echo'}
+		}, {
+			type: 'Command',
+			name: {type: 'Word', text: 'ls'}
+		}]
+	});
+});
+
 test('command with redirection to file', t => {
 	const result = bashParser('ls > file.txt');
 	utils.checkResults(t, result, {

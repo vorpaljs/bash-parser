@@ -54,7 +54,24 @@ module.exports = options => {
 		}
 		return node;
 	};
-	builder.listAppend = (list, logicalExpression) => {
+
+	function isAsyncSeparator(separator) {
+		return separator.text.indexOf('&') !== -1;
+	}
+
+	const last = require('array-last');
+
+	builder.checkAsync = (list, separator) => {
+		if (isAsyncSeparator(separator)) {
+			last(list.commands).async = true;
+		}
+		return list;
+	};
+
+	builder.listAppend = (list, logicalExpression, separator) => {
+		if (isAsyncSeparator(separator)) {
+			last(list.commands).async = true;
+		}
 		list.commands.push(logicalExpression);
 		if (options.insertLOC) {
 			setLocEnd(list.loc, logicalExpression.loc);
@@ -70,7 +87,10 @@ module.exports = options => {
 		return node;
 	};
 
-	builder.termAppend = (term, logicalExpression) => {
+	builder.termAppend = (term, logicalExpression, separator) => {
+		if (isAsyncSeparator(separator)) {
+			last(term.commands).async = true;
+		}
 		term.commands.push(logicalExpression);
 		setLocEnd(term.loc, logicalExpression.loc);
 		return term;

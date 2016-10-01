@@ -24,7 +24,15 @@ module.exports = function separator(options, utils) {
 		let lastToken = {EMPTY: true, is: type => type === 'EMPTY'};
 
 		for (let tk of tokens) {
-			if (tk.is('NEWLINE_LIST') && lastToken.is('SEPARATOR_OP')) {
+			if (
+				(
+					tk.is('NEWLINE_LIST') ||
+					tk.is('AND') ||
+					tk.is('SEMICOLON') ||
+					(tk.is('OPERATOR') && tk.value === ';') ||
+					(tk.is('OPERATOR') && tk.value === '&')
+				) && lastToken.is('SEPARATOR_OP')
+			) {
 				lastToken = changeTokenType(
 					lastToken,
 					'SEPARATOR_OP',
@@ -37,7 +45,15 @@ module.exports = function separator(options, utils) {
 				continue;
 			}
 
-			if (tk.value === ';' || tk.value === '&' || (tk.is('OPERATOR') && tk.value === ';')) {
+			if (tk.is('SEMICOLON') || (tk.is('OPERATOR') && tk.value === ';')) {
+				tk = changeTokenType(
+					tk,
+					'SEPARATOR_OP',
+					tk.value
+				);
+			}
+
+			if (tk.is('AND') || (tk.is('OPERATOR') && tk.value === '&')) {
 				tk = changeTokenType(
 					tk,
 					'SEPARATOR_OP',

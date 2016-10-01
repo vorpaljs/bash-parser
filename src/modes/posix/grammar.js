@@ -6,7 +6,7 @@ module.exports = {
 		complete_command: [
 			[
 				'list separator EOF',
-				' return $list '
+				' return yy.checkAsync($list, $separator)'
 			],
 			[
 				'list EOF',
@@ -18,13 +18,13 @@ module.exports = {
 			],
 			[
 				'separator list separator EOF',
-				' return $list '
+				' return yy.checkAsync($list, $separator)'
 			]
 		],
 		list: [
 			[
 				'list separator and_or',
-				'$$ = yy.listAppend($list, $and_or);'
+				'$$ = yy.listAppend($list, $and_or, $separator);'
 			],
 			[
 				'and_or',
@@ -97,17 +97,17 @@ module.exports = {
 			],
 			[
 				'term separator',
-				'$$ = $term;'
+				'$$ = yy.checkAsync($term, $separator);'
 			],
 			[
 				'NEWLINE_LIST term separator',
-				'$$ = $term;'
+				'$$ = yy.checkAsync($term, $separator);'
 			]
 		],
 		term: [
 			[
 				'term separator and_or',
-				'$$ = yy.termAppend($term, $and_or);'
+				'$$ = yy.termAppend($term, $and_or, $separator);'
 			],
 			[
 				'and_or',

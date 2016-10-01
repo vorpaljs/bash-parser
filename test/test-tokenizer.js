@@ -69,10 +69,10 @@ test('parse word followed by newline', t => {
 });
 
 test('parse invalid operator', t => {
-	const result = tokenize('&');
+	const result = tokenize('^');
 	t.deepEqual(
 		result, [
-			{TOKEN: '&'},
+			{TOKEN: '^'},
 			{EOF: ''}
 		]
 	);

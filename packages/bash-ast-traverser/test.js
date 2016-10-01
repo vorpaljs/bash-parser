@@ -8,26 +8,25 @@ const _node = {
 
 const context = [42, 43];
 const AstTypes = [
-	'complete_command',
-	'pipeline',
-	'and_or',
-	'word',
-	'for',
-	'name',
-	'compound_list',
-	'subshell',
-	'case',
-	'case_item',
-	'if',
-	'simple_command',
-	'function',
-	'until',
-	'arithmetic_expansion',
-	'command_expansion',
-	'parameter_expansion',
-	'assignment_word',
-	'while',
-	'io_redirect'
+	'Script',
+	'Pipeline',
+	'LogicalExpression',
+	'Word',
+	'For',
+	'Name',
+	'Subshell',
+	'Case',
+	'CaseItem',
+	'If',
+	'Command',
+	'Function',
+	'Until',
+	'ArithmeticExpansion',
+	'CommandExpansion',
+	'ParameterExpansion',
+	'AssignmentWord',
+	'While',
+	'Redirect'
 ];
 
 const visitor = arg => ({
@@ -57,7 +56,7 @@ for (const astNodeType of AstTypes) {
 	test(...mkTestVisitor(astNodeType));
 }
 
-test('visit function work as expected', t => {
+test('visit Function work as expected', t => {
 	const [node, first, second, other] = traverse.visit(_node, context, visitor(44));
 	t.is(node, _node);
 	t.is(first, 42);
@@ -65,7 +64,7 @@ test('visit function work as expected', t => {
 	t.is(other, 44);
 });
 
-test('visit function work with array visitors', t => {
+test('visit Function work with array visitors', t => {
 	const [
 		[node, first, second, other],
 		[node2, first2, second2, other2]
@@ -82,7 +81,7 @@ test('visit function work with array visitors', t => {
 	t.is(other2, 45);
 });
 
-test('visit function return undefined if method not defined', t => {
+test('visit Function return undefined If method not defined', t => {
 	const result = traverse.visit({type: 'NodeType'}, [], {});
 	t.is(result, undefined);
 });

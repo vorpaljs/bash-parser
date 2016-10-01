@@ -34,7 +34,7 @@ let traverseNode;
 
 const DescendVisitor = {
 
-	assignment_word(node, parent, ast, visitor) {
+	AssignmentWord(node, parent, ast, visitor) {
 		if (!node.expansion) {
 			return null;
 		}
@@ -42,7 +42,7 @@ const DescendVisitor = {
 		return node.expansion.map(traverse);
 	},
 
-	arithmetic_expansion(node, parent, ast, visitor) {
+	ArithmeticExpansion(node, parent, ast, visitor) {
 		if (!node.expansion) {
 			return null;
 		}
@@ -50,7 +50,7 @@ const DescendVisitor = {
 		return node.expansion.map(traverse);
 	},
 
-	command_expansion(node, parent, ast, visitor) {
+	CommandExpansion(node, parent, ast, visitor) {
 		if (!node.expansion) {
 			return null;
 		}
@@ -58,7 +58,7 @@ const DescendVisitor = {
 		return node.expansion.map(traverse);
 	},
 
-	parameter_expansion(node, parent, ast, visitor) {
+	ParameterExpansion(node, parent, ast, visitor) {
 		if (!node.expansion) {
 			return null;
 		}
@@ -66,7 +66,7 @@ const DescendVisitor = {
 		return node.expansion.map(traverse);
 	},
 
-	complete_command(node, parent, ast, visitor) {
+	Script(node, parent, ast, visitor) {
 		if (!node.commands) {
 			return null;
 		}
@@ -74,7 +74,7 @@ const DescendVisitor = {
 		return node.commands.map(traverse);
 	},
 
-	word(node, parent, ast, visitor) {
+	Word(node, parent, ast, visitor) {
 		if (!node.expansion) {
 			return null;
 		}
@@ -82,7 +82,7 @@ const DescendVisitor = {
 		return node.expansion.map(traverse);
 	},
 
-	function(node, parent, ast, visitor) {
+	Function(node, parent, ast, visitor) {
 		if (!node.body) {
 			return null;
 		}
@@ -90,7 +90,7 @@ const DescendVisitor = {
 		return traverse(node.body);
 	},
 
-	io_redirect(node, parent, ast, visitor) {
+	Redirect(node, parent, ast, visitor) {
 		if (!node.file) {
 			return null;
 		}
@@ -98,7 +98,7 @@ const DescendVisitor = {
 		return traverse(node.file);
 	},
 
-	and_or(node, parent, ast, visitor) {
+	LogicalExpression(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
 			node.left ? traverse(node.left) : null,
@@ -106,7 +106,7 @@ const DescendVisitor = {
 		];
 	},
 
-	case(node, parent, ast, visitor) {
+	Case(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return (node.cases ? node.cases.map(traverse) : [])
 			.concat(
@@ -114,7 +114,7 @@ const DescendVisitor = {
 			);
 	},
 
-	case_item(node, parent, ast, visitor) {
+	CaseItem(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return (node.pattern ? node.pattern.map(traverse) : [])
 			.concat(
@@ -122,7 +122,7 @@ const DescendVisitor = {
 			);
 	},
 
-	if(node, parent, ast, visitor) {
+	If(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
 			traverse(node.clause),
@@ -131,7 +131,7 @@ const DescendVisitor = {
 		];
 	},
 
-	while(node, parent, ast, visitor) {
+	While(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
 			traverse(node.clause),
@@ -139,7 +139,7 @@ const DescendVisitor = {
 		];
 	},
 
-	until(node, parent, ast, visitor) {
+	Until(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
 			traverse(node.clause),
@@ -147,7 +147,7 @@ const DescendVisitor = {
 		];
 	},
 
-	simple_command(node, parent, ast, visitor) {
+	Command(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
 			traverse(node.prefix),
@@ -155,7 +155,7 @@ const DescendVisitor = {
 		];
 	},
 
-	for(node, parent, ast, visitor) {
+	For(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
 			node.wordlist ? node.wordlist.map(traverse) : [],
@@ -163,7 +163,7 @@ const DescendVisitor = {
 		];
 	},
 
-	pipeline(node, parent, ast, visitor) {
+	Pipeline(node, parent, ast, visitor) {
 		if (!node.commands) {
 			return null;
 		}
@@ -171,15 +171,7 @@ const DescendVisitor = {
 		return node.commands.map(traverse);
 	},
 
-	compound_list(node, parent, ast, visitor) {
-		if (!node.commands) {
-			return null;
-		}
-		const traverse = traverseNode(node, ast, visitor);
-		return node.commands.map(traverse);
-	},
-
-	subshell(node, parent, ast, visitor) {
+	Subshell(node, parent, ast, visitor) {
 		if (!node.list) {
 			return null;
 		}

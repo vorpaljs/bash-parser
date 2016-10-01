@@ -1,24 +1,26 @@
+
+/* eslint-disable xo/filename-case */
 module.exports = {
 	ast: {
-		type: 'complete_command',
+		type: 'Script',
 		text: 0,
 		commands: [{
-			type: 'word',
+			type: 'Word',
 			text: 1
 		}, {
-			type: 'word',
+			type: 'Word',
 			text: 2
 		}]
 	},
 	expected: [
 		[
 			[
-				'word on 1'
+				'Word on 1'
 			],
 			[
-				'word on 2'
+				'Word on 2'
 			]
 		],
-		'complete_command on 0'
+		'Script on 0'
 	]
 };

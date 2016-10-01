@@ -7,6 +7,6 @@ sudo: false
 before_script:
   - lerna bootstrap && lerna run build
 script:
-  - lerna run build
+  - lerna run test
 after_success:
   - lerna run cover-publish

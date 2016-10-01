@@ -6,14 +6,13 @@
   "license": "MIT",
   "author": "Andrea Parodi",
   "scripts": {
-    "test": "ava --no-babel && xo"
+    "test": "xo"
   },
   "keywords": [],
   "engines": {
     "node": ">=6"
   },
   "devDependencies": {
-    "ava": "^0.16.0",
     "xo": "^0.16.0"
   },
   "files": [

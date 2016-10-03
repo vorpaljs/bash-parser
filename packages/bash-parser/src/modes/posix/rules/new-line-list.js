@@ -1,35 +1,38 @@
 'use strict';
+const compose = require('compose-function');
+const map = require('map-iterable');
+const lookahead = require('iterable-lookahead');
+const filterIterator = require('filter-iterator');
+const reverse = require('reverse-arguments');
+const curry = require('curry');
+const tokens = require('../../../utils/tokens');
+
+const filter = curry.to(2, reverse(filterIterator));
+
+const nonNull = tk => {
+	// console.log('filterNonNull:', tk);
+	return tk !== null;
+};
+
+const SkipRepeatedNewLines = {
+	NEWLINE(tk, iterable) {
+		const lastToken = iterable.behind(1) || tokens.mkToken('EMPTY');
+
+		if (lastToken.is('NEWLINE')) {
+			return null;
+		}
+
+		return tokens.changeTokenType(tk, 'NEWLINE_LIST', '\n');
+	}
+};
 
 /* resolve a conflict in grammar by tokenize multiple NEWLINEs as a
 newline_list token (it was a rule in POSIX grammar) */
-module.exports = function newLineList(options, utils) {
-	const mkToken = utils.tokens.mkToken;
-	const appendTo = utils.tokens.appendTo;
-	const changeTokenType = utils.tokens.changeTokenType;
-
-	return function * (tokens) {
-		let lastToken = mkToken('EMPTY', true);
-		for (let tk of tokens) {
-			if (tk.is('NEWLINE')) {
-				if (lastToken.is('NEWLINE_LIST')) {
-					lastToken = appendTo(lastToken, '\n');
-					if (lastToken.loc) {
-						lastToken.loc.endLine++;
-					}
-					continue;
-				} else {
-					tk = changeTokenType(tk, 'NEWLINE_LIST', '\n');
-				}
-			}
-			if (!lastToken.is('EMPTY')) {
-				yield lastToken;
-			}
-			lastToken = tk;
-		}
-
-		if (!lastToken.is('EMPTY')) {
-			yield lastToken;
-		}
-	};
-};
+module.exports = () => compose(
+	filter(nonNull),
+	map(
+		tokens.applyTokenizerVisitor(SkipRepeatedNewLines)
+	),
+	lookahead
+);
 

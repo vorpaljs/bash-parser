@@ -2,15 +2,22 @@
 const hasOwnProperty = require('has-own-property');
 const map = require('map-iterable');
 const operators = require('../enums/operators');
+const tokens = require('../../../utils/tokens');
 
-module.exports = function operatorTokens(options, utils) {
-	const changeTokenType = utils.tokens.changeTokenType;
-
-	return map(tk => {
-		if (tk.is('OPERATOR') && hasOwnProperty(operators, tk.value)) {
-			return changeTokenType(tk, operators[tk.value], tk.value);
+const ReduceToOperatorTokenVisitor = {
+	OPERATOR(tk) {
+		if (hasOwnProperty(operators, tk.value)) {
+			return tokens.changeTokenType(
+				tk,
+				operators[tk.value],
+				tk.value
+			);
 		}
-
 		return tk;
-	});
+	}
 };
+
+module.exports = () => map(
+	tokens.applyTokenizerVisitor(ReduceToOperatorTokenVisitor)
+);
+

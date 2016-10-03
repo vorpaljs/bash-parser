@@ -39,7 +39,9 @@
     "array-last": "^1.1.1",
     "babylon": "^6.9.1",
     "compose-function": "^3.0.3",
+    "curry": "^1.2.0",
     "deep-freeze": "0.0.1",
+    "filter-iterator": "0.0.1",
     "filter-obj": "^1.1.0",
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",
@@ -49,6 +51,7 @@
     "map-iterable": "^1.0.1",
     "object-pairs": "^0.1.0",
     "object-values": "^1.0.0",
+    "reverse-arguments": "^1.0.0",
     "shell-quote-word": "^1.0.1",
     "to-pascal-case": "^1.0.0",
     "unescape-js": "^1.0.5"

@@ -7,6 +7,7 @@ const grammarSource = require('./grammar');
 
 const lexerPhases = () => [
 	phaseCatalog.newLineList,
+	// utils.loggerPhase('tokenizer'),
 	phaseCatalog.operatorTokens,
 	phaseCatalog.separator,
 	phaseCatalog.reservedWords,

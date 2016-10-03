@@ -26,6 +26,7 @@ module.exports = function separator(options, utils) {
 		for (let tk of tokens) {
 			if (
 				(
+					tk.is('NEWLINE') ||
 					tk.is('NEWLINE_LIST') ||
 					tk.is('AND') ||
 					tk.is('SEMICOLON') ||

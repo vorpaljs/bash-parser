@@ -129,3 +129,17 @@ exports.isOperator = function isOperator(text) {
 exports.isSpecialParameter = function isSpecialParameter(char) {
 	return char.match(/^[0-9\-!@#\?\*\$]$/);
 };
+
+exports.applyTokenizerVisitor = visitor => (tk, idx, iterable) => {
+	if (hasOwnProperty(visitor, tk.type)) {
+		const visit = visitor[tk.type];
+		return visit(tk, iterable);
+	}
+
+	if (hasOwnProperty(visitor, 'defaultMethod')) {
+		const visit = visitor.defaultMethod;
+		return visit(tk, iterable);
+	}
+
+	return tk;
+};

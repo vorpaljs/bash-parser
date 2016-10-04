@@ -1,5 +1,9 @@
 'use strict';
 
+const map = require('map-iterable');
+const merge = require('iterable-merge');
+const compose = require('compose-function');
+
 exports.mark = function markFieldSplitting(result, text, options) {
 	if (typeof options.resolveEnv === 'function' &&
 			text[0] !== '\'' && text[0] !== '"'
@@ -14,20 +18,20 @@ exports.mark = function markFieldSplitting(result, text, options) {
 	return result;
 };
 
-exports.split = (options, utils) => function * resolveParameterExpansion(tokens) {
-	for (const token of tokens) {
+exports.split = (options, utils) => compose(
+	merge,
+	map(token => {
 		if (token.is('WORD')) {
 			const fields = token.value.split('\0');
 			if (fields.length > 1) {
 				let idx = 0;
-				for (const field of fields) {
-					yield utils.tokens.mkFieldSplitToken(token, field, idx++);
-				}
-				continue;
+				return fields.map(field =>
+					utils.tokens.mkFieldSplitToken(token, field, idx++)
+				);
 			}
 		}
 
-		yield token;
-	}
-};
+		return token;
+	})
+);
 

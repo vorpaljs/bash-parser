@@ -3,7 +3,7 @@
 const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
-const tokensUtils = require('../../../utils/tokens');
+const tokens = require('../../../utils/tokens');
 const fieldSplitting = require('./field-splitting');
 
 const parameterOps = {
@@ -91,7 +91,7 @@ const parameterExpansion = () => map(token => {
 			return token;
 		}
 
-		return tokensUtils.setExpansions(token, token.expansion.map(xp => {
+		return tokens.setExpansions(token, token.expansion.map(xp => {
 			if (xp.type === 'parameter_expansion') {
 				return setParameterExpansion(xp, token);
 			}
@@ -102,27 +102,29 @@ const parameterExpansion = () => map(token => {
 	return token;
 });
 
-parameterExpansion.resolve = (options, utils) => function * resolveParameterExpansion(tokens) {
-	for (let token of tokens) {
-		if (options.resolveParameter && token.expansion) {
-			const value = token.value;
-
-			const magic = new MagicString(value);
-			for (const xp of token.expansion) {
-				if (xp.type === 'parameter_expansion') {
-					const result = options.resolveParameter(xp);
-					xp.resolved = true;
-					magic.overwrite(
-						xp.loc.start,
-						xp.loc.end + 1,
-						fieldSplitting.mark(result, value, options)
-					);
-				}
-			}
-			token = utils.tokens.alterValue(token, magic.toString());
+parameterExpansion.resolve = options => map(token => {
+	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
+		if (!options.resolveParameter || !token.expansion || token.expansion.length === 0) {
+			return token;
 		}
-		yield token;
+
+		const value = token.value;
+
+		const magic = new MagicString(value);
+		for (const xp of token.expansion) {
+			if (xp.type === 'parameter_expansion') {
+				const result = options.resolveParameter(xp);
+				xp.resolved = true;
+				magic.overwrite(
+					xp.loc.start,
+					xp.loc.end + 1,
+					fieldSplitting.mark(result, value, options)
+				);
+			}
+		}
+		return tokens.alterValue(token, magic.toString());
 	}
-};
+	return token;
+});
 
 module.exports = parameterExpansion;

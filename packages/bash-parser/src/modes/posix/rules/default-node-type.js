@@ -17,6 +17,8 @@ module.exports = () => map(token => {
 		for (const xp of tk.expansion || []) {
 			xp.type = toPascal(xp.type);
 		}
+
+		delete tk._;
 	}
 	// Object.freeze(tk);
 	return tk;

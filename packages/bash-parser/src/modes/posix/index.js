@@ -30,7 +30,7 @@ const lexerPhases = () => [
 	phaseCatalog.pathExpansion,
 	phaseCatalog.quoteRemoval,
 	phaseCatalog.syntaxerrorOnContinue,
-	phaseCatalog.defaultNodeType,
+	phaseCatalog.defaultNodeType
 	// utils.loggerPhase('tokenizer'),
 	// phaseCatalog.removeTempObject
 

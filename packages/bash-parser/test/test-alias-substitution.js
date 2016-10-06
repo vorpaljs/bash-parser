@@ -7,7 +7,7 @@ const utils = require('./_utils');
 
 test('alias with no argument', t => {
 	const result = bashParser('thisIsAlias world', {
-		resolveAlias: name => name === 'thisIsAlias' ? 'test-value' : null
+		resolveAlias: name => name === 'thisIsAlias' ? 'test-value' : undefined
 	});
 	utils.checkResults(t, result, {
 		type: 'Script',
@@ -21,7 +21,7 @@ test('alias with no argument', t => {
 
 test('alias with duplicating stream redirection', t => {
 	const result = bashParser('2>&1 world', {
-		resolveAlias: name => name === 'world' ? 'test-value' : null
+		resolveAlias: name => name === 'world' ? 'test-value' : undefined
 	});
 	// utils.logResults(result);
 	utils.checkResults(t,

@@ -7,7 +7,6 @@ const grammarSource = require('./grammar');
 
 const lexerPhases = () => [
 	phaseCatalog.newLineList,
-	// utils.loggerPhase('tokenizer'),
 	phaseCatalog.operatorTokens,
 	phaseCatalog.separator,
 	phaseCatalog.reservedWords,
@@ -21,7 +20,9 @@ const lexerPhases = () => [
 	phaseCatalog.forNameVariable,
 	phaseCatalog.functionName,
 	phaseCatalog.identifySimpleCommandNames,
+	// utils.loggerPhase('pre'),
 	phaseCatalog.aliasSubstitution,
+	// utils.loggerPhase('post'),
 	phaseCatalog.tildeExpanding,
 	phaseCatalog.parameterExpansion.resolve,
 	phaseCatalog.commandExpansion.resolve,
@@ -32,8 +33,6 @@ const lexerPhases = () => [
 	phaseCatalog.syntaxerrorOnContinue,
 	phaseCatalog.defaultNodeType
 	// utils.loggerPhase('tokenizer'),
-	// phaseCatalog.removeTempObject
-
 ];
 
 module.exports = {

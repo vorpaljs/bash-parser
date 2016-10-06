@@ -11,7 +11,6 @@ const posixShellLexer = (mode, options) => ({
 		const text = tk.value;
 
 		this.yytext = {text};
-		// console.log(tk)
 		if (tk.expansion) {
 			this.yytext.expansion = tk.expansion;
 		}

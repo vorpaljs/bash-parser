@@ -32,7 +32,7 @@ const expandAlias = (preAliasLexer, resolveAlias) => {
 
 	return {
 		WORD: tk => {
-			return [...tryExpandToken(tk, [])];
+			return Array.from(tryExpandToken(tk, []));
 		}
 	};
 };

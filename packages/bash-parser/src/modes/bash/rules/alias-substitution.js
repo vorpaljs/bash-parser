@@ -32,7 +32,7 @@ const expandAlias = (preAliasLexer, resolveAlias) => {
 	}
 
 	function expandToken(tk) {
-		return [...tryExpandToken(tk, [])];
+		return Array.from(tryExpandToken(tk, []));
 	}
 
 	const visitor = {

@@ -1,45 +1,62 @@
 'use strict';
-/* eslint-disable camelcase */
-/* eslint-disable babel/arrow-parens */
 
 const compose = require('compose-function');
+const identity = require('identity-function');
+const map = require('map-iterable');
 const values = require('object-values');
+const merge = require('iterable-merge');
+const tokens = require('../../../utils/tokens');
 const reservedWords = values(require('../../posix/enums/reserved-words'));
 
-module.exports = (options, utils, previousPhases) => {
-	const preAliasLexer = compose.apply(null, previousPhases.reverse());
-
-	return function * aliasSubstitution(tokens) {
-		function * tryExpandToken(token, expandingAliases) {
-			const isName = token.is('WORD') || reservedWords.some(word => token.is(word));
-			const name = isName ? token.value : '';
-
-			if (name && expandingAliases.indexOf(name) === -1 && token._.maybeStartOfSimpleCommand) {
-				const result = options.resolveAlias(name);
-				if (result !== undefined) {
-					for (const newToken of preAliasLexer(result)) {
-						if (!newToken.is('EOF')) {
-							yield * tryExpandToken(
-								newToken,
-								expandingAliases.concat(name)
-							);
-						}
-					}
-					return;
+const expandAlias = (preAliasLexer, resolveAlias) => {
+	function * tryExpandToken(token, expandingAliases) {
+		if (expandingAliases.indexOf(token.value) !== -1) {
+			yield token;
+			return;
+		}
+		const result = resolveAlias(token.value);
+		if (result === undefined) {
+			yield token;
+		} else {
+			for (const newToken of preAliasLexer(result)) {
+				if (newToken.is('WORD') || reservedWords.some(word => newToken.is(word))) {
+					yield * tryExpandToken(
+						newToken,
+						expandingAliases.concat(token.value)
+					);
+				} else if (!newToken.is('EOF')) {
+					yield newToken;
 				}
 			}
-
-			yield token;
 		}
+	}
 
-		if (typeof options.resolveAlias === 'function') {
-			for (const token of tokens) {
-				yield * tryExpandToken(token, []);
-			}
-		} else {
-			for (const token of tokens) {
-				yield token;
-			}
-		}
+	function expandToken(tk) {
+		return [...tryExpandToken(tk, [])];
+	}
+
+	const visitor = {
+		WORD: expandToken
 	};
+
+	reservedWords.forEach(w => {
+		visitor[w] = expandToken;
+	});
+	return visitor;
+};
+
+module.exports = (options, utils, previousPhases) => {
+	if (typeof options.resolveAlias !== 'function') {
+		return identity;
+	}
+
+	const preAliasLexer = compose.apply(null, previousPhases.reverse());
+	const visitor = expandAlias(preAliasLexer, options.resolveAlias);
+
+	return compose(
+		merge,
+		map(
+			tokens.applyTokenizerVisitor(visitor)
+		)
+	);
 };

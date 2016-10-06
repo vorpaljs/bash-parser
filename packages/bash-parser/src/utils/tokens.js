@@ -133,6 +133,7 @@ exports.isSpecialParameter = function isSpecialParameter(char) {
 exports.applyTokenizerVisitor = visitor => (tk, idx, iterable) => {
 	if (hasOwnProperty(visitor, tk.type)) {
 		const visit = visitor[tk.type];
+
 		return visit(tk, iterable);
 	}
 

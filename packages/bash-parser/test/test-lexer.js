@@ -232,6 +232,7 @@ test('support double quotes', t => {
 		{token: 'WORD', value: 'CIAO 42'}]
 	);
 });
+
 test('support multiple commands', t => {
 	// utils.logResults(tokenize('echo; \nls;'));
 

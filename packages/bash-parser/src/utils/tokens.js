@@ -126,10 +126,6 @@ exports.isOperator = function isOperator(text) {
 	return hasOwnProperty(operators, text);
 };
 
-exports.isSpecialParameter = function isSpecialParameter(char) {
-	return char.match(/^[0-9\-!@#\?\*\$]$/);
-};
-
 exports.applyTokenizerVisitor = visitor => (tk, idx, iterable) => {
 	if (hasOwnProperty(visitor, tk.type)) {
 		const visit = visitor[tk.type];

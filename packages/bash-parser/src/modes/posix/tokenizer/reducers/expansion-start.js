@@ -1,6 +1,8 @@
 'use strict';
 
-const isSpecialParameter = require('../../../../utils/tokens').isSpecialParameter;
+function isSpecialParameter(char) {
+	return char.match(/^[0-9\-!@#\?\*\$]$/);
+}
 
 module.exports = function expansionStart(state, source) {
 	const expansionSpecialParameter = require('./expansion-special-parameter');

@@ -4,7 +4,7 @@ const compose = require('compose-function');
 const identity = require('identity-function');
 const map = require('map-iterable');
 const values = require('object-values');
-const merge = require('iterable-merge');
+const merge = require('transform-spread-iterable');
 const tokens = require('../../../utils/tokens');
 const reservedWords = values(require('../../posix/enums/reserved-words'));
 

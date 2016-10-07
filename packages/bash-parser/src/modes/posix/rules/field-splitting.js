@@ -1,7 +1,7 @@
 'use strict';
 
 const map = require('map-iterable');
-const merge = require('iterable-merge');
+const merge = require('transform-spread-iterable');
 const compose = require('compose-function');
 
 exports.mark = function markFieldSplitting(result, text, options) {

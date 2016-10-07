@@ -46,7 +46,6 @@
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",
     "iterable-lookahead": "^1.0.0",
-    "iterable-merge": "^1.0.0",
     "iterable-replace": "1.0.0",
     "magic-string": "^0.16.0",
     "map-iterable": "^1.0.1",
@@ -55,6 +54,7 @@
     "reverse-arguments": "^1.0.0",
     "shell-quote-word": "^1.0.1",
     "to-pascal-case": "^1.0.0",
+    "transform-spread-iterable": "^1.1.0",
     "unescape-js": "^1.0.5"
   }
 }

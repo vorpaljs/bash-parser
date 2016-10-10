@@ -4,8 +4,6 @@ const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
 const tokens = require('../../../utils/tokens');
-// const parameterOps = require('../enums/parameter-operators');
-// const specialParameterNames = require('../enums/special-parameters');
 const fieldSplitting = require('./field-splitting');
 
 function isSpecialParameter(currentCharacter) {

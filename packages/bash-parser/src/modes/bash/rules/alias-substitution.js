@@ -6,9 +6,8 @@ const map = require('map-iterable');
 const values = require('object-values');
 const merge = require('transform-spread-iterable');
 const tokens = require('../../../utils/tokens');
-const reservedWords = values(require('../../posix/enums/reserved-words'));
 
-const expandAlias = (preAliasLexer, resolveAlias) => {
+const expandAlias = (preAliasLexer, resolveAlias, reservedWords) => {
 	function * tryExpandToken(token, expandingAliases) {
 		if (expandingAliases.indexOf(token.value) !== -1) {
 			yield token;
@@ -45,13 +44,13 @@ const expandAlias = (preAliasLexer, resolveAlias) => {
 	return visitor;
 };
 
-module.exports = (options, utils, previousPhases) => {
+module.exports = (options, mode, previousPhases) => {
 	if (typeof options.resolveAlias !== 'function') {
 		return identity;
 	}
 
 	const preAliasLexer = compose.apply(null, previousPhases.reverse());
-	const visitor = expandAlias(preAliasLexer, options.resolveAlias);
+	const visitor = expandAlias(preAliasLexer, options.resolveAlias, values(mode.enums.reservedWords));
 
 	return compose(
 		merge,

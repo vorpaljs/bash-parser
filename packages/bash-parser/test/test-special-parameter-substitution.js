@@ -4,7 +4,6 @@ const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
 
-/* eslint-disable camelcase */
 test('parameter with use default value', t => {
 	const result = bashParser('${other:-default_value}');
 

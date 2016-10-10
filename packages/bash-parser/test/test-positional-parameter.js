@@ -4,7 +4,6 @@ const test = require('ava');
 const bashParser = require('../src');
 const utils = require('./_utils');
 
-/* eslint-disable camelcase */
 test('positional parameter with word following', t => {
 	const result = bashParser('echoword=$1ciao')
 		.commands[0].prefix;

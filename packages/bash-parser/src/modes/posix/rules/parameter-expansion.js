@@ -1,28 +1,39 @@
 'use strict';
-
+const mapObj = require('map-obj');
 const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
 const tokens = require('../../../utils/tokens');
 const fieldSplitting = require('./field-splitting');
 
-function isSpecialParameter(currentCharacter) {
-	return currentCharacter.match(/^[0-9\-!@#\?\*\$]$/);
-}
+const handleParameter = (obj, match) => {
+	const ret = mapObj(obj, (k, v) => {
+		if (typeof v === 'function') {
+			return [k, v(match)];
+		}
 
-function setParameterExpansion(xp, enums) {
+		if (typeof v === 'object') {
+			return [k, handleParameter(v, match)];
+		}
+
+		return [k, v];
+	});
+
+	delete ret.expand;
+
+	return ret;
+};
+
+function expandParameter(xp, enums) {
 	let parameter = xp.parameter;
 
 	for (const pair of pairs(enums.parameterOperators)) {
-		const opName = pair[0];
-		const opChars = pair[1];
-		// console.log({opChars, parameter})
-		const pos = parameter.indexOf(opChars);
+		const re = new RegExp(pair[0]);
 
-		if (pos !== -1) {
-			const word = {text: parameter.slice(pos + 2)};
+		const match = parameter.match(re);
 
-			parameter = parameter.slice(0, pos);
+		if (match) {
+			const opProps = handleParameter(pair[1], match);
 
 			/*
 			// recursive expansion of operator argument
@@ -34,29 +45,11 @@ function setParameterExpansion(xp, enums) {
 			delete word.value;
 			delete word.undefined;*/
 
-			const op = opName;
-
 			return Object.assign(
 				xp,
-				{parameter},
-				op ? {op} : {},
-				word ? {word} : {}
+				opProps
 			);
 		}
-	}
-
-	if (parameter.match(/^[0-9]+$/) && parameter !== '0') {
-		return Object.assign(
-			xp,
-			{kind: 'positional', parameter: Number(xp.parameter)}
-		);
-	}
-
-	if (isSpecialParameter(parameter)) {
-		return Object.assign(
-			xp,
-			{kind: enums.specialParameters[parameter]}
-		);
 	}
 
 	return xp;
@@ -75,7 +68,7 @@ const parameterExpansion = (options, mode) => map(token => {
 
 		return tokens.setExpansions(token, token.expansion.map(xp => {
 			if (xp.type === 'parameter_expansion') {
-				return setParameterExpansion(xp, mode.enums);
+				return expandParameter(xp, mode.enums);
 			}
 
 			return xp;

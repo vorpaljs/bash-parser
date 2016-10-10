@@ -4,25 +4,9 @@ const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
 const tokens = require('../../../utils/tokens');
+const parameterOps = require('../enums/parameter-operators');
+const specialParameterNames = require('../enums/special-parameters');
 const fieldSplitting = require('./field-splitting');
-
-const parameterOps = {
-	useDefaultValue: ':-',
-	assignDefaultValue: ':=',
-	indicateErrorIfNull: ':?',
-	useAlternativeValue: ':+'
-};
-
-const specialParameterNames = {
-	'!': 'last-background-pid',
-	'@': 'positional-list',
-	'-': 'current-option-flags',
-	'#': 'positional-count',
-	'?': 'last-exit-status',
-	'*': 'positional-string',
-	'$': 'shell-process-id',
-	'0': 'shell-script-name'
-};
 
 function isSpecialParameter(currentCharacter) {
 	return currentCharacter.match(/^[0-9\-!@#\?\*\$]$/);

@@ -3,6 +3,7 @@
 const map = require('map-iterable');
 const merge = require('transform-spread-iterable');
 const compose = require('compose-function');
+const mkFieldSplitToken = require('../../../utils/tokens').mkFieldSplitToken;
 
 exports.mark = function markFieldSplitting(result, text, options) {
 	if (typeof options.resolveEnv === 'function' &&
@@ -18,7 +19,7 @@ exports.mark = function markFieldSplitting(result, text, options) {
 	return result;
 };
 
-exports.split = (options, utils) => compose(
+exports.split = () => compose(
 	merge,
 	map(token => {
 		if (token.is('WORD')) {
@@ -26,7 +27,7 @@ exports.split = (options, utils) => compose(
 			if (fields.length > 1) {
 				let idx = 0;
 				return fields.map(field =>
-					utils.tokens.mkFieldSplitToken(token, field, idx++)
+					mkFieldSplitToken(token, field, idx++)
 				);
 			}
 		}

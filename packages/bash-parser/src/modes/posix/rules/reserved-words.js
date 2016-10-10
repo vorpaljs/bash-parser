@@ -32,22 +32,20 @@ function isValidReservedWordPosition(tk, iterable) {
 	return tk.value === '}' || startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
 }
 
-module.exports = function reservedWords(options, utils) {
-	const changeTokenType = utils.tokens.changeTokenType;
-
+module.exports = function reservedWords() {
 	return compose(map((tk, idx, iterable) => {
 		// console.log(tk, isValidReservedWordPosition(tk, iterable), hasOwnProperty(words, tk.value))
 		// TOKEN tokens consisting of a reserved word
 		// are converted to their own token types
 		// console.log({tk, v:isValidReservedWordPosition(tk, iterable)})
 		if (isValidReservedWordPosition(tk, iterable) && hasOwnProperty(words, tk.value)) {
-			return changeTokenType(tk, words[tk.value], tk.value);
+			return tk.changeTokenType(words[tk.value], tk.value);
 		}
 
 		// otherwise, TOKEN tokens are converted to
 		// WORD tokens
 		if (tk.is('TOKEN')) {
-			return changeTokenType(tk, 'WORD', tk.value);
+			return tk.changeTokenType('WORD', tk.value);
 		}
 
 		// other tokens are amitted as-is

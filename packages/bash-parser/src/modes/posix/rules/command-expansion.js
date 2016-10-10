@@ -43,7 +43,7 @@ const commandExpansion = () => map(token => {
 	return token;
 });
 
-commandExpansion.resolve = (options, utils) => map(token => {
+commandExpansion.resolve = options => map(token => {
 	if (options.execCommand && token.expansion) {
 		const value = token.value;
 
@@ -61,7 +61,7 @@ commandExpansion.resolve = (options, utils) => map(token => {
 				xp.resolved = true;
 			}
 		}
-		return utils.tokens.alterValue(token, magic.toString());
+		return token.alterValue(magic.toString());
 	}
 	return token;
 });

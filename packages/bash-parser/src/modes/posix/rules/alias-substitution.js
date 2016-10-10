@@ -37,7 +37,7 @@ const expandAlias = (preAliasLexer, resolveAlias) => {
 	};
 };
 
-module.exports = (options, utils, previousPhases) => {
+module.exports = (options, mode, previousPhases) => {
 	if (typeof options.resolveAlias !== 'function') {
 		return identity;
 	}

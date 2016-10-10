@@ -40,7 +40,7 @@ const arithmeticExpansion = () => map(token => {
 	return token;
 });
 
-arithmeticExpansion.resolve = (options, utils) => map(token => {
+arithmeticExpansion.resolve = options => map(token => {
 	if (options.runArithmeticExpression && token.expansion) {
 		const value = token.value;
 
@@ -58,7 +58,7 @@ arithmeticExpansion.resolve = (options, utils) => map(token => {
 			}
 		}
 
-		return utils.tokens.alterValue(token, magic.toString());
+		return token.alterValue(magic.toString());
 	}
 	return token;
 });

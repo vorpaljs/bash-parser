@@ -1,7 +1,8 @@
 'use strict';
 const map = require('map-iterable');
+const isValidName = require('../../../utils/is-valid-name');
 
-module.exports = function assignmentWord(options, utils) {
+module.exports = function assignmentWord() {
 	return map((tk, idx, ctx) => {
 		// apply only on valid positions
 		// (start of simple commands)
@@ -12,9 +13,9 @@ module.exports = function assignmentWord(options, utils) {
 		// check if it is an assignment
 		if (!ctx.commandPrefixNotAllowed && tk.is('WORD') && tk.value.indexOf('=') > 0 && (
 				// left part must be a valid name
-				utils.isValidName(tk.value.slice(0, tk.value.indexOf('=')))
+				isValidName(tk.value.slice(0, tk.value.indexOf('=')))
 			)) {
-			return utils.tokens.changeTokenType(tk, 'ASSIGNMENT_WORD', tk.value);
+			return tk.changeTokenType('ASSIGNMENT_WORD', tk.value);
 		}
 
 		ctx.commandPrefixNotAllowed = true;

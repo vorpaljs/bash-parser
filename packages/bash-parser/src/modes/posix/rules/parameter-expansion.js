@@ -4,18 +4,18 @@ const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
 const tokens = require('../../../utils/tokens');
-const parameterOps = require('../enums/parameter-operators');
-const specialParameterNames = require('../enums/special-parameters');
+// const parameterOps = require('../enums/parameter-operators');
+// const specialParameterNames = require('../enums/special-parameters');
 const fieldSplitting = require('./field-splitting');
 
 function isSpecialParameter(currentCharacter) {
 	return currentCharacter.match(/^[0-9\-!@#\?\*\$]$/);
 }
 
-function setParameterExpansion(xp) {
+function setParameterExpansion(xp, enums) {
 	let parameter = xp.parameter;
 
-	for (const pair of pairs(parameterOps)) {
+	for (const pair of pairs(enums.parameterOperators)) {
 		const opName = pair[0];
 		const opChars = pair[1];
 		// console.log({opChars, parameter})
@@ -57,7 +57,7 @@ function setParameterExpansion(xp) {
 	if (isSpecialParameter(parameter)) {
 		return Object.assign(
 			xp,
-			{kind: specialParameterNames[parameter]}
+			{kind: enums.specialParameters[parameter]}
 		);
 	}
 
@@ -69,7 +69,7 @@ function setParameterExpansion(xp) {
 // command substitution (Command Substitution), or arithmetic expansion (Arithmetic
 // Expansion) from their introductory unquoted character sequences: '$' or "${", "$("
 // or '`', and "$((", respectively.
-const parameterExpansion = () => map(token => {
+const parameterExpansion = (options, mode) => map(token => {
 	if (token.is('WORD') || token.is('ASSIGNMENT_WORD')) {
 		if (!token.expansion || token.expansion.length === 0) {
 			return token;
@@ -77,7 +77,7 @@ const parameterExpansion = () => map(token => {
 
 		return tokens.setExpansions(token, token.expansion.map(xp => {
 			if (xp.type === 'parameter_expansion') {
-				return setParameterExpansion(xp, token);
+				return setParameterExpansion(xp, mode.enums);
 			}
 
 			return xp;

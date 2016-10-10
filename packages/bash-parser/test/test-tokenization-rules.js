@@ -2,16 +2,17 @@
 
 const test = require('ava');
 const rules = require('../src/modes/posix/rules');
+const enums = require('../src/modes/posix/enums');
 const utils = require('../src/utils');
 // const _utils = require('./_utils');
 
 const token = utils.tokens.token;
 
 function check(t, rule, actual, expected) {
-	// _utils.logResults({actual: Array.from(rule({}, utils)(actual)), expected});
+	// _utils.logResults({actual: Array.from(rule({}, mode)(actual)), expected});
 	t.is(
 		JSON.stringify(
-			Array.from(rule({}, utils)(actual))
+			Array.from(rule({}, {enums})(actual))
 		),
 		JSON.stringify(expected)
 	);

@@ -2,7 +2,7 @@
 const lookahead = require('iterable-lookahead');
 const compose = require('compose-function');
 const map = require('map-iterable');
-const isOperator = require('../enums/io-file-operators').isOperator;
+// const isOperator = require('../enums/io-file-operators').isOperator;
 const isValidName = require('../../../utils/is-valid-name');
 
 function couldEndSimpleCommand(scTk) {
@@ -22,7 +22,7 @@ function couldBeCommandName(tk) {
 	return tk && tk.is('WORD') && isValidName(tk.value);
 }
 
-module.exports = () => compose(
+module.exports = (options, mode) => compose(
 	map((tk, idx, iterable) => {
 		if (tk._.maybeStartOfSimpleCommand) {
 			if (couldBeCommandName(tk)) {
@@ -38,7 +38,7 @@ module.exports = () => compose(
 		if (tk._.commandNameNotFoundYet) {
 			const last = iterable.behind(1);
 
-			if (!isOperator(last) && couldBeCommandName(tk)) {
+			if (!mode.enums.IOFileOperators.isOperator(last) && couldBeCommandName(tk)) {
 				tk._.maybeSimpleCommandName = true;
 			} else {
 				const next = iterable.ahead(1);

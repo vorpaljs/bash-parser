@@ -4,6 +4,7 @@ const astBuilder = require('./ast-builder');
 const tokenizer = require('./tokenizer');
 const phaseCatalog = require('./rules');
 const grammarSource = require('./grammar');
+const enums = require('./enums');
 
 const lexerPhases = () => [
 	phaseCatalog.newLineList,
@@ -43,6 +44,7 @@ module.exports = {
 			grammar = require('./built-grammar');
 		} catch (err) {}
 		return {
+			enums,
 			phaseCatalog,
 			lexerPhases: lexerPhases(utils),
 			tokenizer,

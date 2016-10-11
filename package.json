@@ -4,7 +4,7 @@
   },
   "scripts": {
   	"setup": "lerna bootstrap && lerna run build",
-  	"test": "lerna run test",
+  	"test": "lerna run cover-test",
   	"cover-publish": "lerna run cover-publish"
   }
 }

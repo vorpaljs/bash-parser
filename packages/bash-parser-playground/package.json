@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
+  	"cover-test": "exit 0",
     "test": "xo",
     "serve": "serve ../../docs",
     "clean": "rm -rf ../../docs && mkdir ../../docs",

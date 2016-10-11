@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "Andrea Parodi",
   "scripts": {
+  	"cover-test": "exit 0",
     "test": "xo"
   },
   "keywords": [],

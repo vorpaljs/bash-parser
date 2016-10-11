@@ -1,6 +1,6 @@
 {
   "name": "bash-parser-playground",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Playground website for bash-parser",
   "repository": "vorpaljs/bash-parser",
   "license": "MIT",

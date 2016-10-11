@@ -1,6 +1,6 @@
 {
   "name": "bash-ast-traverser",
-  "version": "0.0.0",
+  "version": "0.4.0",
   "description": "Traverse an AST object created by bash-parser",
   "repository": "vorpaljs/bash-ast-traverser",
   "license": "MIT",

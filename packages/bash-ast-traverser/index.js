@@ -150,8 +150,9 @@ const DescendVisitor = {
 	Command(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
-			traverse(node.prefix),
-			traverse(node.suffix)
+			traverse(node.name),
+			node.prefix ? node.prefix.map(traverse) : [],
+			node.suffix ? node.suffix.map(traverse) : []
 		];
 	},
 

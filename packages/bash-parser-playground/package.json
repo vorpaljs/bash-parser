@@ -1,12 +1,12 @@
 {
   "name": "bash-parser-playground",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Playground website for bash-parser",
   "repository": "vorpaljs/bash-parser",
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-  	"cover-test": "exit 0",
+    "cover-test": "exit 0",
     "test": "xo",
     "serve": "serve ../../docs",
     "clean": "rm -rf ../../docs && mkdir ../../docs",

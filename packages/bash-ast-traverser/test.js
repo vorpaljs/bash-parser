@@ -44,6 +44,10 @@ function mkTestVisitor(name) {
 			const f = require(`${__dirname}/fixtures/${name.replace(/_/g, '-')}`);
 
 			const results = traverse(f.ast, TestVisitor);
+			/* if (JSON.stringify(results) !== JSON.stringify(f.expected)) {
+				console.log(JSON.stringify(results, null, 4))
+			}*/
+
 			t.is(JSON.stringify(results), JSON.stringify(f.expected));
 		}
 	];

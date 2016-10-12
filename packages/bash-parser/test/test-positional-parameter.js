@@ -32,7 +32,6 @@ test('positional parameter in braces', t => {
 		commands: [
 			{
 				type: 'Command',
-				name: {type: 'Word', text: ''},
 				prefix: [{
 					type: 'AssignmentWord',
 					text: 'echoword=${11}test',
@@ -58,7 +57,6 @@ test('positional parameter without braces', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$1',
@@ -83,7 +81,6 @@ test('positional parameter without braces allow one digit only', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$11',

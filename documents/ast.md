@@ -134,12 +134,12 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 ```
 
 ### Command
-> Represents a builtin or external command to execute. It could optionally have a list of arguments, stream redirection operation and environment variable assignments.
+> Represents a builtin or external command to execute. It could optionally have a list of arguments, stream redirection operation and environment variable assignments. `name` properties is a Word that represents the name of the command to execute. It is optional because Command could represents bare assignment, e.g. `VARNAME = 42;`. In this case, the command node has no name.
 
 ```js
 {
 	type: 'Command',
-	name: string,
+	name: ?Word,
 	prefix: Array<AssignmentWord | Redirect>,
 	suffix: Array<Word | Redirect>
 }

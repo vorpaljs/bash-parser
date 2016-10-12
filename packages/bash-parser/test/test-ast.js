@@ -51,6 +51,17 @@ test('command with pre-assignment', t => {
 	});
 });
 
+test('assignment alone', t => {
+	const result = bashParser('TEST=1');
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'Command',
+			prefix: [{type: 'AssignmentWord', text: 'TEST=1'}]
+		}]
+	});
+});
+
 test('commands with AND', t => {
 	const result = bashParser('run && stop');
 	// utils.logResults(result)

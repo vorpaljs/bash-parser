@@ -12,7 +12,6 @@ test('positional list paramter', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$@',
@@ -36,7 +35,6 @@ test('positional string paramter', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$*',
@@ -60,7 +58,6 @@ test('positional count paramter', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$#',
@@ -84,7 +81,6 @@ test('last exit status', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$?',
@@ -108,7 +104,6 @@ test('current option flags', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$-',
@@ -132,7 +127,6 @@ test('shell process id', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$$',
@@ -156,7 +150,6 @@ test('last background pid', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$!',
@@ -181,7 +174,6 @@ test('shell script name', t => {
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{
 				type: 'AssignmentWord',
 				text: 'echoword=$0',

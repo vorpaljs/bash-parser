@@ -219,11 +219,14 @@ module.exports = options => {
 	builder.commandName = name => name;
 
 	builder.commandAssignment = function commandAssignment(prefix) {
-		return builder.command(prefix, {text: '', type: 'Word'});
+		return builder.command(prefix);
 	};
 
 	builder.command = function command(prefix, command, suffix) {
-		const node = {type: 'Command', name: command};
+		const node = {type: 'Command'};
+		if (command) {
+			node.name = command;
+		}
 
 		if (options.insertLOC) {
 			node.loc = {};
@@ -237,8 +240,11 @@ module.exports = options => {
 			if (suffix) {
 				const lastSuffix = suffix[suffix.length - 1];
 				node.loc.end = lastSuffix.loc.end;
-			} else {
+			} else if (command) {
 				node.loc.end = command.loc.end;
+			} else {
+				const lastPrefix = prefix[prefix.length - 1];
+				node.loc.end = lastPrefix.loc.end;
 			}
 		}
 

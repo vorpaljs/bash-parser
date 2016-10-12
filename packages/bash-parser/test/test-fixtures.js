@@ -100,11 +100,9 @@ eval "dest=foo"`
 		type: 'Script',
 		commands: [{
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{type: 'AssignmentWord', text: 'foo=hello ; rm -rf /'}]
 		}, {
 			type: 'Command',
-			name: {type: 'Word', text: ''},
 			prefix: [{type: 'AssignmentWord', text: 'dest=bar'}]
 		}, {
 			type: 'Command',

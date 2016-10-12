@@ -149,12 +149,13 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 > `Function` represents the definition of a Function.
 
-> It is formed by the name of the Function  itself and a list of all command that forms the body of the Function.
+> It is formed by the name of the Function  itself and a list of all command that forms the body of the Function. It can also contains a list of redirection that applies to all commands of the function body.
 
 ```js
 {
 	type: 'Function',
 	name: Name,
+	redirections: Array<Redirect>
 	body: CompoundList
 }
 ```
@@ -174,7 +175,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 
 ### CompoundList
 
-> `CompoundList` represent a group of commands that form the body of `for`, `until` `while`, `if`, `else`, `case` items and `function` command.
+> `CompoundList` represent a group of commands that form the body of `for`, `until` `while`, `if`, `else`, `case` items and `function` command. It can also represent a simple group of commands, with an optional list of redirections.
 
 ```js
 {
@@ -189,6 +190,7 @@ If the source is parsed specifing the `insertLOC` option, each node contins a `l
 					If |
 					While |
 					Until>
+	redirections: Array<Redirect>
 }
 ```
 

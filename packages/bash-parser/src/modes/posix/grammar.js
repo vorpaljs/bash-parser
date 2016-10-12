@@ -68,7 +68,10 @@ module.exports = {
 		command: [
 			'simple_command',
 			'compound_command',
-			'compound_command redirect_list',
+			[
+				'compound_command redirect_list',
+				'$$ = yy.addRedirections($compound_command, $redirect_list)'
+			],
 			'function_definition'
 		],
 		compound_command: [
@@ -265,8 +268,14 @@ module.exports = {
 			]
 		],
 		function_body: [
-			'compound_command',
-			'compound_command redirect_list'
+			[
+				'compound_command',
+				'$$ = [$compound_command, null];'
+			],
+			[
+				'compound_command redirect_list',
+				'$$ = [$compound_command, $redirect_list];'
+			]
 		],
 		fname: [
 			'NAME'
@@ -360,7 +369,7 @@ module.exports = {
 			],
 			[
 				'redirect_list io_redirect',
-				'$$ = [$redirect_list.concat($io_redirect)];'
+				'$$ = $redirect_list.concat($io_redirect);'
 			]
 		],
 		io_redirect: [

@@ -176,6 +176,96 @@ test('multi line commands', t => {
 	});
 });
 
+test('Compound list', t => {
+	const result = bashParser('{ echo; ls; }');
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'CompoundList',
+			commands: [{
+				type: 'Command',
+				name: {text: 'echo', type: 'Word'}
+			}, {
+				type: 'Command',
+				name: {text: 'ls', type: 'Word'}
+			}]
+		}]
+	});
+});
+
+test('Compound list with redirections', t => {
+	const result = bashParser('{ echo; ls; } > file.txt');
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'CompoundList',
+			commands: [{
+				type: 'Command',
+				name: {text: 'echo', type: 'Word'}
+			}, {
+				type: 'Command',
+				name: {text: 'ls', type: 'Word'}
+			}],
+			redirections: [{
+				type: 'Redirect',
+				op: {type: 'great', text: '>'},
+				file: {type: 'Word', text: 'file.txt'}
+			}]
+		}]
+	});
+});
+
+test('command with multiple redirections', t => {
+	const result = bashParser('echo world > file.txt < input.dat');
+
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'Command',
+			name: {type: 'Word', text: 'echo'},
+			suffix: [{
+				type: 'Word',
+				text: 'world'
+			}, {
+				type: 'Redirect',
+				op: {type: 'great', text: '>'},
+				file: {type: 'Word', text: 'file.txt'}
+			}, {
+				type: 'Redirect',
+				op: {type: 'less', text: '<'},
+				file: {type: 'Word', text: 'input.dat'}
+			}]
+		}]
+	});
+});
+
+test('Compound list with multiple redirections', t => {
+	const result = bashParser('{ echo; ls; } > file.txt < input.dat');
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [{
+			type: 'CompoundList',
+			commands: [{
+				type: 'Command',
+				name: {text: 'echo', type: 'Word'}
+			}, {
+				type: 'Command',
+				name: {text: 'ls', type: 'Word'}
+			}],
+			redirections: [{
+				type: 'Redirect',
+				op: {type: 'great', text: '>'},
+				file: {type: 'Word', text: 'file.txt'}
+			}, {
+				type: 'Redirect',
+				op: {type: 'less', text: '<'},
+				file: {type: 'Word', text: 'input.dat'}
+			}]
+		}]
+	});
+});
+
 test('single line commands', t => {
 	const result = bashParser('echo;ls');
 	// utils.logResults(result)

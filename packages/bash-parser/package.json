@@ -9,7 +9,7 @@
   "scripts": {
     "doc": "doctoc",
     "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
-    "build": "mgb ./src/modes posix && mgb ./src/modes bash",
+    "build": "mgb ./src/modes posix && mgb ./src/modes bash && mgb ./src/modes word-expansion",
     "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
     "cover-publish": "nyc report --reporter=text-lcov | coveralls"
   },

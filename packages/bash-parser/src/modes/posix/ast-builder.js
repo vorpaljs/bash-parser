@@ -79,6 +79,15 @@ module.exports = options => {
 		return list;
 	};
 
+	builder.addRedirections = (compoundCommand, redirectList) => {
+		compoundCommand.redirections = redirectList;
+		if (options.insertLOC) {
+			const lastRedirect = redirectList[redirectList.length - 1];
+			setLocEnd(compoundCommand.loc, lastRedirect.loc);
+		}
+		return compoundCommand;
+	};
+
 	builder.term = logicalExpression => {
 		const node = {type: 'CompoundList', commands: [logicalExpression]};
 		if (options.insertLOC) {
@@ -168,9 +177,18 @@ module.exports = options => {
 	};
 
 	builder.functionDefinition = (name, body) => {
-		const node = {type: 'Function', name, body};
+		const node = {type: 'Function', name};
+
+		node.body = body[0];
+
+		if (body[1]) {
+			node.redirections = body[1];
+		}
+
+		const endLoc = body[1] || body[0];
+
 		if (options.insertLOC) {
-			node.loc = setLocEnd(setLocStart({}, name.loc), body.loc);
+			node.loc = setLocEnd(setLocStart({}, name.loc), endLoc.loc);
 		}
 		return node;
 	};

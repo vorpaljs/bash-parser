@@ -1,8 +1,12 @@
 {
-  "devDependencies": {
-    "lerna": "2.0.0-beta.28"
-  },
+  "devDependencies": {},
   "scripts": {
-
+    "setup": "./scripts/setup.sh",
+    "cover-publish": "./scripts/cover-publish.sh",
+    "clean": "./scripts/clean.sh",
+    "test": "./scripts/test.sh"
+  },
+  "dependencies": {
+    "yarn": "^0.16.1"
   }
 }

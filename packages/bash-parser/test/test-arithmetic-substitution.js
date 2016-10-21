@@ -93,7 +93,7 @@ test('arithmetic substitution in suffix', t => {
 test('arithmetic substitution node applied to invalid expressions throws', async t => {
 	const result = await t.throws(() => bashParser('echo $((a b c d))'));
 	const message = result.message.split('\n')[0];
-	t.is(message, 'Cannot parse arithmetic expression "a b c d": Unexpected token (1:2)');
+	t.is(message, 'Cannot parse arithmetic expression "a b c d": Unexpected token, expected ; (1:2)');
 });
 
 test('arithmetic substitution node applied to non expressions throws', async t => {

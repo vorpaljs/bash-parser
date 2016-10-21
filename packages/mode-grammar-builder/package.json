@@ -6,8 +6,10 @@
   "license": "MIT",
   "author": "Andrea Parodi",
   "scripts": {
-    "cover-test": "exit 0",
-    "test": "xo"
+    "travis-test": "xo",
+    "test": "xo",
+    "setup": "echo nothing to do!"
+
   },
   "keywords": [],
   "engines": {

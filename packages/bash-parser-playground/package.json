@@ -6,13 +6,17 @@
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
-    "cover-test": "exit 0",
     "test": "xo",
     "serve": "serve ../../docs",
     "clean": "rm -rf ../../docs && mkdir ../../docs",
     "copy": "cp ./*.html ../../docs",
     "browserify": "browserify index.js -o ../../docs/bundle.js -t [ babelify --presets [ es2015 ] ] -t uglifyify",
-    "build-site": "npm run clean --silent && npm run browserify --silent && npm run copy --silent"
+    "setup": "npm run clean --silent && npm run browserify --silent && npm run copy --silent",
+    "travis-test": "xo"
+
+  },
+  "dependencies": {
+
   },
   "devDependencies": {
     "babel-polyfill": "^6.13.0",

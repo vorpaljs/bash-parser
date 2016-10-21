@@ -7,7 +7,8 @@
   "author": "Andrea Parodi",
   "scripts": {
     "test": "ava --no-babel && xo",
-    "cover-test": "nyc ava --no-babel"
+    "setup": "echo nothing to do!",
+    "travis-test": "nyc ava --no-babel && xo"
   },
   "keywords": [],
   "engines": {

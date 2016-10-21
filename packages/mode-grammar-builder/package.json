@@ -9,7 +9,6 @@
     "travis-test": "xo",
     "test": "xo",
     "setup": "echo nothing to do!"
-
   },
   "keywords": [],
   "engines": {

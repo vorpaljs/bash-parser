@@ -2,7 +2,7 @@
   "devDependencies": {},
   "scripts": {
     "setup": "./scripts/setup.sh",
-    "cover-publish": "./scripts/cover-publish.sh",
+    "travis-test": "./scripts/travis-test.sh",
     "clean": "./scripts/clean.sh",
     "test": "./scripts/test.sh"
   },

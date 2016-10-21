@@ -8,22 +8,17 @@
   "scripts": {
     "test": "ava --no-babel && xo",
     "setup": "echo nothing to do!",
-    "travis-test": "nyc ava --no-babel && xo"
+    "travis-test": "npm run test --silent"
   },
-  "keywords": [],
+  "keywords": ["bash-parser", "traverser", "visitor"],
   "engines": {
     "node": ">=4"
   },
   "devDependencies": {
     "ava": "^0.15.2",
-    "coveralls": "^2.11.11",
-    "nyc": "^7.0.0",
     "xo": "^0.16.0"
   },
   "files": [
     "index.js"
-  ],
-  "nyc": {
-    "exclude": []
-  }
+  ]
 }

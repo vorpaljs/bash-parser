@@ -10,7 +10,8 @@
     "doc": "doctoc",
     "test": "ava --no-babel && xo",
     "setup": "mgb ./src/modes posix && mgb ./src/modes bash && mgb ./src/modes word-expansion",
-    "travis-test": "nyc ava --no-babel && xo && nyc report --reporter=text-lcov | coveralls"
+    "travis-test": "ava --no-babel && xo",
+    "travis-pr": "xo && nyc ava --no-babel && nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "engines": {

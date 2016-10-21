@@ -88,5 +88,5 @@ built-grammar.js
 .nyc_output
 
 
-VERSION
+**/built-grammar.js
 

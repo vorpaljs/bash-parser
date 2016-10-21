@@ -8,11 +8,9 @@
   "author": "vorpal-js",
   "scripts": {
     "doc": "doctoc",
-    "test": "ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
+    "test": "ava --no-babel && xo",
     "setup": "mgb ./src/modes posix && mgb ./src/modes bash && mgb ./src/modes word-expansion",
-    "cover-test": "nyc ava --no-babel && xo --ignore **/built-grammar.js --ignore 'packages/**/*'",
-    "cover-publish": "nyc report --reporter=text-lcov | coveralls",
-    "travis-test": "npm run cover-test --silent && npm run cover-publish --silent"
+    "travis-test": "nyc ava --no-babel && xo && nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "engines": {

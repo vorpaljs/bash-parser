@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "engines": {
-    "node": ">=6"
+    "node": ">=4"
   },
   "devDependencies": {
     "xo": "^0.16.0"

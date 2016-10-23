@@ -9,7 +9,12 @@ const fieldSplitting = require('./field-splitting');
 const handleParameter = (obj, match) => {
 	const ret = mapObj(obj, (k, v) => {
 		if (typeof v === 'function') {
-			return [k, v(match)];
+			const val = v(match);
+			console.log(k, val)
+			if (val === undefined) {
+				return ['delete-me'];
+			}
+			return [k, val];
 		}
 
 		if (typeof v === 'object' && k !== 'expand') {
@@ -18,6 +23,8 @@ const handleParameter = (obj, match) => {
 
 		return [k, v];
 	});
+
+	delete ret['delete-me'];
 
 	if (ret.expand) {
 		const bashParser = require('../../../index');

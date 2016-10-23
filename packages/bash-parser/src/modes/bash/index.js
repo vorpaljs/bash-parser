@@ -4,11 +4,11 @@ const bashAliasSubstitution = require('./rules/alias-substitution');
 
 const name = '[a-zA-Z_][a-zA-Z0-9_]*';
 const parameterOperators = {
-	[`^(${name}):(.*):(.*)$`]: {
+	[`^(${name}):([^:]*):?([^:]*)$`]: {
 		op: 'substring',
 		parameter: m => m[1],
 		offset: m => parseInt(m[2], 10),
-		length: m => parseInt(m[3], 10)
+		length: m => parseInt(m[3], 10) || undefined
 	}
 };
 

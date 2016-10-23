@@ -3,12 +3,28 @@
 const bashAliasSubstitution = require('./rules/alias-substitution');
 
 const name = '[a-zA-Z_][a-zA-Z0-9_]*';
+
 const parameterOperators = {
+	// This is referred to as Substring Expansion.
+	// It expands to up to length characters of the value
+	// of parameter starting at the character specified by offset.
 	[`^(${name}):([^:]*):?([^:]*)$`]: {
 		op: 'substring',
 		parameter: m => m[1],
 		offset: m => parseInt(m[2], 10),
 		length: m => parseInt(m[3], 10) || undefined
+	},
+
+	// Expands to the names of variables whose names begin with prefix,
+	// separated by the first character of the IFS special variable.
+	// When ‘@’ is used and the expansion appears within double quotes,
+	// each variable name expands to a separate word.
+	// TODO: @ case may need some investigation, maybe it's not actually possible
+	[`^!(${name})(\\*|@)$`]: {
+		op: 'prefix',
+		prefix: m => m[1],
+		expandWords: m => m[2] === '@',
+		parameter: () => undefined
 	}
 };
 

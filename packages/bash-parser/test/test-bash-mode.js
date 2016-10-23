@@ -38,6 +38,37 @@ test('parameter substitution with Substring Expansion', t => {
 	});
 });
 
+test('parameter substitution with prefix', t => {
+	const result = bashParser('echo ${!text*}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		type: 'ParameterExpansion',
+		op: 'prefix',
+		prefix: 'text',
+		expandWords: false
+	});
+});
+
+test('parameter substitution with prefix and word expansion', t => {
+	const result = bashParser('echo ${!text@}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		prefix: 'text',
+		type: 'ParameterExpansion',
+		op: 'prefix',
+		expandWords: true
+	});
+});
+
 test('parameter substitution: length is optional', t => {
 	const result = bashParser('echo ${text:2}', {mode: 'bash'})
 		.commands[0].suffix[0].expansion[0];

@@ -1,5 +1,6 @@
 'use strict';
 const mapObj = require('map-obj');
+const filter = require('filter-obj');
 const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
@@ -10,10 +11,6 @@ const handleParameter = (obj, match) => {
 	const ret = mapObj(obj, (k, v) => {
 		if (typeof v === 'function') {
 			const val = v(match);
-			console.log(k, val)
-			if (val === undefined) {
-				return ['delete-me'];
-			}
 			return [k, val];
 		}
 
@@ -23,8 +20,6 @@ const handleParameter = (obj, match) => {
 
 		return [k, v];
 	});
-
-	delete ret['delete-me'];
 
 	if (ret.expand) {
 		const bashParser = require('../../../index');
@@ -50,10 +45,10 @@ function expandParameter(xp, enums) {
 		if (match) {
 			const opProps = handleParameter(pair[1], match);
 
-			return Object.assign(
+			return filter(Object.assign(
 				xp,
 				opProps
-			);
+			), (k, v) => v !== undefined);
 		}
 	}
 

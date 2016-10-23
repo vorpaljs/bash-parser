@@ -25,6 +25,17 @@ const parameterOperators = {
 		prefix: m => m[1],
 		expandWords: m => m[2] === '@',
 		parameter: () => undefined
+	},
+
+	// Parameter is expanded and the longest match of pattern against its
+	// value is replaced with string. If pattern begins with ‘/’, all matches
+	// of pattern are replaced with string.
+	[`^(${name})\\/(\\/)?([^\\/])+\\/(.*)$`]: {
+		op: 'stringReplace',
+		parameter: m => m[1],
+		substitute: m => m[3],
+		replace: m => m[4],
+		globally: m => m[2] === '/'
 	}
 };
 

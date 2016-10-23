@@ -84,3 +84,37 @@ test('parameter substitution: length is optional', t => {
 		offset: 2
 	});
 });
+
+test('parameter substitution with string replacement', t => {
+	const result = bashParser('echo ${var/a/b}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 9
+		},
+		type: 'ParameterExpansion',
+		op: 'stringReplace',
+		parameter: 'var',
+		substitute: 'a',
+		replace: 'b',
+		globally: false
+	});
+});
+
+test('parameter substitution with string replacement - globally', t => {
+	const result = bashParser('echo ${var//a/b}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 10
+		},
+		type: 'ParameterExpansion',
+		op: 'stringReplace',
+		parameter: 'var',
+		substitute: 'a',
+		replace: 'b',
+		globally: true
+	});
+});

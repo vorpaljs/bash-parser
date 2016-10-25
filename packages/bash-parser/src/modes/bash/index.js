@@ -103,6 +103,21 @@ const parameterOperators = {
 				default: return 'unknown';
 			}
 		}
+	},
+
+	// If the first character of parameter is an exclamation point (!), and parameter is not
+	// a nameref, it introduces a level of variable indirection. Bash uses the value of the
+	// variable formed from the rest of parameter as the name of the variable; this variable
+	// is then expanded and that value is used in the rest of the substitution, rather than
+	// the value of parameter itself. This is known as indirect expansion. If parameter is a
+	// nameref, this expands to the name of the variable referenced by parameter instead of
+	// performing the complete indirect expansion. The exceptions to this are the expansions
+	// of ${!prefix*} and ${!name[@]} described below. The exclamation point must immediately
+	// follow the left brace in order to introduce indirection.
+	[`^!(.+)$`]: {
+		op: 'indirection',
+		word: m => m[1],
+		parameter: () => undefined
 	}
 };
 

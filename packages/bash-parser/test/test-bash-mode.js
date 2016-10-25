@@ -369,3 +369,17 @@ test('parameter substitution with transformation:flags', t => {
 		kind: 'flags'
 	});
 });
+
+test('parameter substitution with indirection', t => {
+	const result = bashParser('echo ${!text}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 7
+		},
+		word: 'text',
+		type: 'ParameterExpansion',
+		op: 'indirection'
+	});
+});

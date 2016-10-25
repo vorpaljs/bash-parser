@@ -152,3 +152,145 @@ test('parameter substitution with array indices and word expansion', t => {
 		expandWords: true
 	});
 });
+
+test('parameter substitution with case change upper case and pattern', t => {
+	const result = bashParser('echo ${text^t}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		pattern: 't',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'upper',
+		globally: false
+	});
+});
+
+test('parameter substitution with case change upper case globally and pattern', t => {
+	const result = bashParser('echo ${text^^t}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 9
+		},
+		parameter: 'text',
+		pattern: 't',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'upper',
+		globally: true
+	});
+});
+
+test('parameter substitution with case change lower case and pattern', t => {
+	const result = bashParser('echo ${text,t}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		pattern: 't',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'lower',
+		globally: false
+	});
+});
+
+test('parameter substitution with case change lower case globally and pattern', t => {
+	const result = bashParser('echo ${text,,t}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 9
+		},
+		parameter: 'text',
+		pattern: 't',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'lower',
+		globally: true
+	});
+});
+
+test('parameter substitution with case change upper case and default pattern', t => {
+	const result = bashParser('echo ${text^}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 7
+		},
+		parameter: 'text',
+		pattern: '?',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'upper',
+		globally: false
+	});
+});
+
+test('parameter substitution with case change upper case globally and default pattern', t => {
+	const result = bashParser('echo ${text^^}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	// utils.logResults(result);
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		pattern: '?',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'upper',
+		globally: true
+	});
+});
+
+test('parameter substitution with case change lower case and default pattern', t => {
+	const result = bashParser('echo ${text,}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 7
+		},
+		parameter: 'text',
+		pattern: '?',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'lower',
+		globally: false
+	});
+});
+
+test('parameter substitution with case change lower case globally and default pattern', t => {
+	const result = bashParser('echo ${text,,}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		pattern: '?',
+		type: 'ParameterExpansion',
+		op: 'caseChange',
+		case: 'lower',
+		globally: true
+	});
+});

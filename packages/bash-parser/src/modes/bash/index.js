@@ -47,6 +47,28 @@ const parameterOperators = {
 		substitute: m => m[3],
 		replace: m => m[4],
 		globally: m => m[2] === '/'
+	},
+
+	// This expansion modifies the case of alphabetic characters in parameter.
+	// The pattern is expanded to produce a pattern just as in filename expansion.
+	// Each character in the expanded value of parameter is tested against pattern,
+	// and, if it matches the pattern, its case is converted. The pattern should
+	// not attempt to match more than one character. The ‘^’ operator converts
+	// lowercase letters matching pattern to uppercase; the ‘,’ operator converts
+	// matching uppercase letters to lowercase. The ‘^^’ and ‘,,’ expansions convert
+	// each matched character in the expanded value; the ‘^’ and ‘,’ expansions match
+	// and convert only the first character in the expanded value. If pattern is omitted,
+	// it is treated like a ‘?’, which matches every character. If parameter is ‘@’
+	// or ‘*’, the case modification operation is applied to each positional parameter
+	// in turn, and the expansion is the resultant list. If parameter is an array variable
+	// subscripted with ‘@’ or ‘*’, the case modification operation is applied to each
+	// member of the array in turn, and the expansion is the resultant list.
+	[`^(${name})(\\^\\^|\\^|,,|,)(.*)$`]: {
+		op: 'caseChange',
+		parameter: m => m[1],
+		pattern: m => m[3] || '?',
+		case: m => m[2][0] === ',' ? 'lower' : 'upper',
+		globally: m => m[2].length === 2
 	}
 };
 

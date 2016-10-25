@@ -69,6 +69,40 @@ const parameterOperators = {
 		pattern: m => m[3] || '?',
 		case: m => m[2][0] === ',' ? 'lower' : 'upper',
 		globally: m => m[2].length === 2
+	},
+
+	// The expansion is either a transformation of the value of parameter or information about
+	// parameter itself, depending on the value of operator. Each operator is a single letter:
+	//
+	// Q - The expansion is a string that is the value of parameter quoted in a format that can
+	// 	be reused as input.
+	// E - The expansion is a string that is the value of parameter with backslash escape
+	// 	sequences expanded as with the $'…' quoting mechansim.
+	// P - The expansion is a string that is the result of expanding the value of parameter
+	// 	as if it were a prompt string (see Controlling the Prompt).
+	// A - The expansion is a string in the form of an assignment statement or declare command
+	// 	that, if evaluated, will recreate parameter with its attributes and value.
+	// a - The expansion is a string consisting of flag values representing parameter’s attributes.
+	//
+	// If parameter is ‘@’ or ‘*’, the operation is applied to each positional parameter in turn,
+	// and the expansion is the resultant list. If parameter is an array variable subscripted
+	// with ‘@’ or ‘*’, the operation is applied to each member of the array in turn, and the
+	// expansion is the resultant list.
+	// The result of the expansion is subject to word splitting and pathname expansion as
+	// described below.
+	[`^(${name})@([Q|E|P|A|a])$`]: {
+		op: 'transformation',
+		parameter: m => m[1],
+		kind: m => {
+			switch (m[2]) {
+				case 'Q': return 'quoted';
+				case 'E': return 'escape';
+				case 'P': return 'prompt';
+				case 'A': return 'assignment';
+				case 'a': return 'flags';
+				default: return 'unknown';
+			}
+		}
 	}
 };
 

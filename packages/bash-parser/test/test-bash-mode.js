@@ -294,3 +294,78 @@ test('parameter substitution with case change lower case globally and default pa
 		globally: true
 	});
 });
+
+test('parameter substitution with transformation:quoted', t => {
+	const result = bashParser('echo ${text@Q}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		type: 'ParameterExpansion',
+		op: 'transformation',
+		kind: 'quoted'
+	});
+});
+
+test('parameter substitution with transformation:escape', t => {
+	const result = bashParser('echo ${text@E}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		type: 'ParameterExpansion',
+		op: 'transformation',
+		kind: 'escape'
+	});
+});
+
+test('parameter substitution with transformation:prompt', t => {
+	const result = bashParser('echo ${text@P}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		type: 'ParameterExpansion',
+		op: 'transformation',
+		kind: 'prompt'
+	});
+});
+
+test('parameter substitution with transformation:assignment', t => {
+	const result = bashParser('echo ${text@A}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		type: 'ParameterExpansion',
+		op: 'transformation',
+		kind: 'assignment'
+	});
+});
+
+test('parameter substitution with transformation:flags', t => {
+	const result = bashParser('echo ${text@a}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 8
+		},
+		parameter: 'text',
+		type: 'ParameterExpansion',
+		op: 'transformation',
+		kind: 'flags'
+	});
+});

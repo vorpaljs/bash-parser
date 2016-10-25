@@ -118,3 +118,37 @@ test('parameter substitution with string replacement - globally', t => {
 		globally: true
 	});
 });
+
+test('parameter substitution with array indices', t => {
+	const result = bashParser('echo ${!text[*]}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+
+	// utils.logResults(result);
+
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 10
+		},
+		type: 'ParameterExpansion',
+		op: 'arrayIndices',
+		parameter: 'text',
+		expandWords: false
+	});
+});
+
+test('parameter substitution with array indices and word expansion', t => {
+	const result = bashParser('echo ${!text[@]}', {mode: 'bash'})
+		.commands[0].suffix[0].expansion[0];
+
+	utils.checkResults(t, result, {
+		loc: {
+			start: 0,
+			end: 10
+		},
+		parameter: 'text',
+		type: 'ParameterExpansion',
+		op: 'arrayIndices',
+		expandWords: true
+	});
+});

@@ -27,6 +27,17 @@ const parameterOperators = {
 		parameter: () => undefined
 	},
 
+	// If name is an array variable, expands to the list of array indices
+	// (keys) assigned in name. If name is not an array, expands to 0 if
+	// name is set and null otherwise. When ‘@’ is used and the expansion
+	// appears within double quotes, each key expands to a separate word.
+	// TODO: @ case may need some investigation, maybe it's not actually possible
+	[`^!(${name})(\\[\\*\\]|\\[@\\])$`]: {
+		op: 'arrayIndices',
+		parameter: m => m[1],
+		expandWords: m => m[2] === '[@]'
+	},
+
 	// Parameter is expanded and the longest match of pattern against its
 	// value is replaced with string. If pattern begins with ‘/’, all matches
 	// of pattern are replaced with string.

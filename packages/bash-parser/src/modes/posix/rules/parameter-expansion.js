@@ -1,5 +1,6 @@
 'use strict';
 const mapObj = require('map-obj');
+const filter = require('filter-obj');
 const map = require('map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
@@ -9,7 +10,8 @@ const fieldSplitting = require('./field-splitting');
 const handleParameter = (obj, match) => {
 	const ret = mapObj(obj, (k, v) => {
 		if (typeof v === 'function') {
-			return [k, v(match)];
+			const val = v(match);
+			return [k, val];
 		}
 
 		if (typeof v === 'object' && k !== 'expand') {
@@ -43,10 +45,10 @@ function expandParameter(xp, enums) {
 		if (match) {
 			const opProps = handleParameter(pair[1], match);
 
-			return Object.assign(
+			return filter(Object.assign(
 				xp,
 				opProps
-			);
+			), (k, v) => v !== undefined);
 		}
 	}
 

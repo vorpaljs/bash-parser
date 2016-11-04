@@ -1,6 +1,6 @@
 {
   "name": "mode-grammar-builder",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Build a jison grammar for a bash-parser mode",
   "repository": "vorpaljs/bash-ast-traverser",
   "license": "MIT",

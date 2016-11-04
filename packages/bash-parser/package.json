@@ -21,13 +21,16 @@
     "coveralls": "^2.11.11",
     "doctoc": "^1.2.0",
     "json5": "^0.5.0",
-    "mode-grammar-builder": "0.4.2",
+    "mode-grammar-builder": "0.5.0",
     "nyc": "^7.0.0",
     "rollup": "^0.36.3",
     "xo": "^0.16.0"
   },
   "files": [
-    "src"
+    "index.js",
+    "built-grammar-bash.js",
+    "built-grammar-posix.js",
+    "built-grammar-word-expansion.js"
   ],
   "nyc": {
     "exclude": [

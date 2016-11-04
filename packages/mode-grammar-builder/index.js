@@ -16,13 +16,6 @@ if (argv._.length === 1) {
 	process.exit(1);
 }
 
-function loadPlugin(modePlugin, modes) {
-	if (modePlugin.inherits) {
-		return modePlugin.init(loadPlugin(modes[modePlugin.inherits], modes));
-	}
-	return modePlugin.init(null);
-}
-
 function build(modesFolder) {
 	const modeModule = resolve(modesFolder, 'index.js');
 	const builtGrammar = mode => resolve(modesFolder, `built-grammar-${mode}.js`);
@@ -38,9 +31,8 @@ function build(modesFolder) {
 			return;
 		}
 		const modeName = modeNames[idx];
-		const modePlugin = bashParser.modes[modeName];
+		const mode = bashParser.modes[modeName];
 		const builtGrammarPath = builtGrammar(modeName);
-		const mode = loadPlugin(modePlugin, bashParser.modes);
 
 		spinner.text = `${modeName} module loaded.`;
 		let parserSource;

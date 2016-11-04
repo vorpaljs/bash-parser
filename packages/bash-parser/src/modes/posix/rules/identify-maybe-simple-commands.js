@@ -1,11 +1,10 @@
-'use strict';
-// const hasOwnProperty = require('has-own-property');
-const values = require('object-values');
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
+// import hasOwnProperty from 'has-own-property';
+import values from 'object-values';
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
 
-module.exports = function identifyMaybeSimpleCommands(options, mode) {
+export default function identifyMaybeSimpleCommands(options, mode) {
 	return compose(map((tk, idx, iterable) => {
 		const last = iterable.behind(1) || {EMPTY: true, is: type => type === 'EMPTY'};
 
@@ -20,4 +19,4 @@ module.exports = function identifyMaybeSimpleCommands(options, mode) {
 
 		return tk;
 	}), lookahead);
-};
+}

@@ -1,6 +1,5 @@
-'use strict';
-
-const bashAliasSubstitution = require('./rules/alias-substitution');
+import utils from '../../utils/index';
+import bashAliasSubstitution from './rules/alias-substitution';
 
 const name = '[a-zA-Z_][a-zA-Z0-9_]*';
 
@@ -121,9 +120,9 @@ const parameterOperators = {
 	}
 };
 
-module.exports = {
+export default {
 	inherits: 'posix',
-	init: (posixMode, utils) => {
+	init: posixMode => {
 		const phaseCatalog = Object.assign(
 			{},
 			posixMode.phaseCatalog,

@@ -1,6 +1,4 @@
-'use strict';
-
-const ioFileOperators = module.exports = [
+const ioFileOperators = [
 	'LESS',
 	'DLESS',
 	'DGREAT',
@@ -10,6 +8,8 @@ const ioFileOperators = module.exports = [
 	'LESSGREAT',
 	'CLOBBER'
 ];
+
+export default ioFileOperators;
 
 ioFileOperators.isOperator = function isOperator(tk) {
 	for (const op of ioFileOperators) {

@@ -1,11 +1,10 @@
-'use strict';
 /* eslint-disable camelcase */
 
-const map = require('map-iterable');
-const babylon = require('babylon');
-const MagicString = require('magic-string');
-const tokens = require('../../../utils/tokens');
-const fieldSplitting = require('./field-splitting');
+import map from 'map-iterable';
+import babylon from 'babylon';
+import MagicString from 'magic-string';
+import {tokens} from '../../../utils/index';
+import {mark} from './field-splitting';
 
 function parseArithmeticAST(xp) {
 	let AST;
@@ -52,7 +51,7 @@ arithmeticExpansion.resolve = options => map(token => {
 				magic.overwrite(
 					xp.loc.start,
 					xp.loc.end + 1,
-					fieldSplitting.mark(result, value, options)
+					mark(result, value, options)
 				);
 				xp.resolved = true;
 			}
@@ -63,4 +62,4 @@ arithmeticExpansion.resolve = options => map(token => {
 	return token;
 });
 
-module.exports = arithmeticExpansion;
+export default arithmeticExpansion;

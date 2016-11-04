@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable camelcase */
-module.exports = {
+export default {
 	start: 'complete_command',
 	bnf: {
 		complete_command: [

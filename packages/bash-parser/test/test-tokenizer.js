@@ -1,9 +1,10 @@
 'use strict';
 
 const test = require('ava');
-const tokenDelimiter = require('../src/modes/posix/tokenizer');
+const {modes} = require('../index');
 
-const tokenizer = tokenDelimiter();
+const {posix} = modes;
+const tokenizer = posix.tokenizer();
 
 function mkloc([startCol, startRow, startChar], [endCol, endRow, endChar]) {
 	return JSON.stringify({

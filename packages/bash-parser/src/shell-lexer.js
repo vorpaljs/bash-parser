@@ -1,10 +1,10 @@
-'use strict';
-const compose = require('compose-function');
+import compose from 'compose-function';
 
 const posixShellLexer = (mode, options) => ({
 	lex() {
 		const item = this.tokenizer.next();
 		const tk = item.value;
+		// if (!tk) return ;
 		const tkType = tk.originalType;
 		const text = tk.value;
 
@@ -59,4 +59,4 @@ const posixShellLexer = (mode, options) => ({
 	}
 });
 
-module.exports = posixShellLexer;
+export default posixShellLexer;

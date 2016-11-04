@@ -1,13 +1,16 @@
 'use strict';
 
 const test = require('ava');
-const posixLexer = require('../src/shell-lexer');
-const posixMode = require('../src/modes/posix');
+const {modes, lexer} = require('../index');
 const utils = require('./_utils');
+
+const {posix} = modes;
+const posixMode = posix;
+const posixLexer = lexer;
 
 /* eslint-disable camelcase */
 function tokenize(text, rawTokens) {
-	const lexer = posixLexer(posixMode.init(), {});
+	const lexer = posixLexer(posixMode, {});
 	lexer.setInput(text);
 	const results = [];
 	let token = lexer.lex();

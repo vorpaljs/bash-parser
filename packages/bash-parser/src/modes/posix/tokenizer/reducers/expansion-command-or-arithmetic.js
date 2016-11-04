@@ -1,11 +1,9 @@
-'use strict';
-
-const last = require('array-last');
-const t = require('../../../../utils/tokens');
+import last from 'array-last';
+import {tokens as t} from '../../../../utils/index';
 
 const continueToken = t.continueToken;
 
-module.exports = function expansionCommandOrArithmetic(state, source, reducers) {
+export default function expansionCommandOrArithmetic(state, source, reducers) {
 	const char = source && source.shift();
 	const xp = last(state.expansion);
 
@@ -42,4 +40,4 @@ module.exports = function expansionCommandOrArithmetic(state, source, reducers) 
 		nextReduction: reducers.expansionCommandOrArithmetic,
 		nextState: state.appendChar(char).replaceLastExpansion({command: (xp.command || '') + char})
 	};
-};
+}

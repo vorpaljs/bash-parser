@@ -1,20 +1,18 @@
-'use strict';
+import end from './end';
+import operator from './operator';
+import comment from './comment';
+import singleQuoting from './single-quoting';
+import doubleQuoting from './double-quoting';
+import expansionStart from './expansion-start';
+import expansionCommandTick from './expansion-command-tick';
+import start from './start';
+import expansionArithmetic from './expansion-arithmetic';
+import expansionSpecialParameter from './expansion-special-parameter';
+import expansionParameter from './expansion-parameter';
+import expansionCommandOrArithmetic from './expansion-command-or-arithmetic';
+import expansionParameterExtended from './expansion-parameter-extended';
 
-const end = require('./end');
-const operator = require('./operator');
-const comment = require('./comment');
-const singleQuoting = require('./single-quoting');
-const doubleQuoting = require('./double-quoting');
-const expansionStart = require('./expansion-start');
-const expansionCommandTick = require('./expansion-command-tick');
-const start = require('./start');
-const expansionArithmetic = require('./expansion-arithmetic');
-const expansionSpecialParameter = require('./expansion-special-parameter');
-const expansionParameter = require('./expansion-parameter');
-const expansionCommandOrArithmetic = require('./expansion-command-or-arithmetic');
-const expansionParameterExtended = require('./expansion-parameter-extended');
-
-module.exports = {
+export default {
 	end,
 	operator,
 	comment,

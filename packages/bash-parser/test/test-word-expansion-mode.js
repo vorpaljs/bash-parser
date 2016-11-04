@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 
 const test = require('ava');
-const bashParser = require('../src');
+const bashParser = require('../index');
 const utils = require('./_utils');
 
 test('expand on a single word', t => {

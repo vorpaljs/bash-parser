@@ -1,10 +1,8 @@
-'use strict';
-
 function isSpecialParameter(char) {
 	return char.match(/^[0-9\-!@#\?\*\$]$/);
 }
 
-module.exports = function expansionStart(state, source, reducers) {
+export default function expansionStart(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === '{') {
@@ -36,4 +34,4 @@ module.exports = function expansionStart(state, source, reducers) {
 	}
 
 	return state.previousReducer(state, [char].concat(source));
-};
+}

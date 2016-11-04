@@ -1,6 +1,6 @@
-'use strict';
-const deepFreeze = require('deep-freeze');
-const last = require('array-last');
+import deepFreeze from 'deep-freeze';
+import last from 'array-last';
+import defaultReducers from './reducers/index';
 
 const defaultFields = reducers => ({
 	current: '',
@@ -178,8 +178,8 @@ const mkMutableState = reducers => class {
 	}
 };
 
-module.exports = (options, reducers) => function * tokenizer(src) {
-	reducers = reducers || require('./reducers');
+const tokenizer = (options, reducers) => function * tokenizer(src) {
+	reducers = reducers || defaultReducers;
 
 	const State = process.env.NODE_NEV === 'development' ? mkImmutableState(reducers) : mkMutableState(reducers);
 
@@ -212,4 +212,5 @@ module.exports = (options, reducers) => function * tokenizer(src) {
 	}
 };
 
-module.exports.reducers = require('./reducers');
+tokenizer.reducers = defaultReducers;
+export default tokenizer;

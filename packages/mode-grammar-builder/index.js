@@ -9,52 +9,61 @@ const Parser = require('jison').Parser;
 
 const argv = minimist(process.argv.slice(2));
 
-if (argv._.length === 2) {
-	build(argv._[0], argv._[1]);
+if (argv._.length === 1) {
+	build(argv._[0]);
 } else {
-	console.log(chalk.red(`Usage: mgb <modes folder> <mode name>`));
+	console.log(chalk.red(`Usage: mgb <modes folder>`));
 	process.exit(1);
 }
 
-function loadPlugin(modesFolder, modeName, utils) {
-	const modePath = resolve(modesFolder, modeName);
-	const modePlugin = require(modePath);
-
+function loadPlugin(modePlugin, modes) {
 	if (modePlugin.inherits) {
-		return modePlugin.init(loadPlugin(modesFolder, modePlugin.inherits, utils), utils);
+		return modePlugin.init(loadPlugin(modes[modePlugin.inherits], modes));
 	}
-	return modePlugin.init(null, utils);
+	return modePlugin.init(null);
 }
 
-function build(modesFolder, modeName) {
-	const modeModule = resolve(modesFolder, modeName, 'index.js');
-	const builtGrammarPath = resolve(modesFolder, modeName, 'built-grammar.js');
-	const utilsPath = resolve(modesFolder, '..', 'utils');
-	const utils = require(utilsPath);
+function build(modesFolder) {
+	const modeModule = resolve(modesFolder, 'index.js');
+	const builtGrammar = mode => resolve(modesFolder, `built-grammar-${mode}.js`);
 	const spinner = ora(`Building grammar from ${modeModule}...`).start();
+	const bashParser = require(modeModule);
 
-	const mode = loadPlugin(modesFolder, modeName, utils);
-	spinner.text = 'Mode module loaded.';
-	let parserSource;
-	try {
-		const parser = new Parser(mode.grammarSource);
-		parserSource = parser.generate();
-	} catch (err) {
-		console.log(chalk.red(`Cannot compile grammar: \n${err.stack}`));
-		spinner.stop();
-		process.exit(1);
-		return;
-	}
+	const modeNames = Object.keys(bashParser.modes);
+	buildMode(0);
 
-	spinner.text = 'Mode grammar compiled.';
-	writeFile(builtGrammarPath, parserSource, err => {
-		if (err) {
-			console.log(chalk.red(`Cannot write compiled grammar to file: \n${err.stack}`));
+	function buildMode(idx) {
+		if (idx >= modeNames.length) {
+			spinner.stop();
+			return;
+		}
+		const modeName = modeNames[idx];
+		const modePlugin = bashParser.modes[modeName];
+		const builtGrammarPath = builtGrammar(modeName);
+		const mode = loadPlugin(modePlugin, bashParser.modes);
+
+		spinner.text = `${modeName} module loaded.`;
+		let parserSource;
+		try {
+			const parser = new Parser(mode.grammarSource);
+			parserSource = parser.generate();
+		} catch (err) {
+			console.log(chalk.red(`Cannot compile grammar: \n${err.stack}`));
 			spinner.stop();
 			process.exit(1);
 			return;
 		}
-		spinner.stop();
-		console.log(chalk.green(`Mode grammar saved to ${builtGrammarPath}.`));
-	});
+
+		spinner.text = '- grammar compiled.';
+		writeFile(builtGrammarPath, parserSource, err => {
+			if (err) {
+				console.log(chalk.red(`Cannot write compiled grammar to file: \n${err.stack}`));
+				spinner.stop();
+				process.exit(1);
+				return;
+			}
+			buildMode(idx + 1);
+			console.log(chalk.green(`grammar saved to ${builtGrammarPath}.`));
+		});
+	}
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const bashParser = require('../src');
+const bashParser = require('../index');
 const utils = require('./_utils');
 
 test('loc take into account line continuations', t => {

@@ -1,9 +1,8 @@
-'use strict';
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
-const tokens = require('../../../utils/tokens');
-const filterNonNull = require('../../../utils/non-null');
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
+import {tokens} from '../../../utils/index';
+import filterNonNull from '../../../utils/non-null';
 
 const ReplaceWithLineBreakIn = {
 	NEWLINE_LIST(tk, iterable) {
@@ -33,7 +32,7 @@ const ReplaceWithLineBreakIn = {
 
 /* resolve a conflict in grammar by tokenize linebreak+in
 tokens as a new  linebreak_in */
-module.exports = () => compose(
+export default () => compose(
 	filterNonNull,
 	map(
 		tokens.applyTokenizerVisitor(ReplaceWithLineBreakIn)

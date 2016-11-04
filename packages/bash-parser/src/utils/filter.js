@@ -1,8 +1,7 @@
-'use strict';
-const filterIterator = require('filter-iterator');
-const reverse = require('reverse-arguments');
-const curry = require('curry');
+import filterIterator from 'filter-iterator';
+import reverse from 'reverse-arguments';
+import curry from 'curry';
 
 const filter = curry.to(2, reverse(filterIterator));
 
-module.exports = filter;
+export default filter;

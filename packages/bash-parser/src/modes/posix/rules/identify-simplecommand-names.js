@@ -1,9 +1,8 @@
-'use strict';
-const lookahead = require('iterable-lookahead');
-const compose = require('compose-function');
-const map = require('map-iterable');
+import lookahead from 'iterable-lookahead';
+import compose from 'compose-function';
+import map from 'map-iterable';
 // const isOperator = require('../enums/io-file-operators').isOperator;
-const isValidName = require('../../../utils/is-valid-name');
+import isValidName from '../../../utils/is-valid-name';
 
 function couldEndSimpleCommand(scTk) {
 	return scTk && (
@@ -22,7 +21,7 @@ function couldBeCommandName(tk) {
 	return tk && tk.is('WORD') && isValidName(tk.value);
 }
 
-module.exports = (options, mode) => compose(
+export default (options, mode) => compose(
 	map((tk, idx, iterable) => {
 		if (tk._.maybeStartOfSimpleCommand) {
 			if (couldBeCommandName(tk)) {

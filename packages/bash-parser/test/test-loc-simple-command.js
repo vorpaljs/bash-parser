@@ -3,7 +3,7 @@
 // const json = require('json5');
 // const {diff} = require('rus-diff');
 const test = require('ava');
-const bashParser = require('../src');
+const bashParser = require('../index');
 const mkloc = require('./_utils').mkloc2;
 const utils = require('./_utils');
 

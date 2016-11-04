@@ -1,10 +1,8 @@
-'use strict';
-
-const compose = require('compose-function');
-const identity = require('identity-function');
-const map = require('map-iterable');
-const merge = require('transform-spread-iterable');
-const tokens = require('../../../utils/tokens');
+import compose from 'compose-function';
+import identity from 'identity-function';
+import map from 'map-iterable';
+import merge from 'transform-spread-iterable';
+import {tokens} from '../../../utils/index';
 
 const expandAlias = (preAliasLexer, resolveAlias) => {
 	function * tryExpandToken(token, expandingAliases) {
@@ -37,7 +35,7 @@ const expandAlias = (preAliasLexer, resolveAlias) => {
 	};
 };
 
-module.exports = (options, mode, previousPhases) => {
+export default (options, mode, previousPhases) => {
 	if (typeof options.resolveAlias !== 'function') {
 		return identity;
 	}

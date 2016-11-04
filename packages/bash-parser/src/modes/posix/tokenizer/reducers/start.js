@@ -1,12 +1,10 @@
-'use strict';
-
-const t = require('../../../../utils/tokens');
+import {tokens as t} from '../../../../utils/index';
 
 const tokenOrEmpty = t.tokenOrEmpty;
 const newLine = t.newLine;
 const isPartOfOperator = t.isPartOfOperator;
 
-module.exports = function start(state, source, reducers) {
+export default function start(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === undefined) {
@@ -93,4 +91,4 @@ module.exports = function start(state, source, reducers) {
 		nextReduction: reducers.start,
 		nextState: state.appendChar(char).setEscaping(false)
 	};
-};
+}

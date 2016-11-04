@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const bashParser = require('../src');
+const bashParser = require('../index');
 const utils = require('./_utils');
 
 // various example taken from http://www.etalabs.net/sh_tricks.html

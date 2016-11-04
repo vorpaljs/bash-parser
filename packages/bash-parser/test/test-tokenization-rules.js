@@ -1,11 +1,10 @@
 'use strict';
 
 const test = require('ava');
-const rules = require('../src/modes/posix/rules');
-const enums = require('../src/modes/posix/enums');
-const utils = require('../src/utils');
-// const _utils = require('./_utils');
+const {modes, utils} = require('../index');
 
+const rules = modes.posix.phaseCatalog;
+const enums = modes.posix.enums;
 const token = utils.tokens.token;
 
 function check(t, rule, actual, expected) {

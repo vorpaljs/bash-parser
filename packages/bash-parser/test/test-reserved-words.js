@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const bashParser = require('../src');
+const bashParser = require('../index');
 const utils = require('./_utils');
 
 test('single quoted tokens are not parsed as reserved words', t => {

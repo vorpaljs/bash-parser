@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const bashParser = require('../src');
+const bashParser = require('../index');
 const mkloc = require('./_utils').mkloc2;
 const utils = require('./_utils');
 

@@ -1,13 +1,22 @@
-'use strict';
+import shellLexer from './shell-lexer';
+import * as utils from './utils/index';
+import bash from './modes/bash/index';
+import posix from './modes/posix/index';
+import wordExpansion from './modes/word-expansion/index';
 
-const shellLexer = require('./shell-lexer');
-const utils = require('./utils');
+parse.lexer = shellLexer;
+parse.utils = utils;
 
-// preload all modes to have them browserified
 const modes = {
-	'bash': require('./modes/bash'),
-	'posix': require('./modes/posix'),
-	'word-expansion': require('./modes/word-expansion')
+	bash,
+	posix,
+	'word-expansion': wordExpansion
+};
+
+parse.modes = {
+	'bash': loadPlugin('bash'),
+	'posix': loadPlugin('posix'),
+	'word-expansion': loadPlugin('word-expansion')
 };
 
 function loadPlugin(name) {
@@ -19,12 +28,12 @@ function loadPlugin(name) {
 	return modePlugin.init(null, utils);
 }
 
-module.exports = function parse(sourceCode, options) {
+export default function parse(sourceCode, options) {
 	try {
 		options = options || {};
 		options.mode = options.mode || 'posix';
 
-		const mode = loadPlugin(options.mode);
+		const mode = parse.modes[options.mode];
 		const Parser = mode.grammar.Parser;
 		const astBuilder = mode.astBuilder;
 		const parser = new Parser();
@@ -35,7 +44,7 @@ module.exports = function parse(sourceCode, options) {
 
 /*
 		const fixtureFolder = `${__dirname}/../test/fixtures`;
-		const json = require('json5');
+		import json from 'json5';
 		const {writeFileSync} = require('fs');
 
 		const fileName = require('node-uuid').v4();
@@ -51,4 +60,4 @@ module.exports = function parse(sourceCode, options) {
 		}
 		throw new Error(err.stack || err.message);
 	}
-};
+}

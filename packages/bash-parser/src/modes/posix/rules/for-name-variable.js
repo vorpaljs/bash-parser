@@ -1,10 +1,9 @@
-'use strict';
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
-const isValidName = require('../../../utils/is-valid-name');
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
+import isValidName from '../../../utils/is-valid-name';
 
-module.exports = function forNameVariable() {
+export default function forNameVariable() {
 	return compose(map((tk, idx, iterable) => {
 		let lastToken = iterable.behind(1) || {is: () => false};
 
@@ -17,4 +16,4 @@ module.exports = function forNameVariable() {
 
 		return tk;
 	}), lookahead);
-};
+}

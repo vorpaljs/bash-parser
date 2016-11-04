@@ -1,11 +1,11 @@
-'use strict';
-const mapObj = require('map-obj');
-const filter = require('filter-obj');
-const map = require('map-iterable');
-const pairs = require('object-pairs');
-const MagicString = require('magic-string');
-const tokens = require('../../../utils/tokens');
-const fieldSplitting = require('./field-splitting');
+import mapObj from 'map-obj';
+import filter from 'filter-obj';
+import map from 'map-iterable';
+import pairs from 'object-pairs';
+import MagicString from 'magic-string';
+import {tokens} from '../../../utils/index';
+import bashParser from '../../../index';
+import {mark} from './field-splitting';
 
 const handleParameter = (obj, match) => {
 	const ret = mapObj(obj, (k, v) => {
@@ -22,8 +22,6 @@ const handleParameter = (obj, match) => {
 	});
 
 	if (ret.expand) {
-		const bashParser = require('../../../index');
-
 		for (const prop of ret.expand) {
 			const ast = bashParser(ret[prop], {mode: 'word-expansion'});
 			ret[prop] = ast.commands[0].name;
@@ -93,7 +91,7 @@ parameterExpansion.resolve = options => map(token => {
 				magic.overwrite(
 					xp.loc.start,
 					xp.loc.end + 1,
-					fieldSplitting.mark(result, value, options)
+					mark(result, value, options)
 				);
 			}
 		}
@@ -102,4 +100,4 @@ parameterExpansion.resolve = options => map(token => {
 	return token;
 });
 
-module.exports = parameterExpansion;
+export default parameterExpansion;

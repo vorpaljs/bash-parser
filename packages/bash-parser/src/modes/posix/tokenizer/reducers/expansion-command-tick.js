@@ -1,11 +1,9 @@
-'use strict';
-
-const last = require('array-last');
-const t = require('../../../../utils/tokens');
+import last from 'array-last';
+import {tokens as t} from '../../../../utils/index';
 
 const continueToken = t.continueToken;
 
-module.exports = function expansionCommandTick(state, source, reducers) {
+export default function expansionCommandTick(state, source, reducers) {
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
@@ -44,4 +42,4 @@ module.exports = function expansionCommandTick(state, source, reducers) {
 			.appendChar(char)
 			.replaceLastExpansion({command: (xp.command || '') + char})
 	};
-};
+}

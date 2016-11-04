@@ -1,8 +1,6 @@
-'use strict';
+import last from 'array-last';
 
-const last = require('array-last');
-
-module.exports = function expansionParameter(state, source, reducers) {
+export default function expansionParameter(state, source, reducers) {
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
@@ -30,4 +28,4 @@ module.exports = function expansionParameter(state, source, reducers) {
 		[char].concat(source),
 		reducers
 	);
-};
+}

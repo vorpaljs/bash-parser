@@ -1,12 +1,10 @@
-'use strict';
-
-const t = require('../../../../utils/tokens');
+import {tokens as t} from '../../../../utils/index';
 
 const isPartOfOperator = t.isPartOfOperator;
 const operatorTokens = t.operatorTokens;
 const isOperator = t.isOperator;
 
-module.exports = function operator(state, source, reducers) {
+export default function operator(state, source, reducers) {
 	const char = source && source.shift();
 
 	// console.log('isOperator ', {state,char})
@@ -49,4 +47,4 @@ module.exports = function operator(state, source, reducers) {
 		tokensToEmit: tokens,
 		nextState
 	};
-};
+}

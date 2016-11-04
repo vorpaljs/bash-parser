@@ -1,5 +1,4 @@
-'use strict';
-module.exports = {
+export default {
 	'if': 'If',
 	'then': 'Then',
 	'else': 'Else',

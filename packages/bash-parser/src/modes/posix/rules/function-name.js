@@ -1,9 +1,8 @@
-'use strict';
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
 
-module.exports = function functionName() {
+export default function functionName() {
 	return compose(map((tk, idx, iterable) => {
 		// apply only on valid positions
 		// (start of simple commands)
@@ -31,4 +30,4 @@ module.exports = function functionName() {
 
 		return tk;
 	}), lookahead.depth(2));
-};
+}

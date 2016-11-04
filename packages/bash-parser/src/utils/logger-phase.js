@@ -1,5 +1,3 @@
-'use strict';
-
 const logger = name => () => function * (tokens) {
 	for (const tk of tokens) {
 		if (!tk) {
@@ -15,4 +13,4 @@ const logger = name => () => function * (tokens) {
 	}
 };
 
-module.exports = logger;
+export default logger;

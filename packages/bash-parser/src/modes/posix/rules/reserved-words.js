@@ -1,10 +1,9 @@
-'use strict';
-const hasOwnProperty = require('has-own-property');
-const values = require('object-values');
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
-// const words = require('../enums/reserved-words');
+import hasOwnProperty from 'has-own-property';
+import values from 'object-values';
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
+// import words from '../enums/reserved-words';
 /*
 function defined(v) {
 	return v !== undefined;
@@ -32,7 +31,7 @@ function isValidReservedWordPosition(tk, iterable, words) {
 	return tk.value === '}' || startOfCommand || lastIsReservedWord || thirdInFor || thirdInCase;
 }
 
-module.exports = function reservedWords(options, mode) {
+export default function reservedWords(options, mode) {
 	return compose(map((tk, idx, iterable) => {
 		// console.log(tk, isValidReservedWordPosition(tk, iterable), hasOwnProperty(words, tk.value))
 		// TOKEN tokens consisting of a reserved word
@@ -51,4 +50,4 @@ module.exports = function reservedWords(options, mode) {
 		// other tokens are amitted as-is
 		return tk;
 	}), lookahead.depth(2));
-};
+}

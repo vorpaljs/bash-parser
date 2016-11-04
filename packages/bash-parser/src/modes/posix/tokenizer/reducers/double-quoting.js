@@ -1,11 +1,9 @@
-'use strict';
-
-const t = require('../../../../utils/tokens');
+import {tokens as t} from '../../../../utils/index';
 
 const tokenOrEmpty = t.tokenOrEmpty;
 const continueToken = t.continueToken;
 
-module.exports = function doubleQuoting(state, source, reducers) {
+export default function doubleQuoting(state, source, reducers) {
 	const char = source && source.shift();
 
 	state = state.setPreviousReducer(doubleQuoting);
@@ -50,4 +48,4 @@ module.exports = function doubleQuoting(state, source, reducers) {
 		nextReduction: reducers.doubleQuoting,
 		nextState: state.setEscaping(false).appendChar(char)
 	};
-};
+}

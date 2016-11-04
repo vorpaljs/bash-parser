@@ -1,17 +1,16 @@
 {
   "name": "bash-parser",
   "version": "0.4.0",
-  "main": "src/index.js",
   "description": "Standard compliant bash parser",
   "repository": "vorpaljs/bash-parser",
   "license": "MIT",
   "author": "vorpal-js",
   "scripts": {
     "doc": "doctoc",
-    "test": "ava --no-babel && xo --ignore **/built-grammar.js",
-    "setup": "mgb ./src/modes posix && mgb ./src/modes bash && mgb ./src/modes word-expansion",
-    "travis-test": "ava --no-babel && xo --ignore **/built-grammar.js",
-    "travis-pr": "xo --ignore **/built-grammar.js && nyc ava --no-babel && nyc report --reporter=text-lcov | coveralls"
+    "test": "rollup -c && ava --no-babel && xo --ignore index.js --ignore 'built-grammar-*.js'",
+    "setup": "rollup -c && mgb .",
+    "travis-test": "ava --no-babel && xo --ignore index.js --ignore 'built-grammar-*.js'",
+    "travis-pr": "xo --ignore index.js --ignore 'built-grammar-*.js' && nyc ava --no-babel && nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "engines": {

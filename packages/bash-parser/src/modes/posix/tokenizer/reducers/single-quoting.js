@@ -1,11 +1,9 @@
-'use strict';
-
-const t = require('../../../../utils/tokens');
+import {tokens as t} from '../../../../utils/index';
 
 const tokenOrEmpty = t.tokenOrEmpty;
 const continueToken = t.continueToken;
 
-module.exports = function singleQuoting(state, source, reducers) {
+export default function singleQuoting(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === undefined) {
@@ -27,4 +25,4 @@ module.exports = function singleQuoting(state, source, reducers) {
 		nextReduction: reducers.singleQuoting,
 		nextState: state.appendChar(char)
 	};
-};
+}

@@ -1,8 +1,6 @@
-'use strict';
+import {tokens} from '../../../../utils/index';
 
-const newLine = require('../../../../utils/tokens').newLine;
-
-module.exports = function comment(state, source, reducers) {
+export default function comment(state, source, reducers) {
 	const char = source && source.shift();
 
 	if (char === undefined) {
@@ -14,7 +12,7 @@ module.exports = function comment(state, source, reducers) {
 
 	if (char === '\n') {
 		return {
-			tokensToEmit: [newLine()],
+			tokensToEmit: [tokens.newLine()],
 			nextReduction: reducers.start,
 			nextState: state
 		};
@@ -24,4 +22,4 @@ module.exports = function comment(state, source, reducers) {
 		nextReduction: comment,
 		nextState: state
 	};
-};
+}

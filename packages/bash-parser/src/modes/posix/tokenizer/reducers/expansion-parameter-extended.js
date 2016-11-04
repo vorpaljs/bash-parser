@@ -1,11 +1,9 @@
-'use strict';
-
-const last = require('array-last');
-const t = require('../../../../utils/tokens');
+import last from 'array-last';
+import {tokens as t} from '../../../../utils/index';
 
 const continueToken = t.continueToken;
 
-module.exports = function expansionParameterExtended(state, source, reducers) {
+export default function expansionParameterExtended(state, source, reducers) {
 	const char = source && source.shift();
 
 	const xp = last(state.expansion);
@@ -36,4 +34,4 @@ module.exports = function expansionParameterExtended(state, source, reducers) {
 			.appendChar(char)
 			.replaceLastExpansion({parameter: (xp.parameter || '') + char})
 	};
-};
+}

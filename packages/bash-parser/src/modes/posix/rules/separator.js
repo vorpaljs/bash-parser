@@ -1,10 +1,8 @@
-'use strict';
-
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
-const tokens = require('../../../utils/tokens');
-const filterNonNull = require('../../../utils/non-null');
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
+import {tokens} from '../../../utils/index';
+import filterNonNull from '../../../utils/non-null';
 
 const isSeparator = tk => tk && (
 	tk.is('NEWLINE') ||
@@ -71,7 +69,7 @@ with a new separator_op token, the rule became:
 separator : separator_op
 				 | NEWLINE_LIST
 */
-module.exports = () => compose(
+export default () => compose(
 	filterNonNull,
 	map(
 		tokens.applyTokenizerVisitor(AccumulateSeparators)

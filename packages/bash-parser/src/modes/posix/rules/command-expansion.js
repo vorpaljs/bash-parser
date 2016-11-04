@@ -1,9 +1,8 @@
-'use strict';
-
-const map = require('map-iterable');
-const MagicString = require('magic-string');
-const tokensUtils = require('../../../utils/tokens');
-const fieldSplitting = require('./field-splitting');
+import map from 'map-iterable';
+import MagicString from 'magic-string';
+import {tokens as tokensUtils} from '../../../utils/index';
+import bashParser from '../../../index';
+import {mark} from './field-splitting';
 
 function setCommandExpansion(xp, token) {
 	let command = xp.command;
@@ -11,8 +10,6 @@ function setCommandExpansion(xp, token) {
 	if (token.value[xp.loc.start - 1] === '`') {
 		command = command.replace(/\\`/g, '`');
 	}
-
-	const bashParser = require('../../../index');
 
 	const commandAST = bashParser(command);
 
@@ -56,7 +53,7 @@ commandExpansion.resolve = options => map(token => {
 				magic.overwrite(
 					xp.loc.start,
 					xp.loc.end + 1,
-					fieldSplitting.mark(result.replace(/\n+$/, ''), value, options)
+					mark(result.replace(/\n+$/, ''), value, options)
 				);
 				xp.resolved = true;
 			}
@@ -66,4 +63,4 @@ commandExpansion.resolve = options => map(token => {
 	return token;
 });
 
-module.exports = commandExpansion;
+export default commandExpansion;

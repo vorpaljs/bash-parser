@@ -1,9 +1,8 @@
-'use strict';
-const compose = require('compose-function');
-const map = require('map-iterable');
-const lookahead = require('iterable-lookahead');
+import compose from 'compose-function';
+import map from 'map-iterable';
+import lookahead from 'iterable-lookahead';
 
-module.exports = function ioNumber(options, mode) {
+export default function ioNumber(options, mode) {
 	return compose(map((tk, idx, iterable) => {
 		const next = iterable.ahead(1);
 
@@ -13,4 +12,4 @@ module.exports = function ioNumber(options, mode) {
 
 		return tk;
 	}), lookahead);
-};
+}

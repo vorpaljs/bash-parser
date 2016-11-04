@@ -1,7 +1,6 @@
-'use strict';
-const hasOwnProperty = require('has-own-property');
-const map = require('map-iterable');
-const tokens = require('../../../utils/tokens');
+import hasOwnProperty from 'has-own-property';
+import map from 'map-iterable';
+import {tokens} from '../../../utils/index';
 
 const reduceToOperatorTokenVisitor = operators => ({
 	OPERATOR(tk) {
@@ -16,7 +15,7 @@ const reduceToOperatorTokenVisitor = operators => ({
 	}
 });
 
-module.exports = (options, mode) => map(
+export default (options, mode) => map(
 	tokens.applyTokenizerVisitor(reduceToOperatorTokenVisitor(mode.enums.operators))
 );
 

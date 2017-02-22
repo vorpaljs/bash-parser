@@ -2,11 +2,11 @@
 /* eslint-disable camelcase */
 
 /*
- *  Execute a method of visitor object that has the same name
- *  of AST node type.
+ *  Execute a visitor object method that has the same name
+ *  of an AST node type.
  *
- *  The method receive as first argument the node, and
- *  subsequently the context array exploded
+ *  The visitor method receive as arguments the AST node,
+ *  and the execution context.
  */
 function visit(node, context, visitor) {
 	if (node === null || node === undefined) {
@@ -15,8 +15,10 @@ function visit(node, context, visitor) {
 
 	if (Array.isArray(visitor)) {
 		return visitor
-			.map(v => visit(node, context, v))
-			.filter(v => v !== null && v !== undefined);
+			.reduce((n, v) => {
+				const newNode = visit(n, context, v);
+				return newNode;
+			}, node);
 	}
 
 	const method = visitor[node.type];
@@ -44,10 +46,10 @@ const DescendVisitor = {
 
 	ArithmeticExpansion(node, parent, ast, visitor) {
 		if (!node.expansion) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.expansion.map(traverse);
+		return Object.assign({}, node, {expansion: node.expansion.map(traverse)});
 	},
 
 	CommandExpansion(node, parent, ast, visitor) {
@@ -76,10 +78,10 @@ const DescendVisitor = {
 
 	Word(node, parent, ast, visitor) {
 		if (!node.expansion) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.expansion.map(traverse);
+		return Object.assign({}, node, {expansion: node.expansion.map(traverse)});
 	},
 
 	Function(node, parent, ast, visitor) {
@@ -92,10 +94,11 @@ const DescendVisitor = {
 
 	Redirect(node, parent, ast, visitor) {
 		if (!node.file) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return traverse(node.file);
+		const result = Object.assign({}, node, {file: traverse(node.file)});
+		return result;
 	},
 
 	LogicalExpression(node, parent, ast, visitor) {
@@ -147,6 +150,10 @@ const DescendVisitor = {
 		];
 	},
 
+	Name(node, parent, ast, visitor) {
+		return node;
+	},
+
 	Command(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
 		return [
@@ -181,12 +188,16 @@ const DescendVisitor = {
 	}
 };
 
-traverseNode = (parent, ast, visitor) => node => {
-	const ret = visit(node, [parent, ast, visitor], [DescendVisitor, visitor]);
-	return ret;
-};
+traverseNode = (parent, ast, visitor) => node =>
+	visit(
+		node,
+		[parent, ast, visitor],
+		[DescendVisitor, visitor]
+	)
+;
 
-const traverse = (ast, visitor) => traverseNode(null, ast, visitor)(ast);
+const traverse = (ast, visitor) =>
+	traverseNode(null, ast, visitor)(ast);
 
 traverse.visit = visit;
 

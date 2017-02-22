@@ -8,12 +8,12 @@ const _node = {
 
 const context = [42, 43];
 const AstTypes = [
-	'Script',
+	/*'Script',
 	'Pipeline',
 	'LogicalExpression',
-	'Word',
+
 	'For',
-	'Name',
+
 	'Subshell',
 	'Case',
 	'CaseItem',
@@ -25,7 +25,9 @@ const AstTypes = [
 	'CommandExpansion',
 	'ParameterExpansion',
 	'AssignmentWord',
-	'While',
+	'While',*/
+	'Name',
+	'Word',
 	'Redirect'
 ];
 
@@ -48,18 +50,22 @@ function mkTestVisitor(name) {
 				console.log(JSON.stringify(results, null, 4))
 			}*/
 
-			t.is(JSON.stringify(results), JSON.stringify(f.expected));
+			t.deepEqual(
+				results,
+				f.expected
+			);
 		}
 	];
 }
 
 for (const astNodeType of AstTypes) {
 	TestVisitor[astNodeType] = node => {
-		return `${astNodeType} on ${node.text}`;
+		return Object.assign({visited: true}, node);
 	};
 	test(...mkTestVisitor(astNodeType));
 }
 
+/*
 test('visit Function work as expected', t => {
 	const [node, first, second, other] = traverse.visit(_node, context, visitor(44));
 	t.is(node, _node);
@@ -89,3 +95,4 @@ test('visit Function return undefined If method not defined', t => {
 	const result = traverse.visit({type: 'NodeType'}, [], {});
 	t.is(result, undefined);
 });
+*/

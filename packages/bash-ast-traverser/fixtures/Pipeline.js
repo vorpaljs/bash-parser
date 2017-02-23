@@ -11,15 +11,18 @@ module.exports = {
 			text: 2
 		}]
 	},
-	expected: [
-		[
-			[
-				'Word on 1'
-			],
-			[
-				'Word on 2'
-			]
-		],
-		'Pipeline on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'Pipeline',
+		text: 0,
+		commands: [{
+			visited: true,
+			type: 'Word',
+			text: 1
+		}, {
+			visited: true,
+			type: 'Word',
+			text: 2
+		}]
+	}
 };

@@ -3,13 +3,19 @@ module.exports = {
 	ast: {
 		type: 'Subshell',
 		text: 0,
-		list: {
+		list: [{
 			type: 'Word',
 			text: 1
-		}
+		}]
 	},
-	expected: [
-		['Word on 1'],
-		'Subshell on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'Subshell',
+		text: 0,
+		list: [{
+			visited: true,
+			type: 'Word',
+			text: 1
+		}]
+	}
 };

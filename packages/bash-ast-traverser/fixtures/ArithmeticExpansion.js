@@ -8,10 +8,14 @@ module.exports = {
 			text: '1'
 		}]
 	},
-	expected: [
-		[
-			['Name on 1']
-		],
-		'ArithmeticExpansion on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'ArithmeticExpansion',
+		text: '0',
+		expansion: [{
+			visited: true,
+			type: 'Name',
+			text: '1'
+		}]
+	}
 };

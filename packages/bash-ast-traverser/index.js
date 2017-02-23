@@ -38,10 +38,10 @@ const DescendVisitor = {
 
 	AssignmentWord(node, parent, ast, visitor) {
 		if (!node.expansion) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.expansion.map(traverse);
+		return Object.assign({}, node, {expansion: node.expansion.map(traverse)});
 	},
 
 	ArithmeticExpansion(node, parent, ast, visitor) {
@@ -54,26 +54,26 @@ const DescendVisitor = {
 
 	CommandExpansion(node, parent, ast, visitor) {
 		if (!node.expansion) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.expansion.map(traverse);
+		return Object.assign({}, node, {expansion: node.expansion.map(traverse)});
 	},
 
 	ParameterExpansion(node, parent, ast, visitor) {
 		if (!node.expansion) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.expansion.map(traverse);
+		return Object.assign({}, node, {expansion: node.expansion.map(traverse)});
 	},
 
 	Script(node, parent, ast, visitor) {
 		if (!node.commands) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.commands.map(traverse);
+		return Object.assign({}, node, {commands: node.commands.map(traverse)});
 	},
 
 	Word(node, parent, ast, visitor) {
@@ -86,10 +86,10 @@ const DescendVisitor = {
 
 	Function(node, parent, ast, visitor) {
 		if (!node.body) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return traverse(node.body);
+		return Object.assign({}, node, {body: traverse(node.body)});
 	},
 
 	Redirect(node, parent, ast, visitor) {
@@ -97,94 +97,129 @@ const DescendVisitor = {
 			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		const result = Object.assign({}, node, {file: traverse(node.file)});
-		return result;
+		return Object.assign({}, node, {file: traverse(node.file)});
 	},
 
 	LogicalExpression(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return [
-			node.left ? traverse(node.left) : null,
-			node.right ? traverse(node.right) : null
-		];
+		if (!node.left && !node.right) {
+			return node;
+		}
+
+		return Object.assign({}, node, {
+			left: node.left ? traverse(node.left) : node.left,
+			right: node.right ? traverse(node.right) : node.right
+		});
 	},
 
 	Case(node, parent, ast, visitor) {
 		const traverse = traverseNode(node, ast, visitor);
-		return (node.cases ? node.cases.map(traverse) : [])
-			.concat(
-				node.clause ? traverse(node.clause) : null
-			);
+		if (!node.cases && !node.clause) {
+			return node;
+		}
+
+		return Object.assign({}, node, {
+			cases: node.cases ? node.cases.map(traverse) : [],
+			clause: node.clause ? traverse(node.clause) : null
+		});
 	},
 
 	CaseItem(node, parent, ast, visitor) {
+		if (!node.pattern && !node.body) {
+			return node;
+		}
+
 		const traverse = traverseNode(node, ast, visitor);
-		return (node.pattern ? node.pattern.map(traverse) : [])
-			.concat(
-				traverse(node.body)
-			);
+		return Object.assign({}, node, {
+			pattern: node.pattern ? node.pattern.map(traverse) : [],
+			body: node.body ? traverse(node.body) : null
+		});
 	},
 
 	If(node, parent, ast, visitor) {
+		if (!node.clause && !node.then && !node.else) {
+			return node;
+		}
+
 		const traverse = traverseNode(node, ast, visitor);
-		return [
-			traverse(node.clause),
-			traverse(node.then),
-			traverse(node.else)
-		];
+		return Object.assign({}, node, {
+			clause: node.clause ? traverse(node.clause) : null,
+			then: node.then ? traverse(node.then) : null,
+			else: node.else ? traverse(node.else) : null
+		});
 	},
 
 	While(node, parent, ast, visitor) {
+		if (!node.clause && !node.do) {
+			return node;
+		}
+
 		const traverse = traverseNode(node, ast, visitor);
-		return [
-			traverse(node.clause),
-			traverse(node.do)
-		];
+		return Object.assign({}, node, {
+			clause: node.clause ? traverse(node.clause) : null,
+			do: node.do ? traverse(node.do) : null
+		});
 	},
 
 	Until(node, parent, ast, visitor) {
+		if (!node.clause && !node.do) {
+			return node;
+		}
+
 		const traverse = traverseNode(node, ast, visitor);
-		return [
-			traverse(node.clause),
-			traverse(node.do)
-		];
+		return Object.assign({}, node, {
+			clause: node.clause ? traverse(node.clause) : null,
+			do: node.do ? traverse(node.do) : null
+		});
 	},
 
-	Name(node, parent, ast, visitor) {
+	Name(node) {
 		return node;
 	},
 
 	Command(node, parent, ast, visitor) {
+		if (!node.name && !node.prefix && !node.suffix) {
+			return node;
+		}
+
 		const traverse = traverseNode(node, ast, visitor);
-		return [
-			traverse(node.name),
-			node.prefix ? node.prefix.map(traverse) : [],
-			node.suffix ? node.suffix.map(traverse) : []
-		];
+		return Object.assign({}, node, {
+			name: node.name ? traverse(node.name) : null,
+			prefix: node.prefix ? node.prefix.map(traverse) : [],
+			suffix: node.suffix ? node.suffix.map(traverse) : []
+		});
 	},
 
 	For(node, parent, ast, visitor) {
+		if (!node.do && !node.wordlist) {
+			return node;
+		}
+
 		const traverse = traverseNode(node, ast, visitor);
-		return [
-			node.wordlist ? node.wordlist.map(traverse) : [],
-			traverse(node.do)
-		];
+		return Object.assign({}, node, {
+			do: node.do ? traverse(node.do) : null,
+			wordlist: node.wordlist ? node.wordlist.map(traverse) : []
+		});
 	},
 
 	Pipeline(node, parent, ast, visitor) {
 		if (!node.commands) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return node.commands.map(traverse);
+		return Object.assign({}, node, {
+			commands: node.commands ? node.commands.map(traverse) : []
+		});
 	},
 
 	Subshell(node, parent, ast, visitor) {
 		if (!node.list) {
-			return null;
+			return node;
 		}
 		const traverse = traverseNode(node, ast, visitor);
-		return traverse(node.list);
+		return Object.assign({}, node, {
+			list: node.list ? node.list.map(traverse) : []
+		});
 	}
 };
 

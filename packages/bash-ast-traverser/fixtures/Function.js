@@ -8,8 +8,14 @@ module.exports = {
 			text: 'test'
 		}
 	},
-	expected: [
-		['Name on test'],
-		'Function on cosine'
-	]
+	expected: {
+		visited: true,
+		type: 'Function',
+		text: 'cosine',
+		body: {
+			visited: true,
+			type: 'Name',
+			text: 'test'
+		}
+	}
 };

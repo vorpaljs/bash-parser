@@ -1,6 +1,5 @@
-/* eslint-disable camelcase */
-import test from 'ava';
-import traverse from '.';
+const test = require('ava');
+const traverse = require('.');
 
 const _node = {
 	type: 'NodeType'
@@ -26,6 +25,7 @@ const AstTypes = [
 	'AssignmentWord',
 	'Name',
 	'Word',
+	'CompoundList',
 	'Redirect'
 ];
 

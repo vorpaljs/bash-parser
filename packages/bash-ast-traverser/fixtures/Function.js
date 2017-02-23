@@ -6,7 +6,11 @@ module.exports = {
 		body: {
 			type: 'Name',
 			text: 'test'
-		}
+		},
+		redirections: [{
+			type: 'Name',
+			text: 'test'
+		}]
 	},
 	expected: {
 		visited: true,
@@ -16,6 +20,11 @@ module.exports = {
 			visited: true,
 			type: 'Name',
 			text: 'test'
-		}
+		},
+		redirections: [{
+			visited: true,
+			type: 'Name',
+			text: 'test'
+		}]
 	}
 };

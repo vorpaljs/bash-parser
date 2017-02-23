@@ -2,20 +2,11 @@
 module.exports = {
 	ast: {
 		type: 'CommandExpansion',
-		text: '0',
-		expansion: [{
-			type: 'Name',
-			text: '1'
-		}]
+		text: '0'
 	},
 	expected: {
 		visited: true,
 		type: 'CommandExpansion',
-		text: '0',
-		expansion: [{
-			visited: true,
-			type: 'Name',
-			text: '1'
-		}]
+		text: '0'
 	}
 };

@@ -24,6 +24,10 @@ module.exports = traverseNode => {
 	};
 
 	return {
+		defaultMethod(node) {
+			return node;
+		},
+
 		AssignmentWord: descendProperties({expansion: list}),
 
 		Script: descendProperties({commands: list}),
@@ -69,10 +73,6 @@ module.exports = traverseNode => {
 			clause: single,
 			do: single
 		}),
-
-		defaultMethod(node) {
-			return node;
-		},
 
 		Command: descendProperties({
 			name: single,

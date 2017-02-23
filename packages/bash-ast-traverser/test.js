@@ -85,3 +85,8 @@ test('visit Function return undefined if method not defined', t => {
 	const result = traverse.visit({type: 'NodeType'}, [], {});
 	t.is(result, undefined);
 });
+
+test('visit null nodes resolve to null', t => {
+	const node = traverse.visit(null, context);
+	t.is(null, node);
+});

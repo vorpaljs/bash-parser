@@ -8,8 +8,14 @@ module.exports = {
 			text: 'test'
 		}
 	},
-	expected: [
-		['Word on test'],
-		'Redirect on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'Redirect',
+		text: 0,
+		file: {
+			visited: true,
+			type: 'Word',
+			text: 'test'
+		}
+	}
 };

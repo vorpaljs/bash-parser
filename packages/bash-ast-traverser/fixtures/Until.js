@@ -12,11 +12,19 @@ module.exports = {
 			text: '2'
 		}
 	},
-	expected: [
-		[
-			['Name on 1'],
-			['Name on 2']
-		],
-		'Until on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'Until',
+		text: '0',
+		clause: {
+			visited: true,
+			type: 'Name',
+			text: '1'
+		},
+		do: {
+			visited: true,
+			type: 'Name',
+			text: '2'
+		}
+	}
 };

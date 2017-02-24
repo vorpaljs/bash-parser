@@ -6,10 +6,25 @@ module.exports = {
 		body: {
 			type: 'Name',
 			text: 'test'
-		}
+		},
+		redirections: [{
+			type: 'Name',
+			text: 'test'
+		}]
 	},
-	expected: [
-		['Name on test'],
-		'Function on cosine'
-	]
+	expected: {
+		visited: true,
+		type: 'Function',
+		text: 'cosine',
+		body: {
+			visited: true,
+			type: 'Name',
+			text: 'test'
+		},
+		redirections: [{
+			visited: true,
+			type: 'Name',
+			text: 'test'
+		}]
+	}
 };

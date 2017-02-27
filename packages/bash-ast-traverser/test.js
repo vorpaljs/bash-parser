@@ -60,7 +60,7 @@ function mkTestVisitor(name) {
 
 for (const astNodeType of AstTypes) {
 	TestVisitor[astNodeType] = node => {
-		return Object.assign({visited: true}, node);
+		return Object.assign({visited: !node.visited}, node);
 	};
 	test(...mkTestVisitor(astNodeType));
 }

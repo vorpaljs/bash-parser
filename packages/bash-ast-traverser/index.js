@@ -1,6 +1,7 @@
 'use strict';
 
-const DescendVisitor = require('./descend-visitor')(traverseNode);
+const list = {};
+const single = {};
 
 /*
  *  Execute a visitor object method that has the same name
@@ -33,18 +34,104 @@ function visit(node, context, visitor) {
 	}
 }
 
-function traverseNode(parent, ast, visitor) {
-	return node =>
-		visit(
-			node,
-			[parent, ast, visitor],
-			[DescendVisitor, visitor]
-		);
+function astVisit(ast, context, visitors) {
+	const descendProperties = properties => previousNode => {
+		const node = visit(previousNode, context, visitors);
+
+		const traverse = node => astVisit(node, context, visitors);
+
+		const traversedProperties = Object.keys(properties).map(name => {
+			if (!node[name]) {
+				return null;
+			}
+
+			const kind = properties[name];
+			if (kind === list) {
+				return {
+					[name]: node[name].map(traverse)
+				};
+			}
+
+			return {
+				[name]: traverse(node[name])
+			};
+		});
+
+		return Object.assign({}, node, ...traversedProperties);
+	};
+
+	const DescendVisitor = {
+		defaultMethod(node) {
+			return visit(node, context, visitors);
+		},
+
+		AssignmentWord: descendProperties({expansion: list}),
+
+		Script: descendProperties({commands: list}),
+
+		CompoundList: descendProperties({commands: list}),
+
+		Word: descendProperties({expansion: list}),
+
+		Function: descendProperties({
+			body: single,
+			redirections: list
+		}),
+
+		Redirect: descendProperties({file: single}),
+
+		LogicalExpression: descendProperties({
+			left: single,
+			right: single
+		}),
+
+		Case: descendProperties({
+			cases: list,
+			clause: single
+		}),
+
+		CaseItem: descendProperties({
+			pattern: list,
+			body: single
+		}),
+
+		If: descendProperties({
+			clause: single,
+			else: single,
+			then: single
+		}),
+
+		While: descendProperties({
+			clause: single,
+			do: single
+		}),
+
+		Until: descendProperties({
+			clause: single,
+			do: single
+		}),
+
+		Command: descendProperties({
+			name: single,
+			prefix: list,
+			suffix: list
+		}),
+
+		For: descendProperties({
+			wordlist: list,
+			do: single
+		}),
+
+		Pipeline: descendProperties({
+			commands: list
+		}),
+
+		Subshell: descendProperties({
+			list: single
+		})
+	};
+
+	return visit(ast, context, [DescendVisitor]);
 }
 
-const traverse = (ast, visitor) =>
-	traverseNode(null, ast, visitor)(ast);
-
-traverse.visit = visit;
-
-module.exports = traverse;
+module.exports = astVisit;

@@ -1,5 +1,5 @@
 const test = require('ava');
-const traverse = require('.');
+const astVisit = require('.');
 
 const _node = {
 	type: 'NodeType'
@@ -45,7 +45,7 @@ function mkTestVisitor(name) {
 		t => {
 			const f = require(`${__dirname}/fixtures/${name.replace(/_/g, '-')}`);
 
-			const results = traverse(f.ast, TestVisitor);
+			const results = astVisit(f.ast, {}, TestVisitor);
 			/* if (JSON.stringify(results) !== JSON.stringify(f.expected)) {
 				console.log(JSON.stringify(results, null, 4))
 			}*/
@@ -66,7 +66,8 @@ for (const astNodeType of AstTypes) {
 }
 
 test('visit Function work as expected', t => {
-	const node = traverse.visit(_node, context, visitor(44));
+	const node = astVisit(_node, context, visitor(44));
+
 	t.deepEqual(node, {
 		type: 'NodeType',
 		args: [42, 43, 44]
@@ -74,7 +75,7 @@ test('visit Function work as expected', t => {
 });
 
 test('visit Function work with array visitors', t => {
-	const node = traverse.visit(_node, context, [visitor(44), visitor(45)]);
+	const node = astVisit(_node, context, [visitor(44), visitor(45)]);
 	t.deepEqual(node, {
 		type: 'NodeType',
 		args: [42, 43, 44, 42, 43, 45]
@@ -82,11 +83,11 @@ test('visit Function work with array visitors', t => {
 });
 
 test('visit Function return undefined if method not defined', t => {
-	const result = traverse.visit({type: 'NodeType'}, [], {});
+	const result = astVisit({type: 'NodeType'}, [], {});
 	t.is(result, undefined);
 });
 
 test('visit null nodes resolve to null', t => {
-	const node = traverse.visit(null, context);
+	const node = astVisit(null, context);
 	t.is(null, node);
 });

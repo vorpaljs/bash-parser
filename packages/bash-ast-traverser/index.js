@@ -32,6 +32,8 @@ function visit(node, context, visitor) {
 	if (typeof defaultMethod === 'function') {
 		return defaultMethod.apply(null, [node].concat(context));
 	}
+
+	return node;
 }
 
 function astVisit(ast, context, visitors) {

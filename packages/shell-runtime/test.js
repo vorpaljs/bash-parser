@@ -84,3 +84,10 @@ test('Command node - pass env vars to child process', async t => {
 	t.is(exitCode, 43);
 });
 
+test('Command node - pass cwd to child process', async t => {
+	const runner = commandNode('node', 'check-cwd.js');
+	const exitCode = await runner.run({cwd: `${__dirname}/fixtures`});
+
+	t.is(exitCode, 142);
+});
+

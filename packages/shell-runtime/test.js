@@ -3,6 +3,8 @@ import test from 'ava';
 import execa from 'execa';
 import pify from 'pify';
 import pathExists from 'path-exists';
+import astVisit from 'bash-ast-traverser';
+import visitor from '.';
 
 const readFile = pify(fs.readFile);
 const unlink = pify(fs.unlink);
@@ -50,4 +52,23 @@ test('Command node - stdin redirection from file', async t => {
 	const {stderr, stdout} = await execa('node', ['fixtures/input.js']);
 	t.is(stdout.trim(), '4');
 	t.is(stderr, '');
+});
+
+test('Command node - return a promise to an exit code', async t => {
+	const node = {
+		type: 'Command',
+		name: {
+			type: 'Word',
+			text: 'node'
+		},
+		suffix: [{
+			type: 'Word',
+			text: 'fixtures/exit-42.js'
+		}]
+	};
+
+	const runner = astVisit(node, {}, visitor);
+	const exitCode = await runner.run();
+
+	t.is(exitCode, 42);
 });

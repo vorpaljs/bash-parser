@@ -11,8 +11,14 @@
   "devDependencies": {
     "ava": "^0.18.2",
     "bash-ast-traverser": "*",
+    "execa": "^0.6.0",
     "get-stream": "^3.0.0",
+    "path-exists": "^3.0.0",
     "watch": "^1.0.2",
     "xo": "^0.17.1"
+  },
+  "dependencies": {
+    "pify": "^2.3.0"
   }
+
 }

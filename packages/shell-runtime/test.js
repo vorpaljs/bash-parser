@@ -45,3 +45,9 @@ test('Command node - support appending to files', async t => {
 	t.is(await readFile(fileName, 'utf8'), 'ciao\nciao\n');
 	await unlink(fileName);
 });
+
+test('Command node - stdin redirection from file', async t => {
+	const {stderr, stdout} = await execa('node', ['fixtures/input.js']);
+	t.is(stdout.trim(), '4');
+	t.is(stderr, '');
+});

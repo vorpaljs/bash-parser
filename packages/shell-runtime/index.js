@@ -32,9 +32,11 @@ async function run() {
 
 	// apply redirections
 	await Promise.all(redirections.map(async ({numberIo, op, file}) => {
-		const streamNumber = numberIo || 1;
+
 		switch (op) {
-			case '>':
+			case '>': {
+				const streamNumber = numberIo === undefined ? 1 : numberIo;
+
 				if (/^\d+$/.test(file)) {
 					stdio[streamNumber] = file;
 				} else {
@@ -42,9 +44,23 @@ async function run() {
 					stdio[streamNumber] = targetFile;
 				}
 				break;
-			case '>>':
+			}
+			case '<': {
+				const streamNumber = numberIo === undefined ? 0 : numberIo;
+
+				if (/^\d+$/.test(file)) {
+					stdio[streamNumber] = file;
+				} else {
+					const targetFile = await open(file, 'r');
+					stdio[streamNumber] = targetFile;
+				}
+				break;
+			}
+			case '>>': {
+				const streamNumber = numberIo === undefined ? 1 : numberIo;
 				stdio[streamNumber] = await open(file, 'a');
 				break;
+			}
 			default:
 				throw new Error(`Unknown operator ${op}`);
 		}

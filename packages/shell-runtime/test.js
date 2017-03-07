@@ -54,21 +54,33 @@ test('Command node - stdin redirection from file', async t => {
 	t.is(stderr, '');
 });
 
-test('Command node - return a promise to an exit code', async t => {
+function commandNode(command, ...args) {
 	const node = {
 		type: 'Command',
 		name: {
 			type: 'Word',
-			text: 'node'
+			text: command
 		},
-		suffix: [{
+		suffix: args.map(arg => ({
 			type: 'Word',
-			text: 'fixtures/exit-42.js'
-		}]
+			text: arg
+		}))
 	};
 
-	const runner = astVisit(node, {}, visitor);
+	return astVisit(node, {}, visitor);
+}
+
+test('Command node - return a promise to an exit code', async t => {
+	const runner = commandNode('node', 'fixtures/exit-42.js');
 	const exitCode = await runner.run();
 
 	t.is(exitCode, 42);
 });
+
+test('Command node - pass env vars to child process', async t => {
+	const runner = commandNode('node', 'fixtures/env-spy.js');
+	const exitCode = await runner.run({env: {thisIsATest: 43}});
+
+	t.is(exitCode, 43);
+});
+

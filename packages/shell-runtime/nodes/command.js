@@ -45,7 +45,7 @@ const configureRedirection = stdio => async ({numberIo, op, file}) => {
 	}
 };
 
-async function run() {
+async function run({env = [], cwd = process.cwd()} = {}) {
 	const {
 		name,
 		prefix = [],
@@ -73,7 +73,7 @@ async function run() {
 	const proc = spawn(
 		name.text,
 		args,
-		{stdio}
+		{stdio, cwd, env}
 	);
 
 	return await new Promise(resolve =>

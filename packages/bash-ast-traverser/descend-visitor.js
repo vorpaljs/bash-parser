@@ -13,11 +13,17 @@ module.exports = traverseNode => {
 
 		const traverse = traverseNode(node, ast, visitor);
 		const traversedProperties = propertiesNames.map(name => {
-			const kind = properties[name];
-			const value = kind === list ?
-				node[name].map(traverse) :
-				traverse(node[name]);
-			return {[name]: value};
+			try {
+				const kind = properties[name];
+				const value = kind === list ?
+					((node[name] && node[name].map(traverse)) || []) :
+					traverse(node[name]);
+				return {[name]: value};
+			} catch (err) {
+				throw new Error(
+					`While traversing property ${name}:${err.message}`
+				);
+			}
 		});
 
 		return Object.assign({}, node, ...traversedProperties);

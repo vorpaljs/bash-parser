@@ -29,4 +29,19 @@ test('Command node - support redirections to files', async t => {
 	t.is(stdout, '');
 	t.is(stderr, '');
 	t.is(await readFile(fileName, 'utf8'), 'ciao\n');
+	await unlink(fileName);
+});
+
+test('Command node - support appending to files', async t => {
+	const fileName = '/tmp/test-append';
+	if (await pathExists(fileName)) {
+		await unlink(fileName);
+	}
+
+	await execa('node', ['fixtures/files-append.js']);
+	const {stderr, stdout} = await execa('node', ['fixtures/files-append.js']);
+	t.is(stdout, '');
+	t.is(stderr, '');
+	t.is(await readFile(fileName, 'utf8'), 'ciao\nciao\n');
+	await unlink(fileName);
 });

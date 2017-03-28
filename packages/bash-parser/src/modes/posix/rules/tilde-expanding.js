@@ -4,13 +4,13 @@ const tokens = require('../../../utils/tokens');
 
 const replace = (text, resolveHomeUser) => {
 	let replaced = false;
-	let result = text.replace(/^~[^\/]*\//, (match, p1) => {
+	let result = text.replace(/^~([^\/]*)\//, (match, p1) => {
 		replaced = true;
 		return resolveHomeUser(p1 || null) + '/';
 	});
 	// console.log({result, replaced})
 	if (!replaced) {
-		result = text.replace(/^~.*$/, (match, p1) => {
+		result = text.replace(/^~(.*)$/, (match, p1) => {
 			return resolveHomeUser(p1 || null);
 		});
 	}

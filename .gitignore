@@ -90,3 +90,5 @@ built-grammar.js
 
 **/built-grammar.js
 
+yarn.lock
+out

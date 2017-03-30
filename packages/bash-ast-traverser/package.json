@@ -2,13 +2,12 @@
   "name": "bash-ast-traverser",
   "version": "0.4.1",
   "description": "Traverse an AST object created by bash-parser",
-  "repository": "vorpaljs/bash-ast-traverser",
+  "repository": "vorpaljs/bash-parser",
   "license": "MIT",
   "author": "Andrea Parodi",
   "scripts": {
-    "test": "ava --no-babel && xo",
-    "setup": "echo nothing to do!",
-    "travis-test": "ava --no-babel && xo"
+    "test": "ava && xo",
+    "cover-test": "nyc ava"
   },
   "keywords": ["bash-parser", "traverser", "visitor"],
   "engines": {
@@ -19,6 +18,8 @@
     "xo": "^0.16.0"
   },
   "files": [
-    "index.js"
+
+    "index.js",
+    "descend-visitor.js"
   ]
 }

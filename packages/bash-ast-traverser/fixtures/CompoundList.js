@@ -1,21 +1,21 @@
 /* eslint-disable xo/filename-case */
 module.exports = {
 	ast: {
-		type: 'AssignmentWord',
+		type: 'CompoundList',
 		text: '0',
-		expansion: [{
+		commands: [{
 			type: 'Name',
-			text: '1'
+			text: '0'
 		}]
 	},
 	expected: {
 		visited: true,
-		type: 'AssignmentWord',
+		type: 'CompoundList',
 		text: '0',
-		expansion: [{
+		commands: [{
 			visited: true,
 			type: 'Name',
-			text: '1'
+			text: '0'
 		}]
 	}
 };

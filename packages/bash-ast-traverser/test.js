@@ -1,6 +1,5 @@
-/* eslint-disable camelcase */
-import test from 'ava';
-import traverse from '.';
+const test = require('ava');
+const traverse = require('.');
 
 const _node = {
 	type: 'NodeType'
@@ -8,30 +7,33 @@ const _node = {
 
 const context = [42, 43];
 const AstTypes = [
-	'Script',
-	'Pipeline',
-	'LogicalExpression',
-	'Word',
-	'For',
-	'Name',
 	'Subshell',
-	'Case',
-	'CaseItem',
-	'If',
+	'Pipeline',
+	'For',
 	'Command',
-	'Function',
 	'Until',
-	'ArithmeticExpansion',
+	'While',
+	'If',
+	'CaseItem',
+	'Case',
+	'LogicalExpression',
+	'Function',
+	'Script',
 	'CommandExpansion',
 	'ParameterExpansion',
+	'ArithmeticExpansion',
 	'AssignmentWord',
-	'While',
+	'Name',
+	'Word',
+	'CompoundList',
 	'Redirect'
 ];
 
 const visitor = arg => ({
 	NodeType(node, first, second) {
-		return [node, first, second, arg];
+		return Object.assign({}, node, {
+			args: (node.args || []).concat(first, second, arg)
+		});
 	}
 });
 
@@ -48,44 +50,43 @@ function mkTestVisitor(name) {
 				console.log(JSON.stringify(results, null, 4))
 			}*/
 
-			t.is(JSON.stringify(results), JSON.stringify(f.expected));
+			t.deepEqual(
+				results,
+				f.expected
+			);
 		}
 	];
 }
 
 for (const astNodeType of AstTypes) {
 	TestVisitor[astNodeType] = node => {
-		return `${astNodeType} on ${node.text}`;
+		return Object.assign({visited: true}, node);
 	};
 	test(...mkTestVisitor(astNodeType));
 }
 
 test('visit Function work as expected', t => {
-	const [node, first, second, other] = traverse.visit(_node, context, visitor(44));
-	t.is(node, _node);
-	t.is(first, 42);
-	t.is(second, 43);
-	t.is(other, 44);
+	const node = traverse.visit(_node, context, visitor(44));
+	t.deepEqual(node, {
+		type: 'NodeType',
+		args: [42, 43, 44]
+	});
 });
 
 test('visit Function work with array visitors', t => {
-	const [
-		[node, first, second, other],
-		[node2, first2, second2, other2]
-	] = traverse.visit(_node, context, [visitor(44), visitor(45)]);
-
-	t.is(node, _node);
-	t.is(first, 42);
-	t.is(second, 43);
-	t.is(other, 44);
-
-	t.is(node2, _node);
-	t.is(first2, 42);
-	t.is(second2, 43);
-	t.is(other2, 45);
+	const node = traverse.visit(_node, context, [visitor(44), visitor(45)]);
+	t.deepEqual(node, {
+		type: 'NodeType',
+		args: [42, 43, 44, 42, 43, 45]
+	});
 });
 
-test('visit Function return undefined If method not defined', t => {
+test('visit Function return undefined if method not defined', t => {
 	const result = traverse.visit({type: 'NodeType'}, [], {});
 	t.is(result, undefined);
+});
+
+test('visit null nodes resolve to null', t => {
+	const node = traverse.visit(null, context);
+	t.is(null, node);
 });

@@ -15,12 +15,23 @@ module.exports = {
 			text: '2'
 		}]
 	},
-	expected: [
-		[
-			['Name on 1'],
-			['Name on 2'],
-			'Name on 3'
-		],
-		'CaseItem on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'CaseItem',
+		text: '0',
+		body: {
+			visited: true,
+			type: 'Name',
+			text: '3'
+		},
+		pattern: [{
+			visited: true,
+			type: 'Name',
+			text: '1'
+		}, {
+			visited: true,
+			type: 'Name',
+			text: '2'
+		}]
+	}
 };

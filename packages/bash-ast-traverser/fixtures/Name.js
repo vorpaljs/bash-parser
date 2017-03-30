@@ -4,7 +4,9 @@ module.exports = {
 		type: 'Name',
 		text: 'test'
 	},
-	expected: [
-		'Name on test'
-	]
+	expected: {
+		visited: true,
+		type: 'Name',
+		text: 'test'
+	}
 };

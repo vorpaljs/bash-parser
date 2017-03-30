@@ -8,8 +8,14 @@ module.exports = {
 			text: 'test'
 		}]
 	},
-	expected: [
-		[['Name on test']],
-		'Word on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'Word',
+		text: 0,
+		expansion: [{
+			visited: true,
+			type: 'Name',
+			text: 'test'
+		}]
+	}
 };

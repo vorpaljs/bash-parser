@@ -12,11 +12,19 @@ module.exports = {
 			text: '2'
 		}
 	},
-	expected: [
-		[
-			[['Name on 1']],
-			['Name on 2']
-		],
-		'For on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'For',
+		text: '0',
+		wordlist: [{
+			visited: true,
+			type: 'Name',
+			text: '1'
+		}],
+		do: {
+			visited: true,
+			type: 'Name',
+			text: '2'
+		}
+	}
 };

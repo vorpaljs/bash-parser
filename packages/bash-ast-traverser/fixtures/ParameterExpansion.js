@@ -2,16 +2,11 @@
 module.exports = {
 	ast: {
 		type: 'ParameterExpansion',
-		text: '0',
-		expansion: [{
-			type: 'Name',
-			text: '1'
-		}]
+		text: '0'
 	},
-	expected: [
-		[
-			['Name on 1']
-		],
-		'ParameterExpansion on 0'
-	]
+	expected: {
+		visited: true,
+		type: 'ParameterExpansion',
+		text: '0'
+	}
 };

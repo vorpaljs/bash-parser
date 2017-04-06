@@ -222,7 +222,7 @@ module.exports = {
 			],
 			[
 				'pattern PIPE WORD',
-				'$$ = yy.patternAppend(pattern, $WORD);'
+				'$$ = yy.patternAppend($pattern, $WORD);'
 			]
 		],
 		if_clause: [

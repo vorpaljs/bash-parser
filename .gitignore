@@ -76,3 +76,4 @@ yarn.lock
 out
 
 **/built-grammar.*
+**/.nyc_output

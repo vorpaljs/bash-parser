@@ -26,7 +26,7 @@ module.exports = traverseNode => {
 			}
 		});
 
-		return Object.assign({}, node, ...traversedProperties);
+		return Object.assign.apply(null, [{}, node].concat(traversedProperties));
 	};
 
 	return {

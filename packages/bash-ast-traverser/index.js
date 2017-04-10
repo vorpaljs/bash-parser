@@ -46,7 +46,7 @@ function traverseNode(parent, ast, visitor) {
 
 const traverse = (ast, visitor) => {
 	return traverseNode(null, ast, visitor)(ast);
-}
+};
 
 traverse.visit = visit;
 

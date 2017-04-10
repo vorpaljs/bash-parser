@@ -81,9 +81,9 @@ test('visit Function work with array visitors', t => {
 	});
 });
 
-test('visit Function return undefined if method not defined', t => {
+test('visit Function return source node if method not defined', t => {
 	const result = traverse.visit({type: 'NodeType'}, [], {});
-	t.is(result, undefined);
+	t.deepEqual(result, {type: 'NodeType'});
 });
 
 test('visit null nodes resolve to null', t => {

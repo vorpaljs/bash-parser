@@ -74,3 +74,5 @@ Temporary Items
 
 yarn.lock
 out
+
+**/built-grammar.*

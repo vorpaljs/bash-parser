@@ -1,10 +1,5 @@
 {
-  "devDependencies": {
-    "lerna": "2.0.0-beta.28"
-  },
   "scripts": {
-  	"setup": "lerna bootstrap && lerna run build",
-  	"test": "lerna run cover-test",
-  	"cover-publish": "lerna run cover-publish"
+  	"test": "cd packages/bash-parser; npm install; npm test",
   }
 }

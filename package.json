@@ -1,5 +1,5 @@
 {
   "scripts": {
-  	"test": "cd packages/bash-parser; npm install; npm test",
+  	"test": "cd packages/bash-parser; npm install; npm test"
   }
 }

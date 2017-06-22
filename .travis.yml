@@ -2,3 +2,9 @@ language: node_js
 node_js:
   - 8
 sudo: false
+before_script:
+  - npm run build
+script:
+  - npm test
+after_success:
+  - npm run cover-publish

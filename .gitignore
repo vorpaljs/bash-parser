@@ -79,3 +79,4 @@ out
 **/.nyc_output
 
 package-lock.json
+.coveralls.yml

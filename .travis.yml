@@ -5,6 +5,7 @@ sudo: false
 before_script:
   - npm run build
 script:
-  - npm test
+  - npm run cover-test
 after_success:
+  - echo "repo_token: $coveralls_repo_token" >.coveralls.yml
   - npm run cover-publish

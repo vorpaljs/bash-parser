@@ -2,6 +2,7 @@
   "name": "bash-parser",
   "version": "0.5.0",
   "main": "src/index.js",
+  "bin": "src/cli.js",
   "description": "Standard compliant bash parser",
   "repository": "vorpaljs/bash-parser",
   "license": "MIT",

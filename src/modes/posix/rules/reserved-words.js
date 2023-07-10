@@ -2,7 +2,7 @@
 const hasOwnProperty = require('has-own-property');
 const values = require('object-values');
 const compose = require('compose-function');
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const lookahead = require('iterable-lookahead');
 // const words = require('../enums/reserved-words');
 /*

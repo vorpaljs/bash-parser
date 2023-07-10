@@ -1,7 +1,7 @@
 'use strict';
 const mapObj = require('map-obj');
 const filter = require('filter-obj');
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const pairs = require('object-pairs');
 const MagicString = require('magic-string');
 const tokens = require('../../../utils/tokens');

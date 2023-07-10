@@ -1,7 +1,7 @@
 'use strict';
 const parse = require('shell-quote-word');
 const unescape = require('unescape-js');
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const tokens = require('../../../utils/tokens');
 
 function unquote(text) {

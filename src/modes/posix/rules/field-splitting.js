@@ -1,6 +1,6 @@
 'use strict';
 
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const merge = require('transform-spread-iterable');
 const compose = require('compose-function');
 const mkFieldSplitToken = require('../../../utils/tokens').mkFieldSplitToken;
@@ -35,4 +35,3 @@ exports.split = () => compose(
 		return token;
 	})
 );
-

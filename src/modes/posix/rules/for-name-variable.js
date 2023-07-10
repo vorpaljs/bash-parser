@@ -1,6 +1,6 @@
 'use strict';
 const compose = require('compose-function');
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const lookahead = require('iterable-lookahead');
 const isValidName = require('../../../utils/is-valid-name');
 

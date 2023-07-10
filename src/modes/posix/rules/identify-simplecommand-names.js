@@ -1,7 +1,7 @@
 'use strict';
 const lookahead = require('iterable-lookahead');
 const compose = require('compose-function');
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 // const isOperator = require('../enums/io-file-operators').isOperator;
 const isValidName = require('../../../utils/is-valid-name');
 

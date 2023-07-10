@@ -45,7 +45,6 @@
     "has-own-property": "^0.1.0",
     "identity-function": "^1.0.0",
     "iterable-lookahead": "^1.0.0",
-    "iterable-transform-replace": "^1.1.1",
     "lodash.curry": "^4.1.1",
     "magic-string": "^0.16.0",
     "map-iterable": "^1.0.1",

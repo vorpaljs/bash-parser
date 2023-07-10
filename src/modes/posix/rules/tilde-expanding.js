@@ -1,5 +1,5 @@
 'use strict';
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const tokens = require('../../../utils/tokens');
 
 const replace = (text, resolveHomeUser) => {

@@ -1,8 +1,8 @@
 'use strict';
 const filterIterator = require('filter-iterator');
 const reverse = require('reverse-arguments');
-const curry = require('curry');
+const curry = require('lodash.curry');
 
-const filter = curry.to(2, reverse(filterIterator));
+const filter = curry(reverse(filterIterator), 2);
 
 module.exports = filter;

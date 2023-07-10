@@ -1,6 +1,6 @@
 'use strict';
 
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const MagicString = require('magic-string');
 const tokensUtils = require('../../../utils/tokens');
 const fieldSplitting = require('./field-splitting');

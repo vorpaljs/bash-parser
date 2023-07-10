@@ -1,5 +1,5 @@
 'use strict';
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const isValidName = require('../../../utils/is-valid-name');
 
 module.exports = function assignmentWord() {

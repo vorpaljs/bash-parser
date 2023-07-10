@@ -2,9 +2,9 @@
 
 const compose = require('compose-function');
 const identity = require('identity-function');
-const map = require('map-iterable');
+const map = require('../../../vendored/map-iterable');
 const values = require('object-values');
-const merge = require('transform-spread-iterable');
+const merge = require('../../../vendored/transform-spread-iterable');
 const tokens = require('../../../utils/tokens');
 
 const expandAlias = (preAliasLexer, resolveAlias, reservedWords) => {

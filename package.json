@@ -54,7 +54,6 @@
     "reverse-arguments": "^1.0.0",
     "shell-quote-word": "^1.0.1",
     "to-pascal-case": "^1.0.0",
-    "transform-spread-iterable": "^1.1.0",
     "unescape-js": "^1.0.5"
   }
 }

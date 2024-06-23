@@ -425,6 +425,41 @@ test('command with stderr redirection to file', t => {
 	});
 });
 
+// FIXME: see issue #45
+test('command with stderr redirection to file (II)', t => {
+	const result = bashParser('echo 1 > file.txt');
+	utils.logResults(result);
+	utils.checkResults(t, result, {
+		type: 'Script',
+		commands: [
+			{
+				type: 'Command',
+				name: {
+					text: 'echo',
+					type: 'Word'
+				},
+				suffix: [
+					{
+						text: '1',
+						type: 'Word'
+					},
+					{
+						type: 'Redirect',
+						op: {
+							text: '>',
+							type: 'great'
+						},
+						file: {
+							text: 'file.txt',
+							type: 'Word'
+						}
+					}
+				]
+			}
+		]
+	});
+});
+
 test('parse subshell', t => {
 	const result = bashParser('( ls )');
 

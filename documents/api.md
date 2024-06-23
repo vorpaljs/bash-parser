@@ -35,5 +35,5 @@
 
 ## Return value
 
-The function return an object containing the AST on successfull parsing. Please refer to [AST documentation](https://github.com/vorpaljs/bash-parser/blob/master/docs/ast.md) for details on the AST format.
+The function return an object containing the AST on successfull parsing. Please refer to [AST documentation](https://github.com/vorpaljs/bash-parser/blob/master/documents/ast.md) for details on the AST format.
 
